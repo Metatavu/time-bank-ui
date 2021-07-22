@@ -1,0 +1,15 @@
+{
+
+  "generic": {
+    "add": "Add",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "copy": "Copy",
+    "save": "Save",
+    "delete": "Delete",
+    "search": "Search",
+    "language": "Language",
+    "select": "Select"
+  }
+
+}

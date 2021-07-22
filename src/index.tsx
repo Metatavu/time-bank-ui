@@ -1,12 +1,20 @@
+import { CssBaseline, responsiveFontSizes, ThemeProvider } from '@material-ui/core';
+import { store } from 'app/store';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
+import { Provider } from 'react-redux';
+import App from './components/App';
 import reportWebVitals from './reportWebVitals';
+import theme from "theme/theme";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider store={ store }>
+      <ThemeProvider theme={ responsiveFontSizes(theme) }>
+        <CssBaseline/>
+        <App/>
+      </ThemeProvider>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
