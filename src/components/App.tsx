@@ -16,10 +16,7 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    // Add when Keycloak has been setup
-    // <AccessTokenRefresh>
       <MainScreen/>
-    // </AccessTokenRefresh>
   );
 }
 
