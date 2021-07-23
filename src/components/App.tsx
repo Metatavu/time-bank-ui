@@ -16,7 +16,7 @@ const App: React.FC = () => {
   }, []);
 
   return (
-      <MainScreen/>
+    <MainScreen/>
   );
 }
 

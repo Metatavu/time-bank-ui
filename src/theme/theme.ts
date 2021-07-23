@@ -31,8 +31,7 @@ export default createMuiTheme({
     h1: {
       fontFamily: "ambroise-std, serif",
       fontWeight: 800,
-      fontSize: 48,
-      color: "#002D66",
+      fontSize: 42,
       letterSpacing: "0.05em",
       [breakpoints.down("sm")]: {
         fontSize: "1.75rem"
@@ -41,8 +40,7 @@ export default createMuiTheme({
     h2: {
       fontFamily: "ambroise-std, serif",
       fontWeight: 800,
-      fontSize: 36,
-      color: "#002D66"
+      fontSize: 30,
     },
     h3: {
       fontSize: 26
@@ -52,6 +50,12 @@ export default createMuiTheme({
     },
     body1: {
       fontSize: 18
+    },
+    h5: {
+      fontSize: 16
+    },
+    h6: {
+      fontSize: 12
     },
     body2: {
       fontSize: 16,
