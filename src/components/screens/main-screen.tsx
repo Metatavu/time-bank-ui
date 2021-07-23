@@ -1,6 +1,8 @@
 import React from "react";
 import AppLayout from "../layouts/app-layout";
 import { useMainScreenStyles } from "styles/screens/main-screen";
+import UserInfo from "components/user-info/user-info";
+import { Avatar, Box, Typography } from "@material-ui/core";
 
 /** Minimum time that loader is visible */
 
@@ -10,12 +12,18 @@ import { useMainScreenStyles } from "styles/screens/main-screen";
 const MainScreen: React.FC = () => {
   const classes = useMainScreenStyles();
 
+  const renderUserInfo = () => {
+    return (
+      <UserInfo />
+    );
+  }
+
   /**
    * Component render
    */
   return (
     <AppLayout
-      drawerContent={ null }
+      drawerContent={ renderUserInfo() }
       editorContent={ null }
     />
   );
