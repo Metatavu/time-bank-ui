@@ -1,0 +1,29 @@
+import LocalizedStrings, { LocalizedStringsMethods } from "localized-strings";
+import en from "./en.json";
+import fi from "./fi.json";
+
+/**
+ * Interface describing localized strings
+ */
+export interface IStrings extends LocalizedStringsMethods {
+
+  /**
+   * Translations related to generic words
+   */
+  generic: {
+    add: string;
+    cancel: string;
+    confirm: string;
+    copy: string;
+    save: string;
+    delete: string;
+    search: string;
+    language: string;
+    select: string;
+  };
+
+}
+
+const strings: IStrings = new LocalizedStrings({ en, fi });
+
+export default strings;

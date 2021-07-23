@@ -1,0 +1,15 @@
+{
+
+  "generic": {
+    "add": "Lisää",
+    "cancel": "Peruuta",
+    "confirm": "Vahvista",
+    "copy": "Kopioi",
+    "save": "Tallenna",
+    "delete": "Poista",
+    "search": "Haku",
+    "language": "Kieli",
+    "select": "Valitse"
+  }
+
+}
