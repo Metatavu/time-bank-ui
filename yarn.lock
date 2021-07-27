@@ -1548,6 +1548,11 @@
     "mkdirp" "^1.0.4"
     "rimraf" "^3.0.2"
 
+"@openapitools/openapi-generator-cli@^1.0.18-4.3.1":
+  "integrity" "sha512-zcuOcVKuQ/wp5immG4l3/w5koLHLy+NCoFPK4RQ2iz34kHgtaRfXzNIroulHWLUNuoWgx9y2zYecEITX6ndGMA=="
+  "resolved" "https://registry.npmjs.org/@openapitools/openapi-generator-cli/-/openapi-generator-cli-1.0.18-5.0.0-beta2.tgz"
+  "version" "1.0.18-5.0.0-beta2"
+
 "@pmmmwh/react-refresh-webpack-plugin@0.4.3":
   "integrity" "sha512-br5Qwvh8D2OQqSXpd1g/xqXKnK0r+Jz6qVKBbWmpUcrbGOxUrf39V5oZ1876084CGn18uMdR5uvPqBv9UqtBjQ=="
   "resolved" "https://registry.npmjs.org/@pmmmwh/react-refresh-webpack-plugin/-/react-refresh-webpack-plugin-0.4.3.tgz"
