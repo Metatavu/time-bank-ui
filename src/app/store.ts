@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import localeReducer from "features/locale/locale-slice";
+import personReducer from "features/person/person-slice";
 
 /**
  * Initialized Redux store
@@ -7,7 +8,8 @@ import localeReducer from "features/locale/locale-slice";
 export const store = configureStore({
   middleware: getDefaultMiddleware => getDefaultMiddleware({ serializableCheck: false }),
   reducer: {
-    locale: localeReducer
+    locale: localeReducer,
+    person: personReducer
   }
 });
 

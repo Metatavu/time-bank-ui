@@ -7,7 +7,6 @@ import { useUserInfoStyles } from "styles/user-info/user-info";
  */
 const UserInfo: React.FC = () => {
   const classes = useUserInfoStyles();
-  console.log("user info rendered")
 
   /**
    * Component render
