@@ -1,8 +1,9 @@
 import React from "react";
 import AppLayout from "../layouts/app-layout";
 import { useMainScreenStyles } from "styles/screens/main-screen";
-import UserInfo from "components/user-info/user-info";
-import { Avatar, Box, Typography } from "@material-ui/core";
+import { Box } from "@material-ui/core";
+
+import DrawerContent from "components/drawer-content/drawer-content";
 
 /** Minimum time that loader is visible */
 
@@ -12,9 +13,16 @@ import { Avatar, Box, Typography } from "@material-ui/core";
 const MainScreen: React.FC = () => {
   const classes = useMainScreenStyles();
 
-  const renderUserInfo = () => {
+  /**
+   * Renders the drawer content 
+   */
+  const renderDrawer = () => {
     return (
-      <UserInfo />
+      <>
+        <Box className={ classes.root }>
+          <DrawerContent />
+        </Box>
+      </>
     );
   }
 
@@ -23,7 +31,7 @@ const MainScreen: React.FC = () => {
    */
   return (
     <AppLayout
-      drawerContent={ renderUserInfo() }
+      drawerContent={ renderDrawer() }
       editorContent={ null }
     />
   );

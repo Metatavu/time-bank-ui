@@ -3,7 +3,7 @@ import theme from "theme/theme";
 
 const drawerWidth = 400;
 
-export const useEditorLayoutStyles = makeStyles({
+export const useAppLayoutStyles = makeStyles({
 
   root: {
     backgroundColor: theme.palette.background.default,
@@ -19,13 +19,14 @@ export const useEditorLayoutStyles = makeStyles({
 
   drawerPaper: {
     width: drawerWidth,
-    backgroundColor: theme.palette.background.default
+    backgroundColor: theme.palette.background.paper
   },
 
   content: {
+    backgroundColor: theme.palette.background.default,
     flexGrow: 1
   }
 
 }, {
-  name: "editor-layout"
+  name: "app-layout"
 });

@@ -6,8 +6,8 @@ export default createMuiTheme({
 
   palette: {
     primary: {
-      main: "#002D66",
-      light: "#3E55BD"
+      main: "#000000",
+      light: "#E0E0E0"
     },
     secondary: {
       main: "#F17446",
@@ -18,8 +18,8 @@ export default createMuiTheme({
       secondary: "#ffffff"
     },
     background: {
-      default: "#ffffff",
-      paper: "rgba(218,219,205,1)"
+      default: "#E0E0E0",
+      paper: "#ffffff"
     }
   },
 

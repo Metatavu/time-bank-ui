@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Drawer } from "@material-ui/core";
-import { useEditorLayoutStyles } from "styles/layouts/app-layout";
+import { useAppLayoutStyles } from "styles/layouts/app-layout";
 
 /**
  * Component properties
@@ -16,7 +16,7 @@ interface Props {
  * @param props component properties
  */
 const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, editorContent }) => {
-  const classes = useEditorLayoutStyles();
+  const classes = useAppLayoutStyles();
 
   /**
    * Component render
