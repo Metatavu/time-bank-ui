@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, Divider, OutlinedInput, TextField } from "@material-ui/core";
+import { Box, Button, Divider, OutlinedInput, TextField, Toolbar } from "@material-ui/core";
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import UserInfo from "components/user-info/user-info";
 import { useDrawerContentStyles } from "styles/drawer-content/drawer-content";
@@ -105,6 +105,7 @@ const DrawerContent: React.FC<Props> = () => {
    */
   return (
     <>
+      <Toolbar />
       { renderSearchBox() }
       <UserInfo />
     </>

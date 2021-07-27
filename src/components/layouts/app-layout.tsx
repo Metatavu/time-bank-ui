@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Drawer } from "@material-ui/core";
+import { AppBar, Box, Drawer, Toolbar } from "@material-ui/core";
 import { useAppLayoutStyles } from "styles/layouts/app-layout";
 
 /**
@@ -23,6 +23,11 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, editorCo
    */
   return (
     <Box className={ classes.root }>
+      <AppBar style={{ zIndex: 1201 }}>
+        <Toolbar>
+          
+        </Toolbar>
+      </AppBar>
       <Drawer
         variant="permanent"
         className={ classes.drawer }

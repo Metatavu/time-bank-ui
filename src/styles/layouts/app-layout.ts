@@ -13,6 +13,7 @@ export const useAppLayoutStyles = makeStyles({
   },
 
   drawer: {
+    top: 64,
     width: drawerWidth,
     height: "100%"
   },

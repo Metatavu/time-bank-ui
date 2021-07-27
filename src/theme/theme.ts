@@ -84,10 +84,12 @@ export default createMuiTheme({
     },
     MuiAppBar: {
       root: {
-        backgroundColor: "#fff",
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between"
+      },
+      colorPrimary: {
+        backgroundColor: "#000"
       }
     },
     MuiToolbar: {
