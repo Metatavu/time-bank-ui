@@ -7,7 +7,8 @@ import { useAppSelector } from "app/hooks";
 /**
  * User info component
  */
-const UserInfo: React.FC = () => {
+const UserInfo: React.FC = ({}) => {
+
   const classes = useUserInfoStyles();
   const { person } = useAppSelector(selectPerson)
 
@@ -21,12 +22,12 @@ const UserInfo: React.FC = () => {
   return (
     <Box className={ classes.root }>
       <Box className={ classes.userName }>
-        <Avatar alt={ `${person.firstName} + ${person.lastName}` }>
+        <Avatar alt={ `${person.firstName} ${person.lastName}` }>
           { person.firstName.charAt(0) }
         </Avatar>
         <Box style={{ paddingLeft: 10 }}>
           <Typography variant="h2">
-            { `${person.firstName} + ${person.lastName}` }
+            { `${person.firstName} ${person.lastName}` }
           </Typography>
           <Typography variant="h6">
             { person.email }
@@ -56,7 +57,7 @@ const UserInfo: React.FC = () => {
               { "createdAt: " }
             </Typography>
             <Typography variant="h6" style={{ paddingLeft: 10, fontStyle: "italic" }}>
-              { person.createdAt }
+              { person.createdAt.toLocaleString() }
             </Typography>
           </Box>
           <Box style={{ display: "flex", opacity: 0.6 }}>
@@ -64,7 +65,7 @@ const UserInfo: React.FC = () => {
               { "updatedAt: " }
             </Typography>
             <Typography variant="h6" style={{ paddingLeft: 10, fontStyle: "italic" }}>
-              { person.updatedAt }
+              { person.updatedAt.toLocaleString() }
             </Typography>
           </Box>
         </Box>

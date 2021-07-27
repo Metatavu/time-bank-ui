@@ -1,11 +1,14 @@
 import React from "react";
-import { Box, Button, Divider, OutlinedInput } from "@material-ui/core";
+import { Box, Button, Divider, OutlinedInput, TextField } from "@material-ui/core";
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import UserInfo from "components/user-info/user-info";
 import { useDrawerContentStyles } from "styles/drawer-content/drawer-content";
 import SearchIcon from '@material-ui/icons/Search';
 import strings from "localization/strings";
-import { PersonDto, TimebankApi } from "generated/client";
+import { PersonDto } from "generated/client";
+import Api from "api/api";
+import { setPerson } from "features/person/person-slice";
+import { useAppDispatch } from "app/hooks";
 
 /**
  * Component properties
@@ -19,18 +22,21 @@ interface Props {
  * @param props component properties
  */
 const DrawerContent: React.FC<Props> = () => {
-  const classes = useDrawerContentStyles();
-  const [ persons, setPersons ] = React.useState<PersonDto[]>([])
+  const dispatch = useAppDispatch();
 
+  const classes = useDrawerContentStyles();
+  const [ persons, setPersons ] = React.useState<PersonDto[]>([]);
+  const [ pendingPerson, setPendingPerson ] = React.useState<PersonDto | null>(null);
+  const [ searchInput, setSearchInput ] = React.useState<string>("");
   /**
    * Fetches the person data 
    */
   const fetchData = async () => {
-    const timeBankApi = new TimebankApi();
+    const timeBankApi = Api.getTimeBankApi();
     timeBankApi.timebankControllerGetPersons()
     .then(fetchedPersons =>  
-{      console.log("persons fetched: ", fetchedPersons);
-      setPersons(fetchedPersons);}
+      {setPersons(fetchedPersons)
+      console.log(fetchedPersons)}
     );
   }
 
@@ -48,22 +54,50 @@ const DrawerContent: React.FC<Props> = () => {
           <Box className={ classes.searchBoxContaienr }>
             <SearchIcon className={ classes.searchIcon }/>
             <Autocomplete 
+              freeSolo
               options={ persons }
               getOptionLabel={ person => person.firstName }
+              inputValue={ searchInput }
+              onChange={ (event, newValue) => {
+                if (typeof newValue === 'string'){
+                  return;
+                }
+                setPendingPerson(newValue);
+              }}
+              onInputChange={ (event, newInputValue) => {
+                setSearchInput(newInputValue);
+              }}
               renderInput={(params) => (
-                <OutlinedInput 
+                <TextField 
                   {...params}  
-                  className={ classes.searchBox }
+                  variant="outlined"
               />
               )}
+              className={ classes.searchBox }
             />
           </Box>
-          <Button className={ classes.saerchButton }>
+          <Button 
+            onClick={ onSearchButtonClick }
+            className={ classes.searchButton }
+          >
             { strings.generic.search }
           </Button>
         </Box>
       </>
     );
+  }
+
+
+  /**
+   * Event Handler for search button click
+   */
+  const onSearchButtonClick = () => {
+    if (!pendingPerson) {
+      return;
+    }
+    console.log("onSearchButtonClick: ", pendingPerson)
+
+    dispatch(setPerson(pendingPerson));
   }
 
   /**

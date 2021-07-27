@@ -7,11 +7,12 @@ export const useDrawerContentStyles = makeStyles({
 
   root: {
     display: "flex",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
+    alignItems: "center"
   },
 
   searchBoxContaienr: {
-    position: "relative"
+    position: "relative",
   },
 
   searchIcon: {
@@ -24,15 +25,22 @@ export const useDrawerContentStyles = makeStyles({
   searchBox: {
     height: 40,
     width: 230,
-    borderRadius: 20,
-    fontSize: 14,
-    padding: theme.spacing(1),
-    paddingLeft: theme.spacing(3)
+    "& div div": {
+      height: 40,
+      borderRadius: 20,
+      fontSize: 14,
+      "& input": {
+        padding: `${theme.spacing(1)}px !important`,
+        paddingLeft: `${theme.spacing(4)}px !important`
+      }
+    }
   },
 
-  saerchButton: {
+  searchButton: {
     height: 40,
     width: 75,
+    display: "flex",
+    justifyContent: "center",
     borderRadius: 20,
     color: theme.palette.primary.light,
     backgroundColor: theme.palette.primary.main,
