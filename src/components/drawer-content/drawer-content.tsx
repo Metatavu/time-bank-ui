@@ -5,6 +5,7 @@ import UserInfo from "components/user-info/user-info";
 import { useDrawerContentStyles } from "styles/drawer-content/drawer-content";
 import SearchIcon from '@material-ui/icons/Search';
 import strings from "localization/strings";
+import { PersonDto, TimebankApi } from "generated/client";
 
 /**
  * Component properties
@@ -19,7 +20,23 @@ interface Props {
  */
 const DrawerContent: React.FC<Props> = () => {
   const classes = useDrawerContentStyles();
+  const [ persons, setPersons ] = React.useState<PersonDto[]>([])
 
+  /**
+   * Fetches the person data 
+   */
+  const fetchData = async () => {
+    const timeBankApi = new TimebankApi();
+    timeBankApi.timebankControllerGetPersons()
+    .then(fetchedPersons =>  
+{      console.log("persons fetched: ", fetchedPersons);
+      setPersons(fetchedPersons);}
+    );
+  }
+
+  React.useEffect(() => {
+    fetchData();    
+  }, [])
 
   /**
    * Renders the drawer content 
@@ -31,7 +48,8 @@ const DrawerContent: React.FC<Props> = () => {
           <Box className={ classes.searchBoxContaienr }>
             <SearchIcon className={ classes.searchIcon }/>
             <Autocomplete 
-              options={ [] }
+              options={ persons }
+              getOptionLabel={ person => person.firstName }
               renderInput={(params) => (
                 <OutlinedInput 
                   {...params}  
@@ -57,6 +75,8 @@ const DrawerContent: React.FC<Props> = () => {
       <UserInfo />
     </>
   );
+
+
 }
 
 export default DrawerContent;

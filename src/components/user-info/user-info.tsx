@@ -1,12 +1,19 @@
 import React from "react";
 import { Avatar, Box, Typography } from "@material-ui/core";
 import { useUserInfoStyles } from "styles/user-info/user-info";
+import { selectPerson } from "features/person/person-slice";
+import { useAppSelector } from "app/hooks";
 
 /**
  * User info component
  */
 const UserInfo: React.FC = () => {
   const classes = useUserInfoStyles();
+  const { person } = useAppSelector(selectPerson)
+
+  if(!person) {
+    return null;
+  }
 
   /**
    * Component render
@@ -14,10 +21,16 @@ const UserInfo: React.FC = () => {
   return (
     <Box className={ classes.root }>
       <Box className={ classes.userName }>
-        <Avatar alt="Antti Leppä" >{ "A" }</Avatar>
+        <Avatar alt={ `${person.firstName} + ${person.lastName}` }>
+          { person.firstName.charAt(0) }
+        </Avatar>
         <Box style={{ paddingLeft: 10 }}>
-          <Typography variant="h2">Antti Leppä</Typography>
-          <Typography variant="h6">antti.leppä@metatavu.fi</Typography>
+          <Typography variant="h2">
+            { `${person.firstName} + ${person.lastName}` }
+          </Typography>
+          <Typography variant="h6">
+            { person.email }
+          </Typography>
         </Box>
       </Box>
       <Box className={ classes.userDetail}>
@@ -26,7 +39,7 @@ const UserInfo: React.FC = () => {
             { "User type: " }
           </Typography>
           <Typography variant="h5" style={{ paddingLeft: 10, fontStyle: "italic" }}>
-            { "ADMIN" }
+            { person.userType }
           </Typography>
         </Box>
         <Box className={ classes.userDetailEntry }>
@@ -34,7 +47,7 @@ const UserInfo: React.FC = () => {
             { "Language: " }
           </Typography>
           <Typography variant="h5" style={{ paddingLeft: 10, fontStyle: "italic" }}>
-            { "ENGLISH_UK" }
+            { person.language }
           </Typography>
         </Box>
         <Box className={ classes.date}>
@@ -43,7 +56,7 @@ const UserInfo: React.FC = () => {
               { "createdAt: " }
             </Typography>
             <Typography variant="h6" style={{ paddingLeft: 10, fontStyle: "italic" }}>
-              { "2021-06-11T15:04:43Z" }
+              { person.createdAt }
             </Typography>
           </Box>
           <Box style={{ display: "flex", opacity: 0.6 }}>
@@ -51,7 +64,7 @@ const UserInfo: React.FC = () => {
               { "updatedAt: " }
             </Typography>
             <Typography variant="h6" style={{ paddingLeft: 10, fontStyle: "italic" }}>
-              { "2021-07-22T07:23:11Z" }
+              { person.updatedAt }
             </Typography>
           </Box>
         </Box>
