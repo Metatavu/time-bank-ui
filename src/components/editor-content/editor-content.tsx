@@ -23,7 +23,7 @@ const EditorContent: React.FC<Props> = () => {
   const classes = useEditorContentStyles();
   const dispatch = useAppDispatch();
 
-  const { person, personTotalTime } = useAppSelector(selectPerson)
+  const { person, personTotalTime } = useAppSelector(selectPerson);
 
   /**
    * Fetches the person data 
