@@ -5,7 +5,7 @@ import { selectPerson } from "features/person/person-slice";
 import { useAppSelector } from "app/hooks";
 import strings from "localization/strings";
 import theme from "theme/theme";
-import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
+import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 
 /**
  * User info component
