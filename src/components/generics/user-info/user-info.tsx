@@ -23,14 +23,14 @@ const UserInfo: React.FC = () => {
   const renderUsername = () => {
     return (
       <>
-        <Avatar alt={ `${person.firstName} ${person.lastName}` }>
+        <Avatar alt={ `${person.firstName} ${person.lastName}` } className={ classes.avatar } >
           { person.firstName.charAt(0) }
         </Avatar>
         <Box style={{ paddingLeft: 10 }}>
           <Typography variant="h2">
             { `${person.firstName} ${person.lastName}` }
           </Typography>
-          <Typography variant="h6">
+          <Typography variant="h6" style={{ color: "rgba(0,0,0,0.6)" }} >
             { person.email }
           </Typography>
         </Box>
@@ -87,7 +87,7 @@ const UserInfo: React.FC = () => {
    */
   return (
     <Box className={ classes.root }>
-      <Box className={ classes.userName }>
+      <Box className={ classes.userNameContainer }>
         { renderUsername() }
       </Box>
       <Box className={ classes.userDetail}>

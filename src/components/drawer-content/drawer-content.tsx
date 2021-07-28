@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Button, Divider, OutlinedInput, TextField, Toolbar } from "@material-ui/core";
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import UserInfo from "generics/user-info/user-info";
+import UserInfo from "components/generics/user-info/user-info";
 import { useDrawerContentStyles } from "styles/drawer-content/drawer-content";
 import SearchIcon from '@material-ui/icons/Search';
 import strings from "localization/strings";
