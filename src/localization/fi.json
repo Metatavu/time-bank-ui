@@ -12,6 +12,15 @@
     "select": "Valitse"
   },
 
+  "drawerContent": {
+    "userInfo": {
+      "userType": "TODO:",
+      "language": "TODO:",
+      "createdAt": "TODO:",
+      "updatedAt": "TODO:"
+    }
+  },
+
   "editorContent": {
     "userNotSelected": "TODO",
     "totalWorkTime": "TODO"

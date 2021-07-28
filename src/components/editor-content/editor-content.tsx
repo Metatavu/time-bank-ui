@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Paper, Typography } from "@material-ui/core";
 import Api from "api/api";
-import { useEditorContentStyles } from "styles/editor-content copy/editor-content";
+import { useEditorContentStyles } from "styles/editor-content/editor-content";
 import { useAppSelector } from "app/hooks";
 import { selectPerson } from "features/person/person-slice";
 import strings from "localization/strings";

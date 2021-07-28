@@ -1,8 +1,9 @@
 import React from "react";
 import { Avatar, Box, Typography } from "@material-ui/core";
-import { useUserInfoStyles } from "styles/user-info/user-info";
+import { useUserInfoStyles } from "styles/generics/user-info/user-info";
 import { selectPerson } from "features/person/person-slice";
 import { useAppSelector } from "app/hooks";
+import strings from "localization/strings";
 
 /**
  * User info component
@@ -17,11 +18,11 @@ const UserInfo: React.FC = () => {
   }
 
   /**
-   * Component render
+   * Renders the username section 
    */
-  return (
-    <Box className={ classes.root }>
-      <Box className={ classes.userName }>
+  const renderUsername = () => {
+    return (
+      <>
         <Avatar alt={ `${person.firstName} ${person.lastName}` }>
           { person.firstName.charAt(0) }
         </Avatar>
@@ -33,11 +34,19 @@ const UserInfo: React.FC = () => {
             { person.email }
           </Typography>
         </Box>
-      </Box>
-      <Box className={ classes.userDetail}>
+      </>
+    );
+  }
+
+    /**
+   * Renders the user detail section 
+   */
+  const renderUserDetail = () => {
+    return (
+      <>
         <Box className={ classes.userDetailEntry }>
           <Typography variant="h5" style={{ fontWeight: 600 }}>
-            { "User type: " }
+            { strings.drawerContent.userInfo.userType }
           </Typography>
           <Typography variant="h5" style={{ paddingLeft: 10, fontStyle: "italic" }}>
             { person.userType }
@@ -45,7 +54,7 @@ const UserInfo: React.FC = () => {
         </Box>
         <Box className={ classes.userDetailEntry }>
           <Typography variant="h5" style={{ fontWeight: 600 }}>
-            { "Language: " }
+            { strings.drawerContent.userInfo.language }
           </Typography>
           <Typography variant="h5" style={{ paddingLeft: 10, fontStyle: "italic" }}>
             { person.language }
@@ -54,7 +63,7 @@ const UserInfo: React.FC = () => {
         <Box className={ classes.date}>
           <Box style={{ display: "flex", opacity: 0.6 }}>
             <Typography variant="h6" style={{ fontWeight: 600 }}>
-              { "createdAt: " }
+              { strings.drawerContent.userInfo.createdAt }
             </Typography>
             <Typography variant="h6" style={{ paddingLeft: 10, fontStyle: "italic" }}>
               { person.createdAt.toLocaleString() }
@@ -62,13 +71,27 @@ const UserInfo: React.FC = () => {
           </Box>
           <Box style={{ display: "flex", opacity: 0.6 }}>
             <Typography variant="h6" style={{ fontWeight: 600 }}>
-              { "updatedAt: " }
+              { strings.drawerContent.userInfo.updatedAt }
             </Typography>
             <Typography variant="h6" style={{ paddingLeft: 10, fontStyle: "italic" }}>
               { person.updatedAt.toLocaleString() }
             </Typography>
           </Box>
         </Box>
+      </>
+    );
+  }
+
+  /**
+   * Component render
+   */
+  return (
+    <Box className={ classes.root }>
+      <Box className={ classes.userName }>
+        { renderUsername() }
+      </Box>
+      <Box className={ classes.userDetail}>
+        { renderUserDetail() }
       </Box>
     </Box>
   );

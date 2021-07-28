@@ -23,6 +23,18 @@ export interface IStrings extends LocalizedStringsMethods {
   };
 
   /**
+   * Translations related to drawer content
+   */
+  drawerContent: {
+    userInfo: {
+      userType: string;
+      language: string;
+      createdAt: string;
+      updatedAt: string;
+    }
+  };
+
+  /**
    * Translations related to editor content
    */
   editorContent: {

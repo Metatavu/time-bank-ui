@@ -12,6 +12,15 @@
     "select": "Select"
   },
 
+  "drawerContent": {
+    "userInfo": {
+      "userType": "User type:",
+      "language": "Language:",
+      "createdAt": "Created at:",
+      "updatedAt": "Updated at:"
+    }
+  },
+
   "editorContent": {
     "userNotSelected": "Please select a user first",
     "totalWorkTime": "Total work time"
