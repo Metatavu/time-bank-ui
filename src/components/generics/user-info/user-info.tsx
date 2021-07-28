@@ -64,7 +64,10 @@ const UserInfo: React.FC = () => {
           <Typography variant="h2">
             { `${person.firstName} ${person.lastName}` }
           </Typography>
-          <Typography variant="h6" style={{ color: "rgba(0,0,0,0.6)" }} >
+          <Typography
+            variant="h6"
+            style={{ color: "rgba(0,0,0,0.6)" }}
+          >
             { person.email }
           </Typography>
         </Box>
