@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, Divider, TextField } from "@material-ui/core";
+import { Box, Button, Divider, TextField, Typography } from "@material-ui/core";
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import UserInfo from "components/generics/user-info/user-info";
 import { useDrawerContentStyles } from "styles/drawer-content/drawer-content";
@@ -44,6 +44,24 @@ const DrawerContent: React.FC<Props> = () => {
   }, [])
 
   /**
+   * Renders the autocomplete options 
+   * 
+   * @param person person option to be rendered
+   */
+  const renderOptions = (person: PersonDto) => {
+    return (
+      <Box p={ 0.5 }>
+        <Typography variant="h5">
+          { `${person.firstName} ${person.lastName}` }
+        </Typography>
+        <Typography variant="h6" style={{ color: "rgba(0, 0, 0, 0.6)" }}>
+          { person.email }
+        </Typography>
+      </Box>
+    );
+  }
+
+  /**
    * Renders the search box
    */
   const renderSearchBox = () => {
@@ -54,8 +72,11 @@ const DrawerContent: React.FC<Props> = () => {
           <Autocomplete 
             freeSolo
             options={ persons }
-            getOptionLabel={ person => person.firstName }
             inputValue={ searchInput }
+            getOptionLabel={ person => `${person.firstName} ${person.lastName}` }
+            renderOption={ person => (
+              renderOptions(person)
+            ) }
             onChange={ (event, newValue) => {
               if (typeof newValue === 'string'){
                 return;
