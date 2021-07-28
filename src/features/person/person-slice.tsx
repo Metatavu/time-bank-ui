@@ -2,6 +2,9 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "app/store";
 import { PersonDto, TimeEntryTotalDto } from "generated/client";
 
+/**
+ * Locale state
+ */
 interface LocaleState {
   person?: PersonDto;
   personTotalTime?: TimeEntryTotalDto;
