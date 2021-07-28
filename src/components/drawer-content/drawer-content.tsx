@@ -35,8 +35,7 @@ const DrawerContent: React.FC<Props> = () => {
     const timeBankApi = Api.getTimeBankApi();
     timeBankApi.timebankControllerGetPersons()
     .then(fetchedPersons =>  
-      {setPersons(fetchedPersons)
-      console.log(fetchedPersons)}
+      setPersons(fetchedPersons)
     );
   }
 
