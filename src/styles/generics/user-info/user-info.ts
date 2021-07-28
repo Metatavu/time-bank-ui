@@ -29,10 +29,20 @@ export const useUserInfoStyles = makeStyles({
     margin: "5px 0px"
   },
 
+  userDetailDateEntry: {
+    display: "flex", 
+    opacity: 0.6 
+  },
+
   date: {
     padding: "0px 20px",
     display: "grid",
   },
+
+  infoValue: {
+    paddingLeft: theme.spacing(1), 
+    fontStyle: "italic"
+  }
 
 }, {
   name: "user-info"

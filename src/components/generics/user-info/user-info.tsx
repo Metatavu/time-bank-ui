@@ -4,6 +4,7 @@ import { useUserInfoStyles } from "styles/generics/user-info/user-info";
 import { selectPerson } from "features/person/person-slice";
 import { useAppSelector } from "app/hooks";
 import strings from "localization/strings";
+import { isNamespaceExport } from "typescript";
 
 /**
  * User info component
@@ -38,6 +39,32 @@ const UserInfo: React.FC = () => {
     );
   }
 
+  /**
+   * Renders the username section 
+   * 
+   * @param name name of the subtitle text
+   * @param value value of the subtitle text
+   * @param variant variant of the subtitle text
+   */
+  const renderUserDetailEntry = (name: string, value: string, variant: "h5" | "h6") => {
+    return (
+      <>
+        <Typography 
+          variant={ variant } 
+          style={{ fontWeight: 600 }}
+        >
+          { name }
+        </Typography>
+        <Typography 
+          variant={ variant }
+          className={ classes.infoValue }
+        >
+          { value }
+        </Typography>
+      </>
+    );
+  }
+
     /**
    * Renders the user detail section 
    */
@@ -45,37 +72,17 @@ const UserInfo: React.FC = () => {
     return (
       <>
         <Box className={ classes.userDetailEntry }>
-          <Typography variant="h5" style={{ fontWeight: 600 }}>
-            { strings.drawerContent.userInfo.userType }
-          </Typography>
-          <Typography variant="h5" style={{ paddingLeft: 10, fontStyle: "italic" }}>
-            { person.userType }
-          </Typography>
+          { renderUserDetailEntry(strings.drawerContent.userInfo.userType, person.userType, "h5") }
         </Box>
         <Box className={ classes.userDetailEntry }>
-          <Typography variant="h5" style={{ fontWeight: 600 }}>
-            { strings.drawerContent.userInfo.language }
-          </Typography>
-          <Typography variant="h5" style={{ paddingLeft: 10, fontStyle: "italic" }}>
-            { person.language }
-          </Typography>
+          { renderUserDetailEntry(strings.drawerContent.userInfo.language, person.language, "h5") }
         </Box>
         <Box className={ classes.date}>
-          <Box style={{ display: "flex", opacity: 0.6 }}>
-            <Typography variant="h6" style={{ fontWeight: 600 }}>
-              { strings.drawerContent.userInfo.createdAt }
-            </Typography>
-            <Typography variant="h6" style={{ paddingLeft: 10, fontStyle: "italic" }}>
-              { person.createdAt.toLocaleString() }
-            </Typography>
+          <Box className={ classes.userDetailDateEntry }>
+            { renderUserDetailEntry(strings.drawerContent.userInfo.createdAt, person.createdAt.toLocaleString(), "h6") }
           </Box>
-          <Box style={{ display: "flex", opacity: 0.6 }}>
-            <Typography variant="h6" style={{ fontWeight: 600 }}>
-              { strings.drawerContent.userInfo.updatedAt }
-            </Typography>
-            <Typography variant="h6" style={{ paddingLeft: 10, fontStyle: "italic" }}>
-              { person.updatedAt.toLocaleString() }
-            </Typography>
+          <Box className={ classes.userDetailDateEntry }>
+            { renderUserDetailEntry(strings.drawerContent.userInfo.updatedAt, person.updatedAt.toLocaleString(), "h6") }
           </Box>
         </Box>
       </>
