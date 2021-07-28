@@ -98,10 +98,7 @@ const DrawerContent: React.FC<Props> = () => {
    * @param newValue new value for the pending person 
    */
   const onSearchBoxChange = (newValue: string | PersonDto | null) => {
-    if (typeof newValue === 'string'){
-      return;
-    }
-    setPendingPerson(newValue);
+    typeof newValue !== "string" && setPendingPerson(newValue);    
   }
 
   /**
