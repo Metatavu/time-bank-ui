@@ -3,7 +3,6 @@ import theme from "theme/theme";
 
 export const useUserInfoStyles = makeStyles({
   root: {
-    display: "grid",
     width: "100%"
   },
 
@@ -15,7 +14,6 @@ export const useUserInfoStyles = makeStyles({
 
   userDetail: {
     padding: 10,
-    display: "grid",
   },
 
   avatar: {

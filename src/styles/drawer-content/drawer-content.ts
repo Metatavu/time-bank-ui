@@ -5,7 +5,7 @@ const drawerWidth = 400;
 
 export const useDrawerContentStyles = makeStyles({
 
-  root: {
+  drawerContentContainer: {
     display: "flex",
     alignItems: "center",
     margin: `${theme.spacing(2)}px 0px`,

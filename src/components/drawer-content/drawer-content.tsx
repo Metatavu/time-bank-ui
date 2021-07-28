@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, Divider, OutlinedInput, TextField, Toolbar } from "@material-ui/core";
+import { Box, Button, Divider, TextField } from "@material-ui/core";
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import UserInfo from "components/generics/user-info/user-info";
 import { useDrawerContentStyles } from "styles/drawer-content/drawer-content";
@@ -44,42 +44,42 @@ const DrawerContent: React.FC<Props> = () => {
   }, [])
 
   /**
-   * Renders the drawer content 
+   * Renders the search box
    */
   const renderSearchBox = () => {
     return (
       <>
-          <Box className={ classes.searchBoxContaienr }>
-            <SearchIcon className={ classes.searchIcon }/>
-            <Autocomplete 
-              freeSolo
-              options={ persons }
-              getOptionLabel={ person => person.firstName }
-              inputValue={ searchInput }
-              onChange={ (event, newValue) => {
-                if (typeof newValue === 'string'){
-                  return;
-                }
-                setPendingPerson(newValue);
-              }}
-              onInputChange={ (event, newInputValue) => {
-                setSearchInput(newInputValue);
-              }}
-              renderInput={(params) => (
-                <TextField 
-                  {...params}  
-                  variant="outlined"
+        <Box className={ classes.searchBoxContaienr }>
+          <SearchIcon className={ classes.searchIcon }/>
+          <Autocomplete 
+            freeSolo
+            options={ persons }
+            getOptionLabel={ person => person.firstName }
+            inputValue={ searchInput }
+            onChange={ (event, newValue) => {
+              if (typeof newValue === 'string'){
+                return;
+              }
+              setPendingPerson(newValue);
+            }}
+            onInputChange={ (event, newInputValue) => {
+              setSearchInput(newInputValue);
+            }}
+            renderInput={(params) => (
+              <TextField 
+                {...params}  
+                variant="outlined"
               />
-              )}
-              className={ classes.searchBox }
-            />
-          </Box>
-          <Button 
-            onClick={ onSearchButtonClick }
-            className={ classes.searchButton }
-          >
-            { strings.generic.search }
-          </Button>
+            )}
+            className={ classes.searchBox }
+          />
+        </Box>
+        <Button 
+          onClick={ onSearchButtonClick }
+          className={ classes.searchButton }
+        >
+          { strings.generic.search }
+        </Button>
       </>
     );
   }
@@ -92,7 +92,6 @@ const DrawerContent: React.FC<Props> = () => {
     if (!pendingPerson) {
       return;
     }
-    console.log("onSearchButtonClick: ", pendingPerson)
 
     dispatch(setPerson(pendingPerson));
   }
@@ -102,11 +101,11 @@ const DrawerContent: React.FC<Props> = () => {
    */
   return (
     <>
-      <Box className={ classes.root }>
+      <Box className={ classes.drawerContentContainer }>
         { renderSearchBox() }
       </Box>
       <Divider />
-      <Box className={ classes.root }>
+      <Box className={ classes.drawerContentContainer }>
         <UserInfo />
       </Box>
     </>
