@@ -116,7 +116,7 @@ const UserInfo: React.FC = () => {
     );
   }
 
-    /**
+  /**
    * Renders the user detail section 
    */
   const renderUserDetail = () => {
