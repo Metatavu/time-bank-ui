@@ -96,11 +96,7 @@ const EditorContent: React.FC<Props> = () => {
           elevation={ 3 }
           className={ classes.filterContainer }
         >
-          <Typography
-            style={{
-              fontStyle: "italic",
-            }}
-          >
+          <Typography style={{ fontStyle: "italic" }}>
             { strings.editorContent.userNotSelected }
           </Typography>
         </Paper>
