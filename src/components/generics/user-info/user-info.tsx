@@ -54,7 +54,10 @@ const UserInfo: React.FC = () => {
   const renderUsername = () => {
     return (
       <>
-        <Avatar alt={ `${person.firstName} ${person.lastName}` } className={ classes.avatar } >
+        <Avatar
+          alt={ `${person.firstName} ${person.lastName}` }
+          className={ classes.avatar }
+        >
           { person.firstName.charAt(0) }
         </Avatar>
         <Box style={{ paddingLeft: 10 }}>
