@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from "app/hooks";
 import { selectPerson, setPersonTotalTime } from "features/person/person-slice";
 import strings from "localization/strings";
 import { TimebankControllerGetTotalRetentionEnum } from "generated/client";
+import theme from "theme/theme";
 
 /**
  * Component properties
@@ -45,10 +46,23 @@ const EditorContent: React.FC<Props> = () => {
   }, [person])
 
   /**
+   * Utility method converts time in minute to a string formatted as xhymin 
+   * 
+   * @param mminutes time in minutes
+   * @return formatted string of time 
+   */
+  const timeConverterUtil = (minutes: number): string => {
+    const hour = Math.floor(minutes / 60);
+    const minute = minutes % 60;
+
+    return `${hour}h ${minute}min`;
+  }
+
+  /**
    * Renders the filter subtitle text
    * 
    * @param name name of the subtitle text
-   * @param value namevalue of the subtitle text
+   * @param value value of the subtitle text
    */
   const renderFilterSubtitleText = (name: string, value: number) => {
     return (
@@ -56,7 +70,7 @@ const EditorContent: React.FC<Props> = () => {
         <Typography
           variant="h5"
           style={{
-            marginLeft: 8
+            marginLeft: theme.spacing(2)
           }}
         >
           { name }
@@ -64,11 +78,11 @@ const EditorContent: React.FC<Props> = () => {
         <Typography
           variant="h5"
           style={{
-            marginLeft: 8,
+            marginLeft: theme.spacing(1),
             fontStyle: "italic"
           }}
         >
-          { value.toString() }
+          { timeConverterUtil(value) }
         </Typography>
       </>
     );
@@ -86,7 +100,6 @@ const EditorContent: React.FC<Props> = () => {
           className={ classes.filterContainer }
         >
           <Typography
-            variant="h5"
             style={{
               fontStyle: "italic",
             }}
@@ -105,7 +118,8 @@ const EditorContent: React.FC<Props> = () => {
         <Typography
           variant="h4"
           style={{
-            fontWeight: 600
+            fontWeight: 600,
+            fontStyle: "italic",
           }}
         >
           { strings.editorContent.totalWorkTime }

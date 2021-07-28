@@ -29,8 +29,8 @@
     "totalWorkTime": "Total work time"
   },
 
-  "logged": "Logged",
-  "expected": "Expected",
-  "total": "Total"
+  "logged": "Logged:",
+  "expected": "Expected:",
+  "total": "Total:"
 
 }
