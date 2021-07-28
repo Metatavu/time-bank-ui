@@ -73,7 +73,7 @@ const DrawerContent: React.FC<Props> = () => {
             renderOption={ person => renderOptions(person) }
             onChange={ (event, newValue) => onSearchBoxChange(newValue) }
             onInputChange={ (event, newInputValue) => onSearchBoxInputChange(newInputValue)  }
-            renderInput={(params) => (
+            renderInput={ params => (
               <TextField 
                 {...params}  
                 variant="outlined"
