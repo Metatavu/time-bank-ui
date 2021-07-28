@@ -148,7 +148,7 @@ const UserInfo: React.FC = () => {
       <Box className={ classes.userNameContainer }>
         { renderUsername() }
       </Box>
-      <Box className={ classes.userDetail}>
+      <Box className={ classes.userDetail }>
         { renderUserDetail() }
       </Box>
     </Box>
