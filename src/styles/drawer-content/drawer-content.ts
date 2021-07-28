@@ -7,27 +7,32 @@ export const useDrawerContentStyles = makeStyles({
 
   root: {
     display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center"
+    alignItems: "center",
+    margin: `${theme.spacing(2)}px 0px`,
   },
 
   searchBoxContaienr: {
+    height: 40,
+    flexGrow: 200,
     position: "relative",
   },
 
   searchIcon: {
-    position: "absolute",
     top: "50%",
+    color: "rgba(0, 0, 0, 0.8)",
+    left: theme.spacing(1),
+    position: "absolute",
     transform: "translateY(-50%)",
-    left: theme.spacing(1)
   },
 
   searchBox: {
-    height: 40,
-    width: 230,
+    height: "100%",
+    width: "100%",
     "& div div": {
       height: 40,
+      border: 4,
       borderRadius: 20,
+      boxShadow: "0 4px 4px 0 rgba(0,0,0,0.05)",
       fontSize: 14,
       "& input": {
         padding: `${theme.spacing(1)}px !important`,
@@ -39,11 +44,12 @@ export const useDrawerContentStyles = makeStyles({
   searchButton: {
     height: 40,
     width: 75,
+    marginLeft: theme.spacing(1),
     display: "flex",
     justifyContent: "center",
-    borderRadius: 20,
-    color: theme.palette.primary.light,
-    backgroundColor: theme.palette.primary.main,
+    "& .MuiButton-label": {
+      fontSize: 12,
+    },
   }
 
 }, {

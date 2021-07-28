@@ -33,10 +33,10 @@ const DrawerContent: React.FC<Props> = () => {
    */
   const fetchData = async () => {
     const timeBankApi = Api.getTimeBankApi();
-    timeBankApi.timebankControllerGetPersons()
-    .then(fetchedPersons =>  
-      setPersons(fetchedPersons)
-    );
+    // timeBankApi.timebankControllerGetPersons()
+    // .then(fetchedPersons =>  
+    //   setPersons(fetchedPersons)
+    // );
   }
 
   React.useEffect(() => {
@@ -49,7 +49,6 @@ const DrawerContent: React.FC<Props> = () => {
   const renderSearchBox = () => {
     return (
       <>
-        <Box className={ classes.root }>
           <Box className={ classes.searchBoxContaienr }>
             <SearchIcon className={ classes.searchIcon }/>
             <Autocomplete 
@@ -81,7 +80,6 @@ const DrawerContent: React.FC<Props> = () => {
           >
             { strings.generic.search }
           </Button>
-        </Box>
       </>
     );
   }
@@ -104,9 +102,13 @@ const DrawerContent: React.FC<Props> = () => {
    */
   return (
     <>
-      <Toolbar />
-      { renderSearchBox() }
-      <UserInfo />
+      <Box className={ classes.root }>
+        { renderSearchBox() }
+      </Box>
+      <Divider />
+      <Box className={ classes.root }>
+        <UserInfo />
+      </Box>
     </>
   );
 

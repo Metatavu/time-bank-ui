@@ -100,11 +100,17 @@ export default createMuiTheme({
     },
     MuiButton: {
       root: {
-        borderRadius: 0,
-        fontWeight: 500,
+        fontWeight: 600,
+        borderRadius: 20,
+        color: "#fff",
+        backgroundColor: "#000",
         [breakpoints.down(460)]: {
           height: 46,
           width: "100%"
+        },
+        "&:hover": {
+          color: "#fff",
+          backgroundColor: "#000",
         }
       },
       text: {
