@@ -1,9 +1,9 @@
 import React from "react";
 import { Box, Button, Divider, TextField, Typography } from "@material-ui/core";
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Autocomplete from "@material-ui/lab/Autocomplete";
 import UserInfo from "components/generics/user-info/user-info";
 import { useDrawerContentStyles } from "styles/drawer-content/drawer-content";
-import SearchIcon from '@material-ui/icons/Search';
+import SearchIcon from "@material-ui/icons/Search";
 import strings from "localization/strings";
 import { PersonDto } from "generated/client";
 import Api from "api/api";
