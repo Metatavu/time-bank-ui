@@ -74,18 +74,9 @@ const DrawerContent: React.FC<Props> = () => {
             options={ persons }
             inputValue={ searchInput }
             getOptionLabel={ person => `${person.firstName} ${person.lastName}` }
-            renderOption={ person => (
-              renderOptions(person)
-            ) }
-            onChange={ (event, newValue) => {
-              if (typeof newValue === 'string'){
-                return;
-              }
-              setPendingPerson(newValue);
-            }}
-            onInputChange={ (event, newInputValue) => {
-              setSearchInput(newInputValue);
-            }}
+            renderOption={ person => renderOptions(person) }
+            onChange={ (event, newValue) => onSearchBoxChange(newValue) }
+            onInputChange={ (event, newInputValue) => onSearchBoxInputChange(newInputValue)  }
             renderInput={(params) => (
               <TextField 
                 {...params}  
@@ -105,6 +96,26 @@ const DrawerContent: React.FC<Props> = () => {
     );
   }
 
+  /**
+   * Event Handler for autocomplete value change
+   * 
+   * @param newValue new value for the pending person 
+   */
+  const onSearchBoxChange = (newValue: string | PersonDto | null) => {
+    if (typeof newValue === 'string'){
+      return;
+    }
+    setPendingPerson(newValue);
+  }
+
+  /**
+   * Event Handler for autocomplete input change
+   * 
+   * @param newValue new input value
+   */
+  const onSearchBoxInputChange = (newValue: string) => {
+    setSearchInput(newValue);
+  }
 
   /**
    * Event Handler for search button click
@@ -131,8 +142,6 @@ const DrawerContent: React.FC<Props> = () => {
       </Box>
     </>
   );
-
-
 }
 
 export default DrawerContent;

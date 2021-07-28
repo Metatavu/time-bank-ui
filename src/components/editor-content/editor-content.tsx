@@ -92,7 +92,6 @@ const EditorContent: React.FC<Props> = () => {
    * Renders the filter component
    */
   const renderFilter = () => {
-
     if (!personTotalTime) {
       return (
         <Paper 
