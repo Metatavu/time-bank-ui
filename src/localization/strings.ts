@@ -8,6 +8,13 @@ import fi from "./fi.json";
 export interface IStrings extends LocalizedStringsMethods {
 
   /**
+   * Translations related to header words
+   */
+  header: {
+    title: string;
+  }
+
+  /**
    * Translations related to generic words
    */
   generic: {

@@ -1,6 +1,8 @@
 import React from "react";
-import { AppBar, Box, Drawer, Toolbar } from "@material-ui/core";
+import { AppBar, Box, Drawer, Toolbar, Typography } from "@material-ui/core";
 import { useAppLayoutStyles } from "styles/layouts/app-layout";
+import siteloge from "../../gfx/Metatavu-icon.svg";
+import strings from "localization/strings";
 
 /**
  * Component properties
@@ -19,15 +21,29 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, editorCo
   const classes = useAppLayoutStyles();
 
   /**
+   * Renders the header component 
+   */
+  const renderHeader = () => {
+    return (
+      <AppBar style={{ zIndex: 1201 }}>
+        <Toolbar>
+          <Box className={ classes.titleContainer }>
+            <img src={ siteloge } className={ classes.logo }/>
+            <Typography className={ classes.title }>
+              { strings.header.title }
+            </Typography>
+          </Box>
+        </Toolbar>
+      </AppBar>
+    );
+  }
+
+  /**
    * Component render
    */
   return (
     <Box className={ classes.root }>
-      <AppBar style={{ zIndex: 1201 }}>
-        <Toolbar>
-          
-        </Toolbar>
-      </AppBar>
+      { renderHeader() }
       <Drawer
         variant="permanent"
         className={ classes.drawer }

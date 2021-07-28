@@ -27,6 +27,23 @@ export const useAppLayoutStyles = makeStyles({
   content: {
     backgroundColor: theme.palette.background.default,
     flexGrow: 1
+  },
+
+  titleContainer: {
+    display: "flex",
+    alignItems: "center"
+  },
+
+  title: {
+    marginLeft: theme.spacing(2),
+    fontSize: 18,
+    fontWeight: 600, 
+  },
+
+  logo: {
+    maxHeight: 76,
+    marginLeft: 15,
+    padding: 5
   }
 
 }, {
