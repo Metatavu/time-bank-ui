@@ -128,7 +128,7 @@ const UserInfo: React.FC = () => {
         <Box className={ classes.userDetailEntry }>
           { renderUserDetailEntry(strings.drawerContent.userInfo.language, person.language, "h5") }
         </Box>
-        <Box className={ classes.date}>
+        <Box className={ classes.date }>
           <Box className={ classes.userDetailDateEntry }>
             { renderUserDetailEntry(strings.drawerContent.userInfo.createdAt, person.createdAt.toLocaleString(), "h6") }
           </Box>
