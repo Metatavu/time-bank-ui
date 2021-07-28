@@ -22,6 +22,18 @@ export interface IStrings extends LocalizedStringsMethods {
     select: string;
   };
 
+  /**
+   * Translations related to editor content
+   */
+  editorContent: {
+    userNotSelected: string;
+    totalWorkTime: string;
+  };
+
+  logged: string;
+  expected: string;
+  total: string;
+
 }
 
 const strings: IStrings = new LocalizedStrings({ en, fi });

@@ -10,6 +10,15 @@
     "search": "Search",
     "language": "Language",
     "select": "Select"
-  }
+  },
+
+  "editorContent": {
+    "userNotSelected": "Please select a user first",
+    "totalWorkTime": "Total work time"
+  },
+
+  "logged": "Logged",
+  "expected": "Expected",
+  "total": "Total"
 
 }

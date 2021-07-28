@@ -1,16 +1,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "app/store";
-import { PersonDto } from "generated/client";
+import { PersonDto, TimeEntryTotalDto } from "generated/client";
 
 interface LocaleState {
   person?: PersonDto;
+  personTotalTime?: TimeEntryTotalDto;
 }
 
 /**
  * Initial person state
  */
 const initialState: LocaleState = {
-  person: undefined
+  person: undefined,
+  personTotalTime: undefined
 };
 
 /**
@@ -22,6 +24,9 @@ export const personSlice = createSlice({
   reducers: {
     setPerson: (state, { payload }: PayloadAction<PersonDto>) => {
       state.person = payload;
+    },
+    setPersonTotalTime: (state, { payload }: PayloadAction<TimeEntryTotalDto>) => {
+      state.personTotalTime = payload;
     }
   }
 });
@@ -29,7 +34,7 @@ export const personSlice = createSlice({
 /**
  * Person actions from created person slice
  */
-export const { setPerson } = personSlice.actions;
+export const { setPerson, setPersonTotalTime } = personSlice.actions;
 
 /**
  * Select person selector

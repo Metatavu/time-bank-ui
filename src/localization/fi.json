@@ -10,6 +10,15 @@
     "search": "Haku",
     "language": "Kieli",
     "select": "Valitse"
-  }
+  },
+
+  "editorContent": {
+    "userNotSelected": "TODO",
+    "totalWorkTime": "TODO"
+  },
+
+  "logged": "TODO",
+  "expected": "TODO",
+  "total": "TODO"
 
 }

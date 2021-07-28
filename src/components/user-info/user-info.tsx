@@ -7,7 +7,7 @@ import { useAppSelector } from "app/hooks";
 /**
  * User info component
  */
-const UserInfo: React.FC = ({}) => {
+const UserInfo: React.FC = () => {
 
   const classes = useUserInfoStyles();
   const { person } = useAppSelector(selectPerson)
