@@ -17,6 +17,9 @@
 
   "drawerContent": {
     "userInfo": {
+      "id": "id",
+      "active": "active",
+      "inactive": "inactive",
       "userType": "User type:",
       "language": "Language:",
       "createdAt": "Created at:",

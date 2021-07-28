@@ -1,6 +1,6 @@
 {
   "header": {
-    "title": "TODO"
+    "title": "Aikapankki"
   },
 
   "generic": {
@@ -17,20 +17,23 @@
 
   "drawerContent": {
     "userInfo": {
-      "userType": "TODO:",
-      "language": "TODO:",
-      "createdAt": "TODO:",
-      "updatedAt": "TODO:"
+      "id": "tunniste",
+      "active": "aktiivinen",
+      "inactive": "ei-aktiivinen",
+      "userType": "käyttäjän tyyppi:",
+      "language": "Kieli:",
+      "createdAt": "Luotu:",
+      "updatedAt": "Päivitetty:"
     }
   },
 
   "editorContent": {
-    "userNotSelected": "TODO",
-    "totalWorkTime": "TODO"
+    "userNotSelected": "Valitse käyttäjä ensin",
+    "totalWorkTime": "Työaika"
   },
 
-  "logged": "TODO",
-  "expected": "TODO",
-  "total": "TODO"
+  "logged": "Kirjattu: ",
+  "expected": "Odotettu: ",
+  "total": "Yhteensä: "
 
 }

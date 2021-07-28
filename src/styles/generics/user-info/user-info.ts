@@ -7,13 +7,20 @@ export const useUserInfoStyles = makeStyles({
   },
 
   userNameContainer: {
-    padding: 10,
+    padding: `${theme.spacing(1.5)}px 0px`,
     display: "flex",
     alignItems: "center"
   },
 
   userDetail: {
     padding: 10,
+  },
+
+  status: {
+    marginLeft: "auto",
+    minWidth: 60,
+    height: "100%",
+    paddingLeft: theme.spacing(1)
   },
 
   avatar: {
