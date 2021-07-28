@@ -43,7 +43,7 @@ const EditorContent: React.FC<Props> = () => {
 
   React.useEffect(() => {
     fetchData();    
-  }, [person])
+  }, [ person ]);
 
   /**
    * Utility method converts time in minute to a string formatted as xhymin 
