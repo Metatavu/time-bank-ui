@@ -114,11 +114,7 @@ const DrawerContent: React.FC<Props> = () => {
    * Event Handler for search button click
    */
   const onSearchButtonClick = () => {
-    if (!pendingPerson) {
-      return;
-    }
-
-    dispatch(setPerson(pendingPerson));
+    pendingPerson && dispatch(setPerson(pendingPerson));
   }
 
   /**
