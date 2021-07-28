@@ -33,10 +33,10 @@ const DrawerContent: React.FC<Props> = () => {
    */
   const fetchData = async () => {
     const timeBankApi = Api.getTimeBankApi();
-    // timeBankApi.timebankControllerGetPersons()
-    // .then(fetchedPersons =>  
-    //   setPersons(fetchedPersons)
-    // );
+    timeBankApi.timebankControllerGetPersons()
+    .then(fetchedPersons =>  
+      setPersons(fetchedPersons)
+    );
   }
 
   React.useEffect(() => {

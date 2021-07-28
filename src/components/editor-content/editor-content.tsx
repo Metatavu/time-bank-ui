@@ -2,9 +2,10 @@ import React from "react";
 import { Box, Paper, Typography } from "@material-ui/core";
 import Api from "api/api";
 import { useEditorContentStyles } from "styles/editor-content/editor-content";
-import { useAppSelector } from "app/hooks";
-import { selectPerson } from "features/person/person-slice";
+import { useAppDispatch, useAppSelector } from "app/hooks";
+import { selectPerson, setPersonTotalTime } from "features/person/person-slice";
 import strings from "localization/strings";
+import { TimebankControllerGetTotalRetentionEnum } from "generated/client";
 
 /**
  * Component properties
@@ -19,6 +20,7 @@ interface Props {
  */
 const EditorContent: React.FC<Props> = () => {
   const classes = useEditorContentStyles();
+  const dispatch = useAppDispatch();
 
   const { person, personTotalTime } = useAppSelector(selectPerson)
 
@@ -26,13 +28,21 @@ const EditorContent: React.FC<Props> = () => {
    * Fetches the person data 
    */
   const fetchData = async () => {
-    const timeBankApi = Api.getTimeBankApi();
-    // TODO
+    if (person && person.id) {
+      const timeBankApi = Api.getTimeBankApi();
+      timeBankApi.timebankControllerGetTotal({
+        personId: person.id.toString(),
+        retention: TimebankControllerGetTotalRetentionEnum.ALLTIME
+      })
+      .then(fetchedPersonTotalTime => 
+        dispatch(setPersonTotalTime(fetchedPersonTotalTime[0]))
+      );
+    }
   }
 
   React.useEffect(() => {
     fetchData();    
-  }, [])
+  }, [person])
 
   /**
    * Renders the filter subtitle text
@@ -44,7 +54,7 @@ const EditorContent: React.FC<Props> = () => {
     return (
       <>
         <Typography
-          variant="h4"
+          variant="h5"
           style={{
             marginLeft: 8
           }}
@@ -52,9 +62,10 @@ const EditorContent: React.FC<Props> = () => {
           { name }
         </Typography>
         <Typography
-          variant="h4"
+          variant="h5"
           style={{
-            marginLeft: 8
+            marginLeft: 8,
+            fontStyle: "italic"
           }}
         >
           { value.toString() }
@@ -67,34 +78,41 @@ const EditorContent: React.FC<Props> = () => {
    * Renders the filter component
    */
   const renderFilter = () => {
-    return (
-      <Paper 
-        elevation={ 3 }
-        className={ classes.filterContainer }
-      >
-        { personTotalTime ? (<Box>
-            <Typography
-              variant="h4"
-              style={{
-                fontWeight: 600
-              }}
-            >
-              { strings.editorContent.totalWorkTime }
-            </Typography>
-            { renderFilterSubtitleText(strings.logged, personTotalTime.logged) }
-            { renderFilterSubtitleText(strings.expected, personTotalTime.expected) }
-            { renderFilterSubtitleText(strings.total, personTotalTime.total) }
-          </Box>) : (
+
+    if (!personTotalTime) {
+      return (
+        <Paper 
+          elevation={ 3 }
+          className={ classes.filterContainer }
+        >
           <Typography
             variant="h5"
             style={{
               fontStyle: "italic",
             }}
           >
-              { strings.editorContent.userNotSelected }
-            </Typography>
-          )
-        }
+            { strings.editorContent.userNotSelected }
+          </Typography>
+        </Paper>
+      );
+    }
+
+    return (
+      <Paper 
+        elevation={ 3 }
+        className={ classes.filterContainer }
+      >
+        <Typography
+          variant="h4"
+          style={{
+            fontWeight: 600
+          }}
+        >
+          { strings.editorContent.totalWorkTime }
+        </Typography>
+        { renderFilterSubtitleText(strings.logged, personTotalTime.logged) }
+        { renderFilterSubtitleText(strings.expected, personTotalTime.expected) }
+        { renderFilterSubtitleText(strings.total, personTotalTime.total) }
       </Paper>
     );
   }
@@ -103,6 +121,10 @@ const EditorContent: React.FC<Props> = () => {
    * Renders the filter component
    */
   const renderOverview = () => {
+    if (!personTotalTime) {
+      return null;
+    }
+
     return (
       <Paper 
         elevation={ 3 }
@@ -118,7 +140,8 @@ const EditorContent: React.FC<Props> = () => {
   return (
     <>
       { renderFilter() }
-      { renderOverview() }
+      {/* TODO */}
+      {/* { renderOverview() } */}
     </>
   );
 
