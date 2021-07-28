@@ -12,7 +12,7 @@ import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
  */
 const UserInfo: React.FC = () => {
   const classes = useUserInfoStyles();
-  const { person } = useAppSelector(selectPerson)
+  const { person } = useAppSelector(selectPerson);
 
   if(!person) {
     return null;
