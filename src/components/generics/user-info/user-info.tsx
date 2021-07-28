@@ -14,7 +14,7 @@ const UserInfo: React.FC = () => {
   const classes = useUserInfoStyles();
   const { person } = useAppSelector(selectPerson);
 
-  if(!person) {
+  if (!person) {
     return null;
   }
 
