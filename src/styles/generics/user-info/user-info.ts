@@ -2,6 +2,7 @@ import { makeStyles } from "@material-ui/core";
 import theme from "theme/theme";
 
 export const useUserInfoStyles = makeStyles({
+
   root: {
     width: "100%"
   },
