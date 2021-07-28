@@ -30,14 +30,14 @@ const EditorContent: React.FC<Props> = () => {
    */
   const fetchData = async () => {
     if (person && person.id) {
-      const timeBankApi = Api.getTimeBankApi();
-      timeBankApi.timebankControllerGetTotal({
-        personId: person.id.toString(),
-        retention: TimebankControllerGetTotalRetentionEnum.ALLTIME
-      })
-      .then(fetchedPersonTotalTime => 
-        dispatch(setPersonTotalTime(fetchedPersonTotalTime[0]))
-      );
+      Api.getTimeBankApi()
+        .timebankControllerGetTotal({
+          personId: person.id.toString(),
+          retention: TimebankControllerGetTotalRetentionEnum.ALLTIME
+        })
+        .then(fetchedPersonTotalTime =>
+          dispatch(setPersonTotalTime(fetchedPersonTotalTime[0]))
+        );
     }
   }
 
