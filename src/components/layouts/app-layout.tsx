@@ -1,7 +1,7 @@
 import React from "react";
 import { AppBar, Box, Drawer, Toolbar, Typography } from "@material-ui/core";
 import { useAppLayoutStyles } from "styles/layouts/app-layout";
-import siteloge from "../../gfx/Metatavu-icon.svg";
+import siteLogo from "../../gfx/Metatavu-icon.svg";
 import strings from "localization/strings";
 
 /**
