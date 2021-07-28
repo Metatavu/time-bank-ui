@@ -26,7 +26,10 @@ export const useDrawerContentStyles = makeStyles({
   searchBox: {
     height: "100%",
     width: "100%",
-    "& div div": {
+  },
+
+  inputBox: {
+    "& .MuiInputBase-root": {
       height: 40,
       borderRadius: 20,
       boxShadow: "0 4px 4px 0 rgba(0,0,0,0.05)",

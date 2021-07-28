@@ -21,7 +21,10 @@ export const useAppLayoutStyles = makeStyles({
   drawerPaper: {
     width: drawerWidth,
     backgroundColor: theme.palette.background.paper,
-    boxShadow: "0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19)"
+    boxShadow: `
+      0 10px 16px 0 rgba(0,0,0,0.2),
+      0 6px 20px 0 rgba(0,0,0,0.19)
+    `
   },
 
   content: {

@@ -77,6 +77,7 @@ const DrawerContent: React.FC<Props> = () => {
               <TextField 
                 { ...params }
                 variant="outlined"
+                className={ classes.inputBox }
               />
             )}
             className={ classes.searchBox }
