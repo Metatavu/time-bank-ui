@@ -70,7 +70,7 @@ const DrawerContent: React.FC<Props> = () => {
             options={ persons }
             inputValue={ searchInput }
             getOptionLabel={ person => `${person.firstName} ${person.lastName}` }
-            renderOption={ person => renderOptions(person) }
+            renderOption={ renderOptions }
             onChange={ (event, newValue) => onSearchBoxChange(newValue) }
             onInputChange={ (event, newInputValue) => onSearchBoxInputChange(newInputValue)  }
             renderInput={ params => (
