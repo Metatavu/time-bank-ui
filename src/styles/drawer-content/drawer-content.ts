@@ -1,8 +1,6 @@
 import { makeStyles } from "@material-ui/core";
 import theme from "theme/theme";
 
-const drawerWidth = 400;
-
 export const useDrawerContentStyles = makeStyles({
 
   drawerContentContainer: {
@@ -30,7 +28,6 @@ export const useDrawerContentStyles = makeStyles({
     width: "100%",
     "& div div": {
       height: 40,
-      border: 4,
       borderRadius: 20,
       boxShadow: "0 4px 4px 0 rgba(0,0,0,0.05)",
       fontSize: 14,
