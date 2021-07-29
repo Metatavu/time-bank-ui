@@ -77,12 +77,13 @@ const DrawerContent: React.FC<Props> = () => {
               <TextField 
                 { ...params }
                 variant="outlined"
-                InputProps={{
-                  className: classes.inputBox
-                }}
               />
             )}
-            className={ classes.searchBox }
+            classes={{ 
+              root: classes.searchBox,
+              inputRoot: classes.inputRoot,
+              input: classes.input
+            }}
           />
         </Box>
         <Button 

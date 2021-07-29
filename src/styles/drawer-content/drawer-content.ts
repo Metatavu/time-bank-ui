@@ -28,15 +28,15 @@ export const useDrawerContentStyles = makeStyles({
     width: "100%",
   },
 
-  inputBox: {
+  inputRoot: {
     height: 40,
     borderRadius: 20,
     boxShadow: "0 4px 4px 0 rgba(0,0,0,0.05)",
     fontSize: 14,
-    "& .MuiOutlinedInput-input": {
-      padding: `${theme.spacing(1)}px !important`,
-      paddingLeft: `${theme.spacing(4)}px !important`
-    }
+  },
+
+  input: {
+    paddingLeft: `${theme.spacing(4)}px !important`
   },
 
   searchButton: {
