@@ -19,9 +19,12 @@ export const useUserInfoStyles = makeStyles({
 
   status: {
     marginLeft: "auto",
-    minWidth: 60,
+    minWidth: 75,
     height: "100%",
-    paddingLeft: theme.spacing(1)
+    paddingLeft: theme.spacing(1),
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
   },
 
   avatar: {
