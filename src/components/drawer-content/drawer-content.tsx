@@ -163,7 +163,7 @@ const DrawerContent: React.FC<Props> = () => {
             id="panel1a-header"
           >
             <Typography variant="h4" style={{ fontWeight: 600 }}>
-              { "Total" }
+              { strings.drawerContent.statistics }
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -194,12 +194,12 @@ const DrawerContent: React.FC<Props> = () => {
       <>
         <Accordion className={ classes.drawerAccordin }>
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
+            expandIcon={ <ExpandMoreIcon /> }
             aria-controls="panel1a-content"
             id="panel1a-header"
             >
             <Typography variant="h4" style={{ fontWeight: 600 }}>
-              { "Expected" }
+              { strings.drawerContent.expected }
             </Typography>
           </AccordionSummary>
           <AccordionDetails>

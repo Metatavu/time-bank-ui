@@ -24,12 +24,14 @@
       "language": "Language:",
       "createdAt": "Created at:",
       "updatedAt": "Updated at:"
-    }
+    },
+    "statistics": "Statistics",
+    "expected": "Expected"
   },
 
   "editorContent": {
     "userNotSelected": "Please select a user first",
-    "totalWorkTime": "Total work time"
+    "workTime": "Work time"
   },
 
   "logged": "Logged:",

@@ -1,11 +1,9 @@
 import React from "react";
 import { Box, Paper, Typography } from "@material-ui/core";
-import Api from "api/api";
 import { useEditorContentStyles } from "styles/editor-content/editor-content";
 import { useAppDispatch, useAppSelector } from "app/hooks";
-import { selectPerson, setPersonTotalTime } from "features/person/person-slice";
+import { selectPerson } from "features/person/person-slice";
 import strings from "localization/strings";
-import { TimebankControllerGetTotalRetentionEnum } from "generated/client";
 import theme from "theme/theme";
 import TimeUtils from "utils/time-utils";
 
@@ -83,7 +81,7 @@ const EditorContent: React.FC<Props> = () => {
             fontStyle: "italic",
           }}
         >
-          { strings.editorContent.totalWorkTime }
+          { strings.editorContent.workTime }
         </Typography>
         { renderFilterSubtitleText(strings.logged, personTotalTime.logged) }
         { renderFilterSubtitleText(strings.expected, personTotalTime.expected) }
