@@ -8,6 +8,13 @@ import fi from "./fi.json";
 export interface IStrings extends LocalizedStringsMethods {
 
   /**
+   * Translations related to header words
+   */
+  header: {
+    title: string;
+  }
+
+  /**
    * Translations related to generic words
    */
   generic: {
@@ -21,6 +28,33 @@ export interface IStrings extends LocalizedStringsMethods {
     language: string;
     select: string;
   };
+
+  /**
+   * Translations related to drawer content
+   */
+  drawerContent: {
+    userInfo: {
+      id: string;
+      active: string;
+      inactive: string;
+      userType: string;
+      language: string;
+      createdAt: string;
+      updatedAt: string;
+    }
+  };
+
+  /**
+   * Translations related to editor content
+   */
+  editorContent: {
+    userNotSelected: string;
+    totalWorkTime: string;
+  };
+
+  logged: string;
+  expected: string;
+  total: string;
 
 }
 

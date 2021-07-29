@@ -6,11 +6,10 @@ export default createMuiTheme({
 
   palette: {
     primary: {
-      main: "#002D66",
-      light: "#3E55BD"
+      main: "#000000",
     },
     secondary: {
-      main: "#F17446",
+      main: "#F9473B",
       light: "#39a849"
     },
     text: {
@@ -18,8 +17,8 @@ export default createMuiTheme({
       secondary: "#ffffff"
     },
     background: {
-      default: "#ffffff",
-      paper: "rgba(218,219,205,1)"
+      default: "#E0E0E0",
+      paper: "#ffffff"
     }
   },
 
@@ -84,10 +83,12 @@ export default createMuiTheme({
     },
     MuiAppBar: {
       root: {
-        backgroundColor: "#fff",
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between"
+      },
+      colorPrimary: {
+        backgroundColor: "#000"
       }
     },
     MuiToolbar: {
@@ -98,11 +99,17 @@ export default createMuiTheme({
     },
     MuiButton: {
       root: {
-        borderRadius: 0,
-        fontWeight: 500,
+        fontWeight: 600,
+        borderRadius: 20,
+        color: "#fff",
+        backgroundColor: "#000",
         [breakpoints.down(460)]: {
           height: 46,
           width: "100%"
+        },
+        "&:hover": {
+          color: "#fff",
+          backgroundColor: "#000",
         }
       },
       text: {

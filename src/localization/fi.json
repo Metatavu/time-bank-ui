@@ -1,4 +1,7 @@
 {
+  "header": {
+    "title": "Aikapankki"
+  },
 
   "generic": {
     "add": "Lisää",
@@ -10,6 +13,27 @@
     "search": "Haku",
     "language": "Kieli",
     "select": "Valitse"
-  }
+  },
+
+  "drawerContent": {
+    "userInfo": {
+      "id": "tunniste",
+      "active": "aktiivinen",
+      "inactive": "ei-aktiivinen",
+      "userType": "käyttäjän tyyppi:",
+      "language": "Kieli:",
+      "createdAt": "Luotu:",
+      "updatedAt": "Päivitetty:"
+    }
+  },
+
+  "editorContent": {
+    "userNotSelected": "Valitse ensin käyttäjä",
+    "totalWorkTime": "Työaika"
+  },
+
+  "logged": "Kirjattu: ",
+  "expected": "Odotettu: ",
+  "total": "Yhteensä: "
 
 }
