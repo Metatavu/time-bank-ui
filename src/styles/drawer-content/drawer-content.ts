@@ -29,15 +29,13 @@ export const useDrawerContentStyles = makeStyles({
   },
 
   inputBox: {
-    "& .MuiInputBase-root": {
-      height: 40,
-      borderRadius: 20,
-      boxShadow: "0 4px 4px 0 rgba(0,0,0,0.05)",
-      fontSize: 14,
-      "& input": {
-        padding: `${theme.spacing(1)}px !important`,
-        paddingLeft: `${theme.spacing(4)}px !important`
-      }
+    height: 40,
+    borderRadius: 20,
+    boxShadow: "0 4px 4px 0 rgba(0,0,0,0.05)",
+    fontSize: 14,
+    "& .MuiOutlinedInput-input": {
+      padding: `${theme.spacing(1)}px !important`,
+      paddingLeft: `${theme.spacing(4)}px !important`
     }
   },
 
