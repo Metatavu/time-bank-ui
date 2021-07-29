@@ -7,6 +7,7 @@ import { selectPerson, setPersonTotalTime } from "features/person/person-slice";
 import strings from "localization/strings";
 import { TimebankControllerGetTotalRetentionEnum } from "generated/client";
 import theme from "theme/theme";
+import TimeUtils from "utils/time-utils";
 
 /**
  * Component properties
@@ -24,19 +25,6 @@ const EditorContent: React.FC<Props> = () => {
   const dispatch = useAppDispatch();
 
   const { person, personTotalTime } = useAppSelector(selectPerson);
-
-  /**
-   * Utility method converts time in minute to a string formatted as xhymin 
-   * 
-   * @param mminutes time in minutes
-   * @return formatted string of time 
-   */
-  const timeConverterUtil = (minutes: number): string => {
-    const hour = Math.floor(minutes / 60);
-    const minute = Math.abs(minutes % 60);
-
-    return `${hour}h ${minute}min`;
-  }
 
   /**
    * Renders the filter subtitle text
@@ -60,7 +48,7 @@ const EditorContent: React.FC<Props> = () => {
             fontStyle: "italic"
           }}
         >
-          { timeConverterUtil(value) }
+          { TimeUtils.minuteToHourString(value) }
         </Typography>
       </>
     );

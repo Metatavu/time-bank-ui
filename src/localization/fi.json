@@ -34,6 +34,13 @@
 
   "logged": "Kirjattu: ",
   "expected": "Odotettu: ",
-  "total": "Yhteensä: "
+  "total": "Yhteensä: ",
+  "sunday": "Sunnuntai",
+  "monday": "Maanantai",
+  "tuesday": "Tiistai",
+  "wednesday": "Keskiviikko",
+  "thursday": "Torstai",
+  "friday": "Perjantai",
+  "saturday": "Lauantai"
 
 }

@@ -34,6 +34,13 @@
 
   "logged": "Logged:",
   "expected": "Expected:",
-  "total": "Total:"
+  "total": "Total:",
+  "sunday": "Sunday",
+  "monday": "Monday",
+  "tuesday": "Tuseday",
+  "wednesday": "Wednesday",
+  "thursday": "Thursday",
+  "friday": "Friday",
+  "saturday": "Saturday"
 
 }

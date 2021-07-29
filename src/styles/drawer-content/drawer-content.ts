@@ -9,11 +9,10 @@ export const useDrawerContentStyles = makeStyles({
     margin: `${theme.spacing(2)}px 0px`,
   },
 
-  drawerContentContainer: {
+  drawerUserInfoContainer: {
     display: "flex",
     alignItems: "center",
-    flexDirection: "column",
-    margin: `0px ${theme.spacing(1.5)}px`,
+    margin: theme.spacing(2),
   },
 
   searchBoxContaienr: {
@@ -33,6 +32,16 @@ export const useDrawerContentStyles = makeStyles({
   searchBox: {
     height: "100%",
     width: "100%",
+  },
+
+  drawerAccordin: {
+    boxShadow: "none"
+  },
+
+  accordinRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    marginBottom: theme.spacing(1)
   },
 
   inputRoot: {

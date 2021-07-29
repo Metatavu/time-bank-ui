@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, Divider, TextField, Typography } from "@material-ui/core";
+import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Divider, TextField, Typography } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import UserInfo from "components/generics/user-info/user-info";
 import { useDrawerContentStyles } from "styles/drawer-content/drawer-content";
@@ -9,6 +9,9 @@ import { PersonDto, TimebankControllerGetTotalRetentionEnum } from "generated/cl
 import Api from "api/api";
 import { selectPerson, setPerson, setPersonTotalTime } from "features/person/person-slice";
 import { useAppDispatch, useAppSelector } from "app/hooks";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import TimeUtils from "utils/time-utils";
+import theme from "theme/theme";
 
 /**
  * Component properties
@@ -119,6 +122,107 @@ const DrawerContent: React.FC<Props> = () => {
   }
 
   /**
+   * Renders the Total work time section
+   * 
+   * @param name name of the row
+   * @param value value of the row
+   * @param color color of the row value
+   */
+  const renderAccordinRow = (name: string, value: string, color?: string) => {
+
+    return (
+      <Box className={ classes.accordinRow }>
+        <Typography style={{ fontSize: 14, fontWeight: 600 }}>
+          { name }
+        </Typography>
+        <Typography style={{ fontSize: 14, fontStyle: "italic", color: color }}>
+          { value }
+        </Typography>
+      </Box>
+    );
+  }
+
+  /**
+   * Renders the Total work time section
+   */
+  const renderTotalWorkTime = () => {
+    if (!personTotalTime) {
+      return null;
+    }
+
+    let totalHour = TimeUtils.minuteToHourString(personTotalTime.total);
+    personTotalTime.total >= 0 && (totalHour = `+${totalHour}`)
+    const totalColor = (personTotalTime.total < 0) ? theme.palette.error.dark : theme.palette.success.main;
+
+    return (
+      <>
+        <Accordion className={ classes.drawerAccordin }>
+          <AccordionSummary
+            expandIcon={ <ExpandMoreIcon /> }
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography variant="h4" style={{ fontWeight: 600 }}>
+              { "Total" }
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Box 
+              p={ 1 }
+              paddingRight={ 3 }
+              width="100%" 
+            >
+              { renderAccordinRow(strings.total, totalHour, totalColor) }
+              { renderAccordinRow(strings.logged, TimeUtils.minuteToHourString(personTotalTime.logged)) }
+              { renderAccordinRow(strings.expected, TimeUtils.minuteToHourString(personTotalTime.expected)) }
+            </Box>
+          </AccordionDetails>
+        </Accordion>
+      </>
+    );
+  }
+
+  /**
+   * Renders the expected work time section
+   */
+  const renderExpectedWork = () => {
+    if (!person) {
+      return null;
+    }
+
+    return (
+      <>
+        <Accordion className={ classes.drawerAccordin }>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+            >
+            <Typography variant="h4" style={{ fontWeight: 600 }}>
+              { "Expected" }
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Box 
+              p={ 1 }
+              paddingRight={ 3 }
+              width="100%" 
+            >
+              { renderAccordinRow(strings.sunday, TimeUtils.minuteToHourString(person.sunday)) }
+              { renderAccordinRow(strings.monday, TimeUtils.minuteToHourString(person.monday)) }
+              { renderAccordinRow(strings.tuesday, TimeUtils.minuteToHourString(person.tuesday)) }
+              { renderAccordinRow(strings.wednesday, TimeUtils.minuteToHourString(person.wednesday)) }
+              { renderAccordinRow(strings.thursday, TimeUtils.minuteToHourString(person.thursday)) }
+              { renderAccordinRow(strings.friday, TimeUtils.minuteToHourString(person.friday)) }
+              { renderAccordinRow(strings.saturday, TimeUtils.minuteToHourString(person.saturday)) }
+            </Box>
+          </AccordionDetails>
+        </Accordion>
+      </>
+    );
+  }
+
+  /**
    * Event Handler for autocomplete value change
    * 
    * @param newValue new value for the pending person 
@@ -152,16 +256,16 @@ const DrawerContent: React.FC<Props> = () => {
         { renderSearchBox() }
       </Box>
       <Divider />
-      { person && <Box className={ classes.drawerContentContainer }>
-          <Box 
-            marginY={ 2 }
-            width="100%"
-          >
+      { person && <>
+          <Box className={ classes.drawerUserInfoContainer }>
             <UserInfo />
           </Box>
           <Divider />
-          {/* { renderTotalWorkTime() } */}
-        </Box>
+          <Box mt={ 2 }>
+            { renderTotalWorkTime() }
+            { renderExpectedWork() }
+          </Box>
+        </>
       }
     </>
   );
