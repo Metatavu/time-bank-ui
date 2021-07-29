@@ -26,26 +26,6 @@ const EditorContent: React.FC<Props> = () => {
   const { person, personTotalTime } = useAppSelector(selectPerson);
 
   /**
-   * Fetches the person data 
-   */
-  const fetchData = async () => {
-    if (person && person.id) {
-      Api.getTimeBankApi()
-        .timebankControllerGetTotal({
-          personId: person.id.toString(),
-          retention: TimebankControllerGetTotalRetentionEnum.ALLTIME
-        })
-        .then(fetchedPersonTotalTime =>
-          dispatch(setPersonTotalTime(fetchedPersonTotalTime[0]))
-        );
-    }
-  }
-
-  React.useEffect(() => {
-    fetchData();    
-  }, [ person ]);
-
-  /**
    * Utility method converts time in minute to a string formatted as xhymin 
    * 
    * @param mminutes time in minutes

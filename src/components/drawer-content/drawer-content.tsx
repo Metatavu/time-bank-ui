@@ -5,10 +5,10 @@ import UserInfo from "components/generics/user-info/user-info";
 import { useDrawerContentStyles } from "styles/drawer-content/drawer-content";
 import SearchIcon from "@material-ui/icons/Search";
 import strings from "localization/strings";
-import { PersonDto } from "generated/client";
+import { PersonDto, TimebankControllerGetTotalRetentionEnum } from "generated/client";
 import Api from "api/api";
-import { setPerson } from "features/person/person-slice";
-import { useAppDispatch } from "app/hooks";
+import { selectPerson, setPerson, setPersonTotalTime } from "features/person/person-slice";
+import { useAppDispatch, useAppSelector } from "app/hooks";
 
 /**
  * Component properties
@@ -23,21 +23,43 @@ interface Props {
  */
 const DrawerContent: React.FC<Props> = () => {
   const dispatch = useAppDispatch();
+  const { person, personTotalTime } = useAppSelector(selectPerson);
 
   const classes = useDrawerContentStyles();
   const [ persons, setPersons ] = React.useState<PersonDto[]>([]);
   const [ pendingPerson, setPendingPerson ] = React.useState<PersonDto | null>(null);
   const [ searchInput, setSearchInput ] = React.useState<string>("");
+  
   /**
    * Fetches the person data 
    */
-  const fetchData = async () => {
+  const fetchPeronsData = async () => {
     Api.getTimeBankApi().timebankControllerGetPersons().then(setPersons);
   }
 
+  /**
+   * Fetches the total work time data 
+   */
+  const fetchWorkTimeData = async () => {
+    if (person && person.id) {
+      Api.getTimeBankApi()
+        .timebankControllerGetTotal({
+          personId: person.id.toString(),
+          retention: TimebankControllerGetTotalRetentionEnum.ALLTIME
+        })
+        .then(fetchedPersonTotalTime =>
+          dispatch(setPersonTotalTime(fetchedPersonTotalTime[0]))
+        );
+    }
+  }
+
   React.useEffect(() => {
-    fetchData();    
+    fetchPeronsData();    
   }, [])
+
+  React.useEffect(() => {
+    fetchWorkTimeData();    
+  }, [ person ]);
 
   /**
    * Renders the autocomplete options 
@@ -130,9 +152,12 @@ const DrawerContent: React.FC<Props> = () => {
         { renderSearchBox() }
       </Box>
       <Divider />
-      <Box className={ classes.drawerContentContainer }>
-        <UserInfo />
-      </Box>
+      { person && <Box className={ classes.drawerContentContainer }>
+          <UserInfo />
+          <Divider />
+          {/* { renderTotalWorkTime() } */}
+        </Box>
+      }
     </>
   );
 }
