@@ -148,12 +148,17 @@ const DrawerContent: React.FC<Props> = () => {
    */
   return (
     <>
-      <Box className={ classes.drawerContentContainer }>
+      <Box className={ classes.drawerSearchBoxContainer }>
         { renderSearchBox() }
       </Box>
       <Divider />
       { person && <Box className={ classes.drawerContentContainer }>
-          <UserInfo />
+          <Box 
+            marginY={ 2 }
+            width="100%"
+          >
+            <UserInfo />
+          </Box>
           <Divider />
           {/* { renderTotalWorkTime() } */}
         </Box>

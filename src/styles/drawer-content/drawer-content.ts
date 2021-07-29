@@ -3,10 +3,17 @@ import theme from "theme/theme";
 
 export const useDrawerContentStyles = makeStyles({
 
-  drawerContentContainer: {
+  drawerSearchBoxContainer: {
     display: "flex",
     alignItems: "center",
     margin: `${theme.spacing(2)}px 0px`,
+  },
+
+  drawerContentContainer: {
+    display: "flex",
+    alignItems: "center",
+    flexDirection: "column",
+    margin: `0px ${theme.spacing(1.5)}px`,
   },
 
   searchBoxContaienr: {

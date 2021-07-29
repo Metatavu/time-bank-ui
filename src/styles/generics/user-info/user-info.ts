@@ -8,7 +8,7 @@ export const useUserInfoStyles = makeStyles({
   },
 
   userNameContainer: {
-    padding: `${theme.spacing(1.5)}px 0px`,
+    padding: `${theme.spacing(1)}px 0px`,
     display: "flex",
     alignItems: "center"
   },

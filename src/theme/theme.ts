@@ -97,6 +97,11 @@ export default createMuiTheme({
         justifyContent: "space-between"
       }
     },
+    MuiDivider: {
+      root: {
+        width: "100%"
+      }
+    },
     MuiButton: {
       root: {
         fontWeight: 600,
