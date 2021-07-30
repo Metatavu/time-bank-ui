@@ -12,6 +12,6 @@ export default class TimeUtils {
     const hour = Math.floor(minutes / 60);
     const minute = Math.abs(minutes % 60);
 
-    return `${hour}h ${minute}min`;
+    return `${hour} h ${minute} min`;
   }
 }
