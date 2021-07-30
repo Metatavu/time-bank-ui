@@ -1,3 +1,6 @@
+/**
+ * Utility class for time values
+ */
 export default class TimeUtils {
   /**
    * Utility method converts time in minute to a string formatted as xhymin 
