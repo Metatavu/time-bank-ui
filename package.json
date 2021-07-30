@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^4.12.2",
     "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.60",
     "@reduxjs/toolkit": "^1.6.1",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
@@ -25,7 +26,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "build-client": "./node_modules/@openapitools/openapi-generator-cli/bin/openapi-generator generate -i time-bank-api-spec/swagger.yaml -o ./src/generated/client -c generator-config.json -g typescript-fetch"
   },
   "eslintConfig": {
     "extends": [
@@ -44,5 +46,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^1.0.18-4.3.1"
   }
 }

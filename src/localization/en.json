@@ -1,5 +1,8 @@
 {
-
+  "header": {
+    "title": "Time Bank"
+  },
+  
   "generic": {
     "add": "Add",
     "cancel": "Cancel",
@@ -10,6 +13,27 @@
     "search": "Search",
     "language": "Language",
     "select": "Select"
-  }
+  },
+
+  "drawerContent": {
+    "userInfo": {
+      "id": "id",
+      "active": "active",
+      "inactive": "inactive",
+      "userType": "User type:",
+      "language": "Language:",
+      "createdAt": "Created at:",
+      "updatedAt": "Updated at:"
+    }
+  },
+
+  "editorContent": {
+    "userNotSelected": "Please select a user first",
+    "totalWorkTime": "Total work time"
+  },
+
+  "logged": "Logged:",
+  "expected": "Expected:",
+  "total": "Total:"
 
 }
