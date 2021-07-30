@@ -257,7 +257,8 @@ const DrawerContent: React.FC<Props> = () => {
         { renderSearchBox() }
       </Box>
       <Divider />
-      { person && <>
+      { person &&
+        <>
           <Box className={ classes.drawerUserInfoContainer }>
             <UserInfo />
           </Box>
