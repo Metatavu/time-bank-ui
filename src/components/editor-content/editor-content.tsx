@@ -83,9 +83,9 @@ const EditorContent: React.FC<Props> = () => {
         >
           { strings.editorContent.workTime }
         </Typography>
-        { renderFilterSubtitleText(strings.logged, personTotalTime.logged) }
-        { renderFilterSubtitleText(strings.expected, personTotalTime.expected) }
-        { renderFilterSubtitleText(strings.total, personTotalTime.total) }
+        { renderFilterSubtitleText(`${strings.logged}:`, personTotalTime.logged) }
+        { renderFilterSubtitleText(`${strings.expected}:`, personTotalTime.expected) }
+        { renderFilterSubtitleText(`${strings.total}:`, personTotalTime.total) }
       </Paper>
     );
   }

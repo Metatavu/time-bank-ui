@@ -34,9 +34,9 @@
     "workTime": "Work time"
   },
 
-  "logged": "Logged:",
-  "expected": "Expected:",
-  "total": "Total:",
+  "logged": "Logged",
+  "expected": "Expected",
+  "total": "Total",
   "sunday": "Sunday",
   "monday": "Monday",
   "tuesday": "Tuseday",

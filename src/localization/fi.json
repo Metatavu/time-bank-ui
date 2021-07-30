@@ -34,9 +34,9 @@
     "workTime": "Työaika"
   },
 
-  "logged": "Kirjattu: ",
-  "expected": "Odotettu: ",
-  "total": "Yhteensä: ",
+  "logged": "Kirjattu",
+  "expected": "Odotettu",
+  "total": "Yhteensä",
   "sunday": "Sunnuntai",
   "monday": "Maanantai",
   "tuesday": "Tiistai",

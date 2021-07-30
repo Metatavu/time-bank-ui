@@ -173,9 +173,9 @@ const DrawerContent: React.FC<Props> = () => {
               paddingRight={ 3 }
               width="100%" 
             >
-              { renderAccordinRow(strings.total, totalHour, totalColor) }
-              { renderAccordinRow(strings.logged, TimeUtils.minuteToHourString(personTotalTime.logged)) }
-              { renderAccordinRow(strings.expected, TimeUtils.minuteToHourString(personTotalTime.expected)) }
+              { renderAccordinRow(`${strings.total}:`, totalHour, totalColor) }
+              { renderAccordinRow(`${strings.logged}:`, TimeUtils.minuteToHourString(personTotalTime.logged)) }
+              { renderAccordinRow(`${strings.expected}:`, TimeUtils.minuteToHourString(personTotalTime.expected)) }
             </Box>
           </AccordionDetails>
         </Accordion>
@@ -209,13 +209,13 @@ const DrawerContent: React.FC<Props> = () => {
               paddingRight={ 3 }
               width="100%" 
             >
-              { renderAccordinRow(strings.sunday, TimeUtils.minuteToHourString(person.sunday)) }
-              { renderAccordinRow(strings.monday, TimeUtils.minuteToHourString(person.monday)) }
-              { renderAccordinRow(strings.tuesday, TimeUtils.minuteToHourString(person.tuesday)) }
-              { renderAccordinRow(strings.wednesday, TimeUtils.minuteToHourString(person.wednesday)) }
-              { renderAccordinRow(strings.thursday, TimeUtils.minuteToHourString(person.thursday)) }
-              { renderAccordinRow(strings.friday, TimeUtils.minuteToHourString(person.friday)) }
-              { renderAccordinRow(strings.saturday, TimeUtils.minuteToHourString(person.saturday)) }
+              { renderAccordinRow(`${strings.sunday}:`, TimeUtils.minuteToHourString(person.sunday)) }
+              { renderAccordinRow(`${strings.monday}:`, TimeUtils.minuteToHourString(person.monday)) }
+              { renderAccordinRow(`${strings.tuesday}:`, TimeUtils.minuteToHourString(person.tuesday)) }
+              { renderAccordinRow(`${strings.wednesday}:`, TimeUtils.minuteToHourString(person.wednesday)) }
+              { renderAccordinRow(`${strings.thursday}:`, TimeUtils.minuteToHourString(person.thursday)) }
+              { renderAccordinRow(`${strings.friday}:`, TimeUtils.minuteToHourString(person.friday)) }
+              { renderAccordinRow(`${strings.saturday}:`, TimeUtils.minuteToHourString(person.saturday)) }
             </Box>
           </AccordionDetails>
         </Accordion>
