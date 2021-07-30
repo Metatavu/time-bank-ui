@@ -151,7 +151,9 @@ const DrawerContent: React.FC<Props> = () => {
 
     let totalHour = TimeUtils.minuteToHourString(personTotalTime.total);
     personTotalTime.total >= 0 && (totalHour = `+${totalHour}`)
-    const totalColor = (personTotalTime.total < 0) ? theme.palette.error.dark : theme.palette.success.main;
+    const totalColor = personTotalTime.total < 0 ?
+      theme.palette.error.dark :
+      theme.palette.success.main;
 
     return (
       <>
