@@ -57,7 +57,7 @@ const DrawerContent: React.FC<Props> = () => {
   }
 
   React.useEffect(() => {
-    fetchPeronsData();    
+    fetchPersonData();
   }, [])
 
   React.useEffect(() => {
