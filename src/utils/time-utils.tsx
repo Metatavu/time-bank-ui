@@ -3,7 +3,7 @@
  */
 export default class TimeUtils {
   /**
-   * Utility method converts time in minute to a string formatted as xhymin 
+   * Converts time in minutes to a string formatted as "x h y min"
    * 
    * @param mminutes time in minutes
    * @return formatted string of time 
