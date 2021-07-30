@@ -129,7 +129,6 @@ const DrawerContent: React.FC<Props> = () => {
    * @param color color of the row value
    */
   const renderAccordinRow = (name: string, value: string, color?: string) => {
-
     return (
       <Box className={ classes.accordinRow }>
         <Typography style={{ fontSize: 14, fontWeight: 600 }}>
