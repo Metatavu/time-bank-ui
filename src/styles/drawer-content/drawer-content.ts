@@ -3,10 +3,16 @@ import theme from "theme/theme";
 
 export const useDrawerContentStyles = makeStyles({
 
-  drawerContentContainer: {
+  drawerSearchBoxContainer: {
     display: "flex",
     alignItems: "center",
     margin: `${theme.spacing(2)}px 0px`,
+  },
+
+  drawerUserInfoContainer: {
+    display: "flex",
+    alignItems: "center",
+    margin: theme.spacing(2),
   },
 
   searchBoxContaienr: {
@@ -26,6 +32,16 @@ export const useDrawerContentStyles = makeStyles({
   searchBox: {
     height: "100%",
     width: "100%",
+  },
+
+  drawerAccordin: {
+    boxShadow: "none"
+  },
+
+  accordinRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    marginBottom: theme.spacing(1)
   },
 
   inputRoot: {

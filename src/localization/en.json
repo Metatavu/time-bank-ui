@@ -24,16 +24,25 @@
       "language": "Language:",
       "createdAt": "Created at:",
       "updatedAt": "Updated at:"
-    }
+    },
+    "statistics": "Statistics",
+    "expected": "Expected"
   },
 
   "editorContent": {
     "userNotSelected": "Please select a user first",
-    "totalWorkTime": "Total work time"
+    "workTime": "Work time"
   },
 
-  "logged": "Logged:",
-  "expected": "Expected:",
-  "total": "Total:"
+  "logged": "Logged",
+  "expected": "Expected",
+  "total": "Total",
+  "sunday": "Sunday",
+  "monday": "Monday",
+  "tuesday": "Tuseday",
+  "wednesday": "Wednesday",
+  "thursday": "Thursday",
+  "friday": "Friday",
+  "saturday": "Saturday"
 
 }

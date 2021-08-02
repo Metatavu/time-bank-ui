@@ -41,7 +41,9 @@ export interface IStrings extends LocalizedStringsMethods {
       language: string;
       createdAt: string;
       updatedAt: string;
-    }
+    },
+    statistics: string;
+    expected: string;
   };
 
   /**
@@ -49,12 +51,19 @@ export interface IStrings extends LocalizedStringsMethods {
    */
   editorContent: {
     userNotSelected: string;
-    totalWorkTime: string;
+    workTime: string;
   };
 
   logged: string;
   expected: string;
   total: string;
+  sunday: string;
+  monday: string;
+  tuesday: string;
+  wednesday: string;
+  thursday: string;
+  friday: string;
+  saturday: string;
 
 }
 

@@ -1,12 +1,11 @@
 import React from "react";
 import { Box, Paper, Typography } from "@material-ui/core";
-import Api from "api/api";
 import { useEditorContentStyles } from "styles/editor-content/editor-content";
 import { useAppDispatch, useAppSelector } from "app/hooks";
-import { selectPerson, setPersonTotalTime } from "features/person/person-slice";
+import { selectPerson } from "features/person/person-slice";
 import strings from "localization/strings";
-import { TimebankControllerGetTotalRetentionEnum } from "generated/client";
 import theme from "theme/theme";
+import TimeUtils from "utils/time-utils";
 
 /**
  * Component properties
@@ -24,39 +23,6 @@ const EditorContent: React.FC<Props> = () => {
   const dispatch = useAppDispatch();
 
   const { person, personTotalTime } = useAppSelector(selectPerson);
-
-  /**
-   * Fetches the person data 
-   */
-  const fetchData = async () => {
-    if (person && person.id) {
-      Api.getTimeBankApi()
-        .timebankControllerGetTotal({
-          personId: person.id.toString(),
-          retention: TimebankControllerGetTotalRetentionEnum.ALLTIME
-        })
-        .then(fetchedPersonTotalTime =>
-          dispatch(setPersonTotalTime(fetchedPersonTotalTime[0]))
-        );
-    }
-  }
-
-  React.useEffect(() => {
-    fetchData();    
-  }, [ person ]);
-
-  /**
-   * Utility method converts time in minute to a string formatted as xhymin 
-   * 
-   * @param mminutes time in minutes
-   * @return formatted string of time 
-   */
-  const timeConverterUtil = (minutes: number): string => {
-    const hour = Math.floor(minutes / 60);
-    const minute = Math.abs(minutes % 60);
-
-    return `${hour}h ${minute}min`;
-  }
 
   /**
    * Renders the filter subtitle text
@@ -80,7 +46,7 @@ const EditorContent: React.FC<Props> = () => {
             fontStyle: "italic"
           }}
         >
-          { timeConverterUtil(value) }
+          { TimeUtils.minuteToHourString(value) }
         </Typography>
       </>
     );
@@ -115,11 +81,11 @@ const EditorContent: React.FC<Props> = () => {
             fontStyle: "italic",
           }}
         >
-          { strings.editorContent.totalWorkTime }
+          { strings.editorContent.workTime }
         </Typography>
-        { renderFilterSubtitleText(strings.logged, personTotalTime.logged) }
-        { renderFilterSubtitleText(strings.expected, personTotalTime.expected) }
-        { renderFilterSubtitleText(strings.total, personTotalTime.total) }
+        { renderFilterSubtitleText(`${strings.logged}:`, personTotalTime.logged) }
+        { renderFilterSubtitleText(`${strings.expected}:`, personTotalTime.expected) }
+        { renderFilterSubtitleText(`${strings.total}:`, personTotalTime.total) }
       </Paper>
     );
   }

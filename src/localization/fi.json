@@ -24,16 +24,25 @@
       "language": "Kieli:",
       "createdAt": "Luotu:",
       "updatedAt": "Päivitetty:"
-    }
+    },
+    "statistics": "Tilastot",
+    "expected": "Odotettu"
   },
 
   "editorContent": {
     "userNotSelected": "Valitse ensin käyttäjä",
-    "totalWorkTime": "Työaika"
+    "workTime": "Työaika"
   },
 
-  "logged": "Kirjattu: ",
-  "expected": "Odotettu: ",
-  "total": "Yhteensä: "
+  "logged": "Kirjattu",
+  "expected": "Odotettu",
+  "total": "Yhteensä",
+  "sunday": "Sunnuntai",
+  "monday": "Maanantai",
+  "tuesday": "Tiistai",
+  "wednesday": "Keskiviikko",
+  "thursday": "Torstai",
+  "friday": "Perjantai",
+  "saturday": "Lauantai"
 
 }
