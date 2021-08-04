@@ -1,5 +1,8 @@
 import React from "react";
-import { Box, Paper, Typography } from "@material-ui/core";
+import { Paper, Typography, Grid } from "@material-ui/core";
+import 'date-fns';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import { useEditorContentStyles } from "styles/editor-content/editor-content";
 import { useAppDispatch, useAppSelector } from "app/hooks";
 import { selectPerson } from "features/person/person-slice";
@@ -23,6 +26,14 @@ const EditorContent: React.FC<Props> = () => {
   const dispatch = useAppDispatch();
 
   const { person, personTotalTime } = useAppSelector(selectPerson);
+
+  const [selectedStartingDate, setSelectedStartingDate] = React.useState<Date | null>(
+    new Date('2014-08-18T21:11:54'),
+  );
+
+  const [selectedEndingDate, setSelectedEndingDate] = React.useState<Date | null>(
+    new Date('2014-08-18T21:11:54'),
+  );
 
   /**
    * Renders the filter subtitle text
@@ -86,7 +97,63 @@ const EditorContent: React.FC<Props> = () => {
         { renderFilterSubtitleText(`${strings.logged}:`, personTotalTime.logged) }
         { renderFilterSubtitleText(`${strings.expected}:`, personTotalTime.expected) }
         { renderFilterSubtitleText(`${strings.total}:`, personTotalTime.total) }
+        { renderStartDatePicker() }
+        { renderEndDatePicker() }
       </Paper>
+    );
+  }
+
+  /**
+   * Renders datepicker for starting date
+   */
+  const renderStartDatePicker = () => {
+    const handleDateChange = (date: Date | null) => {
+      setSelectedStartingDate(date);
+    };
+
+    return (
+      <MuiPickersUtilsProvider utils={ DateFnsUtils }>
+        <Grid container justifyContent="space-around">
+          <KeyboardDatePicker
+            disableToolbar
+            variant="inline"
+            format="dd/MM/yyyy"
+            margin="normal"
+            id="date-picker-inline"
+            label={ strings.editorContent.filterStartingDate }
+            value={ selectedStartingDate }
+            onChange={ handleDateChange }
+            KeyboardButtonProps={ {'aria-label': 'Kaikki alkaa'} }
+          />
+        </Grid>
+      </MuiPickersUtilsProvider>
+    );
+  }
+
+  /**
+   * Renders datepicker for ending date
+   */
+   const renderEndDatePicker = () => {
+    const handleDateChange = (date: Date | null) => {
+      setSelectedEndingDate(date);
+    };
+
+    return (
+      <MuiPickersUtilsProvider utils={ DateFnsUtils }>
+        <Grid container justifyContent="space-around">
+          <KeyboardDatePicker
+            disableToolbar
+            variant="inline"
+            format="dd/MM/yyyy"
+            margin="normal"
+            id="date-picker-inline"
+            label={ strings.editorContent.filterEndingDate }
+            value={ selectedEndingDate } 
+            onChange={ handleDateChange }
+            KeyboardButtonProps={ {'aria-label': 'Kaikki päättyy'} }
+          />
+        </Grid>
+      </MuiPickersUtilsProvider>
     );
   }
 
@@ -107,6 +174,7 @@ const EditorContent: React.FC<Props> = () => {
     );
   }
 
+
   /**
    * Component render
    */
@@ -117,7 +185,6 @@ const EditorContent: React.FC<Props> = () => {
       {/* { renderOverview() } */}
     </>
   );
-
 
 }
 
