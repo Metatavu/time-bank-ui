@@ -1,5 +1,5 @@
-import React from "react";
-import { Paper, Typography, Grid } from "@material-ui/core";
+import React, { useState } from "react";
+import { Paper, Typography, Grid, FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
@@ -24,16 +24,18 @@ interface Props {
 const EditorContent: React.FC<Props> = () => {
   const classes = useEditorContentStyles();
   const dispatch = useAppDispatch();
-
+console.log(TimeUtils)
   const { person, personTotalTime } = useAppSelector(selectPerson);
 
-  const [selectedStartingDate, setSelectedStartingDate] = React.useState<Date | null>(
+  const [selectedStartingDate, setSelectedStartingDate] = useState<Date | null>(
     new Date('2014-08-18T21:11:54'),
   );
 
-  const [selectedEndingDate, setSelectedEndingDate] = React.useState<Date | null>(
+  const [selectedEndingDate, setSelectedEndingDate] = useState<Date | null>(
     new Date('2014-08-18T21:11:54'),
   );
+
+  const [age, setAge] = useState('');
 
   /**
    * Renders the filter subtitle text
@@ -97,6 +99,7 @@ const EditorContent: React.FC<Props> = () => {
         { renderFilterSubtitleText(`${strings.logged}:`, personTotalTime.logged) }
         { renderFilterSubtitleText(`${strings.expected}:`, personTotalTime.expected) }
         { renderFilterSubtitleText(`${strings.total}:`, personTotalTime.total) }
+        { renderSelectScope() }
         { renderStartDatePicker() }
         { renderEndDatePicker() }
       </Paper>
@@ -112,18 +115,18 @@ const EditorContent: React.FC<Props> = () => {
     };
 
     return (
-      <MuiPickersUtilsProvider utils={ DateFnsUtils }>
-        <Grid container justifyContent="space-around">
+      <MuiPickersUtilsProvider utils={ DateFnsUtils } >
+        <Grid className={ classes.timeFilter }>
           <KeyboardDatePicker
             disableToolbar
             variant="inline"
             format="dd/MM/yyyy"
-            margin="normal"
-            id="date-picker-inline"
+            id="date-picker-start"
             label={ strings.editorContent.filterStartingDate }
             value={ selectedStartingDate }
             onChange={ handleDateChange }
             KeyboardButtonProps={ {'aria-label': 'Kaikki alkaa'} }
+            className={ classes.timeFilter }
           />
         </Grid>
       </MuiPickersUtilsProvider>
@@ -140,22 +143,55 @@ const EditorContent: React.FC<Props> = () => {
 
     return (
       <MuiPickersUtilsProvider utils={ DateFnsUtils }>
-        <Grid container justifyContent="space-around">
+        <Grid className={ classes.timeFilter } >
           <KeyboardDatePicker
             disableToolbar
             variant="inline"
             format="dd/MM/yyyy"
-            margin="normal"
-            id="date-picker-inline"
+            id="date-picker-end"
             label={ strings.editorContent.filterEndingDate }
             value={ selectedEndingDate } 
             onChange={ handleDateChange }
             KeyboardButtonProps={ {'aria-label': 'Kaikki päättyy'} }
+            className={ classes.timeFilter }
           />
         </Grid>
       </MuiPickersUtilsProvider>
     );
   }
+
+  /**
+   * Renders datepicker for ending date
+   */
+   const renderSelectScope = () => {
+    const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+      setAge(event.target.value as string);
+    };
+
+    return (
+      <>
+      <FormControl variant="outlined" className={ classes.selectScope }>
+        <InputLabel id="demo-simple-select-outlined-label">Age</InputLabel>
+        <Select
+          labelId="demo-simple-select-outlined-label"
+          id="demo-simple-select-outlined"
+          value={age}
+          onChange={handleChange}
+          label="Age"
+        >
+          <MenuItem value="">
+            <em>None</em>
+          </MenuItem>
+          <MenuItem value={10}>Ten</MenuItem>
+          <MenuItem value={20}>Twenty</MenuItem>
+          <MenuItem value={30}>Thirty</MenuItem>
+        </Select>
+      </FormControl>
+      </>
+    );
+  }
+
+  
 
   /**
    * Renders the filter component
