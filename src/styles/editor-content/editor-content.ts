@@ -9,10 +9,18 @@ export const useEditorContentStyles = makeStyles({
     display: "flex",
     alignItems: "center",
     padding: `0px ${theme.spacing(3)}px`,
+    "& h4": {
+      fontWeight: 600,
+      fontStyle: "italic"
+    },
+    "& h5": {
+      fontSize: "0.8rem"
+    }
   },
   selectScope: {
     width: "10rem",
     marginRight: "1rem",
+    marginLeft: "2rem",
   },
   timeFilter: {
     width: "15rem",

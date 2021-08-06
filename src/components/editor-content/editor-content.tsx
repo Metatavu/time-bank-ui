@@ -24,7 +24,7 @@ interface Props {
 const EditorContent: React.FC<Props> = () => {
   const classes = useEditorContentStyles();
   const dispatch = useAppDispatch();
-console.log(TimeUtils)
+
   const { person, personTotalTime } = useAppSelector(selectPerson);
 
   const [selectedStartingDate, setSelectedStartingDate] = useState<Date | null>(
@@ -35,7 +35,7 @@ console.log(TimeUtils)
     new Date('2014-08-18T21:11:54'),
   );
 
-  const [age, setAge] = useState('');
+  const [scope, setScope] = useState('');
 
   /**
    * Renders the filter subtitle text
@@ -87,18 +87,12 @@ console.log(TimeUtils)
         elevation={ 3 }
         className={ classes.filterContainer }
       >
-        <Typography
-          variant="h4"
-          style={{
-            fontWeight: 600,
-            fontStyle: "italic",
-          }}
-        >
+        <Typography variant="h4">
           { strings.editorContent.workTime }
         </Typography>
-        { renderFilterSubtitleText(`${strings.logged}:`, personTotalTime.logged) }
-        { renderFilterSubtitleText(`${strings.expected}:`, personTotalTime.expected) }
-        { renderFilterSubtitleText(`${strings.total}:`, personTotalTime.total) }
+        { renderFilterSubtitleText(`${ strings.logged }:`, personTotalTime.logged) }
+        { renderFilterSubtitleText(`${ strings.expected }:`, personTotalTime.expected) }
+        { renderFilterSubtitleText(`${ strings.total }:`, personTotalTime.total) }
         { renderSelectScope() }
         { renderStartDatePicker() }
         { renderEndDatePicker() }
@@ -165,7 +159,7 @@ console.log(TimeUtils)
    */
    const renderSelectScope = () => {
     const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-      setAge(event.target.value as string);
+      setScope(event.target.value as string);
     };
 
     return (
@@ -175,14 +169,11 @@ console.log(TimeUtils)
         <Select
           labelId="demo-simple-select-outlined-label"
           id="demo-simple-select-outlined"
-          value={age}
+          value={scope}
           onChange={handleChange}
           label="Age"
         >
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-          <MenuItem value={10}>Ten</MenuItem>
+          <MenuItem value={10}>T</MenuItem>
           <MenuItem value={20}>Twenty</MenuItem>
           <MenuItem value={30}>Thirty</MenuItem>
         </Select>
