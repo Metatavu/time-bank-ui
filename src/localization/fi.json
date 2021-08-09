@@ -38,12 +38,16 @@
     "scopeWeek": "Viikko",
     "scopeDate": "Pvm",
     "scopeMonth": "Kuukausi",
-    "scopeYear": "Vuosi"
+    "scopeYear": "Vuosi",
+    "selectYearStart": "Alku vuosi",
+    "selectWeekStart": "Alku viikko",
+    "selectWeekEnd": "Loppu viikko",
+    "selectYearEnd": "Loppu vuosi"
   },
 
   "logged": "Kirjattu",
   "expected": "Odotettu",
-  "total": "Yhteensä",
+  "difference": "Erotus",
   "sunday": "Sunnuntai",
   "monday": "Maanantai",
   "tuesday": "Tiistai",

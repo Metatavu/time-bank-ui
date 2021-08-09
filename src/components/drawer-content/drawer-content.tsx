@@ -173,7 +173,7 @@ const DrawerContent: React.FC<Props> = () => {
               paddingRight={ 3 }
               width="100%" 
             >
-              { renderAccordinRow(`${strings.total}:`, totalHour, totalColor) }
+              { renderAccordinRow(`${strings.difference}:`, totalHour, totalColor) }
               { renderAccordinRow(`${strings.logged}:`, TimeUtils.minuteToHourString(personTotalTime.logged)) }
               { renderAccordinRow(`${strings.expected}:`, TimeUtils.minuteToHourString(personTotalTime.expected)) }
             </Box>

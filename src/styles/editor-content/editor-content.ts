@@ -18,8 +18,8 @@ export const useEditorContentStyles = makeStyles({
     }
   },
   selectScope: {
-    width: "10rem",
-    marginRight: "1rem",
+    width: "7rem",
+    marginRight: "2rem",
     marginLeft: "2rem",
   },
   timeFilter: {
@@ -35,6 +35,16 @@ export const useEditorContentStyles = makeStyles({
   },
   selectWeekNumbers: {
     width: "5rem",
+    marginRight: "2rem",
+    "& p": {
+      color: "rgba(0, 0, 0, 0.54)"
+    }
+  },
+  filtersContainer: {
+    marginLeft: "auto", 
+    display: "flex", 
+    alignItems: "center",
+    width: "45rem" 
   }
   
 }, {

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Paper, Typography, Grid, FormControl, MenuItem, Select, InputLabel } from "@material-ui/core";
+import { Paper, Typography, Grid, FormControl, MenuItem, Select, FormHelperText, TextField, Box } from "@material-ui/core";
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePickerView } from '@material-ui/pickers';
@@ -26,7 +26,7 @@ const EditorContent: React.FC<Props> = () => {
   const dispatch = useAppDispatch();
 
   const { person, personTotalTime } = useAppSelector(selectPerson);
-
+  console.log(person)
   const [selectedStartingDate, setSelectedStartingDate] = useState<Date | null>(
     new Date('2014-08-18T21:11:54'),
   );
@@ -37,10 +37,20 @@ const EditorContent: React.FC<Props> = () => {
 
   const [scope, setScope] = React.useState<DatePickerView>("month");
 
+  const [startWeek, setStartWeek] = React.useState<Number>(1);
+
+  const [endWeek, setEndWeek] = React.useState<Number>(53);
+
+  const [endYear, setEndYear] = React.useState<Number>(53);
+
+  /*const [startYear, setStartYear = React.useState<Date | null>(
+    new Date('2014-08-18T21:11:54')
+  );*/
+
   /**
-     * Generate week numbers for the select component
-     * @returns week numbers as array
-     */
+   * Generate week numbers for the select component
+   * @returns week numbers as array
+   */
   const generateWeekNumbers = () => {
     const numbers : number[] = [];
     for(let i = 1; i <= 53; i++){
@@ -88,9 +98,11 @@ const EditorContent: React.FC<Props> = () => {
     return (
       <>
       <FormControl variant="outlined" className={ classes.selectScope }>
-        <Select
-          labelId="scope-select-outlined-label"
+        <TextField
+          select
+          //labelId="scope-select-outlined-label"
           id="scope-select-outlined"
+          size="small"
           value={ scope }
           onChange={ handleChange }
         >
@@ -98,7 +110,7 @@ const EditorContent: React.FC<Props> = () => {
           <MenuItem value={ "date" }>{ strings.editorContent.scopeDate }</MenuItem>
           <MenuItem value={ "month" }>{ strings.editorContent.scopeMonth }</MenuItem>
           <MenuItem value={ "year" }>{ strings.editorContent.scopeYear }</MenuItem>
-        </Select>
+        </TextField>
       </FormControl>
       </>
     );
@@ -113,7 +125,7 @@ const EditorContent: React.FC<Props> = () => {
     };
 
     const handleStartWeekChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-      setScope(event.target.value as DatePickerView);
+      setStartWeek(event.target.value as Number);
     };
 
     if(scope.toString() !== "week"){
@@ -128,7 +140,7 @@ const EditorContent: React.FC<Props> = () => {
               label={ strings.editorContent.filterStartingDate }
               value={ selectedStartingDate }
               onChange={ handleDateChange }
-              KeyboardButtonProps={ {'aria-label': `${strings.editorContent.filterStartingDate}`} }
+              KeyboardButtonProps={ {'aria-label': `${ strings.editorContent.filterStartingDate }`} }
               className={ classes.timeFilter }
             />
           </Grid>
@@ -138,18 +150,33 @@ const EditorContent: React.FC<Props> = () => {
       return (
         <>
           <FormControl variant="standard" className={ classes.selectWeekNumbers }>
-            <Select
-              labelId="scope-select-outlined-label"
-              id="scope-select-outlined"
-              value={ generateWeekNumbers()[0] }
-              onChange={ handleStartWeekChange }
-            >
-              { generateWeekNumbers().map((weekNumber : number, index: number) => {
-                return <MenuItem key={ index } value={ weekNumber }>{ weekNumber }</MenuItem>
-              }) }
-            </Select>
+            <FormHelperText>{ strings.editorContent.selectYearStart }</FormHelperText>
+              <Select
+                labelId="scope-select-outlined-label"
+                id="scope-select-outlined"
+                value={ startWeek }
+                onChange={ handleStartWeekChange }
+              >
+                { generateWeekNumbers().map((weekNumber : number, index: number) => {
+                  return <MenuItem key={ index } value={ weekNumber }>{ weekNumber }</MenuItem>
+                }) }
+              </Select>
+          </FormControl>
+          <FormControl variant="standard" className={ classes.selectWeekNumbers }>
+            <FormHelperText>{ strings.editorContent.selectWeekStart }</FormHelperText>
+              <Select
+                labelId="scope-select-outlined-label"
+                id="scope-select-outlined"
+                value={ startWeek }
+                onChange={ handleStartWeekChange }
+              >
+                { generateWeekNumbers().map((weekNumber : number, index: number) => {
+                  return <MenuItem key={ index } value={ weekNumber }>{ weekNumber }</MenuItem>
+                }) }
+              </Select>
           </FormControl>
         </>
+
       )
     }
   }
@@ -161,8 +188,11 @@ const EditorContent: React.FC<Props> = () => {
       setSelectedEndingDate(date);
     };
     const handleEndWeekChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-      setScope(event.target.value as DatePickerView);
+      setEndWeek(event.target.value as Number);
     };
+    /*const handleYearChange = (date: Date | null) => {
+      setStartYear(date);
+    };*/
 
     if(scope.toString() !== "week"){
       return (
@@ -175,7 +205,7 @@ const EditorContent: React.FC<Props> = () => {
               label={ strings.editorContent.filterEndingDate }
               value={ selectedEndingDate } 
               onChange={ handleDateChange }
-              KeyboardButtonProps={ {'aria-label': `${strings.editorContent.filterEndingDate}`} }
+              KeyboardButtonProps={ {'aria-label': `${ strings.editorContent.filterEndingDate }`} }
               className={ classes.timeFilter }
             />
           </Grid>
@@ -185,16 +215,34 @@ const EditorContent: React.FC<Props> = () => {
       return (
         <>
           <FormControl variant="standard" className={ classes.selectWeekNumbers }>
-            <Select
-              labelId="scope-select-outlined-label"
-              id="scope-select-outlined"
-              value={ generateWeekNumbers()[0] }
-              onChange={ handleEndWeekChange }
-            >
-              { generateWeekNumbers().map((weekNumber : number, index: number) => {
-                return <MenuItem key={ index } value={ weekNumber }>{ weekNumber }</MenuItem>
-              }) }
-            </Select>
+            <MuiPickersUtilsProvider utils={ DateFnsUtils } >
+              <Grid className={ classes.timeFilter }>
+                <KeyboardDatePicker
+                  variant="inline"
+                  views={ ["year"] }
+                  format="yy"
+                  id="date-picker-start"
+                  label={ strings.editorContent.filterStartingDate }
+                  value={ selectedStartingDate }
+                  onChange={ handleDateChange }
+                  KeyboardButtonProps={ {'aria-label': `${ strings.editorContent.filterStartingDate }`} }
+                  className={ classes.timeFilter }
+                />
+              </Grid>
+            </MuiPickersUtilsProvider>
+          </FormControl>
+          <FormControl variant="standard" className={ classes.selectWeekNumbers }>
+            <FormHelperText>{ strings.editorContent.selectWeekEnd }</FormHelperText>
+              <Select
+                labelId="scope-select-outlined-label"
+                id="scope-select-outlined"
+                value={ endWeek }
+                onChange={ handleEndWeekChange }
+              >
+                { generateWeekNumbers().map((weekNumber : number, index: number) => {
+                  return <MenuItem key={ index } value={ weekNumber }>{ weekNumber }</MenuItem>
+                }) }
+              </Select>
           </FormControl>
         </>
       )
@@ -230,10 +278,12 @@ const EditorContent: React.FC<Props> = () => {
         </Typography>
         { renderFilterSubtitleText(`${ strings.logged }:`, personTotalTime.logged) }
         { renderFilterSubtitleText(`${ strings.expected }:`, personTotalTime.expected) }
-        { renderFilterSubtitleText(`${ strings.total }:`, personTotalTime.total) }
-        { renderSelectScope() }
-        { renderStartDatePicker() }
-        { renderEndDatePicker() }
+        { renderFilterSubtitleText(`${ strings.difference }:`, personTotalTime.total) }
+        <Box className={ classes.filtersContainer }>
+          { renderSelectScope() }
+          { renderStartDatePicker() }
+          { renderEndDatePicker() }
+        </Box>
       </Paper>
     );
   }

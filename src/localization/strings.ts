@@ -59,11 +59,15 @@ export interface IStrings extends LocalizedStringsMethods {
     scopeDate: string;
     scopeMonth: string;
     scopeYear: string;
+    selectYearStart: string;
+    selectYearEnd: string;
+    selectWeekStart: string;
+    selectWeekEnd: string;
   };
 
   logged: string;
   expected: string;
-  total: string;
+  difference: string;
   sunday: string;
   monday: string;
   tuesday: string;

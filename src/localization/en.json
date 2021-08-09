@@ -38,15 +38,19 @@
     "scopeWeek": "Week",
     "scopeDate": "Date",
     "scopeMonth": "Month",
-    "scopeYear": "Year"
+    "scopeYear": "Year",
+    "selectWeekEnd": "Week-end",
+    "selectYearEnd": "Year-end",
+    "selectYearStart": "Year-start",
+    "selectWeekStart": "Week-start"
   },
 
   "logged": "Logged",
   "expected": "Expected",
-  "total": "Total",
+  "difference": "Difference",
   "sunday": "Sunday",
   "monday": "Monday",
-  "tuesday": "Tuseday",
+  "tuesday": "Tuesday",
   "wednesday": "Wednesday",
   "thursday": "Thursday",
   "friday": "Friday",
