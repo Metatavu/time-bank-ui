@@ -33,6 +33,9 @@ export const useEditorContentStyles = makeStyles({
     width: "100%",
     height: 1200
   },
+  selectWeekNumbers: {
+    width: "5rem",
+  }
   
 }, {
   name: "editor-content"

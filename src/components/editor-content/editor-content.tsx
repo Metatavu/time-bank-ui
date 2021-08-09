@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Paper, Typography, Grid, FormControl, MenuItem, Select } from "@material-ui/core";
+import { Paper, Typography, Grid, FormControl, MenuItem, Select, InputLabel } from "@material-ui/core";
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePickerView } from '@material-ui/pickers';
@@ -26,7 +26,6 @@ const EditorContent: React.FC<Props> = () => {
   const dispatch = useAppDispatch();
 
   const { person, personTotalTime } = useAppSelector(selectPerson);
-console.log(person)
 
   const [selectedStartingDate, setSelectedStartingDate] = useState<Date | null>(
     new Date('2014-08-18T21:11:54'),
@@ -37,6 +36,18 @@ console.log(person)
   );
 
   const [scope, setScope] = React.useState<DatePickerView>("month");
+
+  /**
+     * Generate week numbers for the select component
+     * @returns week numbers as array
+     */
+  const generateWeekNumbers = () => {
+    const numbers : number[] = [];
+    for(let i = 1; i <= 53; i++){
+      numbers.push(i)
+    }
+    return numbers
+  }
 
   /**
    * Renders the filter subtitle text
@@ -69,7 +80,7 @@ console.log(person)
   /**
    * Renders datepicker for ending date
    */
-   const renderSelectScope = () => {
+  const renderSelectScope = () => {
     const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
       setScope(event.target.value as DatePickerView);
     };
@@ -96,55 +107,100 @@ console.log(person)
   /**
    * Renders datepicker for starting date
    */
-   const renderStartDatePicker = () => {
+  const renderStartDatePicker = () => {
     const handleDateChange = (date: Date | null) => {
       setSelectedStartingDate(date);
     };
 
-    return (
-      <MuiPickersUtilsProvider utils={ DateFnsUtils } >
-        <Grid className={ classes.timeFilter }>
-          <KeyboardDatePicker
-            variant="inline"
-            views={ [scope] }
-            format="dd/MM/yyyy"
-            id="date-picker-start"
-            label={ strings.editorContent.filterStartingDate }
-            value={ selectedStartingDate }
-            onChange={ handleDateChange }
-            KeyboardButtonProps={ {'aria-label': 'Kaikki alkaa'} }
-            className={ classes.timeFilter }
-          />
-        </Grid>
-      </MuiPickersUtilsProvider>
-    );
-  }
+    const handleStartWeekChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+      setScope(event.target.value as DatePickerView);
+    };
 
+    if(scope.toString() !== "week"){
+      return (
+        <MuiPickersUtilsProvider utils={ DateFnsUtils } >
+          <Grid className={ classes.timeFilter }>
+            <KeyboardDatePicker
+              variant="inline"
+              views={ [scope] }
+              format="dd/MM/yyyy"
+              id="date-picker-start"
+              label={ strings.editorContent.filterStartingDate }
+              value={ selectedStartingDate }
+              onChange={ handleDateChange }
+              KeyboardButtonProps={ {'aria-label': `${strings.editorContent.filterStartingDate}`} }
+              className={ classes.timeFilter }
+            />
+          </Grid>
+        </MuiPickersUtilsProvider>
+      );
+    } else {
+      return (
+        <>
+          <FormControl variant="standard" className={ classes.selectWeekNumbers }>
+            <Select
+              labelId="scope-select-outlined-label"
+              id="scope-select-outlined"
+              value={ generateWeekNumbers()[0] }
+              onChange={ handleStartWeekChange }
+            >
+              { generateWeekNumbers().map((weekNumber : number, index: number) => {
+                return <MenuItem key={ index } value={ weekNumber }>{ weekNumber }</MenuItem>
+              }) }
+            </Select>
+          </FormControl>
+        </>
+      )
+    }
+  }
   /**
    * Renders datepicker for ending date
    */
-   const renderEndDatePicker = () => {
+  const renderEndDatePicker = () => {
     const handleDateChange = (date: Date | null) => {
       setSelectedEndingDate(date);
     };
+    const handleEndWeekChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+      setScope(event.target.value as DatePickerView);
+    };
 
-    return (
-      <MuiPickersUtilsProvider utils={ DateFnsUtils }>
-        <Grid className={ classes.timeFilter } >
-          <KeyboardDatePicker
-            variant="inline"
-            format="dd/MM/yyyy"
-            id="date-picker-end"
-            //label={ strings.editorContent.filterEndingDate }
-            label="Kaikki kuolee"
-            value={ selectedEndingDate } 
-            onChange={ handleDateChange }
-            KeyboardButtonProps={ {'aria-label': 'Kaikki päättyy'} }
-            className={ classes.timeFilter }
-          />
-        </Grid>
-      </MuiPickersUtilsProvider>
-    );
+    if(scope.toString() !== "week"){
+      return (
+        <MuiPickersUtilsProvider utils={ DateFnsUtils }>
+          <Grid className={ classes.timeFilter } >
+            <KeyboardDatePicker
+              variant="inline"
+              format="dd/MM/yyyy"
+              id="date-picker-end"
+              label={ strings.editorContent.filterEndingDate }
+              value={ selectedEndingDate } 
+              onChange={ handleDateChange }
+              KeyboardButtonProps={ {'aria-label': `${strings.editorContent.filterEndingDate}`} }
+              className={ classes.timeFilter }
+            />
+          </Grid>
+        </MuiPickersUtilsProvider>
+      );
+    } else {
+      return (
+        <>
+          <FormControl variant="standard" className={ classes.selectWeekNumbers }>
+            <Select
+              labelId="scope-select-outlined-label"
+              id="scope-select-outlined"
+              value={ generateWeekNumbers()[0] }
+              onChange={ handleEndWeekChange }
+            >
+              { generateWeekNumbers().map((weekNumber : number, index: number) => {
+                return <MenuItem key={ index } value={ weekNumber }>{ weekNumber }</MenuItem>
+              }) }
+            </Select>
+          </FormControl>
+        </>
+      )
+    }
+
+    
   }
 
   /**
