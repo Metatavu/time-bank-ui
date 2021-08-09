@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { Paper, Typography, Grid, FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
+import { Paper, Typography, Grid, FormControl, MenuItem, Select } from "@material-ui/core";
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePickerView } from '@material-ui/pickers';
 import { useEditorContentStyles } from "styles/editor-content/editor-content";
 import { useAppDispatch, useAppSelector } from "app/hooks";
 import { selectPerson } from "features/person/person-slice";
@@ -26,6 +26,7 @@ const EditorContent: React.FC<Props> = () => {
   const dispatch = useAppDispatch();
 
   const { person, personTotalTime } = useAppSelector(selectPerson);
+console.log(person)
 
   const [selectedStartingDate, setSelectedStartingDate] = useState<Date | null>(
     new Date('2014-08-18T21:11:54'),
@@ -35,7 +36,7 @@ const EditorContent: React.FC<Props> = () => {
     new Date('2014-08-18T21:11:54'),
   );
 
-  const [scope, setScope] = useState('');
+  const [scope, setScope] = React.useState<DatePickerView>("month");
 
   /**
    * Renders the filter subtitle text
@@ -66,44 +67,36 @@ const EditorContent: React.FC<Props> = () => {
   }
 
   /**
-   * Renders the filter component
+   * Renders datepicker for ending date
    */
-  const renderFilter = () => {
-    if (!personTotalTime) {
-      return (
-        <Paper 
-          elevation={ 3 }
-          className={ classes.filterContainer }
-        >
-          <Typography style={{ fontStyle: "italic" }}>
-            { strings.editorContent.userNotSelected }
-          </Typography>
-        </Paper>
-      );
-    }
+   const renderSelectScope = () => {
+    const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+      setScope(event.target.value as DatePickerView);
+    };
 
     return (
-      <Paper 
-        elevation={ 3 }
-        className={ classes.filterContainer }
-      >
-        <Typography variant="h4">
-          { strings.editorContent.workTime }
-        </Typography>
-        { renderFilterSubtitleText(`${ strings.logged }:`, personTotalTime.logged) }
-        { renderFilterSubtitleText(`${ strings.expected }:`, personTotalTime.expected) }
-        { renderFilterSubtitleText(`${ strings.total }:`, personTotalTime.total) }
-        { renderSelectScope() }
-        { renderStartDatePicker() }
-        { renderEndDatePicker() }
-      </Paper>
+      <>
+      <FormControl variant="outlined" className={ classes.selectScope }>
+        <Select
+          labelId="scope-select-outlined-label"
+          id="scope-select-outlined"
+          value={ scope }
+          onChange={ handleChange }
+        >
+          <MenuItem value={ "week" }>{ strings.editorContent.scopeWeek }</MenuItem>
+          <MenuItem value={ "date" }>{ strings.editorContent.scopeDate }</MenuItem>
+          <MenuItem value={ "month" }>{ strings.editorContent.scopeMonth }</MenuItem>
+          <MenuItem value={ "year" }>{ strings.editorContent.scopeYear }</MenuItem>
+        </Select>
+      </FormControl>
+      </>
     );
   }
 
   /**
    * Renders datepicker for starting date
    */
-  const renderStartDatePicker = () => {
+   const renderStartDatePicker = () => {
     const handleDateChange = (date: Date | null) => {
       setSelectedStartingDate(date);
     };
@@ -112,8 +105,8 @@ const EditorContent: React.FC<Props> = () => {
       <MuiPickersUtilsProvider utils={ DateFnsUtils } >
         <Grid className={ classes.timeFilter }>
           <KeyboardDatePicker
-            disableToolbar
             variant="inline"
+            views={ [scope] }
             format="dd/MM/yyyy"
             id="date-picker-start"
             label={ strings.editorContent.filterStartingDate }
@@ -139,11 +132,11 @@ const EditorContent: React.FC<Props> = () => {
       <MuiPickersUtilsProvider utils={ DateFnsUtils }>
         <Grid className={ classes.timeFilter } >
           <KeyboardDatePicker
-            disableToolbar
             variant="inline"
             format="dd/MM/yyyy"
             id="date-picker-end"
-            label={ strings.editorContent.filterEndingDate }
+            //label={ strings.editorContent.filterEndingDate }
+            label="Kaikki kuolee"
             value={ selectedEndingDate } 
             onChange={ handleDateChange }
             KeyboardButtonProps={ {'aria-label': 'Kaikki päättyy'} }
@@ -155,33 +148,39 @@ const EditorContent: React.FC<Props> = () => {
   }
 
   /**
-   * Renders datepicker for ending date
+   * Renders the filter component
    */
-   const renderSelectScope = () => {
-    const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-      setScope(event.target.value as string);
-    };
+  const renderFilter = () => {
+    if (!personTotalTime) {
+      return (
+        <Paper 
+          elevation={ 3 }
+          className={ classes.filterContainer }
+        >
+          <Typography style={ { fontStyle: "italic" } }>
+            { strings.editorContent.userNotSelected }
+          </Typography>
+        </Paper>
+      );
+    }
 
     return (
-      <>
-      <FormControl variant="outlined" className={ classes.selectScope }>
-        <InputLabel id="demo-simple-select-outlined-label">Age</InputLabel>
-        <Select
-          labelId="demo-simple-select-outlined-label"
-          id="demo-simple-select-outlined"
-          value={scope}
-          onChange={handleChange}
-          label="Age"
-        >
-          <MenuItem value={10}>T</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
-        </Select>
-      </FormControl>
-      </>
+      <Paper 
+        elevation={ 3 }
+        className={ classes.filterContainer }
+      >
+        <Typography variant="h4">
+          { strings.editorContent.workTime }
+        </Typography>
+        { renderFilterSubtitleText(`${ strings.logged }:`, personTotalTime.logged) }
+        { renderFilterSubtitleText(`${ strings.expected }:`, personTotalTime.expected) }
+        { renderFilterSubtitleText(`${ strings.total }:`, personTotalTime.total) }
+        { renderSelectScope() }
+        { renderStartDatePicker() }
+        { renderEndDatePicker() }
+      </Paper>
     );
   }
-
   
 
   /**

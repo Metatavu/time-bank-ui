@@ -34,7 +34,11 @@
     "userNotSelected": "Please select a user first",
     "workTime": "Work time",
     "filterStartingDate": "Start",
-    "filterEndingDate": "End"
+    "filterEndingDate": "End",
+    "scopeWeek": "Week",
+    "scopeDate": "Date",
+    "scopeMonth": "Month",
+    "scopeYear": "Year"
   },
 
   "logged": "Logged",

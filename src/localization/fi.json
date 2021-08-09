@@ -34,7 +34,11 @@
     "userNotSelected": "Valitse ensin käyttäjä",
     "workTime": "Työaika",
     "filterStartingDate": "Alku",
-    "filterEndingDate": "Loppu"
+    "filterEndingDate": "Loppu",
+    "scopeWeek": "Viikko",
+    "scopeDate": "Pvm",
+    "scopeMonth": "Kuukausi",
+    "scopeYear": "Vuosi"
   },
 
   "logged": "Kirjattu",
