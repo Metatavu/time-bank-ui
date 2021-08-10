@@ -39,10 +39,10 @@
     "scopeDate": "Pvm",
     "scopeMonth": "Kuukausi",
     "scopeYear": "Vuosi",
-    "selectYearStart": "Alku vuosi",
-    "selectWeekStart": "Alku viikko",
-    "selectWeekEnd": "Loppu viikko",
-    "selectYearEnd": "Loppu vuosi"
+    "selectYearStart": "Mistä",
+    "selectWeekStart": "Mistä",
+    "selectWeekEnd": "Mihin",
+    "selectYearEnd": "Mihin"
   },
 
   "logged": "Kirjattu",

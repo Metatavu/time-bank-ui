@@ -27,6 +27,16 @@ export const useEditorContentStyles = makeStyles({
     float: "right",
     marginLeft: "1rem",
     marginRight: "1rem",
+    "& .MuiInputLabel-root": {
+      color: "rgba(0, 0, 0, 0.54)"
+    }
+  },
+  timeFilterYearSelector: {
+    width: "8rem",
+    marginRight: "1rem",
+    "& .MuiInputLabel-root": {
+      color: "rgba(0, 0, 0, 0.54)"
+    }
   },
   overviewContainer: {
     marginTop: theme.spacing(6),
@@ -45,7 +55,7 @@ export const useEditorContentStyles = makeStyles({
     display: "flex", 
     alignItems: "center",
     width: "45rem" 
-  }
+  },
   
 }, {
   name: "editor-content"

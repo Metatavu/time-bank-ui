@@ -26,26 +26,24 @@ const EditorContent: React.FC<Props> = () => {
   const dispatch = useAppDispatch();
 
   const { person, personTotalTime } = useAppSelector(selectPerson);
-  console.log(person)
+
   const [selectedStartingDate, setSelectedStartingDate] = useState<Date | null>(
-    new Date('2014-08-18T21:11:54'),
+    new Date()
   );
 
   const [selectedEndingDate, setSelectedEndingDate] = useState<Date | null>(
-    new Date('2014-08-18T21:11:54'),
+    new Date()
   );
 
-  const [scope, setScope] = React.useState<DatePickerView>("month");
+  const [dateFormat, setDateFormat] = React.useState<string>("dd/M/yyyy")
+
+  const [scope, setScope] = React.useState<DatePickerView>("date");
 
   const [startWeek, setStartWeek] = React.useState<Number>(1);
 
   const [endWeek, setEndWeek] = React.useState<Number>(53);
 
   const [endYear, setEndYear] = React.useState<Number>(53);
-
-  /*const [startYear, setStartYear = React.useState<Date | null>(
-    new Date('2014-08-18T21:11:54')
-  );*/
 
   /**
    * Generate week numbers for the select component
@@ -88,11 +86,22 @@ const EditorContent: React.FC<Props> = () => {
   }
 
   /**
-   * Renders datepicker for ending date
+   * Renders selector of filter scope
    */
   const renderSelectScope = () => {
     const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
       setScope(event.target.value as DatePickerView);
+      switch(event.target.value as string) {
+        case "date":
+          setDateFormat("dd/MM/yyyy")
+          break;
+        case "month":
+          setDateFormat("MM/yyyy")
+          break;
+        case "year":
+          setDateFormat("yyyy")
+          break;
+      }
     };
 
     return (
@@ -100,16 +109,15 @@ const EditorContent: React.FC<Props> = () => {
       <FormControl variant="outlined" className={ classes.selectScope }>
         <TextField
           select
-          //labelId="scope-select-outlined-label"
           id="scope-select-outlined"
           size="small"
           value={ scope }
           onChange={ handleChange }
         >
-          <MenuItem value={ "week" }>{ strings.editorContent.scopeWeek }</MenuItem>
-          <MenuItem value={ "date" }>{ strings.editorContent.scopeDate }</MenuItem>
-          <MenuItem value={ "month" }>{ strings.editorContent.scopeMonth }</MenuItem>
-          <MenuItem value={ "year" }>{ strings.editorContent.scopeYear }</MenuItem>
+          <MenuItem value={ "week" }>{ strings.editorContent.scopeWeek.toUpperCase() }</MenuItem>
+          <MenuItem value={ "date" }>{ strings.editorContent.scopeDate.toUpperCase() }</MenuItem>
+          <MenuItem value={ "month" }>{ strings.editorContent.scopeMonth.toUpperCase() }</MenuItem>
+          <MenuItem value={ "year" }>{ strings.editorContent.scopeYear.toUpperCase() }</MenuItem>
         </TextField>
       </FormControl>
       </>
@@ -117,7 +125,7 @@ const EditorContent: React.FC<Props> = () => {
   }
 
   /**
-   * Renders datepicker for starting date
+   * Renders starting datepicker/week selector depending on scope
    */
   const renderStartDatePicker = () => {
     const handleDateChange = (date: Date | null) => {
@@ -135,13 +143,12 @@ const EditorContent: React.FC<Props> = () => {
             <KeyboardDatePicker
               variant="inline"
               views={ [scope] }
-              format="dd/MM/yyyy"
+              format={ dateFormat }
               id="date-picker-start"
               label={ strings.editorContent.filterStartingDate }
               value={ selectedStartingDate }
               onChange={ handleDateChange }
               KeyboardButtonProps={ {'aria-label': `${ strings.editorContent.filterStartingDate }`} }
-              className={ classes.timeFilter }
             />
           </Grid>
         </MuiPickersUtilsProvider>
@@ -149,18 +156,21 @@ const EditorContent: React.FC<Props> = () => {
     } else {
       return (
         <>
-          <FormControl variant="standard" className={ classes.selectWeekNumbers }>
-            <FormHelperText>{ strings.editorContent.selectYearStart }</FormHelperText>
-              <Select
-                labelId="scope-select-outlined-label"
-                id="scope-select-outlined"
-                value={ startWeek }
-                onChange={ handleStartWeekChange }
-              >
-                { generateWeekNumbers().map((weekNumber : number, index: number) => {
-                  return <MenuItem key={ index } value={ weekNumber }>{ weekNumber }</MenuItem>
-                }) }
-              </Select>
+          <FormControl variant="standard">
+            <MuiPickersUtilsProvider utils={ DateFnsUtils } >
+              <Grid className={ classes.timeFilterYearSelector }>
+                <KeyboardDatePicker
+                  variant="inline"
+                  views={ ["year"] }
+                  format="yyyy"
+                  id="date-picker-year-start"
+                  label={ strings.editorContent.selectYearStart }
+                  value={ selectedStartingDate }
+                  onChange={ handleDateChange }
+                  KeyboardButtonProps={ {'aria-label': `${ strings.editorContent.filterStartingDate }`} }
+                />
+              </Grid>
+            </MuiPickersUtilsProvider>
           </FormControl>
           <FormControl variant="standard" className={ classes.selectWeekNumbers }>
             <FormHelperText>{ strings.editorContent.selectWeekStart }</FormHelperText>
@@ -171,17 +181,22 @@ const EditorContent: React.FC<Props> = () => {
                 onChange={ handleStartWeekChange }
               >
                 { generateWeekNumbers().map((weekNumber : number, index: number) => {
-                  return <MenuItem key={ index } value={ weekNumber }>{ weekNumber }</MenuItem>
+                  return  <MenuItem 
+                            key={ index } 
+                            value={ weekNumber }
+                            >
+                            { weekNumber }
+                          </MenuItem>
                 }) }
               </Select>
           </FormControl>
         </>
-
       )
     }
   }
+
   /**
-   * Renders datepicker for ending date
+   * Renders ending datepicker/week selector depenging on scope
    */
   const renderEndDatePicker = () => {
     const handleDateChange = (date: Date | null) => {
@@ -190,9 +205,9 @@ const EditorContent: React.FC<Props> = () => {
     const handleEndWeekChange = (event: React.ChangeEvent<{ value: unknown }>) => {
       setEndWeek(event.target.value as Number);
     };
-    /*const handleYearChange = (date: Date | null) => {
-      setStartYear(date);
-    };*/
+    const handleYearChange = (date: Date | null) => {
+      setSelectedEndingDate(date);
+    };
 
     if(scope.toString() !== "week"){
       return (
@@ -200,13 +215,13 @@ const EditorContent: React.FC<Props> = () => {
           <Grid className={ classes.timeFilter } >
             <KeyboardDatePicker
               variant="inline"
-              format="dd/MM/yyyy"
+              format={ dateFormat }
+              views={ [scope] }
               id="date-picker-end"
               label={ strings.editorContent.filterEndingDate }
               value={ selectedEndingDate } 
               onChange={ handleDateChange }
               KeyboardButtonProps={ {'aria-label': `${ strings.editorContent.filterEndingDate }`} }
-              className={ classes.timeFilter }
             />
           </Grid>
         </MuiPickersUtilsProvider>
@@ -214,19 +229,18 @@ const EditorContent: React.FC<Props> = () => {
     } else {
       return (
         <>
-          <FormControl variant="standard" className={ classes.selectWeekNumbers }>
+          <FormControl variant="standard">
             <MuiPickersUtilsProvider utils={ DateFnsUtils } >
-              <Grid className={ classes.timeFilter }>
+              <Grid className={ classes.timeFilterYearSelector }>
                 <KeyboardDatePicker
                   variant="inline"
                   views={ ["year"] }
-                  format="yy"
-                  id="date-picker-start"
-                  label={ strings.editorContent.filterStartingDate }
-                  value={ selectedStartingDate }
-                  onChange={ handleDateChange }
+                  format="yyyy"
+                  id="date-picker-year-start"
+                  label={ strings.editorContent.selectYearEnd }
+                  value={ selectedEndingDate }
+                  onChange={ handleYearChange }
                   KeyboardButtonProps={ {'aria-label': `${ strings.editorContent.filterStartingDate }`} }
-                  className={ classes.timeFilter }
                 />
               </Grid>
             </MuiPickersUtilsProvider>
@@ -246,9 +260,7 @@ const EditorContent: React.FC<Props> = () => {
           </FormControl>
         </>
       )
-    }
-
-    
+    } 
   }
 
   /**
