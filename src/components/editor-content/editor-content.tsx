@@ -19,12 +19,12 @@ interface Props {
 /**
  * Values for filtering scopes
  */
-enum filterScopes {
-  week = "week",
-  date = "date",
-  month = "month",
-  year = "year"
-}
+enum FilterScopes {
+  WEEK = "week",
+  DATE = "date",
+  MONTH = "month",
+  YEAR = "year"
+};
 
 /**
  * Application editor content component
