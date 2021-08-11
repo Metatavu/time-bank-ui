@@ -55,10 +55,10 @@ export interface IStrings extends LocalizedStringsMethods {
     workTime: string;
     filterStartingDate: string;
     filterEndingDate: string;
-    scopeWeek: string;
-    scopeDate: string;
-    scopeMonth: string;
-    scopeYear: string;
+    week: string;
+    date: string;
+    month: string;
+    year: string;
     selectYearStart: string;
     selectYearEnd: string;
     selectWeekStart: string;

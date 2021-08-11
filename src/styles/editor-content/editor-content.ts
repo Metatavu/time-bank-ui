@@ -20,6 +20,7 @@ export const useEditorContentStyles = makeStyles({
     marginRight: "2rem",
     marginLeft: "2rem",
   },
+
   timeFilter: {
     width: "15rem",
     float: "right",
@@ -29,6 +30,7 @@ export const useEditorContentStyles = makeStyles({
       color: "rgba(0, 0, 0, 0.54)"
     }
   },
+
   timeFilterYearSelector: {
     width: "8rem",
     marginRight: "1rem",
@@ -36,11 +38,13 @@ export const useEditorContentStyles = makeStyles({
       color: "rgba(0, 0, 0, 0.54)"
     }
   },
+
   overviewContainer: {
     marginTop: theme.spacing(6),
     width: "100%",
     height: 1200
   },
+  
   selectWeekNumbers: {
     width: "5rem",
     marginRight: "2rem",
@@ -48,6 +52,7 @@ export const useEditorContentStyles = makeStyles({
       color: "rgba(0, 0, 0, 0.54)"
     }
   },
+  
   filtersContainer: {
     marginLeft: "auto", 
     display: "flex", 
