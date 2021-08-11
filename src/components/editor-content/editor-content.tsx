@@ -119,7 +119,7 @@ const EditorContent: React.FC<Props> = () => {
    * Renders scope options for select component
    */
    const renderSelectOptions = Object.values(FilterScopes).map(scope =>
-    <MenuItem value={ scope }>{ strings.editorContent[scope as keyof object] }</MenuItem>
+    <MenuItem value={ scope } key = { scope }>{ strings.editorContent[scope as keyof object] }</MenuItem>
   );
 
   /**
@@ -171,15 +171,16 @@ const EditorContent: React.FC<Props> = () => {
     );
   }
 
-  
-
   /**
    * Renders start date picker 
    * 
    * @returns start date picker
    */
   const renderStartDatePicker = () => {
+    
+    console.log("Miksi ei näy")
     return (
+      <>
       <MuiPickersUtilsProvider utils={ DateFnsUtils } >
         <Grid className={ classes.timeFilter }>
           <KeyboardDatePicker
@@ -194,6 +195,7 @@ const EditorContent: React.FC<Props> = () => {
           />
         </Grid>
       </MuiPickersUtilsProvider>
+      </>
     );
   }
   
@@ -269,7 +271,12 @@ const EditorContent: React.FC<Props> = () => {
     );
   }
 
-  const endYearPickerAndWeekSelector = () => {
+  /**
+   * Renders end year picker and week selector 
+   * 
+   * @returns start year picker and week selector
+   */
+  const renderEndYearPickerAndWeekSelector = () => {
     return (
       <>
         <FormControl variant="standard">
@@ -309,7 +316,6 @@ const EditorContent: React.FC<Props> = () => {
    * Renders starting datepicker or week/year selector depending on scope
    */
    const renderStartDatePickersAndWeekSelector = () => {
-
     if(scope.toString() !== FilterScopes.WEEK){
       renderStartDatePicker();
     } else {
@@ -321,11 +327,10 @@ const EditorContent: React.FC<Props> = () => {
    * Renders ending datepicker/week selector depending on scope
    */
   const renderEndDatePickersAndWeekSelector = () => {
-
-    if(scope.toString() !== "week"){
+    if(scope.toString() !== FilterScopes.WEEK){
       renderEndDate();
     } else {
-      endYearPickerAndWeekSelector();
+      renderEndYearPickerAndWeekSelector();
     } 
   }
 
