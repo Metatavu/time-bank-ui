@@ -154,7 +154,6 @@ const EditorContent: React.FC<Props> = () => {
    * Renders selector of filter scope
    */
   const renderSelectScope = () => {
-
     return (
       <>
         <FormControl variant="outlined" className={ classes.selectScope }>
