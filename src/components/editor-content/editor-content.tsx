@@ -24,7 +24,7 @@ enum FilterScopes {
   DATE = "date",
   MONTH = "month",
   YEAR = "year"
-}
+};
 
 /**
  * Application editor content component
