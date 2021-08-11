@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Paper, Typography, Grid, FormControl, MenuItem, Select, FormHelperText, TextField, Box } from "@material-ui/core";
-import 'date-fns';
-import DateFnsUtils from '@date-io/date-fns';
-import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePickerView } from '@material-ui/pickers';
+import "date-fns";
+import DateFnsUtils from "@date-io/date-fns";
+import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePickerView } from "@material-ui/pickers";
 import { useEditorContentStyles } from "styles/editor-content/editor-content";
 import { useAppDispatch, useAppSelector } from "app/hooks";
 import { selectPerson } from "features/person/person-slice";
