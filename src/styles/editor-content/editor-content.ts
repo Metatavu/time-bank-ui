@@ -9,12 +9,10 @@ export const useEditorContentStyles = makeStyles({
     display: "flex",
     alignItems: "center",
     padding: `0px ${theme.spacing(3)}px`,
-    "& h4": {
-      fontWeight: 600,
-      fontStyle: "italic"
-    },
-    "& h5": {
-      fontSize: "0.8rem"
+    [theme.breakpoints.down(1921)]: {
+        "& .MuiTypography-root": {
+          fontSize: "0.9rem"
+      },
     }
   },
   selectScope: {

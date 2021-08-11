@@ -17,12 +17,24 @@ interface Props {
 }
 
 /**
+ * Values for filtering scopes
+ */
+enum filterScopes {
+  week = "week",
+  date = "date",
+  month = "month",
+  year = "year"
+}
+
+/**
  * Application editor content component
  *
  * @param props component properties
  */
 const EditorContent: React.FC<Props> = () => {
+
   const classes = useEditorContentStyles();
+
   const dispatch = useAppDispatch();
 
   const { person, personTotalTime } = useAppSelector(selectPerson);
@@ -43,7 +55,21 @@ const EditorContent: React.FC<Props> = () => {
 
   const [endWeek, setEndWeek] = React.useState<Number>(53);
 
-  const [endYear, setEndYear] = React.useState<Number>(53);
+  const handleStartDateChange = (date: Date | null) => {
+    setSelectedStartingDate(date);
+  };
+
+  const handleEndDateChange = (date: Date | null) => {
+    setSelectedEndingDate(date);
+  };
+  
+  const handleStartWeekChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setStartWeek(event.target.value as Number);
+  };
+
+  const handleEndWeekChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setEndWeek(event.target.value as Number);
+  };
 
   /**
    * Generate week numbers for the select component
@@ -114,10 +140,10 @@ const EditorContent: React.FC<Props> = () => {
           value={ scope }
           onChange={ handleChange }
         >
-          <MenuItem value={ "week" }>{ strings.editorContent.scopeWeek.toUpperCase() }</MenuItem>
-          <MenuItem value={ "date" }>{ strings.editorContent.scopeDate.toUpperCase() }</MenuItem>
-          <MenuItem value={ "month" }>{ strings.editorContent.scopeMonth.toUpperCase() }</MenuItem>
-          <MenuItem value={ "year" }>{ strings.editorContent.scopeYear.toUpperCase() }</MenuItem>
+          <MenuItem value={ filterScopes.week }>{ strings.editorContent.scopeWeek }</MenuItem>
+          <MenuItem value={ filterScopes.date }>{ strings.editorContent.scopeDate }</MenuItem>
+          <MenuItem value={ filterScopes.month }>{ strings.editorContent.scopeMonth }</MenuItem>
+          <MenuItem value={ filterScopes.year }>{ strings.editorContent.scopeYear }</MenuItem>
         </TextField>
       </FormControl>
       </>
@@ -128,15 +154,8 @@ const EditorContent: React.FC<Props> = () => {
    * Renders starting datepicker/week selector depending on scope
    */
   const renderStartDatePicker = () => {
-    const handleDateChange = (date: Date | null) => {
-      setSelectedStartingDate(date);
-    };
 
-    const handleStartWeekChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-      setStartWeek(event.target.value as Number);
-    };
-
-    if(scope.toString() !== "week"){
+    if(scope.toString() !== filterScopes.week){
       return (
         <MuiPickersUtilsProvider utils={ DateFnsUtils } >
           <Grid className={ classes.timeFilter }>
@@ -147,7 +166,7 @@ const EditorContent: React.FC<Props> = () => {
               id="date-picker-start"
               label={ strings.editorContent.filterStartingDate }
               value={ selectedStartingDate }
-              onChange={ handleDateChange }
+              onChange={ handleStartDateChange }
               KeyboardButtonProps={ {'aria-label': `${ strings.editorContent.filterStartingDate }`} }
             />
           </Grid>
@@ -166,7 +185,7 @@ const EditorContent: React.FC<Props> = () => {
                   id="date-picker-year-start"
                   label={ strings.editorContent.selectYearStart }
                   value={ selectedStartingDate }
-                  onChange={ handleDateChange }
+                  onChange={ handleStartDateChange }
                   KeyboardButtonProps={ {'aria-label': `${ strings.editorContent.filterStartingDate }`} }
                 />
               </Grid>
@@ -181,12 +200,14 @@ const EditorContent: React.FC<Props> = () => {
                 onChange={ handleStartWeekChange }
               >
                 { generateWeekNumbers().map((weekNumber : number, index: number) => {
-                  return  <MenuItem 
-                            key={ index } 
-                            value={ weekNumber }
-                            >
-                            { weekNumber }
-                          </MenuItem>
+                  return  (
+                    <MenuItem 
+                      key={ index } 
+                      value={ weekNumber }
+                      >
+                      { weekNumber }
+                    </MenuItem>
+                  )
                 }) }
               </Select>
           </FormControl>
@@ -196,18 +217,9 @@ const EditorContent: React.FC<Props> = () => {
   }
 
   /**
-   * Renders ending datepicker/week selector depenging on scope
+   * Renders ending datepicker/week selector depending on scope
    */
   const renderEndDatePicker = () => {
-    const handleDateChange = (date: Date | null) => {
-      setSelectedEndingDate(date);
-    };
-    const handleEndWeekChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-      setEndWeek(event.target.value as Number);
-    };
-    const handleYearChange = (date: Date | null) => {
-      setSelectedEndingDate(date);
-    };
 
     if(scope.toString() !== "week"){
       return (
@@ -220,7 +232,7 @@ const EditorContent: React.FC<Props> = () => {
               id="date-picker-end"
               label={ strings.editorContent.filterEndingDate }
               value={ selectedEndingDate } 
-              onChange={ handleDateChange }
+              onChange={ handleEndDateChange }
               KeyboardButtonProps={ {'aria-label': `${ strings.editorContent.filterEndingDate }`} }
             />
           </Grid>
@@ -236,10 +248,10 @@ const EditorContent: React.FC<Props> = () => {
                   variant="inline"
                   views={ ["year"] }
                   format="yyyy"
-                  id="date-picker-year-start"
+                  id="date-picker-year-end"
                   label={ strings.editorContent.selectYearEnd }
                   value={ selectedEndingDate }
-                  onChange={ handleYearChange }
+                  onChange={ handleEndDateChange }
                   KeyboardButtonProps={ {'aria-label': `${ strings.editorContent.filterStartingDate }`} }
                 />
               </Grid>
@@ -285,12 +297,12 @@ const EditorContent: React.FC<Props> = () => {
         elevation={ 3 }
         className={ classes.filterContainer }
       >
-        <Typography variant="h4">
+        <Typography variant="h4" style={ { fontWeight: 600, fontStyle: "italic" } }>
           { strings.editorContent.workTime }
         </Typography>
         { renderFilterSubtitleText(`${ strings.logged }:`, personTotalTime.logged) }
         { renderFilterSubtitleText(`${ strings.expected }:`, personTotalTime.expected) }
-        { renderFilterSubtitleText(`${ strings.difference }:`, personTotalTime.total) }
+        { renderFilterSubtitleText(`${ strings.total }:`, personTotalTime.total) }
         <Box className={ classes.filtersContainer }>
           { renderSelectScope() }
           { renderStartDatePicker() }
