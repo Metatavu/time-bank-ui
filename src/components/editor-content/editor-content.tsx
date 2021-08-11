@@ -39,20 +39,12 @@ const EditorContent: React.FC<Props> = () => {
 
   const { person, personTotalTime } = useAppSelector(selectPerson);
 
-  const [selectedStartingDate, setSelectedStartingDate] = useState<Date | null>(
-    new Date()
-  );
-
-  const [selectedEndingDate, setSelectedEndingDate] = useState<Date | null>(
-    new Date()
-  );
-
-  const [dateFormat, setDateFormat] = React.useState<string>("dd/M/yyyy")
-
+  const [selectedStartingDate, setSelectedStartingDate] = useState<Date>(new Date());
+  const [selectedEndingDate, setSelectedEndingDate] = useState<Date>(new Date());
+  const [dateFormat, setDateFormat] = React.useState<string>("dd/M/yyyy");
   const [scope, setScope] = React.useState<DatePickerView>("date");
-
+  // TODO: Dynamically check week number and how many weeks each year has
   const [startWeek, setStartWeek] = React.useState<Number>(1);
-
   const [endWeek, setEndWeek] = React.useState<Number>(53);
 
   const handleStartDateChange = (date: Date | null) => {
