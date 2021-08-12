@@ -229,7 +229,7 @@ const EditorContent: React.FC<Props> = () => {
                 label={ strings.editorContent.selectYearStart }
                 value={ selectedStartingDate }
                 onChange={ handleStartDateChange }
-                KeyboardButtonProps={ {"aria-label": `${ strings.editorContent.filterStartingDate }`} }
+                KeyboardButtonProps={{ "aria-label": `${ strings.editorContent.filterStartingDate }` }}
               />
             </Grid>
           </MuiPickersUtilsProvider>
