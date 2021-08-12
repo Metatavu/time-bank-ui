@@ -275,7 +275,7 @@ const EditorContent: React.FC<Props> = () => {
             label={ strings.editorContent.filterEndingDate }
             value={ selectedEndingDate } 
             onChange={ handleEndDateChange }
-            KeyboardButtonProps={ {'aria-label': `${ strings.editorContent.filterEndingDate }`} }
+            KeyboardButtonProps={{ "aria-label": `${ strings.editorContent.filterEndingDate }`}}
           />
         </Grid>
       </MuiPickersUtilsProvider>
