@@ -367,9 +367,9 @@ const EditorContent: React.FC<Props> = () => {
         <Typography variant="h4" style={ { fontWeight: 600, fontStyle: "italic" } }>
           { strings.editorContent.workTime }
         </Typography>
-        { renderFilterSubtitleText(`${ strings.logged }:`, personTotalTime.logged) }
-        { renderFilterSubtitleText(`${ strings.expected }:`, personTotalTime.expected) }
-        { renderFilterSubtitleText(`${ strings.total }:`, personTotalTime.total) }
+        { renderFilterSubtitleText(`${strings.logged}:`, personTotalTime.logged) }
+        { renderFilterSubtitleText(`${strings.expected}:`, personTotalTime.expected) }
+        { renderFilterSubtitleText(`${strings.total}:`, personTotalTime.total) }
         <Box className={ classes.filtersContainer }>
           { renderSelectScope() }
           { renderStartDatePickersAndWeekSelector() }
