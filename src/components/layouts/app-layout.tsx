@@ -29,9 +29,9 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, editorCo
         <Toolbar>
           <Box className={ classes.titleContainer }>
             <img 
-            src={ siteLogo } 
-            className={ classes.logo } 
-            alt={ strings.header.logo }
+              src={ siteLogo } 
+              className={ classes.logo } 
+              alt={ strings.header.logo }
             />
             <Typography className={ classes.title }>
               { strings.header.title }
