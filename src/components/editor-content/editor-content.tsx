@@ -152,7 +152,7 @@ const EditorContent: React.FC<Props> = () => {
         </Typography>
         <Typography
           variant="h5"
-          style={ {
+          style={{
             marginLeft: theme.spacing(1),
             fontStyle: "italic"
           } }
