@@ -108,6 +108,7 @@ const EditorContent: React.FC<Props> = () => {
 
   /**
    * Changes the presented date format according to selected scope
+   *
    * @param event 
    */
   const handleDateFormatChange = (event: React.ChangeEvent<HTMLInputElement>) => {
