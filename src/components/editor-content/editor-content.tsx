@@ -186,8 +186,6 @@ const EditorContent: React.FC<Props> = () => {
 
   /**
    * Renders start date picker 
-   * 
-   * @returns start date picker
    */
   const renderStartDatePicker = () => {
     const { filterStartingDate } = strings.editorContent;
