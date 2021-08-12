@@ -155,7 +155,7 @@ const EditorContent: React.FC<Props> = () => {
           style={{
             marginLeft: theme.spacing(1),
             fontStyle: "italic"
-          } }
+          }}
         >
           { TimeUtils.minuteToHourString(value) }
         </Typography>
