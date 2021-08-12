@@ -326,7 +326,7 @@ const EditorContent: React.FC<Props> = () => {
    * Renders starting datepicker or week/year selector depending on scope
    */
   const renderStartDatePickersAndWeekSelector = () => {
-    if(scope.toString() !== FilterScopes.WEEK){
+    if (scope.toString() !== FilterScopes.WEEK) {
       return renderStartDatePicker();
     } else {
       return renderStartYearPickerAndWeekSelector();
