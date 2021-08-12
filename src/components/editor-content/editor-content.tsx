@@ -260,8 +260,6 @@ const EditorContent: React.FC<Props> = () => {
 
   /**
    * Renders end date picker
-   * 
-   * @returns end date picker
    */
   const renderEndDate = () => {
     return (
