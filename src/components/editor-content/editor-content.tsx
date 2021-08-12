@@ -278,8 +278,6 @@ const EditorContent: React.FC<Props> = () => {
 
   /**
    * Renders end year picker and week selector 
-   * 
-   * @returns start year picker and week selector
    */
   const renderEndYearPickerAndWeekSelector = () => {
     return (
