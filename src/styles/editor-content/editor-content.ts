@@ -15,6 +15,7 @@ export const useEditorContentStyles = makeStyles({
       },
     }
   },
+
   selectScope: {
     width: "7rem",
     marginRight: "2rem",
