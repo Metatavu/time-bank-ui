@@ -270,7 +270,7 @@ const EditorContent: React.FC<Props> = () => {
           <KeyboardDatePicker
             variant="inline"
             format={ dateFormat }
-            views={ [ scope ] }
+            views={[ scope ]}
             id="date-picker-end"
             label={ strings.editorContent.filterEndingDate }
             value={ selectedEndingDate } 
