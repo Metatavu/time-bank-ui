@@ -319,7 +319,7 @@ const EditorContent: React.FC<Props> = () => {
             </Select>
         </FormControl>
       </>
-    )
+    );
   }
 
   /**
