@@ -75,6 +75,7 @@ const EditorContent: React.FC<Props> = () => {
   
   /**
    * Method to handle starting week change
+   *
    * @param date 
    */
   const handleStartWeekChange = (event: React.ChangeEvent<{ value: unknown }>) => {
