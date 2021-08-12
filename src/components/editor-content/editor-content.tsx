@@ -85,6 +85,7 @@ const EditorContent: React.FC<Props> = () => {
 
   /**
    * Method to handle ending week change
+   * 
    * @param date 
    */
   const handleEndWeekChange = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -104,7 +105,21 @@ const EditorContent: React.FC<Props> = () => {
     }
 
     return numbers;
-  }
+  };
+
+  const renderWeekNumbers = () => {
+    return generateWeekNumbers().map((weekNumber : number, index: number) => {
+      return  (
+        <MenuItem 
+          key={ index } 
+          value={ weekNumber }
+          >
+          { weekNumber }
+        </MenuItem>
+      )
+    })
+  };
+  
 
   /**
    * Changes the presented date format according to selected scope
@@ -168,19 +183,17 @@ const EditorContent: React.FC<Props> = () => {
    */
   const renderSelectScope = () => {
     return (
-      <>
-        <FormControl variant="outlined" className={ classes.selectScope }>
-          <TextField
-            select
-            id="scope-select-outlined"
-            size="small"
-            value={ scope }
-            onChange={ handleDateFormatChange }
-          >
-            { renderSelectOptions }
-          </TextField>
-        </FormControl>
-      </>
+      <FormControl variant="outlined" className={ classes.selectScope }>
+        <TextField
+          select
+          id="scope-select-outlined"
+          size="small"
+          value={ scope }
+          onChange={ handleDateFormatChange }
+        >
+          { renderSelectOptions }
+        </TextField>
+      </FormControl>
     );
   }
 
@@ -238,16 +251,7 @@ const EditorContent: React.FC<Props> = () => {
               value={ startWeek }
               onChange={ handleStartWeekChange }
             >
-              { generateWeekNumbers().map((weekNumber : number, index: number) => {
-                return  (
-                  <MenuItem 
-                    key={ index } 
-                    value={ weekNumber }
-                    >
-                    { weekNumber }
-                  </MenuItem>
-                )
-              }) }
+              { renderWeekNumbers() }
             </Select>
         </FormControl>
       </>
@@ -306,9 +310,7 @@ const EditorContent: React.FC<Props> = () => {
               value={ endWeek }
               onChange={ handleEndWeekChange }
             >
-              { generateWeekNumbers().map((weekNumber : number, index: number) => {
-                return <MenuItem key={ index } value={ weekNumber }>{ weekNumber }</MenuItem>
-              }) }
+              { renderWeekNumbers() }
             </Select>
         </FormControl>
       </>
@@ -347,7 +349,7 @@ const EditorContent: React.FC<Props> = () => {
           elevation={ 3 }
           className={ classes.filterContainer }
         >
-          <Typography style={ { fontStyle: "italic" } }>
+          <Typography style={{ fontStyle: "italic" }}>
             { strings.editorContent.userNotSelected }
           </Typography>
         </Paper>
@@ -359,7 +361,7 @@ const EditorContent: React.FC<Props> = () => {
         elevation={ 3 }
         className={ classes.filterContainer }
       >
-        <Typography variant="h4" style={ { fontWeight: 600, fontStyle: "italic" } }>
+        <Typography variant="h4" style={{ fontWeight: 600, fontStyle: "italic" }}>
           { strings.editorContent.workTime }
         </Typography>
         { renderFilterSubtitleText(`${strings.logged}:`, personTotalTime.logged) }
