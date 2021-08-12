@@ -39,8 +39,8 @@ const EditorContent: React.FC<Props> = () => {
 
   const { person, personTotalTime } = useAppSelector(selectPerson);
 
-  const [selectedStartingDate, setSelectedStartingDate] = useState<Date | null>(new Date());
-  const [selectedEndingDate, setSelectedEndingDate] = useState<Date | null>(new Date());
+  const [selectedStartingDate, setSelectedStartingDate] = useState<Date>(new Date());
+  const [selectedEndingDate, setSelectedEndingDate] = useState<Date>(new Date());
   const [dateFormat, setDateFormat] = React.useState<string>("dd/M/yyyy");
   const [scope, setScope] = React.useState<DatePickerView>("date");
   // TODO: Dynamically check week number and how many weeks each year has
@@ -49,9 +49,14 @@ const EditorContent: React.FC<Props> = () => {
 
   /**
    * Method to handle starting date change
+   *
    * @param date 
    */
   const handleStartDateChange = (date: Date | null) => {
+    if (!date) {
+      return;
+    }
+
     setSelectedStartingDate(date);
   };
 
@@ -60,6 +65,10 @@ const EditorContent: React.FC<Props> = () => {
    * @param date 
    */
   const handleEndDateChange = (date: Date | null) => {
+    if (!date) {
+      return;
+    }
+
     setSelectedEndingDate(date);
   };
   
@@ -101,6 +110,7 @@ const EditorContent: React.FC<Props> = () => {
    */
   const handleDateFormatChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
+
     setScope(value as DatePickerView);
     switch(value.toString()) {
       case "date":
@@ -118,7 +128,7 @@ const EditorContent: React.FC<Props> = () => {
   /**
    * Renders scope options for select component
    */
-   const renderSelectOptions = Object.values(FilterScopes).map(scope =>
+  const renderSelectOptions = Object.values(FilterScopes).map(scope =>
     <MenuItem value={ scope } key = { scope }>{ strings.editorContent[scope as keyof object] }</MenuItem>
   );
 
@@ -177,10 +187,9 @@ const EditorContent: React.FC<Props> = () => {
    * @returns start date picker
    */
   const renderStartDatePicker = () => {
-    
-    console.log("Miksi ei näy")
+    const { filterStartingDate } = strings.editorContent;
+
     return (
-      <>
       <MuiPickersUtilsProvider utils={ DateFnsUtils } >
         <Grid className={ classes.timeFilter }>
           <KeyboardDatePicker
@@ -188,14 +197,13 @@ const EditorContent: React.FC<Props> = () => {
             views={ [ scope ] }
             format={ dateFormat }
             id="date-picker-start"
-            label={ strings.editorContent.filterStartingDate }
+            label={ filterStartingDate }
             value={ selectedStartingDate }
             onChange={ handleStartDateChange }
-            KeyboardButtonProps={ {"aria-label": `${ strings.editorContent.filterStartingDate }`} }
+            KeyboardButtonProps={ {"aria-label": `${ filterStartingDate }`} }
           />
         </Grid>
       </MuiPickersUtilsProvider>
-      </>
     );
   }
   
@@ -212,7 +220,7 @@ const EditorContent: React.FC<Props> = () => {
             <Grid className={ classes.timeFilterYearSelector }>
               <KeyboardDatePicker
                 variant="inline"
-                views={ ["year"] }
+                views={[ "year" ]}
                 format="yyyy"
                 id="date-picker-year-start"
                 label={ strings.editorContent.selectYearStart }
@@ -284,7 +292,7 @@ const EditorContent: React.FC<Props> = () => {
             <Grid className={ classes.timeFilterYearSelector }>
               <KeyboardDatePicker
                 variant="inline"
-                views={ ["year"] }
+                views={ [ "year" ] }
                 format="yyyy"
                 id="date-picker-year-end"
                 label={ strings.editorContent.selectYearEnd }
@@ -315,11 +323,11 @@ const EditorContent: React.FC<Props> = () => {
   /**
    * Renders starting datepicker or week/year selector depending on scope
    */
-   const renderStartDatePickersAndWeekSelector = () => {
+  const renderStartDatePickersAndWeekSelector = () => {
     if(scope.toString() !== FilterScopes.WEEK){
-      renderStartDatePicker();
+      return renderStartDatePicker();
     } else {
-      renderStartYearPickerAndWeekSelector();
+      return renderStartYearPickerAndWeekSelector();
     }
   }
 
@@ -328,9 +336,9 @@ const EditorContent: React.FC<Props> = () => {
    */
   const renderEndDatePickersAndWeekSelector = () => {
     if(scope.toString() !== FilterScopes.WEEK){
-      renderEndDate();
+      return renderEndDate();
     } else {
-      renderEndYearPickerAndWeekSelector();
+      return renderEndYearPickerAndWeekSelector();
     } 
   }
 
