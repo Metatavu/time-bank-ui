@@ -62,6 +62,7 @@ const EditorContent: React.FC<Props> = () => {
 
   /**
    * Method to handle ending date change
+   *
    * @param date 
    */
   const handleEndDateChange = (date: Date | null) => {
