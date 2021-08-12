@@ -103,7 +103,7 @@ const EditorContent: React.FC<Props> = () => {
       numbers.push(i)
     }
 
-    return numbers
+    return numbers;
   }
 
   /**
