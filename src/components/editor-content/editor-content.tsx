@@ -62,11 +62,7 @@ const EditorContent: React.FC<Props> = () => {
    * @param date selected date
    */
   const handleEndDateChange = (date: Date | null) => {
-    if (!date) {
-      return;
-    }
-
-    setSelectedEndingDate(date);
+    date && setSelectedEndingDate(date);
   };
   
   /**
