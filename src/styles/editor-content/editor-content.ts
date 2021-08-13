@@ -47,9 +47,9 @@ export const useEditorContentStyles = makeStyles({
   },
   
   selectWeekNumbers: {
-    width: "5rem",
-    marginRight: "2rem",
-    "& p": {
+    width: "8rem",
+    marginRight: "1rem",
+    "& .MuiFormLabel-root": {
       color: "rgba(0, 0, 0, 0.54)"
     }
   },

@@ -1,39 +1,21 @@
 import React, { useState } from "react";
-import { Paper, Typography, Grid, FormControl, MenuItem, FormHelperText, TextField, Box } from "@material-ui/core";
+import { Paper, Typography, Grid, FormControl, MenuItem, TextField, Box } from "@material-ui/core";
 import "date-fns";
 import DateFnsUtils from "@date-io/date-fns";
 import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePickerView } from "@material-ui/pickers";
 import { useEditorContentStyles } from "styles/editor-content/editor-content";
-import { useAppDispatch, useAppSelector } from "app/hooks";
+import { useAppSelector } from "app/hooks";
 import { selectPerson } from "features/person/person-slice";
 import strings from "localization/strings";
 import theme from "theme/theme";
 import TimeUtils from "utils/time-utils";
+import { FilterScopes, DateFormats } from "types";
 
 /**
  * Component properties
  */
 interface Props {
 }
-
-/**
- * Values for filtering scopes
- */
-enum FilterScopes {
-  WEEK = "week",
-  DATE = "date",
-  MONTH = "month",
-  YEAR = "year"
-};
-
-/**
- * Values for filtering scopes
- */
- enum DateFormats{
-  DATE = "dd/MM/yyyy",
-  MONTH = "MM/yyyy",
-  YEAR = "yyyy"
-};
 
 /**
  * Application editor content component
@@ -44,14 +26,12 @@ const EditorContent: React.FC<Props> = () => {
 
   const classes = useEditorContentStyles();
 
-  const dispatch = useAppDispatch();
-
   const { person, personTotalTime } = useAppSelector(selectPerson);
 
   const [ selectedStartingDate, setSelectedStartingDate ] = useState<Date>(new Date());
   const [ selectedEndingDate, setSelectedEndingDate ] = useState<Date>(new Date());
   const [ dateFormat, setDateFormat ] = React.useState<string | undefined>("dd/MM/yyyy");
-  const [ scope, setScope ] = React.useState<DatePickerView>("date");
+  const [ scope, setScope ] = React.useState<DatePickerView>(FilterScopes.DATE);
   // TODO: Dynamically check week number and how many weeks each year has
   const [ startWeek, setStartWeek ] = React.useState<Number>(1);
   const [ endWeek, setEndWeek ] = React.useState<Number>(53);
@@ -229,7 +209,7 @@ const EditorContent: React.FC<Props> = () => {
           <Grid className={ classes.timeFilterYearSelector }>
             <KeyboardDatePicker
               variant="inline"
-              views={[ "year" ]}
+              views={ [ FilterScopes.YEAR ] }
               format="yyyy"
               id="date-picker-year-start"
               label={ strings.editorContent.selectYearStart }
@@ -241,15 +221,15 @@ const EditorContent: React.FC<Props> = () => {
         </MuiPickersUtilsProvider>
       </FormControl>
       <FormControl variant="standard" className={ classes.selectWeekNumbers }>
-        <FormHelperText>{ strings.editorContent.selectWeekStart }</FormHelperText>
-          <TextField
-            select
-            id="scope-select-outlined"
-            value={ startWeek }
-            onChange={ handleStartWeekChange }
-          >
-            { renderWeekNumbers() }
-          </TextField>
+        <TextField
+          select
+          id="scope-select-outlined"
+          value={ startWeek }
+          onChange={ handleStartWeekChange }
+          label={ strings.editorContent.selectWeekStart }
+        >
+          { renderWeekNumbers() }
+        </TextField>
       </FormControl>
     </>
   );
@@ -285,7 +265,7 @@ const EditorContent: React.FC<Props> = () => {
           <Grid className={ classes.timeFilterYearSelector }>
             <KeyboardDatePicker
               variant="inline"
-              views={[ "year" ]}
+              views={ [ FilterScopes.YEAR ] }
               format="yyyy"
               id="date-picker-year-end"
               label={ strings.editorContent.selectYearEnd }
@@ -297,14 +277,15 @@ const EditorContent: React.FC<Props> = () => {
         </MuiPickersUtilsProvider>
       </FormControl>
       <FormControl variant="standard" className={ classes.selectWeekNumbers }>
-        <FormHelperText>{ strings.editorContent.selectWeekEnd }</FormHelperText>
-          <TextField
-            id="scope-select-outlined"
-            value={ endWeek }
-            onChange={ handleEndWeekChange }
-          >
-            { renderWeekNumbers() }
-          </TextField>
+        <TextField
+          select
+          id="scope-select-outlined"
+          value={ endWeek }
+          onChange={ handleEndWeekChange }
+          label={ strings.editorContent.selectWeekEnd }
+        >
+          { renderWeekNumbers() }
+        </TextField>
       </FormControl>
     </>
   );
