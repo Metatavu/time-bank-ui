@@ -178,21 +178,19 @@ const EditorContent: React.FC<Props> = () => {
   /**
    * Renders selector of filter scope
    */
-  const renderSelectScope = () => {
-    return (
-      <FormControl variant="outlined" className={ classes.selectScope }>
-        <TextField
-          select
-          id="scope-select-outlined"
-          size="small"
-          value={ scope }
-          onChange={ handleDateFormatChange }
-        >
-          { renderSelectOptions }
-        </TextField>
-      </FormControl>
-    );
-  }
+  const renderSelectScope = () => (
+    <FormControl variant="outlined" className={ classes.selectScope }>
+      <TextField
+        select
+        id="scope-select-outlined"
+        size="small"
+        value={ scope }
+        onChange={ handleDateFormatChange }
+      >
+        { renderSelectOptions }
+      </TextField>
+    </FormControl>
+  );
 
   /**
    * Renders start date picker 
