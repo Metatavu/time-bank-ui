@@ -136,7 +136,12 @@ const EditorContent: React.FC<Props> = () => {
    * Renders scope options for select component
    */
   const renderSelectOptions = Object.values(FilterScopes).map(scope =>
-    <MenuItem value={ scope } key = { scope }>{ strings.editorContent[scope as keyof object] }</MenuItem>
+    <MenuItem
+      value={ scope }
+      key={ scope }
+    >
+      { strings.editorContent[scope as keyof object] }
+    </MenuItem>
   );
 
   /**
