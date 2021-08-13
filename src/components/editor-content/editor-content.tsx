@@ -119,17 +119,11 @@ const EditorContent: React.FC<Props> = () => {
     const { value } = event.target;
 
     setScope(value as DatePickerView);
-    switch(value.toString()) {
-      case "date":
-        setDateFormat("dd/MM/yyyy");
-        break;
-      case "month":
-        setDateFormat("MM/yyyy");
-        break;
-      case "year":
-        setDateFormat("yyyy");
-        break;
-    }
+    setDateFormat({
+      ["date"]: "dd/MM/yyyy",
+      ["month"]: "MM/yyyy",
+      ["year"]: "yyyy",
+    }[value.toString()]);
   };
 
   /**
