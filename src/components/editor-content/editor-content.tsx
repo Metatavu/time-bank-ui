@@ -256,24 +256,22 @@ const EditorContent: React.FC<Props> = () => {
   /**
    * Renders end date picker
    */
-  const renderEndDate = () => {
-    return (
-      <MuiPickersUtilsProvider utils={ DateFnsUtils }>
-        <Grid className={ classes.timeFilter } >
-          <KeyboardDatePicker
-            variant="inline"
-            format={ dateFormat }
-            views={[ scope ]}
-            id="date-picker-end"
-            label={ strings.editorContent.filterEndingDate }
-            value={ selectedEndingDate } 
-            onChange={ handleEndDateChange }
-            KeyboardButtonProps={{ "aria-label": `${ strings.editorContent.filterEndingDate }`}}
-          />
-        </Grid>
-      </MuiPickersUtilsProvider>
-    );
-  }
+  const renderEndDate = () => (
+    <MuiPickersUtilsProvider utils={ DateFnsUtils }>
+      <Grid className={ classes.timeFilter } >
+        <KeyboardDatePicker
+          variant="inline"
+          format={ dateFormat }
+          views={[ scope ]}
+          id="date-picker-end"
+          label={ strings.editorContent.filterEndingDate }
+          value={ selectedEndingDate } 
+          onChange={ handleEndDateChange }
+          KeyboardButtonProps={{ "aria-label": `${ strings.editorContent.filterEndingDate }`}}
+        />
+      </Grid>
+    </MuiPickersUtilsProvider>
+  );
 
   /**
    * Renders end year picker and week selector 
