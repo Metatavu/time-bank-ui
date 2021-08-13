@@ -86,7 +86,7 @@ const EditorContent: React.FC<Props> = () => {
   /**
    * Method to handle ending week change
    * 
-   * @param date 
+   * @param event React change event
    */
   const handleEndWeekChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
