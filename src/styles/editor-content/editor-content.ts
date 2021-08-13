@@ -10,8 +10,8 @@ export const useEditorContentStyles = makeStyles({
     alignItems: "center",
     padding: `0px ${theme.spacing(3)}px`,
     [theme.breakpoints.down(1921)]: {
-        "& .MuiTypography-root": {
-          fontSize: "0.9rem"
+      "& .MuiTypography-root": {
+        fontSize: "0.9rem"
       },
     }
   },
