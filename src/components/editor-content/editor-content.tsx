@@ -50,7 +50,7 @@ const EditorContent: React.FC<Props> = () => {
   /**
    * Method to handle starting date change
    *
-   * @param date 
+   * @param date selected date
    */
   const handleStartDateChange = (date: Date | null) => {
     if (!date) {
