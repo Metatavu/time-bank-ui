@@ -121,7 +121,7 @@ const EditorContent: React.FC<Props> = () => {
   /**
    * Changes the presented date format according to selected scope
    *
-   * @param event 
+   * @param event React change event
    */
   const handleDateFormatChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
