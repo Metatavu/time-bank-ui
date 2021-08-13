@@ -319,11 +319,9 @@ const EditorContent: React.FC<Props> = () => {
    * Renders ending datepicker/week selector depending on scope
    */
   const renderEndDatePickersAndWeekSelector = () => {
-    if (scope.toString() !== FilterScopes.WEEK) {
-      return renderEndDate();
-    } else {
-      return renderEndYearPickerAndWeekSelector();
-    } 
+    return scope.toString() !== FilterScopes.WEEK ?
+      renderEndDate() :
+      renderEndYearPickerAndWeekSelector();
   }
 
   /**
