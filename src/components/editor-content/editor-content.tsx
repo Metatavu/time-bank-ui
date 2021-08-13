@@ -78,7 +78,7 @@ const EditorContent: React.FC<Props> = () => {
    *
    * @param date 
    */
-  const handleStartWeekChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleStartWeekChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     setStartWeek(Number(value));
   };
@@ -88,7 +88,7 @@ const EditorContent: React.FC<Props> = () => {
    * 
    * @param date 
    */
-  const handleEndWeekChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleEndWeekChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     setEndWeek(Number(value));
   };
@@ -245,14 +245,14 @@ const EditorContent: React.FC<Props> = () => {
         </FormControl>
         <FormControl variant="standard" className={ classes.selectWeekNumbers }>
           <FormHelperText>{ strings.editorContent.selectWeekStart }</FormHelperText>
-            <Select
-              labelId="scope-select-outlined-label"
+            <TextField
+              select
               id="scope-select-outlined"
               value={ startWeek }
               onChange={ handleStartWeekChange }
             >
               { renderWeekNumbers() }
-            </Select>
+            </TextField>
         </FormControl>
       </>
     )
@@ -304,14 +304,13 @@ const EditorContent: React.FC<Props> = () => {
         </FormControl>
         <FormControl variant="standard" className={ classes.selectWeekNumbers }>
           <FormHelperText>{ strings.editorContent.selectWeekEnd }</FormHelperText>
-            <Select
-              labelId="scope-select-outlined-label"
+            <TextField
               id="scope-select-outlined"
               value={ endWeek }
               onChange={ handleEndWeekChange }
             >
               { renderWeekNumbers() }
-            </Select>
+            </TextField>
         </FormControl>
       </>
     );
