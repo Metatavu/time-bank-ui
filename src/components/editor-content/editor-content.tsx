@@ -107,19 +107,16 @@ const EditorContent: React.FC<Props> = () => {
     return numbers;
   };
 
-  const renderWeekNumbers = () => {
-    return generateWeekNumbers().map((weekNumber : number, index: number) => {
-      return  (
-        <MenuItem 
-          key={ index } 
-          value={ weekNumber }
-          >
-          { weekNumber }
-        </MenuItem>
-      )
-    })
-  };
-  
+  const renderWeekNumbers = () => (
+    generateWeekNumbers().map((weekNumber, index) => (
+      <MenuItem 
+        key={ index } 
+        value={ weekNumber }
+      >
+        { weekNumber }
+      </MenuItem>
+    ))
+  );
 
   /**
    * Changes the presented date format according to selected scope
