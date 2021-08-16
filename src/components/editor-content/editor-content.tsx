@@ -133,13 +133,24 @@ const EditorContent: React.FC<Props> = () => {
   const renderEndWeekNumbers = () => {
     const weekOpts = []
 
-    for (let week = startWeek || 1; week <= currentWeekNumber; week++) {
-      weekOpts.push((
-        <MenuItem value={ week }>
-          { week }
-        </MenuItem>
-      ))
-    } 
+    if (selectedStartingDate.getFullYear() === selectedEndingDate.getFullYear() && !!startWeek) {
+      for (let week = startWeek + 1; week <= currentWeekNumber; week++) {
+        weekOpts.push((
+          <MenuItem value={ week }>
+            { week }
+          </MenuItem>
+        ))
+      } 
+    } else {
+      for (let week = 1; week <= currentWeekNumber; week++) {
+        weekOpts.push((
+          <MenuItem value={ week }>
+            { week }
+          </MenuItem>
+        ))
+      } 
+    }
+
     return weekOpts;
   };
 
@@ -430,6 +441,7 @@ const EditorContent: React.FC<Props> = () => {
    * Renders the filter component
    */
   const renderOverview = () => {
+    // TODO fix this
     if (!personTotalTime) {
       return null;
     }

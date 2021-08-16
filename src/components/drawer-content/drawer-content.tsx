@@ -201,7 +201,7 @@ const DrawerContent: React.FC<Props> = () => {
                     <Cell key={ index } fill={ COLORS[index % COLORS.length] } />
                   )) }
                 </Pie>
-                <Tooltip content={ (props) => renderCustomizedTooltip(props) }/>
+                <Tooltip content={ renderCustomizedTooltip }/>
               </PieChart>
             </ResponsiveContainer>
           </AccordionDetails>
@@ -214,7 +214,8 @@ const DrawerContent: React.FC<Props> = () => {
    * Renders the customized label for charts
    */
   const renderCustomizedLabel = (props: any) => {
-    return TimeUtils.minuteToHourString(props.value)
+    // TODO type
+    return TimeUtils.minuteToHourString(props.value);
   };
 
   /**
