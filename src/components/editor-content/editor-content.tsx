@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Paper, Typography, Grid, FormControl, MenuItem, TextField, Box } from "@material-ui/core";
+import { Paper, Typography, Grid, Divider, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails } from "@material-ui/core";
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import "date-fns";
 import DateFnsUtils from "@date-io/date-fns";
 import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePickerView } from "@material-ui/pickers";
@@ -141,7 +142,9 @@ const EditorContent: React.FC<Props> = () => {
       <>
         <Typography
           variant="h5"
-          style={{ marginLeft: theme.spacing(2) }}
+          style={{ 
+            marginLeft: theme.spacing(2) 
+          }}
         >
           { name }
         </Typography>
@@ -162,17 +165,16 @@ const EditorContent: React.FC<Props> = () => {
    * Renders selector of filter scope
    */
   const renderSelectScope = () => (
-    <FormControl variant="outlined" className={ classes.selectScope }>
-      <TextField
-        select
-        id="scope-select-outlined"
-        size="small"
-        value={ scope }
-        onChange={ handleDateFormatChange }
-      >
-        { renderSelectOptions }
-      </TextField>
-    </FormControl>
+    <TextField
+      select
+      size="small"
+      id="scope-select-outlined"
+      value={ scope }
+      onChange={ handleDateFormatChange }
+      className={ classes.scopeSelector }
+    >
+      { renderSelectOptions }
+    </TextField>
   );
 
   /**
@@ -183,18 +185,18 @@ const EditorContent: React.FC<Props> = () => {
 
     return (
       <MuiPickersUtilsProvider utils={ DateFnsUtils } >
-        <Grid className={ classes.timeFilter }>
-          <KeyboardDatePicker
-            variant="inline"
-            views={[ scope ]}
-            format={ dateFormat }
-            id="date-picker-start"
-            label={ filterStartingDate }
-            value={ selectedStartingDate }
-            onChange={ handleStartDateChange }
-            KeyboardButtonProps={{ "aria-label": `${ filterStartingDate }` }}
-          />
-        </Grid>
+        <KeyboardDatePicker
+          inputVariant="standard"
+          variant="inline"
+          views={[ scope ]}
+          format={ dateFormat }
+          id="date-picker-start"
+          label={ filterStartingDate }
+          value={ selectedStartingDate }
+          onChange={ handleStartDateChange }
+          className={ classes.datePicker }
+          KeyboardButtonProps={{ "aria-label": `${ filterStartingDate }` }}
+        />
       </MuiPickersUtilsProvider>
     );
   }
@@ -204,33 +206,30 @@ const EditorContent: React.FC<Props> = () => {
    */
   const renderStartYearPickerAndWeekSelector = () =>  (
     <>
-      <FormControl variant="standard">
-        <MuiPickersUtilsProvider utils={ DateFnsUtils } >
-          <Grid className={ classes.timeFilterYearSelector }>
-            <KeyboardDatePicker
-              variant="inline"
-              views={[ FilterScopes.YEAR ]}
-              format="yyyy"
-              id="date-picker-year-start"
-              label={ strings.editorContent.selectYearStart }
-              value={ selectedStartingDate }
-              onChange={ handleStartDateChange }
-              KeyboardButtonProps={{ "aria-label": `${ strings.editorContent.filterStartingDate }` }}
-            />
-          </Grid>
-        </MuiPickersUtilsProvider>
-      </FormControl>
-      <FormControl variant="standard" className={ classes.selectWeekNumbers }>
-        <TextField
-          select
-          id="scope-select-outlined"
-          value={ startWeek }
-          onChange={ handleStartWeekChange }
-          label={ strings.editorContent.selectWeekStart }
-        >
-          { renderWeekNumbers() }
-        </TextField>
-      </FormControl>
+      <MuiPickersUtilsProvider utils={ DateFnsUtils } >
+        <KeyboardDatePicker
+          views={[ FilterScopes.YEAR ]}
+          inputVariant="standard"
+          format="yyyy"
+          id="date-picker-year-start"
+          label={ strings.editorContent.selectYearStart }
+          value={ selectedStartingDate }
+          onChange={ handleStartDateChange }
+          className={ classes.datePicker }
+          KeyboardButtonProps={{ "aria-label": `${ strings.editorContent.filterStartingDate }` }}
+        />
+      </MuiPickersUtilsProvider>
+      <TextField
+        select
+        id="scope-select-outlined"
+        variant="standard"
+        value={ startWeek }
+        onChange={ handleStartWeekChange }
+        label={ strings.editorContent.selectWeekStart }
+        className={ classes.weekPicker }
+      >
+        { renderWeekNumbers() }
+      </TextField>
     </>
   );
   
@@ -240,18 +239,18 @@ const EditorContent: React.FC<Props> = () => {
    */
   const renderEndDate = () => (
     <MuiPickersUtilsProvider utils={ DateFnsUtils }>
-      <Grid className={ classes.timeFilter } >
-        <KeyboardDatePicker
-          variant="inline"
-          format={ dateFormat }
-          views={[ scope ]}
-          id="date-picker-end"
-          label={ strings.editorContent.filterEndingDate }
-          value={ selectedEndingDate } 
-          onChange={ handleEndDateChange }
-          KeyboardButtonProps={{ "aria-label": `${ strings.editorContent.filterEndingDate }`}}
-        />
-      </Grid>
+      <KeyboardDatePicker
+        inputVariant="standard"
+        variant="inline"
+        format={ dateFormat }
+        views={[ scope ]}
+        id="date-picker-end"
+        label={ strings.editorContent.filterEndingDate }
+        value={ selectedEndingDate } 
+        onChange={ handleEndDateChange }
+        className={ classes.datePicker }
+        KeyboardButtonProps={{ "aria-label": `${ strings.editorContent.filterEndingDate }`}}
+      />
     </MuiPickersUtilsProvider>
   );
 
@@ -260,33 +259,31 @@ const EditorContent: React.FC<Props> = () => {
    */
   const renderEndYearPickerAndWeekSelector = () => (
     <>
-      <FormControl variant="standard">
-        <MuiPickersUtilsProvider utils={ DateFnsUtils } >
-          <Grid className={ classes.timeFilterYearSelector }>
-            <KeyboardDatePicker
-              variant="inline"
-              views={[ FilterScopes.YEAR ]}
-              format="yyyy"
-              id="date-picker-year-end"
-              label={ strings.editorContent.selectYearEnd }
-              value={ selectedEndingDate }
-              onChange={ handleEndDateChange }
-              KeyboardButtonProps={{ "aria-label": `${ strings.editorContent.filterStartingDate }` }}
-            />
-          </Grid>
-        </MuiPickersUtilsProvider>
-      </FormControl>
-      <FormControl variant="standard" className={ classes.selectWeekNumbers }>
-        <TextField
-          select
-          id="scope-select-outlined"
-          value={ endWeek }
-          onChange={ handleEndWeekChange }
-          label={ strings.editorContent.selectWeekEnd }
-        >
-          { renderWeekNumbers() }
-        </TextField>
-      </FormControl>
+      <MuiPickersUtilsProvider utils={ DateFnsUtils } >
+        <KeyboardDatePicker
+          inputVariant="standard"
+          variant="inline"
+          views={[ FilterScopes.YEAR ]}
+          format="yyyy"
+          id="date-picker-year-end"
+          label={ strings.editorContent.selectYearEnd }
+          value={ selectedEndingDate }
+          onChange={ handleEndDateChange }
+          className={ classes.datePicker }
+          KeyboardButtonProps={{ "aria-label": `${ strings.editorContent.filterStartingDate }` }}
+        />
+      </MuiPickersUtilsProvider>
+      <TextField
+        select
+        variant="standard"
+        id="scope-select-outlined"
+        value={ endWeek }
+        onChange={ handleEndWeekChange }
+        label={ strings.editorContent.selectWeekEnd }
+        className={ classes.weekPicker }
+      >
+        { renderWeekNumbers() }
+      </TextField>
     </>
   );
   
@@ -327,22 +324,64 @@ const EditorContent: React.FC<Props> = () => {
     }
 
     return (
-      <Paper 
-        elevation={ 3 }
-        className={ classes.filterContainer }
-      >
+      <Accordion className={ classes.filterContainer }>
+        <AccordionSummary
+          expandIcon={ <ExpandMoreIcon /> }
+          aria-controls="panel1a-content"
+          className={ classes.filterSummary }
+        >
+          { renderFilterSummary() }
+        </AccordionSummary>
+        <AccordionDetails className={ classes.filterContent }>
+          { renderFilterDetails() }
+        </AccordionDetails>
+      </Accordion>
+    );
+  }
+
+  /**
+   * Renders the filter summary
+   */
+  const renderFilterSummary = () => {
+    return (
+      <>
         <Typography variant="h4" style={{ fontWeight: 600, fontStyle: "italic" }}>
           { strings.editorContent.workTime }
         </Typography>
-        { renderFilterSubtitleText(`${strings.logged}:`, personTotalTime.logged) }
-        { renderFilterSubtitleText(`${strings.expected}:`, personTotalTime.expected) }
-        { renderFilterSubtitleText(`${strings.total}:`, personTotalTime.total) }
-        <Box className={ classes.filtersContainer }>
-          { renderSelectScope() }
-          { renderStartDatePickersAndWeekSelector() }
-          { renderEndDatePickersAndWeekSelector() }
+        <Box className={ classes.filterSubtitle } >
+          { renderFilterSubtitleText(`${strings.logged}:`, personTotalTime!.logged) }
+          { renderFilterSubtitleText(`${strings.expected}:`, personTotalTime!.expected) }
+          { renderFilterSubtitleText(`${strings.total}:`, personTotalTime!.total) }
         </Box>
-      </Paper>
+      </>
+    );
+  }
+
+  /**
+   * Renders the filter details
+   */
+  const renderFilterDetails = () => {
+    return (
+      <>
+        { renderSelectScope() }
+        <Box className={ classes.datePickers }>
+          <Box display="flex" alignItems="center">
+            {/* TODO stylesheet localization */}
+            <Typography variant="h5" style={{ marginRight: theme.spacing(3) }}>
+              { "from: " }
+            </Typography>
+            { renderStartDatePickersAndWeekSelector() }
+          </Box>
+          <Box>
+            <Box marginLeft={ 4 } display="flex" alignItems="center">
+              <Typography variant="h5" style={{ marginRight: theme.spacing(3) }}>
+                { "to: " }
+              </Typography>
+              { renderEndDatePickersAndWeekSelector() }
+            </Box>
+          </Box>
+        </Box>
+      </>
     );
   }
 
@@ -369,8 +408,7 @@ const EditorContent: React.FC<Props> = () => {
   return (
     <>
       { renderFilter() }
-      {/* TODO */}
-      {/* { renderOverview() } */}
+      { renderOverview() }
     </>
   );
 

@@ -5,39 +5,46 @@ export const useEditorContentStyles = makeStyles({
 
   filterContainer: {
     width: "100%",
+    padding: `${theme.spacing(1)}px 0px `,
+    "&.Mui-expanded": {
+      padding: `${theme.spacing(1)}px 0px `,
+    }
+  },
+
+  filterSummary: {
     height: 72,
     display: "flex",
     alignItems: "center",
     padding: `0px ${theme.spacing(3)}px`,
-    [theme.breakpoints.down(1921)]: {
-      "& .MuiTypography-root": {
-        fontSize: "0.9rem"
-      },
+    "&.Mui-expanded": {
+      borderBottom: "1px solid rgba(0, 0, 0, 0.2)"
     }
   },
 
-  selectScope: {
-    width: "7rem",
-    marginRight: "2rem",
-    marginLeft: "2rem",
+  filterContent: {
+    height: 100,
+    display: "flex", 
+    alignItems: "center",
+    padding: theme.spacing(3),
   },
 
-  timeFilter: {
-    width: "15rem",
+  datePickers: {
+    marginLeft: "auto",
+    display: "flex", 
+    alignItems: "center",
+  },
+
+  scopeSelector: {
+    width: 120
+  },
+
+  datePicker: {
+    width: 200,
     float: "right",
-    marginLeft: "1rem",
-    marginRight: "1rem",
+    marginRight: theme.spacing(2),
     "& .MuiInputLabel-root": {
       color: "rgba(0, 0, 0, 0.54)"
-    }
-  },
-
-  timeFilterYearSelector: {
-    width: "8rem",
-    marginRight: "1rem",
-    "& .MuiInputLabel-root": {
-      color: "rgba(0, 0, 0, 0.54)"
-    }
+    },
   },
 
   overviewContainer: {
@@ -46,21 +53,20 @@ export const useEditorContentStyles = makeStyles({
     height: 1200
   },
   
-  selectWeekNumbers: {
-    width: "8rem",
-    marginRight: "1rem",
+  weekPicker: {
+    width: 120,
+    marginRight: theme.spacing(2),
     "& .MuiFormLabel-root": {
       color: "rgba(0, 0, 0, 0.54)"
     }
   },
   
-  filtersContainer: {
-    marginLeft: "auto", 
+  filterSubtitle: {
     display: "flex", 
+    height: "100%",
     alignItems: "center",
-    width: "45rem" 
-  },
-  
+    marginLeft: "auto"
+  }
 }, {
   name: "editor-content"
 });
