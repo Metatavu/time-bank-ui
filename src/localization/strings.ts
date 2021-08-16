@@ -12,6 +12,7 @@ export interface IStrings extends LocalizedStringsMethods {
    */
   header: {
     title: string;
+    logo: string;
   }
 
   /**
@@ -52,6 +53,16 @@ export interface IStrings extends LocalizedStringsMethods {
   editorContent: {
     userNotSelected: string;
     workTime: string;
+    filterStartingDate: string;
+    filterEndingDate: string;
+    week: string;
+    date: string;
+    month: string;
+    year: string;
+    selectYearStart: string;
+    selectYearEnd: string;
+    selectWeekStart: string;
+    selectWeekEnd: string;
   };
 
   logged: string;

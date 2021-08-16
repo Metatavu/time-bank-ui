@@ -1,6 +1,7 @@
 {
   "header": {
-    "title": "Aikapankki"
+    "title": "Aikapankki",
+    "logo": "Sivun logo"
   },
 
   "generic": {
@@ -31,12 +32,22 @@
 
   "editorContent": {
     "userNotSelected": "Valitse ensin käyttäjä",
-    "workTime": "Työaika"
+    "workTime": "Työaika",
+    "filterStartingDate": "Alku",
+    "filterEndingDate": "Loppu",
+    "week": "Viikko",
+    "date": "Pvm",
+    "month": "Kuukausi",
+    "year": "Vuosi",
+    "selectYearStart": "Mistä",
+    "selectWeekStart": "Mistä",
+    "selectWeekEnd": "Mihin",
+    "selectYearEnd": "Mihin"
   },
 
   "logged": "Kirjattu",
   "expected": "Odotettu",
-  "total": "Yhteensä",
+  "total": "Erotus",
   "sunday": "Sunnuntai",
   "monday": "Maanantai",
   "tuesday": "Tiistai",

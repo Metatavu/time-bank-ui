@@ -1,6 +1,7 @@
 {
   "header": {
-    "title": "Time Bank"
+    "title": "Time Bank",
+    "logo": "Site logo"
   },
   
   "generic": {
@@ -31,15 +32,25 @@
 
   "editorContent": {
     "userNotSelected": "Please select a user first",
-    "workTime": "Work time"
+    "workTime": "Work time",
+    "filterStartingDate": "Start",
+    "filterEndingDate": "End",
+    "week": "WEEK",
+    "date": "DATE",
+    "month": "MONTH",
+    "year": "YEAR",
+    "selectWeekEnd": "Week-end",
+    "selectYearEnd": "Year-end",
+    "selectYearStart": "Year-start",
+    "selectWeekStart": "Week-start"
   },
 
   "logged": "Logged",
   "expected": "Expected",
-  "total": "Total",
+  "total": "Difference",
   "sunday": "Sunday",
   "monday": "Monday",
-  "tuesday": "Tuseday",
+  "tuesday": "Tuesday",
   "wednesday": "Wednesday",
   "thursday": "Thursday",
   "friday": "Friday",
