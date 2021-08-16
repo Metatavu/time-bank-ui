@@ -10,8 +10,8 @@ export const useMainScreenStyles = makeStyles({
   },
 
   editorContainer: {
-    width: "100%",
-    padding: `${theme.spacing(5)}px ${theme.spacing(6)}px`
+    padding: `${theme.spacing(5)}px ${theme.spacing(6)}px`,
+    width: "calc(100vw - 400px)"
   }
 
 }, {
