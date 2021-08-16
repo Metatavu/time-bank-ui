@@ -81,8 +81,8 @@ const EditorContent: React.FC<Props> = () => {
    */
   const generateWeekNumbers = () => {
     const numbers : number[] = [];
-    for(let i = 1; i <= 53; i++){
-      numbers.push(i)
+    for (let i = 1; i <= 53; i++) {
+      numbers.push(i);
     }
 
     return numbers;
