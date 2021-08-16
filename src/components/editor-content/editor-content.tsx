@@ -186,7 +186,7 @@ const EditorContent: React.FC<Props> = () => {
         <Grid className={ classes.timeFilter }>
           <KeyboardDatePicker
             variant="inline"
-            views={ [ scope ] }
+            views={[ scope ]}
             format={ dateFormat }
             id="date-picker-start"
             label={ filterStartingDate }
