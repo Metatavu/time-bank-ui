@@ -265,7 +265,7 @@ const EditorContent: React.FC<Props> = () => {
           <Grid className={ classes.timeFilterYearSelector }>
             <KeyboardDatePicker
               variant="inline"
-              views={ [ FilterScopes.YEAR ] }
+              views={[ FilterScopes.YEAR ]}
               format="yyyy"
               id="date-picker-year-end"
               label={ strings.editorContent.selectYearEnd }
