@@ -15,7 +15,7 @@ export const useDrawerContentStyles = makeStyles({
     margin: theme.spacing(2),
   },
 
-  searchBoxContaienr: {
+  searchBoxContainer: {
     height: 40,
     flexGrow: 200,
     position: "relative",

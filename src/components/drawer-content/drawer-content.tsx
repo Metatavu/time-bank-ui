@@ -1,5 +1,5 @@
 import React from "react";
-import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Divider, TextField, Typography } from "@material-ui/core";
+import { Accordion, AccordionDetails, AccordionSummary, Box, Button, CircularProgress, Divider, TextField, Typography } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import UserInfo from "components/generics/user-info/user-info";
 import { useDrawerContentStyles } from "styles/drawer-content/drawer-content";
@@ -32,6 +32,7 @@ const DrawerContent: React.FC<Props> = () => {
   const [ persons, setPersons ] = React.useState<PersonDto[]>([]);
   const [ pendingPerson, setPendingPerson ] = React.useState<PersonDto | null>(null);
   const [ searchInput, setSearchInput ] = React.useState<string>("");
+  const [ isSearching, setIsSearching ] = React.useState<boolean>(false);
   
   /**
    * Fetches the person data 
@@ -54,6 +55,7 @@ const DrawerContent: React.FC<Props> = () => {
           dispatch(setPersonTotalTime(fetchedPersonTotalTime[0]))
         );
     }
+    setIsSearching(false);
   }
 
   React.useEffect(() => {
@@ -88,7 +90,7 @@ const DrawerContent: React.FC<Props> = () => {
   const renderSearchBox = () => {
     return (
       <>
-        <Box className={ classes.searchBoxContaienr }>
+        <Box className={ classes.searchBoxContainer }>
           <SearchIcon className={ classes.searchIcon }/>
           <Autocomplete 
             freeSolo
@@ -111,12 +113,16 @@ const DrawerContent: React.FC<Props> = () => {
             }}
           />
         </Box>
-        <Button 
-          onClick={ onSearchButtonClick }
-          className={ classes.searchButton }
-        >
-          { strings.generic.search }
-        </Button>
+        { isSearching === true ? 
+          <CircularProgress size={ 30 }></CircularProgress> 
+          :
+          <Button 
+            onClick={ onSearchButtonClick }
+            className={ classes.searchButton }
+          > 
+            { strings.generic.search }
+          </Button>
+        }
       </>
     );
   }
@@ -148,7 +154,7 @@ const DrawerContent: React.FC<Props> = () => {
     if (!personTotalTime) {
       return null;
     }
-
+    
     let totalHour = TimeUtils.minuteToHourString(personTotalTime.total);
     personTotalTime.total >= 0 && (totalHour = `+${totalHour}`)
     const totalColor = personTotalTime.total < 0 ?
@@ -245,7 +251,18 @@ const DrawerContent: React.FC<Props> = () => {
    * Event Handler for search button click
    */
   const onSearchButtonClick = () => {
-    pendingPerson && dispatch(setPerson(pendingPerson));
+    var test = person?.firstName + " " + person?.lastName; 
+    console.log(searchInput)
+    console.log(person?.firstName + " " + person?.lastName)
+    if( searchInput !== test && searchInput !== "") {
+      setIsSearching(true);
+    console.log("TIMMYYYYY!!")
+    }
+    setTimeout(() => {
+      console.log(pendingPerson)
+      pendingPerson && dispatch(setPerson(pendingPerson));
+    }, 1000);
+    
   }
 
   /**
