@@ -1,6 +1,6 @@
 import React from "react";
 import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Divider, TextField, Typography } from "@material-ui/core";
-import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer, PieLabel } from "recharts";
+import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer, TooltipProps } from "recharts";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import UserInfo from "components/generics/user-info/user-info";
 import { useDrawerContentStyles } from "styles/drawer-content/drawer-content";
@@ -14,6 +14,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import TimeUtils from "utils/time-utils";
 import theme from "theme/theme";
 import { WorkTimeCategory, WorkTimeData } from "types/index";
+import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 
 /**
  * Component properties
@@ -64,6 +65,7 @@ const DrawerContent: React.FC<Props> = () => {
 
   React.useEffect(() => {
     fetchWorkTimeData();    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ person ]);
 
   /**
@@ -199,7 +201,7 @@ const DrawerContent: React.FC<Props> = () => {
                     <Cell key={ index } fill={ COLORS[index % COLORS.length] } />
                   )) }
                 </Pie>
-                <Tooltip />
+                <Tooltip content={ (props) => renderCustomizedTooltip(props) }/>
               </PieChart>
             </ResponsiveContainer>
           </AccordionDetails>
@@ -213,6 +215,39 @@ const DrawerContent: React.FC<Props> = () => {
    */
   const renderCustomizedLabel = (props: any) => {
     return TimeUtils.minuteToHourString(props.value)
+  };
+
+  /**
+   * Renders the customized tooltip for charts
+   */
+  const renderCustomizedTooltip = (props: TooltipProps<ValueType, NameType>) => {
+    const { active, payload } = props;
+
+    if (!active || !payload || !payload.length) {
+      return null;
+    }
+
+    const selectedData = payload[0];
+
+    console.log("selectedData", selectedData)
+
+    if (!selectedData.value) {
+      return null;
+    }
+
+    return (
+      <Box style={{ backgroundColor: "rgba(0, 0, 0)" }}>
+        <Typography 
+          variant="h6"
+          style={{
+            color: "#fff",
+            padding: theme.spacing(1)
+          }}
+        >
+          { `${selectedData.name} time: ${TimeUtils.minuteToHourString(selectedData.value as number)}` }
+        </Typography>
+      </Box>
+    )
   };
 
   /**

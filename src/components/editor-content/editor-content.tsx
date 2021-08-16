@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Paper, Typography, Grid, Divider, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails } from "@material-ui/core";
+import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails } from "@material-ui/core";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import "date-fns";
 import DateFnsUtils from "@date-io/date-fns";
@@ -27,9 +27,10 @@ const EditorContent: React.FC<Props> = () => {
 
   const classes = useEditorContentStyles();
 
+  const { person, personTotalTime } = useAppSelector(selectPerson);
+
   const [ todayDate, /*setTodayDate*/ ] = useState(new Date());
   const [ currentWeekNumber, setCurrentWeekNumber ] = useState(0);
-  const { person, personTotalTime } = useAppSelector(selectPerson);
   const [ selectedStartingDate, setSelectedStartingDate ] = useState<Date>(new Date());
   const [ selectedEndingDate, setSelectedEndingDate ] = useState<Date>(new Date());
   const [ scope, setScope ] = React.useState<FilterScopes>(FilterScopes.WEEK);
@@ -56,6 +57,7 @@ const EditorContent: React.FC<Props> = () => {
 
   React.useEffect(() => {
     initializeData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   /**
