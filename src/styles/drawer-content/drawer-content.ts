@@ -69,6 +69,13 @@ export const useDrawerContentStyles = makeStyles({
     "& .MuiButton-label": {
       fontSize: 12,
     },
+  },
+
+  pieChartContainer: {
+    height: "150px !important",
+    "& .recharts-wrapper .recharts-surface": {
+      overflow: "overlay",
+    }
   }
 
 }, {

@@ -3,12 +3,12 @@ import theme from "theme/theme";
 
 export const useEditorContentStyles = makeStyles({
 
-  filterContainer: {
+  emptyFilterContainer: {
     width: "100%",
-    padding: `${theme.spacing(1)}px 0px `,
-    "&.Mui-expanded": {
-      padding: `${theme.spacing(1)}px 0px `,
-    }
+    height: 72,
+    display: "flex",
+    alignItems: "center",
+    padding: `0px ${theme.spacing(3)}px`,
   },
 
   filterSummary: {

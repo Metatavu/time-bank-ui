@@ -27,15 +27,36 @@ const EditorContent: React.FC<Props> = () => {
 
   const classes = useEditorContentStyles();
 
+  const [ todayDate, /*setTodayDate*/ ] = useState(new Date());
+  const [ currentWeekNumber, setCurrentWeekNumber ] = useState(0);
   const { person, personTotalTime } = useAppSelector(selectPerson);
-
   const [ selectedStartingDate, setSelectedStartingDate ] = useState<Date>(new Date());
   const [ selectedEndingDate, setSelectedEndingDate ] = useState<Date>(new Date());
+  const [ scope, setScope ] = React.useState<FilterScopes>(FilterScopes.WEEK);
   const [ dateFormat, setDateFormat ] = React.useState<string | undefined>("dd/MM/yyyy");
-  const [ scope, setScope ] = React.useState<DatePickerView>(FilterScopes.DATE);
-  // TODO: Dynamically check week number and how many weeks each year has
-  const [ startWeek, setStartWeek ] = React.useState<Number>(1);
-  const [ endWeek, setEndWeek ] = React.useState<Number>(53);
+  const [ datePickerView, setDatePickerView ] = React.useState<DatePickerView>("date");
+  const [ startWeek, setStartWeek ] = React.useState<number | undefined>(undefined);
+  const [ endWeek, setEndWeek ] = React.useState<number | undefined>(undefined);
+
+  /**
+   * Initialize the component data
+   */
+  const initializeData = async () => {
+    const currentWeek = getCurrentWeek();
+    setCurrentWeekNumber(currentWeek);
+
+    // set scope to the current sprint
+    if ((currentWeek % 2) === 0) {
+      setStartWeek(currentWeek - 1);
+      setEndWeek(currentWeek);
+    } else {
+      setStartWeek(currentWeek);
+    }
+  }
+
+  React.useEffect(() => {
+    initializeData();
+  }, [])
 
   /**
    * Method to handle starting date change
@@ -78,30 +99,47 @@ const EditorContent: React.FC<Props> = () => {
   /**
    * Generate week numbers for the select component
    * 
-   * @returns week numbers as array
+   * @returns current week number
    */
-  const generateWeekNumbers = () => {
-    const numbers : number[] = [];
-    for (let i = 1; i <= 53; i++) {
-      numbers.push(i);
-    }
+  const getCurrentWeek = () => {
+    const today = new Date();  
+    const oneJan = new Date(today.getFullYear(), 0, 1);   
+    const numberOfDays = Math.floor((today.getTime() - oneJan.getTime()) / (24 * 60 * 60 * 1000));   
 
-    return numbers;
+    return Math.ceil(( today.getDay() + 1 + numberOfDays) / 7);   
   };
 
   /**
    * Renders week numbers to select component
    */
-  const renderWeekNumbers = () => (
-    generateWeekNumbers().map((weekNumber, index) => 
-      <MenuItem 
-        key={ index } 
-        value={ weekNumber }
-      >
-        { weekNumber }
-      </MenuItem>
-    )
-  );
+  const renderStartWeekNumbers = () => {
+    const weekOpts = []
+
+    for (let week = 1; week <= currentWeekNumber; week++) {
+      weekOpts.push((
+        <MenuItem value={ week }>
+          { week }
+        </MenuItem>
+      ))
+    } 
+    return weekOpts;
+  };
+
+  /**
+   * Renders week numbers to select component
+   */
+  const renderEndWeekNumbers = () => {
+    const weekOpts = []
+
+    for (let week = startWeek || 1; week <= currentWeekNumber; week++) {
+      weekOpts.push((
+        <MenuItem value={ week }>
+          { week }
+        </MenuItem>
+      ))
+    } 
+    return weekOpts;
+  };
 
   /**
    * Changes the presented date format according to selected scope
@@ -109,14 +147,18 @@ const EditorContent: React.FC<Props> = () => {
    * @param event React change event
    */
   const handleDateFormatChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
+    const selectedFilterScope  = event.target.value as FilterScopes;
 
-    setScope(value as DatePickerView);
-    setDateFormat({
-      [FilterScopes.DATE]: DateFormats.DATE,
-      [FilterScopes.MONTH]: DateFormats.MONTH,
-      [FilterScopes.YEAR]: DateFormats.YEAR,
-    }[value.toString()]);
+    setScope(selectedFilterScope);
+    if (selectedFilterScope ! === FilterScopes.WEEK ) {
+      setDatePickerView(selectedFilterScope as DatePickerView);
+      setDateFormat({
+        [FilterScopes.DATE]: DateFormats.DATE,
+        [FilterScopes.WEEK]: DateFormats.DATE,
+        [FilterScopes.MONTH]: DateFormats.MONTH,
+        [FilterScopes.YEAR]: DateFormats.YEAR,
+      }[selectedFilterScope]);
+    }
   };
 
   /**
@@ -168,7 +210,6 @@ const EditorContent: React.FC<Props> = () => {
     <TextField
       select
       size="small"
-      id="scope-select-outlined"
       value={ scope }
       onChange={ handleDateFormatChange }
       className={ classes.scopeSelector }
@@ -188,9 +229,9 @@ const EditorContent: React.FC<Props> = () => {
         <KeyboardDatePicker
           inputVariant="standard"
           variant="inline"
-          views={[ scope ]}
+          views={[ datePickerView ]}
           format={ dateFormat }
-          id="date-picker-start"
+          maxDate={ todayDate }
           label={ filterStartingDate }
           value={ selectedStartingDate }
           onChange={ handleStartDateChange }
@@ -209,9 +250,10 @@ const EditorContent: React.FC<Props> = () => {
       <MuiPickersUtilsProvider utils={ DateFnsUtils } >
         <KeyboardDatePicker
           views={[ FilterScopes.YEAR ]}
+          variant="inline"
           inputVariant="standard"
           format="yyyy"
-          id="date-picker-year-start"
+          maxDate={ todayDate }
           label={ strings.editorContent.selectYearStart }
           value={ selectedStartingDate }
           onChange={ handleStartDateChange }
@@ -221,14 +263,13 @@ const EditorContent: React.FC<Props> = () => {
       </MuiPickersUtilsProvider>
       <TextField
         select
-        id="scope-select-outlined"
         variant="standard"
         value={ startWeek }
         onChange={ handleStartWeekChange }
         label={ strings.editorContent.selectWeekStart }
         className={ classes.weekPicker }
       >
-        { renderWeekNumbers() }
+        { renderStartWeekNumbers() }
       </TextField>
     </>
   );
@@ -243,8 +284,8 @@ const EditorContent: React.FC<Props> = () => {
         inputVariant="standard"
         variant="inline"
         format={ dateFormat }
-        views={[ scope ]}
-        id="date-picker-end"
+        views={[ datePickerView ]}
+        maxDate={ todayDate }
         label={ strings.editorContent.filterEndingDate }
         value={ selectedEndingDate } 
         onChange={ handleEndDateChange }
@@ -265,7 +306,7 @@ const EditorContent: React.FC<Props> = () => {
           variant="inline"
           views={[ FilterScopes.YEAR ]}
           format="yyyy"
-          id="date-picker-year-end"
+          maxDate={ todayDate }
           label={ strings.editorContent.selectYearEnd }
           value={ selectedEndingDate }
           onChange={ handleEndDateChange }
@@ -282,7 +323,7 @@ const EditorContent: React.FC<Props> = () => {
         label={ strings.editorContent.selectWeekEnd }
         className={ classes.weekPicker }
       >
-        { renderWeekNumbers() }
+        { renderEndWeekNumbers() }
       </TextField>
     </>
   );
@@ -314,7 +355,7 @@ const EditorContent: React.FC<Props> = () => {
       return (
         <Paper 
           elevation={ 3 }
-          className={ classes.filterContainer }
+          className={ classes.emptyFilterContainer }
         >
           <Typography style={{ fontStyle: "italic" }}>
             { strings.editorContent.userNotSelected }
@@ -324,7 +365,7 @@ const EditorContent: React.FC<Props> = () => {
     }
 
     return (
-      <Accordion className={ classes.filterContainer }>
+      <Accordion>
         <AccordionSummary
           expandIcon={ <ExpandMoreIcon /> }
           aria-controls="panel1a-content"
@@ -372,13 +413,11 @@ const EditorContent: React.FC<Props> = () => {
             </Typography>
             { renderStartDatePickersAndWeekSelector() }
           </Box>
-          <Box>
-            <Box marginLeft={ 4 } display="flex" alignItems="center">
-              <Typography variant="h5" style={{ marginRight: theme.spacing(3) }}>
-                { "to: " }
-              </Typography>
-              { renderEndDatePickersAndWeekSelector() }
-            </Box>
+          <Box marginLeft={ 4 } display="flex" alignItems="center">
+            <Typography variant="h5" style={{ marginRight: theme.spacing(3) }}>
+              { "to: " }
+            </Typography>
+            { renderEndDatePickersAndWeekSelector() }
           </Box>
         </Box>
       </>

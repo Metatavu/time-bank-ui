@@ -186,13 +186,13 @@ const DrawerContent: React.FC<Props> = () => {
               { renderAccordinRow(`${strings.logged}:`, TimeUtils.minuteToHourString(personTotalTime.logged)) }
               { renderAccordinRow(`${strings.expected}:`, TimeUtils.minuteToHourString(personTotalTime.expected)) }
             </Box>
-            <ResponsiveContainer width="100%" height={ 150 }>
+            <ResponsiveContainer className={ classes.pieChartContainer }>
               <PieChart>
                 <Pie
-                  data={ workTimeDatas }
                   cx="50%"
                   cy="50%"
                   dataKey="value"
+                  data={ workTimeDatas }
                   label={ renderCustomizedLabel }
                 >
                   { workTimeDatas.map((entry, index) => (
