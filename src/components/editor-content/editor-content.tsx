@@ -440,7 +440,7 @@ const EditorContent: React.FC<Props> = () => {
   /**
    * Renders the filter component
    */
-  const renderOverview = () => {
+  const renderCharts = () => {
     // TODO fix this
     if (!personTotalTime) {
       return null;
@@ -449,9 +449,37 @@ const EditorContent: React.FC<Props> = () => {
     return (
       <Paper 
         elevation={ 3 }
-        className={ classes.overviewContainer }
+        className={ classes.chartContainer }
       >
+        { renderOverview() }
+        { renderTotal() }
       </Paper>
+    );
+  }
+
+  /**
+   * Renders the overview chart
+   */
+  const renderOverview = () => {
+    return (
+      <Box className={ classes.overViewContainer }>
+        <Typography variant="h2">
+          { "Overview" }
+        </Typography>
+      </Box>
+    );
+  }
+
+  /**
+   * Renders the total chart
+   */
+  const renderTotal = () => {
+    return (
+      <Box className={ classes.totalContainer }>
+        <Typography variant="h2">
+          { "Total" }
+        </Typography>
+      </Box>
     );
   }
 
@@ -461,7 +489,7 @@ const EditorContent: React.FC<Props> = () => {
   return (
     <>
       { renderFilter() }
-      { renderOverview() }
+      { renderCharts() }
     </>
   );
 

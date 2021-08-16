@@ -47,7 +47,7 @@ export const useEditorContentStyles = makeStyles({
     },
   },
 
-  overviewContainer: {
+  chartContainer: {
     marginTop: theme.spacing(6),
     width: "100%",
     height: 1200
@@ -66,7 +66,16 @@ export const useEditorContentStyles = makeStyles({
     height: "100%",
     alignItems: "center",
     marginLeft: "auto"
+  },
+
+  overViewContainer: {
+    padding: `${theme.spacing(3)}px ${theme.spacing(4)}px`
+  },
+
+  totalContainer: {
+    padding: `${theme.spacing(3)}px ${theme.spacing(4)}px`
   }
+  
 }, {
   name: "editor-content"
 });
