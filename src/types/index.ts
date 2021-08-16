@@ -16,3 +16,19 @@ export enum DateFormats {
   MONTH = "MM/yyyy",
   YEAR = "yyyy"
 };
+
+/**
+ * Enum for work time category
+ */
+export enum WorkTimeCategory {
+  PROJECT = "Project",
+  INTERNAL = "Internal"
+};
+
+/**
+ * Type for work time data
+ */
+export interface WorkTimeData {
+  name: WorkTimeCategory;
+  value: number;
+}

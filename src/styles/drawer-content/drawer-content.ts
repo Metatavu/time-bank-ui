@@ -38,6 +38,11 @@ export const useDrawerContentStyles = makeStyles({
     boxShadow: "none"
   },
 
+  accordinDetails: {
+    display: "flex",
+    flexDirection: "column",
+  },
+
   accordinRow: {
     display: "flex",
     justifyContent: "space-between",

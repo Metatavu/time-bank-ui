@@ -9,7 +9,7 @@ import { selectPerson } from "features/person/person-slice";
 import strings from "localization/strings";
 import theme from "theme/theme";
 import TimeUtils from "utils/time-utils";
-import { FilterScopes, DateFormats } from "types";
+import { FilterScopes, DateFormats } from "types/index";
 
 /**
  * Component properties
