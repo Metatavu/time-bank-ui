@@ -30,7 +30,8 @@ export const useAppLayoutStyles = makeStyles({
   content: {
     backgroundColor: theme.palette.background.default,
     flexGrow: 1,
-    overflowX: "hidden"
+    overflowX: "hidden",
+    width: "calc(100vw - 400px)"
   },
 
   titleContainer: {
