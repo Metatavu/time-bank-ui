@@ -1,5 +1,6 @@
 import React from "react";
 import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Divider, TextField, Typography } from "@material-ui/core";
+import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from "recharts";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import UserInfo from "components/generics/user-info/user-info";
 import { useDrawerContentStyles } from "styles/drawer-content/drawer-content";
@@ -155,6 +156,17 @@ const DrawerContent: React.FC<Props> = () => {
       theme.palette.error.dark :
       theme.palette.success.main;
 
+    const workData = [
+      { name: 'Project', value: personTotalTime.projectTime },
+      { name: 'Internal', value: personTotalTime.internalTime },
+    ]
+
+    console.log("project time: ",personTotalTime.projectTime );
+    console.log("internal time: ",personTotalTime.internalTime );
+
+
+    const COLORS = [ theme.palette.success.main, theme.palette.warning.main ];
+
     return (
       <>
         <Accordion className={ classes.drawerAccordin }>
@@ -176,6 +188,23 @@ const DrawerContent: React.FC<Props> = () => {
               { renderAccordinRow(`${strings.total}:`, totalHour, totalColor) }
               { renderAccordinRow(`${strings.logged}:`, TimeUtils.minuteToHourString(personTotalTime.logged)) }
               { renderAccordinRow(`${strings.expected}:`, TimeUtils.minuteToHourString(personTotalTime.expected)) }
+            </Box>
+            <Box height="100px" width="100px">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart width={400} height={400}>
+                  <Pie
+                    data={ workData }
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    dataKey="value"
+                  >
+                    { workData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    )) }
+                  </Pie>
+                </PieChart>
+              </ResponsiveContainer>
             </Box>
           </AccordionDetails>
         </Accordion>
