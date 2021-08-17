@@ -26,6 +26,7 @@ export const useEditorContentStyles = makeStyles({
     display: "flex", 
     alignItems: "center",
     padding: theme.spacing(3),
+    paddingLeft: theme.spacing(5)
   },
 
   datePickers: {
@@ -38,10 +39,23 @@ export const useEditorContentStyles = makeStyles({
     width: 120
   },
 
+  notchedOutline: {
+    borderColor: "rgba(0, 0, 0)"
+  },
+
   datePicker: {
     width: 200,
-    float: "right",
     marginRight: theme.spacing(2),
+    //todo move to theme
+    "& .MuiInputLabel-root": {
+      color: "rgba(0, 0, 0, 0.54)"
+    },
+  },
+
+  yearPicker: {
+    width: 120,
+    marginRight: theme.spacing(2),
+    //todo move to theme
     "& .MuiInputLabel-root": {
       color: "rgba(0, 0, 0, 0.54)"
     },
@@ -53,9 +67,16 @@ export const useEditorContentStyles = makeStyles({
     height: 1200
   },
   
+  startDateOnly: {
+    marginLeft: theme.spacing(5),
+    display: "flex",
+    alignItems: "center"  
+  },
+
   weekPicker: {
-    width: 120,
+    width: 110,
     marginRight: theme.spacing(2),
+    //todo move to theme
     "& .MuiFormLabel-root": {
       color: "rgba(0, 0, 0, 0.54)"
     }

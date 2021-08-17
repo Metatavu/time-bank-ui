@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails } from "@material-ui/core";
+import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, Switch } from "@material-ui/core";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import "date-fns";
 import DateFnsUtils from "@date-io/date-fns";
@@ -32,6 +32,7 @@ const EditorContent: React.FC<Props> = () => {
   const { person, personTotalTime } = useAppSelector(selectPerson);
 
   const [ todayDate, /*setTodayDate*/ ] = useState(new Date());
+  const [ startDateOnly, setStartDateOnly ] = useState(false);
   const [ currentWeekNumber, setCurrentWeekNumber ] = useState(0);
   const [ selectedStartDate, setSelectedStartDate ] = useState<Date>(new Date());
   const [ selectedEndDate, setSelectedEndDate ] = useState<Date | null>(null);
@@ -39,7 +40,7 @@ const EditorContent: React.FC<Props> = () => {
   const [ dateFormat, setDateFormat ] = React.useState<string | undefined>("dd/MM/yyyy");
   const [ datePickerView, setDatePickerView ] = React.useState<DatePickerView>("date");
   const [ startWeek, setStartWeek ] = React.useState<number | undefined>(undefined);
-  const [ endWeek, setEndWeek ] = React.useState<number | undefined>(undefined);
+  const [ endWeek, setEndWeek ] = React.useState<number | null>(null);
   const [ isLoading, setIsLoading ] = React.useState(false);
   const [ totalWeekEntries, setTotalWeekEntries ] = React.useState<TimeEntryTotalDto[] | undefined>(undefined);
   const [ totalMonthEntries, setTotalMonthEntries ] = React.useState<TimeEntryTotalDto[] | undefined>(undefined);
@@ -48,7 +49,6 @@ const EditorContent: React.FC<Props> = () => {
 
   React.useEffect(() => {
     initializeData();
-    // TODO set graoh of the current sprint
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -96,6 +96,15 @@ const EditorContent: React.FC<Props> = () => {
   };
 
   /**
+   * Start date only change handler
+   */
+  const onStartDateOnlyChange = () => {
+    setStartDateOnly(!startDateOnly);
+    setEndWeek(null);
+    setSelectedEndDate(null);
+  };
+
+  /**
    * Changes the presented date format according to selected scope
    *
    * @param event React change event
@@ -137,9 +146,11 @@ const EditorContent: React.FC<Props> = () => {
     // set scope to the current sprint
     if ((currentWeek % 2) === 0) {
       setStartWeek(currentWeek - 1);
+      setSelectedEndDate(todayDate);
       setEndWeek(currentWeek);
     } else {
       setStartWeek(currentWeek);
+      setStartDateOnly(true)
     }
   }
 
@@ -336,7 +347,7 @@ const EditorContent: React.FC<Props> = () => {
     const weekOpts = []
 
     if (selectedStartDate?.getFullYear() === selectedEndDate.getFullYear() && !!startWeek) {
-      for (let week = startWeek + 1; week <= currentWeekNumber; week++) {
+      for (let week = startWeek; week <= currentWeekNumber; week++) {
         weekOpts.push((
           <MenuItem value={ week }>
             { week }
@@ -404,10 +415,16 @@ const EditorContent: React.FC<Props> = () => {
   const renderSelectScope = () => (
     <TextField
       select
+      variant="outlined"
       size="small"
       value={ scope }
       onChange={ handleDateFormatChange }
       className={ classes.scopeSelector }
+      InputProps={{
+        classes: {
+          notchedOutline: classes.notchedOutline,
+        }
+      }}
     >
       { renderSelectOptions }
     </TextField>
@@ -452,7 +469,7 @@ const EditorContent: React.FC<Props> = () => {
           label={ strings.editorContent.selectYearStart }
           value={ selectedStartDate }
           onChange={ handleStartDateChange }
-          className={ classes.datePicker }
+          className={ classes.yearPicker }
           KeyboardButtonProps={{ "aria-label": `${ strings.editorContent.filterStartingDate }` }}
         />
       </MuiPickersUtilsProvider>
@@ -476,10 +493,12 @@ const EditorContent: React.FC<Props> = () => {
   const renderEndDate = () => (
     <MuiPickersUtilsProvider utils={ DateFnsUtils }>
       <KeyboardDatePicker
+        disabled={ startDateOnly }
         inputVariant="standard"
         variant="inline"
         format={ dateFormat }
         views={[ datePickerView ]}
+        minDate={ selectedStartDate }
         maxDate={ todayDate }
         label={ strings.editorContent.filterEndingDate }
         value={ selectedEndDate } 
@@ -497,19 +516,23 @@ const EditorContent: React.FC<Props> = () => {
     <>
       <MuiPickersUtilsProvider utils={ DateFnsUtils } >
         <KeyboardDatePicker
+          disabled={ startDateOnly }
           inputVariant="standard"
           variant="inline"
           views={[ FilterScopes.YEAR ]}
           format="yyyy"
+          minDate={ selectedStartDate }
           maxDate={ todayDate }
           label={ strings.editorContent.selectYearEnd }
           value={ selectedEndDate }
           onChange={ handleEndDateChange }
-          className={ classes.datePicker }
+          className={ classes.yearPicker }
           KeyboardButtonProps={{ "aria-label": `${ strings.editorContent.filterStartingDate }` }}
         />
       </MuiPickersUtilsProvider>
       <TextField
+      // TODO label when start only
+        disabled={ startDateOnly }
         select
         variant="standard"
         id="scope-select-outlined"
@@ -566,56 +589,44 @@ const EditorContent: React.FC<Props> = () => {
           aria-controls="panel1a-content"
           className={ classes.filterSummary }
         >
-          { renderFilterSummary() }
+          <Typography variant="h4" style={{ fontWeight: 600, fontStyle: "italic" }}>
+            { strings.editorContent.workTime }
+          </Typography>
+          <Box className={ classes.filterSubtitle } >
+            { renderFilterSubtitleText(`${strings.logged}:`, personTotalTime!.logged) }
+            { renderFilterSubtitleText(`${strings.expected}:`, personTotalTime!.expected) }
+            { renderFilterSubtitleText(`${strings.total}:`, personTotalTime!.total) }
+          </Box>
         </AccordionSummary>
         <AccordionDetails className={ classes.filterContent }>
-          { renderFilterDetails() }
+          { renderSelectScope() }
+          <Box className={ classes.startDateOnly }>
+            <Switch
+              color="secondary"
+              checked={ startDateOnly }
+              onChange={ onStartDateOnlyChange }
+            />
+            <Typography variant="h5" style={{ paddingLeft: theme.spacing(0.5) }}>
+              { "Start only" }
+            </Typography>
+          </Box>
+          <Box className={ classes.datePickers }>
+            <Box display="flex" alignItems="center">
+              {/* TODO stylesheet localization */}
+              <Typography variant="h5" style={{ marginRight: theme.spacing(3) }}>
+                { "from: " }
+              </Typography>
+              { renderStartDatePickersAndWeekSelector() }
+            </Box>
+            <Box marginLeft={ 4 } display="flex" alignItems="center">
+              <Typography variant="h5" style={{ marginRight: theme.spacing(3) }}>
+                { "to: " }
+              </Typography>
+              { renderEndDatePickersAndWeekSelector() }
+            </Box>
+          </Box>
         </AccordionDetails>
       </Accordion>
-    );
-  }
-
-  /**
-   * Renders the filter summary
-   */
-  const renderFilterSummary = () => {
-    return (
-      <>
-        <Typography variant="h4" style={{ fontWeight: 600, fontStyle: "italic" }}>
-          { strings.editorContent.workTime }
-        </Typography>
-        <Box className={ classes.filterSubtitle } >
-          { renderFilterSubtitleText(`${strings.logged}:`, personTotalTime!.logged) }
-          { renderFilterSubtitleText(`${strings.expected}:`, personTotalTime!.expected) }
-          { renderFilterSubtitleText(`${strings.total}:`, personTotalTime!.total) }
-        </Box>
-      </>
-    );
-  }
-
-  /**
-   * Renders the filter details
-   */
-  const renderFilterDetails = () => {
-    return (
-      <>
-        { renderSelectScope() }
-        <Box className={ classes.datePickers }>
-          <Box display="flex" alignItems="center">
-            {/* TODO stylesheet localization */}
-            <Typography variant="h5" style={{ marginRight: theme.spacing(3) }}>
-              { "from: " }
-            </Typography>
-            { renderStartDatePickersAndWeekSelector() }
-          </Box>
-          <Box marginLeft={ 4 } display="flex" alignItems="center">
-            <Typography variant="h5" style={{ marginRight: theme.spacing(3) }}>
-              { "to: " }
-            </Typography>
-            { renderEndDatePickersAndWeekSelector() }
-          </Box>
-        </Box>
-      </>
     );
   }
 
@@ -656,6 +667,7 @@ const EditorContent: React.FC<Props> = () => {
    * Renders the total chart
    */
   const renderTotal = () => {
+    console.log("displayedTimeData: ", displayedTimeData)
     return (
       <Box className={ classes.totalContainer }>
         <Typography variant="h2">
