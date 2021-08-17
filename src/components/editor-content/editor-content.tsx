@@ -295,7 +295,7 @@ const EditorContent: React.FC<Props> = () => {
       const timeBankApi = Api.getTimeBankApi();
       yearEntries = await timeBankApi.timebankControllerGetTotal({
         personId: person.id.toString(),
-        retention: TimebankControllerGetTotalRetentionEnum.MONTH
+        retention: TimebankControllerGetTotalRetentionEnum.YEAR
       });
       setTotalYearEntries(yearEntries)
     }else {
@@ -667,7 +667,6 @@ const EditorContent: React.FC<Props> = () => {
    * Renders the total chart
    */
   const renderTotal = () => {
-    console.log("displayedTimeData: ", displayedTimeData)
     return (
       <Box className={ classes.totalContainer }>
         <Typography variant="h2">
