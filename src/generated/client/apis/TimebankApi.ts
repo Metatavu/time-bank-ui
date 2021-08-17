@@ -52,11 +52,11 @@ export class TimebankApi extends runtime.BaseAPI {
         const queryParameters: any = {};
 
         if (requestParameters.before !== undefined) {
-            queryParameters['before'] = requestParameters.before;
+            queryParameters['before'] = (requestParameters.before as any).toISOString().substr(0,10);
         }
 
         if (requestParameters.after !== undefined) {
-            queryParameters['after'] = requestParameters.after;
+            queryParameters['after'] = (requestParameters.after as any).toISOString().substr(0,10);
         }
 
         const headerParameters: runtime.HTTPHeaders = {};

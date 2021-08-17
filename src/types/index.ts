@@ -22,13 +22,24 @@ export enum DateFormats {
  */
 export enum WorkTimeCategory {
   PROJECT = "Project",
-  INTERNAL = "Internal"
+  INTERNAL = "Internal",
+  EXPECTED = "Ecpected"
 };
 
 /**
  * Type for work time data
  */
-export interface WorkTimeData {
+export interface WorkTimeTotalData {
   name: WorkTimeCategory;
   value: number;
+}
+
+/**
+ * Type for work time data
+ */
+export interface WorkTimeData {
+  name: string;
+  expected: number;
+  project: number;
+  internal: number
 }

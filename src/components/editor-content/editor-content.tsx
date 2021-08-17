@@ -7,10 +7,12 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePickerView } from "@ma
 import { useEditorContentStyles } from "styles/editor-content/editor-content";
 import { useAppSelector } from "app/hooks";
 import { selectPerson } from "features/person/person-slice";
+import Api from "api/api";
 import strings from "localization/strings";
 import theme from "theme/theme";
 import TimeUtils from "utils/time-utils";
-import { FilterScopes, DateFormats } from "types/index";
+import { FilterScopes, DateFormats, WorkTimeData } from "types/index";
+import { TimebankControllerGetTotalRetentionEnum, TimeEntry, TimeEntryTotalDto } from "generated/client";
 
 /**
  * Component properties
@@ -31,34 +33,29 @@ const EditorContent: React.FC<Props> = () => {
 
   const [ todayDate, /*setTodayDate*/ ] = useState(new Date());
   const [ currentWeekNumber, setCurrentWeekNumber ] = useState(0);
-  const [ selectedStartingDate, setSelectedStartingDate ] = useState<Date>(new Date());
-  const [ selectedEndingDate, setSelectedEndingDate ] = useState<Date>(new Date());
+  const [ selectedStartDate, setSelectedStartDate ] = useState<Date>(new Date());
+  const [ selectedEndDate, setSelectedEndDate ] = useState<Date | null>(null);
   const [ scope, setScope ] = React.useState<FilterScopes>(FilterScopes.WEEK);
   const [ dateFormat, setDateFormat ] = React.useState<string | undefined>("dd/MM/yyyy");
   const [ datePickerView, setDatePickerView ] = React.useState<DatePickerView>("date");
   const [ startWeek, setStartWeek ] = React.useState<number | undefined>(undefined);
   const [ endWeek, setEndWeek ] = React.useState<number | undefined>(undefined);
-
-  /**
-   * Initialize the component data
-   */
-  const initializeData = async () => {
-    const currentWeek = getCurrentWeek();
-    setCurrentWeekNumber(currentWeek);
-
-    // set scope to the current sprint
-    if ((currentWeek % 2) === 0) {
-      setStartWeek(currentWeek - 1);
-      setEndWeek(currentWeek);
-    } else {
-      setStartWeek(currentWeek);
-    }
-  }
+  const [ isLoading, setIsLoading ] = React.useState(false);
+  const [ totalWeekEntries, setTotalWeekEntries ] = React.useState<TimeEntryTotalDto[] | undefined>(undefined);
+  const [ totalMonthEntries, setTotalMonthEntries ] = React.useState<TimeEntryTotalDto[] | undefined>(undefined);
+  const [ totalYearEntries, setTotalYearEntries ] = React.useState<TimeEntryTotalDto[] | undefined>(undefined);
+  const [ displayedTimeData, setDisplayedTimeData ] = React.useState<WorkTimeData[] | undefined>(undefined);
 
   React.useEffect(() => {
     initializeData();
+    // TODO set graoh of the current sprint
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  React.useEffect(() => {
+    updateTimeData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [person, scope, startWeek, endWeek, selectedStartDate, selectedEndDate])
 
   /**
    * Method to handle starting date change
@@ -66,7 +63,7 @@ const EditorContent: React.FC<Props> = () => {
    * @param date selected date
    */
   const handleStartDateChange = (date: Date | null) => {
-    date && setSelectedStartingDate(date);
+    date && setSelectedStartDate(date);
   };
 
   /**
@@ -75,7 +72,7 @@ const EditorContent: React.FC<Props> = () => {
    * @param date selected date
    */
   const handleEndDateChange = (date: Date | null) => {
-    date && setSelectedEndingDate(date);
+    date && setSelectedEndDate(date);
   };
   
   /**
@@ -99,6 +96,24 @@ const EditorContent: React.FC<Props> = () => {
   };
 
   /**
+   * Changes the presented date format according to selected scope
+   *
+   * @param event React change event
+   */
+  const handleDateFormatChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFilterScope  = event.target.value as FilterScopes;
+
+    setScope(selectedFilterScope);
+    setDatePickerView(selectedFilterScope as DatePickerView);
+    setDateFormat({
+      [FilterScopes.DATE]: DateFormats.DATE,
+      [FilterScopes.WEEK]: DateFormats.DATE,
+      [FilterScopes.MONTH]: DateFormats.MONTH,
+      [FilterScopes.YEAR]: DateFormats.YEAR,
+    }[selectedFilterScope]);
+  };
+
+  /**
    * Generate week numbers for the select component
    * 
    * @returns current week number
@@ -111,10 +126,193 @@ const EditorContent: React.FC<Props> = () => {
     return Math.ceil(( today.getDay() + 1 + numberOfDays) / 7);   
   };
 
+
+  /**
+   * Initialize the component data
+   */
+  const initializeData = async () => {
+    const currentWeek = getCurrentWeek();
+    setCurrentWeekNumber(currentWeek);
+
+    // set scope to the current sprint
+    if ((currentWeek % 2) === 0) {
+      setStartWeek(currentWeek - 1);
+      setEndWeek(currentWeek);
+    } else {
+      setStartWeek(currentWeek);
+    }
+  }
+
+  /**
+   * update and set the time data
+   */
+  const updateTimeData = async () => {
+    const loadData = {
+      [FilterScopes.DATE]: loadDateData,
+      [FilterScopes.WEEK]: loadWeekData,
+      [FilterScopes.MONTH]: loadMonthData,
+      [FilterScopes.YEAR]: loadYearData
+    }[scope];
+
+    setIsLoading(true);
+    await loadData().then(setDisplayedTimeData)
+    setIsLoading(false);
+  }
+
+  /**
+   * Load the date data
+   */
+  const loadDateData = async () => {
+    if (!person || !selectedStartDate) {
+      return;
+    }
+
+    const timeBankApi = Api.getTimeBankApi();
+    const dateEntries = await timeBankApi.timebankControllerGetEntries({
+      personId: person.id.toString(),
+      after: selectedStartDate,
+      before: selectedEndDate || selectedStartDate
+    });
+
+    const workTimeDatas: WorkTimeData[] = dateEntries.map(
+      entry => ({
+        name: entry.date.toISOString().split("T")[0],
+        expected: entry.expected,
+        project: entry.projectTime,
+        internal: entry.internalTime
+      })
+    );
+
+    return workTimeDatas;
+  }
+
+  /**
+   * Load the week data
+   */
+  const loadWeekData = async () => {
+    if (!person || !startWeek || !selectedStartDate) {
+      return;
+    }
+
+    let weekEntries: TimeEntryTotalDto[] = [];
+
+    if (!totalWeekEntries) {
+      const timeBankApi = Api.getTimeBankApi();
+      weekEntries = await timeBankApi.timebankControllerGetTotal({
+        personId: person.id.toString(),
+        retention: TimebankControllerGetTotalRetentionEnum.WEEK
+      });
+      setTotalWeekEntries(weekEntries)
+    }else {
+      weekEntries = totalWeekEntries;
+    }
+
+    const workTimeDatas: WorkTimeData[] = weekEntries.filter(
+      entry => TimeUtils.WeekOrMonthInRange(
+        selectedStartDate.getFullYear(),
+        startWeek,
+        (!selectedEndDate || !endWeek) ? selectedStartDate.getFullYear() : selectedEndDate.getFullYear(),
+        (!selectedEndDate || !endWeek) ? startWeek : endWeek,
+        entry.id?.year!,
+        entry.id?.week!
+      )
+    ).map(
+      entry => ({
+        name: `${entry.id?.year!} ${FilterScopes.WEEK} ${entry.id?.week!}`,
+        expected: entry.expected,
+        project: entry.projectTime,
+        internal: entry.internalTime
+      })
+    )
+
+    return workTimeDatas;
+  }
+
+  /**
+   * Load the month data
+   */
+  const loadMonthData = async () => {
+    if (!person || !selectedStartDate) {
+      return;
+    }
+
+    let monthEntries: TimeEntryTotalDto[] = [];
+
+    if (!totalMonthEntries) {
+      const timeBankApi = Api.getTimeBankApi();
+      monthEntries = await timeBankApi.timebankControllerGetTotal({
+        personId: person.id.toString(),
+        retention: TimebankControllerGetTotalRetentionEnum.MONTH
+      });
+      setTotalMonthEntries(monthEntries)
+    }else {
+      monthEntries = totalMonthEntries;
+    }
+
+    const workTimeDatas: WorkTimeData[] = monthEntries.filter(
+      entry => TimeUtils.WeekOrMonthInRange(
+        selectedStartDate.getFullYear(),
+        selectedStartDate.getMonth(),
+        !selectedEndDate ? selectedStartDate.getFullYear() : selectedEndDate.getFullYear(),
+        !selectedEndDate ? selectedStartDate.getMonth() : selectedEndDate.getMonth(),
+        entry.id?.year!,
+        entry.id?.month!
+      )
+    ).map(
+      entry => ({
+        name: `${entry.id?.year!}-${entry.id?.month!}`,
+        expected: entry.expected,
+        project: entry.projectTime,
+        internal: entry.internalTime
+      })
+    )
+
+    return workTimeDatas;
+  }  
+  
+  /**
+  * Load the year data
+  */
+  const loadYearData = async () => {
+    if (!person || !selectedStartDate) {
+      return;
+    }
+
+    let yearEntries: TimeEntryTotalDto[] = [];
+
+    if (!totalYearEntries) {
+      const timeBankApi = Api.getTimeBankApi();
+      yearEntries = await timeBankApi.timebankControllerGetTotal({
+        personId: person.id.toString(),
+        retention: TimebankControllerGetTotalRetentionEnum.MONTH
+      });
+      setTotalYearEntries(yearEntries)
+    }else {
+      yearEntries = totalYearEntries;
+    }
+
+    const workTimeDatas: WorkTimeData[] = yearEntries.filter(
+      entry => (selectedStartDate.getFullYear() <= entry.id?.year!) && (entry.id?.year! <= (selectedEndDate || selectedStartDate).getFullYear())
+    ).map(
+      entry => ({
+        name: `${entry.id?.year!}`,
+        expected: entry.expected,
+        project: entry.projectTime,
+        internal: entry.internalTime
+      })
+    )
+
+    return workTimeDatas;
+  }
+
   /**
    * Renders week numbers to select component
    */
   const renderStartWeekNumbers = () => {
+    if (!selectedStartDate) {
+      return;
+    }
+
     const weekOpts = []
 
     for (let week = 1; week <= currentWeekNumber; week++) {
@@ -131,9 +329,13 @@ const EditorContent: React.FC<Props> = () => {
    * Renders week numbers to select component
    */
   const renderEndWeekNumbers = () => {
+    if (!selectedEndDate) {
+      return;
+    }
+
     const weekOpts = []
 
-    if (selectedStartingDate.getFullYear() === selectedEndingDate.getFullYear() && !!startWeek) {
+    if (selectedStartDate?.getFullYear() === selectedEndDate.getFullYear() && !!startWeek) {
       for (let week = startWeek + 1; week <= currentWeekNumber; week++) {
         weekOpts.push((
           <MenuItem value={ week }>
@@ -152,26 +354,6 @@ const EditorContent: React.FC<Props> = () => {
     }
 
     return weekOpts;
-  };
-
-  /**
-   * Changes the presented date format according to selected scope
-   *
-   * @param event React change event
-   */
-  const handleDateFormatChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFilterScope  = event.target.value as FilterScopes;
-
-    setScope(selectedFilterScope);
-    if (selectedFilterScope ! === FilterScopes.WEEK ) {
-      setDatePickerView(selectedFilterScope as DatePickerView);
-      setDateFormat({
-        [FilterScopes.DATE]: DateFormats.DATE,
-        [FilterScopes.WEEK]: DateFormats.DATE,
-        [FilterScopes.MONTH]: DateFormats.MONTH,
-        [FilterScopes.YEAR]: DateFormats.YEAR,
-      }[selectedFilterScope]);
-    }
   };
 
   /**
@@ -246,7 +428,7 @@ const EditorContent: React.FC<Props> = () => {
           format={ dateFormat }
           maxDate={ todayDate }
           label={ filterStartingDate }
-          value={ selectedStartingDate }
+          value={ selectedStartDate }
           onChange={ handleStartDateChange }
           className={ classes.datePicker }
           KeyboardButtonProps={{ "aria-label": `${ filterStartingDate }` }}
@@ -268,7 +450,7 @@ const EditorContent: React.FC<Props> = () => {
           format="yyyy"
           maxDate={ todayDate }
           label={ strings.editorContent.selectYearStart }
-          value={ selectedStartingDate }
+          value={ selectedStartDate }
           onChange={ handleStartDateChange }
           className={ classes.datePicker }
           KeyboardButtonProps={{ "aria-label": `${ strings.editorContent.filterStartingDate }` }}
@@ -300,7 +482,7 @@ const EditorContent: React.FC<Props> = () => {
         views={[ datePickerView ]}
         maxDate={ todayDate }
         label={ strings.editorContent.filterEndingDate }
-        value={ selectedEndingDate } 
+        value={ selectedEndDate } 
         onChange={ handleEndDateChange }
         className={ classes.datePicker }
         KeyboardButtonProps={{ "aria-label": `${ strings.editorContent.filterEndingDate }`}}
@@ -321,7 +503,7 @@ const EditorContent: React.FC<Props> = () => {
           format="yyyy"
           maxDate={ todayDate }
           label={ strings.editorContent.selectYearEnd }
-          value={ selectedEndingDate }
+          value={ selectedEndDate }
           onChange={ handleEndDateChange }
           className={ classes.datePicker }
           KeyboardButtonProps={{ "aria-label": `${ strings.editorContent.filterStartingDate }` }}

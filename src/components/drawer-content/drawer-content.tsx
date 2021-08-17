@@ -13,7 +13,7 @@ import { useAppDispatch, useAppSelector } from "app/hooks";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import TimeUtils from "utils/time-utils";
 import theme from "theme/theme";
-import { WorkTimeCategory, WorkTimeData } from "types/index";
+import { WorkTimeCategory, WorkTimeTotalData } from "types/index";
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 
 /**
@@ -159,7 +159,7 @@ const DrawerContent: React.FC<Props> = () => {
       theme.palette.error.dark :
       theme.palette.success.main;
 
-    const workTimeDatas: WorkTimeData[] = [
+    const workTimeDatas: WorkTimeTotalData[] = [
       { name: WorkTimeCategory.PROJECT, value: personTotalTime.projectTime },
       { name: WorkTimeCategory.INTERNAL, value: personTotalTime.internalTime, },
     ]
