@@ -25,7 +25,6 @@ export interface IStrings extends LocalizedStringsMethods {
     copy: string;
     save: string;
     delete: string;
-    search: string;
     language: string;
     select: string;
   };
