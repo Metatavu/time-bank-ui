@@ -93,9 +93,19 @@ export const useEditorContentStyles = makeStyles({
     padding: `${theme.spacing(3)}px ${theme.spacing(4)}px`
   },
 
+  overViewChartContainer: {
+    width: "100%",
+    height: 450,
+    paddingTop: theme.spacing(5)
+  },
+
   totalContainer: {
     padding: `${theme.spacing(3)}px ${theme.spacing(4)}px`
-  }
+  },
+
+  totalChartContainer: {
+    width: "100%",
+  },
   
 }, {
   name: "editor-content"

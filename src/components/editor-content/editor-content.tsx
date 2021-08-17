@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, Switch } from "@material-ui/core";
+import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, Switch, Divider } from "@material-ui/core";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import "date-fns";
 import DateFnsUtils from "@date-io/date-fns";
@@ -12,7 +12,9 @@ import strings from "localization/strings";
 import theme from "theme/theme";
 import TimeUtils from "utils/time-utils";
 import { FilterScopes, DateFormats, WorkTimeData } from "types/index";
-import { TimebankControllerGetTotalRetentionEnum, TimeEntry, TimeEntryTotalDto } from "generated/client";
+import { TimebankControllerGetTotalRetentionEnum, TimeEntryTotalDto } from "generated/client";
+import TotalChart from "components/generics/total-chart/total-chart";
+import OverviewChart from "components/generics/overview-chart/overview-chart";
 
 /**
  * Component properties
@@ -31,7 +33,7 @@ const EditorContent: React.FC<Props> = () => {
 
   const { person, personTotalTime } = useAppSelector(selectPerson);
 
-  const [ yesterdayDate, setYesterdayDate ] = useState(new Date());
+  const [ todayDate, /*setTodayDate*/ ] = useState(new Date());
   const [ startDateOnly, setStartDateOnly ] = useState(false);
   const [ currentWeekNumber, setCurrentWeekNumber ] = useState(0);
   const [ selectedStartDate, setSelectedStartDate ] = useState<Date>(new Date());
@@ -124,7 +126,6 @@ const EditorContent: React.FC<Props> = () => {
 
   /**
    * Generate week numbers for the select component 
-   * (as the backend only sync date for yesterday, time is shifted 1 day before. So the method will actually get last week on Monday)
    * 
    * @returns current week number
    */
@@ -133,7 +134,7 @@ const EditorContent: React.FC<Props> = () => {
     const oneJan = new Date(today.getFullYear(), 0, 1);   
     const numberOfDays = Math.floor((today.getTime() - oneJan.getTime()) / (24 * 60 * 60 * 1000));   
 
-    return Math.ceil(( today.getDay() + numberOfDays) / 7);   
+    return Math.ceil(( today.getDay() + 1 + numberOfDays) / 7);   
   };
 
 
@@ -141,10 +142,7 @@ const EditorContent: React.FC<Props> = () => {
    * Initialize the component data
    */
   const initializeData = async () => {
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1)
-    setYesterdayDate(yesterday);
-    setSelectedStartDate(yesterday)
+    setSelectedStartDate(todayDate)
 
     const currentWeek = getCurrentWeek();
     setCurrentWeekNumber(currentWeek);
@@ -152,7 +150,7 @@ const EditorContent: React.FC<Props> = () => {
     // set scope to the current sprint
     if ((currentWeek % 2) === 0) {
       setStartWeek(currentWeek - 1);
-      setSelectedEndDate(yesterdayDate);
+      setSelectedEndDate(todayDate);
       setEndWeek(currentWeek);
     } else {
       setStartWeek(currentWeek);
@@ -269,9 +267,9 @@ const EditorContent: React.FC<Props> = () => {
     const workTimeDatas: WorkTimeData[] = monthEntries.filter(
       entry => TimeUtils.WeekOrMonthInRange(
         selectedStartDate.getFullYear(),
-        selectedStartDate.getMonth(),
-        !selectedEndDate ? selectedStartDate.getFullYear() : selectedEndDate.getFullYear(),
-        !selectedEndDate ? selectedStartDate.getMonth() : selectedEndDate.getMonth(),
+        selectedStartDate.getMonth() + 1,
+        selectedEndDate ? selectedEndDate.getFullYear() : selectedStartDate.getFullYear() ,
+        selectedEndDate ? selectedEndDate.getMonth() + 1: selectedStartDate.getMonth() + 1,
         entry.id?.year!,
         entry.id?.month!
       )
@@ -449,7 +447,7 @@ const EditorContent: React.FC<Props> = () => {
           variant="inline"
           views={[ datePickerView ]}
           format={ dateFormat }
-          maxDate={ yesterdayDate }
+          maxDate={ todayDate }
           label={ filterStartingDate }
           value={ selectedStartDate }
           onChange={ handleStartDateChange }
@@ -471,7 +469,7 @@ const EditorContent: React.FC<Props> = () => {
           variant="inline"
           inputVariant="standard"
           format="yyyy"
-          maxDate={ yesterdayDate }
+          maxDate={ todayDate }
           label={ strings.editorContent.selectYearStart }
           value={ selectedStartDate }
           onChange={ handleStartDateChange }
@@ -505,7 +503,7 @@ const EditorContent: React.FC<Props> = () => {
         format={ dateFormat }
         views={[ datePickerView ]}
         minDate={ selectedStartDate }
-        maxDate={ yesterdayDate }
+        maxDate={ todayDate }
         label={ strings.editorContent.filterEndingDate }
         value={ selectedEndDate } 
         onChange={ handleEndDateChange }
@@ -528,7 +526,7 @@ const EditorContent: React.FC<Props> = () => {
           views={[ FilterScopes.YEAR ]}
           format="yyyy"
           minDate={ selectedStartDate }
-          maxDate={ yesterdayDate }
+          maxDate={ todayDate }
           label={ strings.editorContent.selectYearEnd }
           value={ selectedEndDate }
           onChange={ handleEndDateChange }
@@ -651,6 +649,7 @@ const EditorContent: React.FC<Props> = () => {
         className={ classes.chartContainer }
       >
         { renderOverview() }
+        <Divider/>
         { renderTotal() }
       </Paper>
     );
@@ -660,11 +659,21 @@ const EditorContent: React.FC<Props> = () => {
    * Renders the overview chart
    */
   const renderOverview = () => {
+    if (!displayedTimeData) {
+      return;
+    }
+
     return (
       <Box className={ classes.overViewContainer }>
         <Typography variant="h2">
           { "Overview" }
         </Typography>
+        <Box className={ classes.overViewChartContainer }>
+          <OverviewChart
+            displayedData={ displayedTimeData }
+            isLoading={ isLoading }
+          />
+        </Box>
       </Box>
     );
   }
@@ -673,11 +682,21 @@ const EditorContent: React.FC<Props> = () => {
    * Renders the total chart
    */
   const renderTotal = () => {
+    if (!displayedTimeData) {
+      return;
+    }
+
     return (
       <Box className={ classes.totalContainer }>
         <Typography variant="h2">
           { "Total" }
         </Typography>
+        <Box className={ classes.totalChartContainer }>
+          <TotalChart
+            displayedData={ displayedTimeData }
+            isLoading={ isLoading }
+          />
+        </Box>
       </Box>
     );
   }
