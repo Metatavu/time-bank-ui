@@ -60,7 +60,6 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
             bottom: 5,
           }}
         >
-          {/* <CartesianGrid strokeDasharray="3 3" /> */}
           <XAxis type="number" hide/>
           <YAxis type="category" dataKey="name"/>
           <Tooltip content={ renderCustomizedTooltip }/>
@@ -103,17 +102,15 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
 
   /**
    * Renders the customized tooltip for charts
+   * 
+   * @param props props of the custom tooltip
    */
-  const renderCustomizedTooltip = (props: any) => {
-    // TODO fix any
+  const renderCustomizedTooltip = (props: TooltipProps<ValueType, NameType>) => {
     const { active, payload } = props;
-
 
     if (!active || !payload || !payload.length || !payload[0].payload) {
       return null;
     }
-
-    console.log(props)
 
     const selectedData = payload[0].payload;
 

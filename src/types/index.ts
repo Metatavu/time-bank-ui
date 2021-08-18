@@ -45,5 +45,12 @@ export interface WorkTimeData {
   name: string;
   expected: number;
   project: number;
-  internal: number
+  internal: number;
+}
+
+/**
+ * Type for custom pie label
+ */
+export interface CustomPieLabel {
+  value: number;
 }

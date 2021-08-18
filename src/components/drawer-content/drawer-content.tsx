@@ -1,6 +1,6 @@
 import React from "react";
 import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Divider, TextField, Typography } from "@material-ui/core";
-import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer, TooltipProps } from "recharts";
+import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer, TooltipProps, PieLabel } from "recharts";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import UserInfo from "components/generics/user-info/user-info";
 import { useDrawerContentStyles } from "styles/drawer-content/drawer-content";
@@ -13,7 +13,7 @@ import { useAppDispatch, useAppSelector } from "app/hooks";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import TimeUtils from "utils/time-utils";
 import theme from "theme/theme";
-import { WorkTimeCategory, WorkTimeTotalData } from "types/index";
+import { CustomPieLabel, WorkTimeCategory, WorkTimeTotalData } from "types/index";
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 
 /**
@@ -215,8 +215,7 @@ const DrawerContent: React.FC<Props> = () => {
    * 
    * @param props props of the custom label
    */
-  const renderCustomizedLabel = (props: any) => {
-    // TODO type
+  const renderCustomizedLabel = (props: CustomPieLabel) => {
     return TimeUtils.minuteToHourString(props.value);
   };
 

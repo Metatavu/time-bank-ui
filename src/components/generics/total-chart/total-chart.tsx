@@ -2,12 +2,13 @@ import React from "react";
 import { selectPerson } from "features/person/person-slice";
 import { useAppSelector } from "app/hooks";
 import { useTotalChartStyles } from "styles/generics/total-chart/total-chart";
-import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine, ResponsiveContainer } from 'recharts';
-import { WorkTimeCategory, WorkTimeData, WorkTimeTotalData } from "types";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine, ResponsiveContainer, TooltipProps } from 'recharts';
+import { WorkTimeTotalData } from "types";
 import theme from "theme/theme";
 import { CircularProgress, Box, Typography } from "@material-ui/core";
 import TimeUtils from "utils/time-utils";
 import strings from "localization/strings";
+import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 
 /**
  * Component properties
@@ -38,11 +39,11 @@ const TotalChart: React.FC<Props> = ({ displayedData, isLoading }) => {
 
   /**
    * Renders the customized tooltip for charts
+   * 
+   * @param props props of the custom tooltip
    */
-  const renderCustomizedTooltip = (props: any) => {
-    // TODO fix any
+  const renderCustomizedTooltip = (props: TooltipProps<ValueType, NameType>) => {
     const { active, payload } = props;
-
 
     if (!active || !payload || !payload.length || !payload[0].payload) {
       return null;
