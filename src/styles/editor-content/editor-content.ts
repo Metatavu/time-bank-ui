@@ -46,7 +46,6 @@ export const useEditorContentStyles = makeStyles({
   datePicker: {
     width: 200,
     marginRight: theme.spacing(2),
-    //todo move to theme
     "& .MuiInputLabel-root": {
       color: "rgba(0, 0, 0, 0.54)"
     },
@@ -55,7 +54,6 @@ export const useEditorContentStyles = makeStyles({
   yearPicker: {
     width: 120,
     marginRight: theme.spacing(2),
-    //todo move to theme
     "& .MuiInputLabel-root": {
       color: "rgba(0, 0, 0, 0.54)"
     },
@@ -75,10 +73,6 @@ export const useEditorContentStyles = makeStyles({
   weekPicker: {
     width: 110,
     marginRight: theme.spacing(2),
-    //todo move to theme
-    "& .MuiFormLabel-root": {
-      color: "rgba(0, 0, 0, 0.54)"
-    }
   },
   
   filterSubtitle: {

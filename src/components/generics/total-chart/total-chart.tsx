@@ -24,7 +24,8 @@ const TotalChart: React.FC<Props> = ({ displayedData, isLoading }) => {
   const classes = useTotalChartStyles();
   const { person } = useAppSelector(selectPerson);
 
-  // TODO fix this
+  // TODO when the user is selected but no selected range
+  // Can be added later
   if (!person) {
     return null;
   }
