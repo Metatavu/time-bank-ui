@@ -160,15 +160,15 @@ const DrawerContent: React.FC<Props> = () => {
       theme.palette.success.main;
 
     const workTimeDatas: WorkTimeTotalData[] = [
-      { name: WorkTimeCategory.PROJECT, value: personTotalTime.projectTime },
-      { name: WorkTimeCategory.INTERNAL, value: personTotalTime.internalTime, },
+      { name: WorkTimeCategory.PROJECT, total: personTotalTime.projectTime },
+      { name: WorkTimeCategory.INTERNAL, total: personTotalTime.internalTime, },
     ]
 
     const COLORS = [ theme.palette.success.main, theme.palette.warning.main ];
 
     return (
       <>
-        <Accordion className={ classes.drawerAccordin }>
+        <Accordion defaultExpanded className={ classes.drawerAccordin }>
           <AccordionSummary
             expandIcon={ <ExpandMoreIcon /> }
             aria-controls="panel1a-content"

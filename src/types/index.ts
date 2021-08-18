@@ -23,7 +23,8 @@ export enum DateFormats {
 export enum WorkTimeCategory {
   PROJECT = "Project",
   INTERNAL = "Internal",
-  EXPECTED = "Ecpected"
+  EXPECTED = "Ecpected",
+  TOTAL = "Total"
 };
 
 /**
@@ -31,7 +32,7 @@ export enum WorkTimeCategory {
  */
 export interface WorkTimeTotalData {
   name: WorkTimeCategory;
-  value: number;
+  total: number;
 }
 
 /**

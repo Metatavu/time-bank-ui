@@ -11,7 +11,7 @@ import Api from "api/api";
 import strings from "localization/strings";
 import theme from "theme/theme";
 import TimeUtils from "utils/time-utils";
-import { FilterScopes, DateFormats, WorkTimeData } from "types/index";
+import { FilterScopes, DateFormats, WorkTimeData, WorkTimeCategory, WorkTimeTotalData } from "types/index";
 import { TimebankControllerGetTotalRetentionEnum, TimeEntryTotalDto } from "generated/client";
 import TotalChart from "components/generics/total-chart/total-chart";
 import OverviewChart from "components/generics/overview-chart/overview-chart";
@@ -48,6 +48,7 @@ const EditorContent: React.FC<Props> = () => {
   const [ totalMonthEntries, setTotalMonthEntries ] = React.useState<TimeEntryTotalDto[] | undefined>(undefined);
   const [ totalYearEntries, setTotalYearEntries ] = React.useState<TimeEntryTotalDto[] | undefined>(undefined);
   const [ displayedTimeData, setDisplayedTimeData ] = React.useState<WorkTimeData[] | undefined>(undefined);
+  const [ displayedTotal, setDisplayedTotal ] = React.useState<WorkTimeTotalData | undefined>(undefined);
 
   React.useEffect(() => {
     initializeData();
@@ -170,7 +171,7 @@ const EditorContent: React.FC<Props> = () => {
     }[scope];
 
     setIsLoading(true);
-    await loadData().then(setDisplayedTimeData)
+    await loadData()
     setIsLoading(false);
   }
 
@@ -189,14 +190,28 @@ const EditorContent: React.FC<Props> = () => {
       before: selectedEndDate || selectedStartDate
     });
 
-    const workTimeDatas: WorkTimeData[] = dateEntries.map(
-      entry => ({
-        name: entry.date.toISOString().split("T")[0],
-        expected: entry.expected,
-        project: entry.projectTime,
-        internal: entry.internalTime
-      })
+    const workTimeDatas: WorkTimeData[] = [];
+    let totalTime = 0;
+
+    dateEntries.forEach(
+      entry => {
+        workTimeDatas.push({
+          name: entry.date.toISOString().split("T")[0],
+          expected: entry.expected,
+          project: entry.projectTime,
+          internal: entry.internalTime
+        });
+        totalTime += entry.total;
+      }
     );
+
+    setDisplayedTimeData(workTimeDatas);
+
+    const TotalWorkTime: WorkTimeTotalData = {
+      name: WorkTimeCategory.TOTAL,
+      total: totalTime
+    };
+    setDisplayedTotal(TotalWorkTime);
 
     return workTimeDatas;
   }
@@ -217,12 +232,15 @@ const EditorContent: React.FC<Props> = () => {
         personId: person.id.toString(),
         retention: TimebankControllerGetTotalRetentionEnum.WEEK
       });
-      setTotalWeekEntries(weekEntries)
+      setTotalWeekEntries(weekEntries);
     }else {
       weekEntries = totalWeekEntries;
     }
 
-    const workTimeDatas: WorkTimeData[] = weekEntries.filter(
+    const workTimeDatas: WorkTimeData[] = [];
+    let totalTime = 0;
+    
+    weekEntries.filter(
       entry => TimeUtils.WeekOrMonthInRange(
         selectedStartDate.getFullYear(),
         startWeek,
@@ -231,14 +249,25 @@ const EditorContent: React.FC<Props> = () => {
         entry.id?.year!,
         entry.id?.week!
       )
-    ).map(
-      entry => ({
-        name: `${entry.id?.year!} ${FilterScopes.WEEK} ${entry.id?.week!}`,
-        expected: entry.expected,
-        project: entry.projectTime,
-        internal: entry.internalTime
-      })
-    )
+    ).forEach(
+      entry => {
+        workTimeDatas.push({
+          name: `${entry.id?.year!} ${FilterScopes.WEEK} ${entry.id?.week!}`,
+          expected: entry.expected,
+          project: entry.projectTime,
+          internal: entry.internalTime
+        });
+        totalTime += entry.total;
+      }
+    );
+
+    setDisplayedTimeData(workTimeDatas);
+
+    const TotalWorkTime: WorkTimeTotalData = {
+      name: WorkTimeCategory.TOTAL,
+      total: totalTime
+    };
+    setDisplayedTotal(TotalWorkTime);
 
     return workTimeDatas;
   }
@@ -259,12 +288,15 @@ const EditorContent: React.FC<Props> = () => {
         personId: person.id.toString(),
         retention: TimebankControllerGetTotalRetentionEnum.MONTH
       });
-      setTotalMonthEntries(monthEntries)
+      setTotalMonthEntries(monthEntries);
     }else {
       monthEntries = totalMonthEntries;
     }
 
-    const workTimeDatas: WorkTimeData[] = monthEntries.filter(
+    const workTimeDatas: WorkTimeData[] = [];
+    let totalTime = 0;
+    
+    monthEntries.filter(
       entry => TimeUtils.WeekOrMonthInRange(
         selectedStartDate.getFullYear(),
         selectedStartDate.getMonth() + 1,
@@ -273,14 +305,25 @@ const EditorContent: React.FC<Props> = () => {
         entry.id?.year!,
         entry.id?.month!
       )
-    ).map(
-      entry => ({
-        name: `${entry.id?.year!}-${entry.id?.month!}`,
-        expected: entry.expected,
-        project: entry.projectTime,
-        internal: entry.internalTime
-      })
-    )
+    ).forEach(
+      entry => {
+        workTimeDatas.push({
+          name: `${entry.id?.year!}-${entry.id?.month!}`,
+          expected: entry.expected,
+          project: entry.projectTime,
+          internal: entry.internalTime
+        });
+        totalTime += entry.total;
+      }
+    );
+
+    setDisplayedTimeData(workTimeDatas);
+
+    const TotalWorkTime: WorkTimeTotalData = {
+      name: WorkTimeCategory.TOTAL,
+      total: totalTime
+    };
+    setDisplayedTotal(TotalWorkTime);
 
     return workTimeDatas;
   }  
@@ -301,21 +344,35 @@ const EditorContent: React.FC<Props> = () => {
         personId: person.id.toString(),
         retention: TimebankControllerGetTotalRetentionEnum.YEAR
       });
-      setTotalYearEntries(yearEntries)
+      setTotalYearEntries(yearEntries);
     }else {
       yearEntries = totalYearEntries;
     }
 
-    const workTimeDatas: WorkTimeData[] = yearEntries.filter(
+    const workTimeDatas: WorkTimeData[] = [];
+    let totalTime = 0;
+    
+    yearEntries.filter(
       entry => (selectedStartDate.getFullYear() <= entry.id?.year!) && (entry.id?.year! <= (selectedEndDate || selectedStartDate).getFullYear())
-    ).map(
-      entry => ({
-        name: `${entry.id?.year!}`,
-        expected: entry.expected,
-        project: entry.projectTime,
-        internal: entry.internalTime
-      })
-    )
+    ).forEach(
+      entry => {
+        workTimeDatas.push({
+          name: `${entry.id?.year!}`,
+          expected: entry.expected,
+          project: entry.projectTime,
+          internal: entry.internalTime
+        });
+        totalTime += entry.total;
+      }
+    );
+
+    setDisplayedTimeData(workTimeDatas);
+
+    const TotalWorkTime: WorkTimeTotalData = {
+      name: WorkTimeCategory.TOTAL,
+      total: totalTime
+    };
+    setDisplayedTotal(TotalWorkTime);
 
     return workTimeDatas;
   }
@@ -646,7 +703,7 @@ const EditorContent: React.FC<Props> = () => {
     return (
       <Paper 
         elevation={ 3 }
-        className={ classes.chartContainer }
+        className={ classes.chartsContainer }
       >
         { renderOverview() }
         <Divider/>
@@ -682,7 +739,7 @@ const EditorContent: React.FC<Props> = () => {
    * Renders the total chart
    */
   const renderTotal = () => {
-    if (!displayedTimeData) {
+    if (!displayedTotal) {
       return;
     }
 
@@ -693,7 +750,7 @@ const EditorContent: React.FC<Props> = () => {
         </Typography>
         <Box className={ classes.totalChartContainer }>
           <TotalChart
-            displayedData={ displayedTimeData }
+            displayedData={ displayedTotal }
             isLoading={ isLoading }
           />
         </Box>

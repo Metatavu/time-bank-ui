@@ -5,13 +5,14 @@ import { useOverviewChartStyles } from "styles/generics/overview-chart/overview-
 import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { WorkTimeData } from "types";
 import theme from "theme/theme";
+import { CircularProgress } from "@material-ui/core";
 
 /**
  * Component properties
  */
 interface Props {
-  displayedData: WorkTimeData[]
-  isLoading: boolean
+  displayedData: WorkTimeData[];
+  isLoading: boolean;
 }
 
 /**
@@ -20,9 +21,6 @@ interface Props {
 const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
   const classes = useOverviewChartStyles();
   const { person } = useAppSelector(selectPerson);
-
-  console.log("OverviewChart")
-  console.log(displayedData)
 
   // TODO fix this
   if (!person) {
@@ -86,14 +84,20 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
     );
   }
 
+  if (isLoading) {
+    return(
+      <CircularProgress/ >
+    );
+  }
+
   /**
    * Component render
    */
-  return (
-    <>
-      { displayedData.length === 1 ? renderHorizontalChart() : renderVerticalChart() }
-    </>
-  );
+  if (displayedData.length === 1) {
+    return renderHorizontalChart();
+  }
+
+  return renderVerticalChart();
 }
 
 export default OverviewChart;

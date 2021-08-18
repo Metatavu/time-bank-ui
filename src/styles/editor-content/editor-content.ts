@@ -61,10 +61,9 @@ export const useEditorContentStyles = makeStyles({
     },
   },
 
-  chartContainer: {
+  chartsContainer: {
     marginTop: theme.spacing(6),
     width: "100%",
-    height: 1200
   },
   
   startDateOnly: {
@@ -96,7 +95,11 @@ export const useEditorContentStyles = makeStyles({
   overViewChartContainer: {
     width: "100%",
     height: 450,
-    paddingTop: theme.spacing(5)
+    paddingTop: theme.spacing(5),
+    paddingBottom: theme.spacing(2),
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
   },
 
   totalContainer: {
@@ -105,6 +108,12 @@ export const useEditorContentStyles = makeStyles({
 
   totalChartContainer: {
     width: "100%",
+    height: 450,
+    paddingTop: theme.spacing(5),
+    paddingBottom: theme.spacing(2),
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
   },
   
 }, {
