@@ -3,7 +3,7 @@ import { Paper, Typography, Grid, FormControl, MenuItem, TextField, Box } from "
 import "date-fns";
 import DateFnsUtils from "@date-io/date-fns";
 import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePickerView } from "@material-ui/pickers";
-import { useEditorContentStyles } from "styles/editor-content/editor-content";
+import useEditorContentStyles from "styles/editor-content/editor-content";
 import { useAppSelector } from "app/hooks";
 import { selectPerson } from "features/person/person-slice";
 import strings from "localization/strings";
@@ -23,10 +23,9 @@ interface Props {
  * @param props component properties
  */
 const EditorContent: React.FC<Props> = () => {
-
   const classes = useEditorContentStyles();
 
-  const { person, personTotalTime } = useAppSelector(selectPerson);
+  const { personTotalTime } = useAppSelector(selectPerson);
 
   const [ selectedStartingDate, setSelectedStartingDate ] = useState<Date>(new Date());
   const [ selectedEndingDate, setSelectedEndingDate ] = useState<Date>(new Date());
@@ -92,14 +91,13 @@ const EditorContent: React.FC<Props> = () => {
    * Renders week numbers to select component
    */
   const renderWeekNumbers = () => (
-    generateWeekNumbers().map((weekNumber, index) => 
-      <MenuItem 
-        key={ index } 
+    generateWeekNumbers().map(weekNumber =>
+      <MenuItem
+        key={ weekNumber }
         value={ weekNumber }
       >
         { weekNumber }
-      </MenuItem>
-    )
+      </MenuItem>)
   );
 
   /**
@@ -114,21 +112,20 @@ const EditorContent: React.FC<Props> = () => {
     setDateFormat({
       [FilterScopes.DATE]: DateFormats.DATE,
       [FilterScopes.MONTH]: DateFormats.MONTH,
-      [FilterScopes.YEAR]: DateFormats.YEAR,
+      [FilterScopes.YEAR]: DateFormats.YEAR
     }[value.toString()]);
   };
 
   /**
    * Renders scope options for select component
    */
-  const renderSelectOptions = Object.values(FilterScopes).map(scope =>
+  const renderSelectOptions = Object.values(FilterScopes).map(selectScope =>
     <MenuItem
-      value={ scope }
-      key={ scope }
+      value={ selectScope }
+      key={ selectScope }
     >
-      { strings.editorContent[scope as keyof object] }
-    </MenuItem>
-  );
+      { strings.editorContent[selectScope as keyof object] }
+    </MenuItem>);
 
   /**
    * Renders the filter subtitle text
@@ -156,7 +153,7 @@ const EditorContent: React.FC<Props> = () => {
         </Typography>
       </>
     );
-  }
+  };
 
   /**
    * Renders selector of filter scope
@@ -192,17 +189,17 @@ const EditorContent: React.FC<Props> = () => {
             label={ filterStartingDate }
             value={ selectedStartingDate }
             onChange={ handleStartDateChange }
-            KeyboardButtonProps={{ "aria-label": `${ filterStartingDate }` }}
+            KeyboardButtonProps={{ "aria-label": `${filterStartingDate}` }}
           />
         </Grid>
       </MuiPickersUtilsProvider>
     );
-  }
+  };
   
   /**
    * Renders start year picker and week selector 
    */
-  const renderStartYearPickerAndWeekSelector = () =>  (
+  const renderStartYearPickerAndWeekSelector = () => (
     <>
       <FormControl variant="standard">
         <MuiPickersUtilsProvider utils={ DateFnsUtils } >
@@ -215,7 +212,7 @@ const EditorContent: React.FC<Props> = () => {
               label={ strings.editorContent.selectYearStart }
               value={ selectedStartingDate }
               onChange={ handleStartDateChange }
-              KeyboardButtonProps={{ "aria-label": `${ strings.editorContent.filterStartingDate }` }}
+              KeyboardButtonProps={{ "aria-label": `${strings.editorContent.filterStartingDate}` }}
             />
           </Grid>
         </MuiPickersUtilsProvider>
@@ -233,7 +230,6 @@ const EditorContent: React.FC<Props> = () => {
       </FormControl>
     </>
   );
-  
 
   /**
    * Renders end date picker
@@ -247,9 +243,9 @@ const EditorContent: React.FC<Props> = () => {
           views={[ scope ]}
           id="date-picker-end"
           label={ strings.editorContent.filterEndingDate }
-          value={ selectedEndingDate } 
+          value={ selectedEndingDate }
           onChange={ handleEndDateChange }
-          KeyboardButtonProps={{ "aria-label": `${ strings.editorContent.filterEndingDate }`}}
+          KeyboardButtonProps={{ "aria-label": `${strings.editorContent.filterEndingDate}` }}
         />
       </Grid>
     </MuiPickersUtilsProvider>
@@ -271,7 +267,7 @@ const EditorContent: React.FC<Props> = () => {
               label={ strings.editorContent.selectYearEnd }
               value={ selectedEndingDate }
               onChange={ handleEndDateChange }
-              KeyboardButtonProps={{ "aria-label": `${ strings.editorContent.filterStartingDate }` }}
+              KeyboardButtonProps={{ "aria-label": `${strings.editorContent.filterStartingDate}` }}
             />
           </Grid>
         </MuiPickersUtilsProvider>
@@ -289,7 +285,6 @@ const EditorContent: React.FC<Props> = () => {
       </FormControl>
     </>
   );
-  
 
   /**
    * Renders starting datepicker or week/year selector depending on scope
@@ -298,7 +293,7 @@ const EditorContent: React.FC<Props> = () => {
     return scope.toString() !== FilterScopes.WEEK ?
       renderStartDatePicker() :
       renderStartYearPickerAndWeekSelector();
-  }
+  };
 
   /**
    * Renders ending datepicker/week selector depending on scope
@@ -307,7 +302,7 @@ const EditorContent: React.FC<Props> = () => {
     return scope.toString() !== FilterScopes.WEEK ?
       renderEndDate() :
       renderEndYearPickerAndWeekSelector();
-  }
+  };
 
   /**
    * Renders the filter component
@@ -315,7 +310,7 @@ const EditorContent: React.FC<Props> = () => {
   const renderFilter = () => {
     if (!personTotalTime) {
       return (
-        <Paper 
+        <Paper
           elevation={ 3 }
           className={ classes.filterContainer }
         >
@@ -327,7 +322,7 @@ const EditorContent: React.FC<Props> = () => {
     }
 
     return (
-      <Paper 
+      <Paper
         elevation={ 3 }
         className={ classes.filterContainer }
       >
@@ -344,24 +339,7 @@ const EditorContent: React.FC<Props> = () => {
         </Box>
       </Paper>
     );
-  }
-
-  /**
-   * Renders the filter component
-   */
-  const renderOverview = () => {
-    if (!personTotalTime) {
-      return null;
-    }
-
-    return (
-      <Paper 
-        elevation={ 3 }
-        className={ classes.overviewContainer }
-      >
-      </Paper>
-    );
-  }
+  };
 
   /**
    * Component render
@@ -373,7 +351,6 @@ const EditorContent: React.FC<Props> = () => {
       {/* { renderOverview() } */}
     </>
   );
-
-}
+};
 
 export default EditorContent;

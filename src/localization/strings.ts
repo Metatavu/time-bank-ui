@@ -77,6 +77,6 @@ export interface IStrings extends LocalizedStringsMethods {
 
 }
 
-const strings: IStrings = new LocalizedStrings({ en, fi });
+const strings: IStrings = new LocalizedStrings({ en: en, fi: fi });
 
 export default strings;

@@ -1,10 +1,10 @@
-import { CssBaseline, responsiveFontSizes, ThemeProvider } from '@material-ui/core';
-import { store } from 'app/store';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import App from './components/App';
-import reportWebVitals from './reportWebVitals';
+import { CssBaseline, responsiveFontSizes, ThemeProvider } from "@material-ui/core";
+import { store } from "app/store";
+import React from "react";
+import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
+import App from "./components/App";
+import reportWebVitals from "./reportWebVitals";
 import theme from "theme/theme";
 
 ReactDOM.render(
@@ -16,7 +16,7 @@ ReactDOM.render(
       </ThemeProvider>
     </Provider>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -1,6 +1,6 @@
 import React from "react";
 import { AppBar, Box, Drawer, Toolbar, Typography } from "@material-ui/core";
-import { useAppLayoutStyles } from "styles/layouts/app-layout";
+import useAppLayoutStyles from "styles/layouts/app-layout";
 import siteLogo from "../../gfx/Metatavu-icon.svg";
 import strings from "localization/strings";
 
@@ -28,9 +28,9 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, editorCo
       <AppBar style={{ zIndex: 1201 }}>
         <Toolbar>
           <Box className={ classes.titleContainer }>
-            <img 
-              src={ siteLogo } 
-              className={ classes.logo } 
+            <img
+              src={ siteLogo }
+              className={ classes.logo }
               alt={ strings.header.logo }
             />
             <Typography className={ classes.title }>
@@ -40,7 +40,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, editorCo
         </Toolbar>
       </AppBar>
     );
-  }
+  };
 
   /**
    * Component render
@@ -60,6 +60,6 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, editorCo
       </main>
     </Box>
   );
-}
+};
 
 export default AppLayout;

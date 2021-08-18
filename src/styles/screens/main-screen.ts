@@ -1,7 +1,7 @@
 import { makeStyles } from "@material-ui/core";
 import theme from "theme/theme";
 
-export const useMainScreenStyles = makeStyles({
+const useMainScreenStyles = makeStyles({
 
   drawerContainer: {
     height: "100%",
@@ -17,3 +17,4 @@ export const useMainScreenStyles = makeStyles({
 }, {
   name: "main-screen"
 });
+export default useMainScreenStyles;

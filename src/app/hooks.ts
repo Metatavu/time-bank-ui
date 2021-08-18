@@ -26,14 +26,17 @@ export const useInterval = (callback: () => any, delay: number) => {
   });
 
   React.useEffect(() => {
+    /**
+     * Needs comment!!
+     */
     const tick = () => {
       savedCallback.current && savedCallback.current();
-    }
+    };
 
     const timeout = setInterval(tick, delay);
     return () => clearInterval(timeout);
   }, [ delay ]);
-}
+};
 
 /**
  * Hook to debounce changes to given value
@@ -54,4 +57,4 @@ export const useDebounce = (value: string, delay: number) => {
   }, [ value, delay ]);
 
   return debouncedValue;
-}
+};
