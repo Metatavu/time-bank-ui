@@ -141,14 +141,15 @@ const DrawerContent: React.FC<Props> = () => {
   const renderAccordinRow = (name: string, value: string, color?: string) => {
     return (
       <Box className={ classes.accordinRow }>
-        <Typography style={{ fontSize: 14, fontWeight: 600 }}>
+        <Typography className={ classes.accordinRowNames }>
           { name }
         </Typography>
-        <Typography style={{
-          fontSize: 14,
-          fontStyle: "italic",
-          color: color
-        }}
+        <Typography
+          style={
+            {
+              color: color
+            }}
+          className={ classes.accordinRowValues }
         >
           { value }
         </Typography>
