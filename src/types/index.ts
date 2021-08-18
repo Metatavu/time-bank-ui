@@ -24,7 +24,8 @@ export enum WorkTimeCategory {
   PROJECT = "Project",
   INTERNAL = "Internal",
   EXPECTED = "Ecpected",
-  TOTAL = "Total"
+  TOTAL = "Total",
+  LOGGED = "Logged"
 };
 
 /**

@@ -2,10 +2,12 @@ import React from "react";
 import { selectPerson } from "features/person/person-slice";
 import { useAppSelector } from "app/hooks";
 import { useOverviewChartStyles } from "styles/generics/overview-chart/overview-chart";
-import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { WorkTimeData } from "types";
+import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, TooltipProps } from 'recharts';
+import { WorkTimeCategory, WorkTimeData } from "types";
 import theme from "theme/theme";
-import { CircularProgress } from "@material-ui/core";
+import { Box, CircularProgress, Typography } from "@material-ui/core";
+import TimeUtils from "utils/time-utils";
+import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 
 /**
  * Component properties
@@ -32,25 +34,38 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
    * Renders the horizontal chart 
    */
   const renderHorizontalChart = () => {
+    const preprocessedWorkTimeData = [
+      {
+        name: WorkTimeCategory.LOGGED,
+        project: displayedData[0].project,
+        internal: displayedData[0].internal 
+      },
+      {
+        name: WorkTimeCategory.EXPECTED,
+        expected: displayedData[0].expected
+      }
+    ]
+
     return (
       <ResponsiveContainer className={ classes.chartContainer }>
         <BarChart
-          data={ displayedData }
+          data={ preprocessedWorkTimeData }
+          layout="vertical" 
           margin={{
             top: 20,
-            right: 30,
-            left: 20,
+            right: 40,
+            left: 60,
             bottom: 5,
           }}
         >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
+          {/* <CartesianGrid strokeDasharray="3 3" /> */}
+          <XAxis type="number" hide/>
+          <YAxis type="category" dataKey="name"/>
+          <Tooltip content={ renderCustomizedTooltip }/>
           <Legend />
-          <Bar dataKey="project" stackId="a" fill={ theme.palette.success.main } />
-          <Bar dataKey="internal" stackId="a" fill={ theme.palette.warning.main } />
-          <Bar dataKey="expected" fill={ theme.palette.info.main } />
+          <Bar dataKey="project" barSize={ 60 } stackId="a" fill={ theme.palette.success.main } />
+          <Bar dataKey="internal" barSize={ 60 } stackId="a" fill={ theme.palette.warning.main } />
+          <Bar dataKey="expected" barSize={ 60 } stackId="a" fill={ theme.palette.info.main } />
         </BarChart>
       </ResponsiveContainer>
     );
@@ -73,9 +88,9 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
+          <YAxis interval={ 4 } />
+          <Tooltip content={ renderCustomizedTooltip }/>
+          <Legend wrapperStyle={{ position: 'relative' }}/>
           <Bar dataKey="project" stackId="a" fill={ theme.palette.success.main } />
           <Bar dataKey="internal" stackId="a" fill={ theme.palette.warning.main } />
           <Bar dataKey="expected" fill={ theme.palette.info.main } />
@@ -83,6 +98,53 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
       </ResponsiveContainer>
     );
   }
+
+  /**
+   * Renders the customized tooltip for charts
+   */
+  const renderCustomizedTooltip = (props: any) => {
+    // TODO fix any
+    const { active, payload } = props;
+
+    if (!active || !payload || !payload.length) {
+      return null;
+    }
+
+    if (!payload[0].payload) {
+      return null;
+    }
+
+    const selectedData = payload[0].payload;
+
+    return (
+      <Box className={ classes.customTooltipContainer }>
+        { selectedData.project && renderCustomizedTooltipRow(WorkTimeCategory.PROJECT, selectedData.project as number, theme.palette.success.main) }
+        { selectedData.internal && renderCustomizedTooltipRow(WorkTimeCategory.INTERNAL, selectedData.internal as number, theme.palette.warning.main) }
+        { selectedData.expected && renderCustomizedTooltipRow(WorkTimeCategory.EXPECTED, selectedData.expected as number, theme.palette.info.main) }
+      </Box>
+    )
+  };
+
+  /**
+   * Renders the customized tooltip row
+   * 
+   * @param name name of the tooltip row
+   * @param time time of the tooltip row
+   * @param color color of the tooltip row
+   */
+  const renderCustomizedTooltipRow = (name: string, time: number, color: string) => {
+    return (
+      <Typography 
+        variant="h6"
+        style={{
+          color: color,
+          padding: theme.spacing(1)
+        }}
+      >
+      { `${name} time: ${TimeUtils.minuteToHourString(time)}` }
+    </Typography>
+    );
+  };
 
   if (isLoading) {
     return(

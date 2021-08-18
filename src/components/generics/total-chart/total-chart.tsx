@@ -46,7 +46,6 @@ const TotalChart: React.FC<Props> = ({ displayedData, isLoading }) => {
         <YAxis />
         <Tooltip />
         <Legend />
-        <ReferenceLine y={ 200 } stroke="#000" />
         <Bar dataKey="total" fill={ displayedData.total ? theme.palette.success.main : theme.palette.error.main } />
       </BarChart>
     </ResponsiveContainer>

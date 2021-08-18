@@ -230,8 +230,6 @@ const DrawerContent: React.FC<Props> = () => {
 
     const selectedData = payload[0];
 
-    console.log("selectedData", selectedData)
-
     if (!selectedData.value) {
       return null;
     }
