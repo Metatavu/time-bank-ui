@@ -392,7 +392,7 @@ const EditorContent: React.FC<Props> = () => {
   }
 
   /**
-   * Renders week numbers to select component
+   * Renders start week numbers to select component
    */
   const renderStartWeekNumbers = () => {
     if (!selectedStartDate) {
@@ -412,7 +412,7 @@ const EditorContent: React.FC<Props> = () => {
   };
 
   /**
-   * Renders week numbers to select component
+   * Renders end week numbers to select component
    */
   const renderEndWeekNumbers = () => {
     if (!selectedEndDate) {
@@ -459,7 +459,7 @@ const EditorContent: React.FC<Props> = () => {
    * 
    * @param name name of the subtitle text
    * @param value value of the subtitle text
-   * @param total if its displaying the total value
+   * @param total if it's displaying the total value
    * @param positiveTotal if the total is positive
    */
   const renderFilterSubtitleText = (name: string, value: number, total: boolean, positiveTotal?: boolean) => {
@@ -522,7 +522,7 @@ const EditorContent: React.FC<Props> = () => {
         <KeyboardDatePicker
           inputVariant="standard"
           variant="inline"
-          views={[ datePickerView ]}
+          views={ [ datePickerView ] }
           format={ dateFormat }
           maxDate={ todayDate }
           label={ filterStartingDate }
@@ -578,7 +578,7 @@ const EditorContent: React.FC<Props> = () => {
         inputVariant="standard"
         variant="inline"
         format={ dateFormat }
-        views={[ datePickerView ]}
+        views={ [ datePickerView ] }
         minDate={ selectedStartDate }
         maxDate={ todayDate }
         label={ strings.editorContent.filterEndingDate }
@@ -676,7 +676,7 @@ const EditorContent: React.FC<Props> = () => {
       );
     }
 
-    const timeRange = displayedTimeData.length === 1 
+    const timeRangeText = displayedTimeData.length === 1 
     ?
     `${displayedTimeData[0].name}`
     :
@@ -694,7 +694,7 @@ const EditorContent: React.FC<Props> = () => {
           </Typography>
           <Box>
             <Typography variant="h4" style={{ color: "rgba(0, 0, 0, 0.5)", marginLeft: theme.spacing(2), fontStyle: "italic" }}>
-              { timeRange }
+              { timeRangeText }
             </Typography>
           </Box>
           <Box className={ classes.filterSubtitle } >
@@ -765,7 +765,7 @@ const EditorContent: React.FC<Props> = () => {
     return (
       <Box className={ classes.overViewContainer }>
         <Typography variant="h2">
-          { "Overview" }
+          { strings.editorContent.overview }
         </Typography>
         <Box className={ classes.overViewChartContainer }>
           <OverviewChart
@@ -788,7 +788,7 @@ const EditorContent: React.FC<Props> = () => {
     return (
       <Box className={ classes.totalContainer }>
         <Typography variant="h2">
-          { "Total" }
+          { strings.editorContent.total }
         </Typography>
         <Box className={ classes.totalChartContainer }>
           <TotalChart

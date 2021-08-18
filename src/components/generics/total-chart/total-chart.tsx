@@ -66,6 +66,7 @@ const TotalChart: React.FC<Props> = ({ displayedData, isLoading }) => {
   };
 
   // TODO domain might be change once the internal time is fixed
+  // TODO remove grid, xAxis custom axis label
   const range = Math.max(20000, Math.abs(displayedData.total));
 
   /**

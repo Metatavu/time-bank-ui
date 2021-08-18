@@ -162,7 +162,7 @@ const DrawerContent: React.FC<Props> = () => {
     const workTimeDatas: WorkTimeTotalData[] = [
       { name: WorkTimeCategory.PROJECT, total: personTotalTime.projectTime },
       { name: WorkTimeCategory.INTERNAL, total: personTotalTime.internalTime, },
-    ]
+    ];
 
     const COLORS = [ theme.palette.success.main, theme.palette.warning.main ];
 
@@ -212,6 +212,8 @@ const DrawerContent: React.FC<Props> = () => {
 
   /**
    * Renders the customized label for charts
+   * 
+   * @param props props of the custom label
    */
   const renderCustomizedLabel = (props: any) => {
     // TODO type
@@ -220,6 +222,8 @@ const DrawerContent: React.FC<Props> = () => {
 
   /**
    * Renders the customized tooltip for charts
+   * 
+   * @param props props of the custom tooltip
    */
   const renderCustomizedTooltip = (props: TooltipProps<ValueType, NameType>) => {
     const { active, payload } = props;
@@ -237,7 +241,7 @@ const DrawerContent: React.FC<Props> = () => {
     const sectionName = {
       [WorkTimeCategory.PROJECT]: strings.project,
       [WorkTimeCategory.INTERNAL]: strings.internal
-    }[selectedData.name]
+    }[selectedData.name];
 
     return (
       <Box style={{ backgroundColor: "rgba(0, 0, 0)" }}>

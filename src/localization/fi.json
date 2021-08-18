@@ -31,8 +31,10 @@
   },
 
   "editorContent": {
-    "userNotSelected": "Valitse ensin käyttäjä",
+    "userNotSelected": "Valitse ensin käyttäjä.",
     "noTimeEntries": "No Time entries found for this user.",
+    "overview": "Overview",
+    "total": "Total",
     "workTime": "Työaika",
     "filterStartingDate": "Alku",
     "filterEndingDate": "Loppu",

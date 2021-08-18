@@ -53,6 +53,8 @@ export interface IStrings extends LocalizedStringsMethods {
   editorContent: {
     userNotSelected: string;
     noTimeEntries: string;
+    overview: string;
+    total: string;
     workTime: string;
     filterStartingDate: string;
     filterEndingDate: string;
