@@ -7,6 +7,12 @@ export const useTotalChartStyles = makeStyles({
     "& .recharts-wrapper .recharts-surface": {
       overflow: "overlay",
     }
+  },
+
+  customTooltipContainer: {
+    padding: theme.spacing(1),
+    backgroundColor: "#fff",
+    border: "1px solid rgba(0, 0, 0, 0.4)"
   }
 
 }, {

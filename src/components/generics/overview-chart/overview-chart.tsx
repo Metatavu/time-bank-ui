@@ -2,7 +2,7 @@ import React from "react";
 import { selectPerson } from "features/person/person-slice";
 import { useAppSelector } from "app/hooks";
 import { useOverviewChartStyles } from "styles/generics/overview-chart/overview-chart";
-import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, TooltipProps } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, TooltipProps } from 'recharts';
 import { WorkTimeCategory, WorkTimeData } from "types";
 import theme from "theme/theme";
 import { Box, CircularProgress, Typography } from "@material-ui/core";
@@ -117,6 +117,7 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
 
     return (
       <Box className={ classes.customTooltipContainer }>
+        {/* TODO localization */}
         { (selectedData.project !== undefined) && renderCustomizedTooltipRow(WorkTimeCategory.PROJECT, selectedData.project as number, theme.palette.success.main) }
         { (selectedData.internal !== undefined) && renderCustomizedTooltipRow(WorkTimeCategory.INTERNAL, selectedData.internal as number, theme.palette.warning.main) }
         { (selectedData.expected !== undefined) && renderCustomizedTooltipRow(WorkTimeCategory.EXPECTED, selectedData.expected as number, theme.palette.info.main) }

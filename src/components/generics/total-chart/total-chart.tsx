@@ -3,9 +3,10 @@ import { selectPerson } from "features/person/person-slice";
 import { useAppSelector } from "app/hooks";
 import { useTotalChartStyles } from "styles/generics/total-chart/total-chart";
 import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine, ResponsiveContainer } from 'recharts';
-import { WorkTimeData, WorkTimeTotalData } from "types";
+import { WorkTimeCategory, WorkTimeData, WorkTimeTotalData } from "types";
 import theme from "theme/theme";
-import { CircularProgress } from "@material-ui/core";
+import { CircularProgress, Box, Typography } from "@material-ui/core";
+import TimeUtils from "utils/time-utils";
 
 /**
  * Component properties
@@ -34,19 +35,55 @@ const TotalChart: React.FC<Props> = ({ displayedData, isLoading }) => {
   }
 
   /**
+   * Renders the customized tooltip for charts
+   */
+  const renderCustomizedTooltip = (props: any) => {
+    // TODO fix any
+    const { active, payload } = props;
+
+
+    if (!active || !payload || !payload.length || !payload[0].payload) {
+      return null;
+    }
+
+    console.log(props)
+
+    const selectedData = payload[0].payload;
+
+    return (
+      <Box className={ classes.customTooltipContainer }>
+        <Typography 
+          variant="h6"
+          style={{
+            color: displayedData.total > 0 ? theme.palette.success.main : theme.palette.error.main,
+            padding: theme.spacing(1)
+          }}
+        >
+          { `${selectedData.name} time: ${TimeUtils.minuteToHourString(selectedData.total)}` }
+        </Typography>
+      </Box>
+    )
+  };
+
+  // TODO domain might be change once the internal time is fixed
+  const range = Math.max(20000, Math.abs(displayedData.total));
+
+  /**
    * Component render
    */
   return (
     <ResponsiveContainer className={ classes.chartContainer }>
       <BarChart
+        layout="vertical" 
         data={[ displayedData ]}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip />
+        <XAxis type="number" domain={ [-range, range] } hide/>
+        <YAxis type="category" dataKey="name" hide/>
+        <Tooltip content={ renderCustomizedTooltip }/>
         <Legend />
-        <Bar dataKey="total" fill={ displayedData.total ? theme.palette.success.main : theme.palette.error.main } />
+        <Bar dataKey="total" barSize={ 60 } fill={ displayedData.total > 0 ? theme.palette.success.main : theme.palette.error.main } />
+        <ReferenceLine x={ 0 } stroke="rgba(0, 0, 0, 0.5)" />
       </BarChart>
     </ResponsiveContainer>
   );

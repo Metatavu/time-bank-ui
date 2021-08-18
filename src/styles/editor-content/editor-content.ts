@@ -108,7 +108,7 @@ export const useEditorContentStyles = makeStyles({
 
   totalChartContainer: {
     width: "100%",
-    height: 450,
+    height: 250,
     paddingTop: theme.spacing(5),
     paddingBottom: theme.spacing(2),
     display: "flex",
