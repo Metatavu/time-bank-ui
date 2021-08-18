@@ -11,11 +11,14 @@ const useAppLayoutStyles = makeStyles({
     width: "100vw",
     display: "flex"
   },
-
+  
   drawer: {
     top: 64,
     width: drawerWidth,
-    height: "100%"
+    height: "100%",
+    [theme.breakpoints.down("sm")]: {
+      width: "50%"
+    }
   },
 
   drawerPaper: {
@@ -24,12 +27,18 @@ const useAppLayoutStyles = makeStyles({
     boxShadow: `
       0 10px 16px 0 rgba(0,0,0,0.2),
       0 6px 20px 0 rgba(0,0,0,0.19)
-    `
+    `,
+    [theme.breakpoints.down("sm")]: {
+      width: "50%"
+    }
   },
 
   content: {
     backgroundColor: theme.palette.background.default,
-    flexGrow: 1
+    flexGrow: 1,
+    [theme.breakpoints.down("sm")]: {
+      display: "none"
+    }
   },
 
   titleContainer: {

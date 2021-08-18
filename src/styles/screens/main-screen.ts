@@ -10,6 +10,9 @@ const useMainScreenStyles = makeStyles({
   },
 
   editorContainer: {
+    [theme.breakpoints.down("sm")]: {
+      display: "none"
+    },
     width: "100%",
     padding: `${theme.spacing(5)}px ${theme.spacing(6)}px`
   }
