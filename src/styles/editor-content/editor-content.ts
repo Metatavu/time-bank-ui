@@ -96,7 +96,7 @@ export const useEditorContentStyles = makeStyles({
     width: "100%",
     height: 450,
     paddingTop: theme.spacing(5),
-    paddingBottom: theme.spacing(2),
+    paddingBottom: theme.spacing(5),
     display: "flex",
     justifyContent: "center",
     alignItems: "center"

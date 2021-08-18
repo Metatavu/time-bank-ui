@@ -82,13 +82,13 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
           margin={{
             top: 20,
             right: 30,
-            left: 20,
+            left: 10,
             bottom: 5,
           }}
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
-          <YAxis interval={ 4 } />
+          <YAxis width={ 100 } tickFormatter={ value => TimeUtils.minuteToHourString(value as number) }/>
           <Tooltip content={ renderCustomizedTooltip }/>
           <Legend wrapperStyle={{ position: 'relative' }}/>
           <Bar dataKey="project" stackId="a" fill={ theme.palette.success.main } />
@@ -106,21 +106,20 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
     // TODO fix any
     const { active, payload } = props;
 
-    if (!active || !payload || !payload.length) {
+
+    if (!active || !payload || !payload.length || !payload[0].payload) {
       return null;
     }
 
-    if (!payload[0].payload) {
-      return null;
-    }
+    console.log(props)
 
     const selectedData = payload[0].payload;
 
     return (
       <Box className={ classes.customTooltipContainer }>
-        { selectedData.project && renderCustomizedTooltipRow(WorkTimeCategory.PROJECT, selectedData.project as number, theme.palette.success.main) }
-        { selectedData.internal && renderCustomizedTooltipRow(WorkTimeCategory.INTERNAL, selectedData.internal as number, theme.palette.warning.main) }
-        { selectedData.expected && renderCustomizedTooltipRow(WorkTimeCategory.EXPECTED, selectedData.expected as number, theme.palette.info.main) }
+        { (selectedData.project !== undefined) && renderCustomizedTooltipRow(WorkTimeCategory.PROJECT, selectedData.project as number, theme.palette.success.main) }
+        { (selectedData.internal !== undefined) && renderCustomizedTooltipRow(WorkTimeCategory.INTERNAL, selectedData.internal as number, theme.palette.warning.main) }
+        { (selectedData.expected !== undefined) && renderCustomizedTooltipRow(WorkTimeCategory.EXPECTED, selectedData.expected as number, theme.palette.info.main) }
       </Box>
     )
   };
@@ -133,6 +132,7 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
    * @param color color of the tooltip row
    */
   const renderCustomizedTooltipRow = (name: string, time: number, color: string) => {
+    console.log("name, time, color(renderCustomizedTooltipRow)", name, time, color)
     return (
       <Typography 
         variant="h6"
