@@ -34,4 +34,21 @@ export default class TimeUtils {
 
     return rangeStart <= timeMeasured && timeMeasured <= rangeEnd;
   }
+
+  /**
+   * Compare month or week
+   * 
+   * @param year1 year one
+   * @param monthOrWeek1 month or week one
+   * @param year2 year two
+   * @param monthOrWeek2 month or week two
+   * 
+   * @return positive integer if year+month/week1 is greater than year+month/week2, negative integer if otherwise, 0 if equal
+   */
+    public static WeekOrMonthComparator = (year1: number, monthOrWeek1: number, year2: number, monthOrWeek2: number,): number => {
+      const yearWeekOrMonth1 = parseInt(`${year1}${monthOrWeek1}`);
+      const yearWeekOrMonth2 = parseInt(`${year2}${monthOrWeek2}`);
+  
+      return yearWeekOrMonth1 - yearWeekOrMonth2;
+    }
 }

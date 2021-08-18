@@ -190,6 +190,8 @@ const EditorContent: React.FC<Props> = () => {
       before: selectedEndDate || selectedStartDate
     });
 
+    dateEntries.sort((date1, date2) => date1.date.getTime() - date2.date.getTime());
+
     const workTimeDatas: WorkTimeData[] = [];
     let totalTime = 0;
 
@@ -232,6 +234,7 @@ const EditorContent: React.FC<Props> = () => {
         personId: person.id.toString(),
         retention: TimebankControllerGetTotalRetentionEnum.WEEK
       });
+      weekEntries.sort((entry1, entry2) => TimeUtils.WeekOrMonthComparator(entry1.id?.year!, entry1.id?.week!, entry2.id?.year!, entry2.id?.week!));
       setTotalWeekEntries(weekEntries);
     }else {
       weekEntries = totalWeekEntries;
@@ -288,6 +291,7 @@ const EditorContent: React.FC<Props> = () => {
         personId: person.id.toString(),
         retention: TimebankControllerGetTotalRetentionEnum.MONTH
       });
+      monthEntries.sort((entry1, entry2) => TimeUtils.WeekOrMonthComparator(entry1.id?.year!, entry1.id?.month!, entry2.id?.year!, entry2.id?.month!));
       setTotalMonthEntries(monthEntries);
     }else {
       monthEntries = totalMonthEntries;
@@ -344,6 +348,7 @@ const EditorContent: React.FC<Props> = () => {
         personId: person.id.toString(),
         retention: TimebankControllerGetTotalRetentionEnum.YEAR
       });
+      yearEntries.sort((year1, year2) => year1.id?.year! - year2.id?.year!);
       setTotalYearEntries(yearEntries);
     }else {
       yearEntries = totalYearEntries;
