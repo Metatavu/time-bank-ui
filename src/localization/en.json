@@ -31,7 +31,8 @@
   },
 
   "editorContent": {
-    "userNotSelected": "Please select a user first",
+    "userNotSelected": "Please select a user first.",
+    "noTimeEntries": "No time entries found for this user.",
     "workTime": "Work time",
     "filterStartingDate": "Start",
     "filterEndingDate": "End",

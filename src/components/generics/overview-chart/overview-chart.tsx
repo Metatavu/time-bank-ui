@@ -118,7 +118,6 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
 
     return (
       <Box className={ classes.customTooltipContainer }>
-        {/* TODO localization */}
         { (selectedData.project !== undefined) && renderCustomizedTooltipRow(strings.project, selectedData.project as number, theme.palette.success.main) }
         { (selectedData.internal !== undefined) && renderCustomizedTooltipRow(strings.internal, selectedData.internal as number, theme.palette.warning.main) }
         { (selectedData.expected !== undefined) && renderCustomizedTooltipRow(strings.expected, selectedData.expected as number, theme.palette.info.main) }

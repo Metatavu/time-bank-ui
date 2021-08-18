@@ -194,7 +194,12 @@ const EditorContent: React.FC<Props> = () => {
     dateEntries.sort((date1, date2) => date1.date.getTime() - date2.date.getTime());
 
     const workTimeDatas: WorkTimeData[] = [];
-    let totalTime = 0;
+    const TotalWorkTime: WorkTimeTotalData = {
+      name: WorkTimeCategory.TOTAL,
+      total: 0,
+      logged: 0,
+      expected: 0
+    };
 
     dateEntries.forEach(
       entry => {
@@ -204,16 +209,13 @@ const EditorContent: React.FC<Props> = () => {
           project: entry.projectTime,
           internal: entry.internalTime
         });
-        totalTime += entry.total;
+        TotalWorkTime.total = TotalWorkTime.total + entry.total;
+        TotalWorkTime.logged = TotalWorkTime.total + entry.logged;
+        TotalWorkTime.expected = TotalWorkTime.total + entry.expected;
       }
     );
 
     setDisplayedTimeData(workTimeDatas);
-
-    const TotalWorkTime: WorkTimeTotalData = {
-      name: WorkTimeCategory.TOTAL,
-      total: totalTime
-    };
     setDisplayedTotal(TotalWorkTime);
 
     return workTimeDatas;
@@ -242,7 +244,12 @@ const EditorContent: React.FC<Props> = () => {
     }
 
     const workTimeDatas: WorkTimeData[] = [];
-    let totalTime = 0;
+    const TotalWorkTime: WorkTimeTotalData = {
+      name: WorkTimeCategory.TOTAL,
+      total: 0,
+      logged: 0,
+      expected: 0
+    };
     
     weekEntries.filter(
       entry => TimeUtils.WeekOrMonthInRange(
@@ -261,16 +268,13 @@ const EditorContent: React.FC<Props> = () => {
           project: entry.projectTime,
           internal: entry.internalTime
         });
-        totalTime += entry.total;
+        TotalWorkTime.total = TotalWorkTime.total + entry.total;
+        TotalWorkTime.logged = TotalWorkTime.total + entry.logged;
+        TotalWorkTime.expected = TotalWorkTime.total + entry.expected;
       }
     );
 
     setDisplayedTimeData(workTimeDatas);
-
-    const TotalWorkTime: WorkTimeTotalData = {
-      name: WorkTimeCategory.TOTAL,
-      total: totalTime
-    };
     setDisplayedTotal(TotalWorkTime);
 
     return workTimeDatas;
@@ -299,7 +303,12 @@ const EditorContent: React.FC<Props> = () => {
     }
 
     const workTimeDatas: WorkTimeData[] = [];
-    let totalTime = 0;
+    const TotalWorkTime: WorkTimeTotalData = {
+      name: WorkTimeCategory.TOTAL,
+      total: 0,
+      logged: 0,
+      expected: 0
+    };
     
     monthEntries.filter(
       entry => TimeUtils.WeekOrMonthInRange(
@@ -318,16 +327,13 @@ const EditorContent: React.FC<Props> = () => {
           project: entry.projectTime,
           internal: entry.internalTime
         });
-        totalTime += entry.total;
+        TotalWorkTime.total = TotalWorkTime.total + entry.total;
+        TotalWorkTime.logged = TotalWorkTime.total + entry.logged;
+        TotalWorkTime.expected = TotalWorkTime.total + entry.expected;
       }
     );
 
     setDisplayedTimeData(workTimeDatas);
-
-    const TotalWorkTime: WorkTimeTotalData = {
-      name: WorkTimeCategory.TOTAL,
-      total: totalTime
-    };
     setDisplayedTotal(TotalWorkTime);
 
     return workTimeDatas;
@@ -356,7 +362,12 @@ const EditorContent: React.FC<Props> = () => {
     }
 
     const workTimeDatas: WorkTimeData[] = [];
-    let totalTime = 0;
+    const TotalWorkTime: WorkTimeTotalData = {
+      name: WorkTimeCategory.TOTAL,
+      total: 0,
+      logged: 0,
+      expected: 0
+    };
     
     yearEntries.filter(
       entry => (selectedStartDate.getFullYear() <= entry.id?.year!) && (entry.id?.year! <= (selectedEndDate || selectedStartDate).getFullYear())
@@ -368,16 +379,13 @@ const EditorContent: React.FC<Props> = () => {
           project: entry.projectTime,
           internal: entry.internalTime
         });
-        totalTime += entry.total;
+        TotalWorkTime.total = TotalWorkTime.total + entry.total;
+        TotalWorkTime.logged = TotalWorkTime.total + entry.logged;
+        TotalWorkTime.expected = TotalWorkTime.total + entry.expected;
       }
     );
 
     setDisplayedTimeData(workTimeDatas);
-
-    const TotalWorkTime: WorkTimeTotalData = {
-      name: WorkTimeCategory.TOTAL,
-      total: totalTime
-    };
     setDisplayedTotal(TotalWorkTime);
 
     return workTimeDatas;
@@ -451,8 +459,13 @@ const EditorContent: React.FC<Props> = () => {
    * 
    * @param name name of the subtitle text
    * @param value value of the subtitle text
+   * @param total if its displaying the total value
+   * @param positiveTotal if the total is positive
    */
-  const renderFilterSubtitleText = (name: string, value: number) => {
+  const renderFilterSubtitleText = (name: string, value: number, total: boolean, positiveTotal?: boolean) => {
+    const valueColor = positiveTotal ? theme.palette.success.main : theme.palette.error.main; 
+    const valueText = positiveTotal ? `+${TimeUtils.minuteToHourString(value)}` : `-${TimeUtils.minuteToHourString(value)}`;
+
     return (
       <>
         <Typography
@@ -466,11 +479,12 @@ const EditorContent: React.FC<Props> = () => {
         <Typography
           variant="h5"
           style={{
+            color: total ? valueColor : undefined,
             marginLeft: theme.spacing(1),
             fontStyle: "italic"
           }}
         >
-          { TimeUtils.minuteToHourString(value) }
+          { total ? valueText : TimeUtils.minuteToHourString(value) }
         </Typography>
       </>
     );
@@ -598,7 +612,7 @@ const EditorContent: React.FC<Props> = () => {
         />
       </MuiPickersUtilsProvider>
       <TextField
-      // TODO label when start only
+        // TODO label when start only
         disabled={ startDateOnly }
         select
         variant="standard"
@@ -636,7 +650,7 @@ const EditorContent: React.FC<Props> = () => {
    * Renders the filter component
    */
   const renderFilter = () => {
-    if (!personTotalTime) {
+    if (!person) {
       return (
         <Paper 
           elevation={ 3 }
@@ -649,6 +663,25 @@ const EditorContent: React.FC<Props> = () => {
       );
     }
 
+    if (!personTotalTime || !displayedTotal || !displayedTimeData) {
+      return (
+        <Paper 
+          elevation={ 3 }
+          className={ classes.emptyFilterContainer }
+        >
+          <Typography style={{ fontStyle: "italic" }}>
+            { strings.editorContent.noTimeEntries }
+          </Typography>
+        </Paper>
+      );
+    }
+
+    const timeRange = displayedTimeData.length === 1 
+    ?
+    `${displayedTimeData[0].name}`
+    :
+    `(${displayedTimeData[0].name} - ${displayedTimeData[displayedTimeData.length - 1].name})`;
+    
     return (
       <Accordion>
         <AccordionSummary
@@ -659,10 +692,15 @@ const EditorContent: React.FC<Props> = () => {
           <Typography variant="h4" style={{ fontWeight: 600, fontStyle: "italic" }}>
             { strings.editorContent.workTime }
           </Typography>
+          <Box>
+            <Typography variant="h4" style={{ color: "rgba(0, 0, 0, 0.5)", marginLeft: theme.spacing(2), fontStyle: "italic" }}>
+              { timeRange }
+            </Typography>
+          </Box>
           <Box className={ classes.filterSubtitle } >
-            { renderFilterSubtitleText(`${strings.logged}:`, personTotalTime!.logged) }
-            { renderFilterSubtitleText(`${strings.expected}:`, personTotalTime!.expected) }
-            { renderFilterSubtitleText(`${strings.total}:`, personTotalTime!.total) }
+            { renderFilterSubtitleText(`${strings.logged}:`, displayedTotal.logged || 0, false) }
+            { renderFilterSubtitleText(`${strings.expected}:`, displayedTotal.expected || 0, false) }
+            { renderFilterSubtitleText(`${strings.total}:`, displayedTotal.total, true, displayedTotal.total >= 0) }
           </Box>
         </AccordionSummary>
         <AccordionDetails className={ classes.filterContent }>
