@@ -230,9 +230,14 @@ const DrawerContent: React.FC<Props> = () => {
 
     const selectedData = payload[0];
 
-    if (!selectedData.value) {
+    if (!selectedData.value || !selectedData.name) {
       return null;
     }
+
+    const sectionName = {
+      [WorkTimeCategory.PROJECT]: strings.project,
+      [WorkTimeCategory.INTERNAL]: strings.internal
+    }[selectedData.name]
 
     return (
       <Box style={{ backgroundColor: "rgba(0, 0, 0)" }}>
@@ -243,7 +248,7 @@ const DrawerContent: React.FC<Props> = () => {
             padding: theme.spacing(1)
           }}
         >
-          { `${selectedData.name} time: ${TimeUtils.minuteToHourString(selectedData.value as number)}` }
+          { `${sectionName}: ${TimeUtils.minuteToHourString(selectedData.value as number)}` }
         </Typography>
       </Box>
     )

@@ -7,6 +7,7 @@ import { WorkTimeCategory, WorkTimeData } from "types";
 import theme from "theme/theme";
 import { Box, CircularProgress, Typography } from "@material-ui/core";
 import TimeUtils from "utils/time-utils";
+import strings from "localization/strings";
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 
 /**
@@ -118,9 +119,9 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
     return (
       <Box className={ classes.customTooltipContainer }>
         {/* TODO localization */}
-        { (selectedData.project !== undefined) && renderCustomizedTooltipRow(WorkTimeCategory.PROJECT, selectedData.project as number, theme.palette.success.main) }
-        { (selectedData.internal !== undefined) && renderCustomizedTooltipRow(WorkTimeCategory.INTERNAL, selectedData.internal as number, theme.palette.warning.main) }
-        { (selectedData.expected !== undefined) && renderCustomizedTooltipRow(WorkTimeCategory.EXPECTED, selectedData.expected as number, theme.palette.info.main) }
+        { (selectedData.project !== undefined) && renderCustomizedTooltipRow(strings.project, selectedData.project as number, theme.palette.success.main) }
+        { (selectedData.internal !== undefined) && renderCustomizedTooltipRow(strings.internal, selectedData.internal as number, theme.palette.warning.main) }
+        { (selectedData.expected !== undefined) && renderCustomizedTooltipRow(strings.expected, selectedData.expected as number, theme.palette.info.main) }
       </Box>
     )
   };
@@ -133,7 +134,6 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
    * @param color color of the tooltip row
    */
   const renderCustomizedTooltipRow = (name: string, time: number, color: string) => {
-    console.log("name, time, color(renderCustomizedTooltipRow)", name, time, color)
     return (
       <Typography 
         variant="h6"
@@ -142,7 +142,7 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
           padding: theme.spacing(1)
         }}
       >
-      { `${name} time: ${TimeUtils.minuteToHourString(time)}` }
+      { `${name}: ${TimeUtils.minuteToHourString(time)}` }
     </Typography>
     );
   };

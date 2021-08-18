@@ -42,12 +42,17 @@
     "selectYearStart": "Mistä",
     "selectWeekStart": "Mistä",
     "selectWeekEnd": "Mihin",
-    "selectYearEnd": "Mihin"
+    "selectYearEnd": "Mihin",
+    "from": "Jälkeen",
+    "to": "Ennen",
+    "startOnly": "TODO"
   },
 
   "logged": "Kirjattu",
   "expected": "Odotettu",
   "total": "Erotus",
+  "project": "Projekti",
+  "internal": "Sisäinen",
   "sunday": "Sunnuntai",
   "monday": "Maanantai",
   "tuesday": "Tiistai",

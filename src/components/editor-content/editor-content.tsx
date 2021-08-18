@@ -674,20 +674,19 @@ const EditorContent: React.FC<Props> = () => {
               onChange={ onStartDateOnlyChange }
             />
             <Typography variant="h5" style={{ paddingLeft: theme.spacing(0.5) }}>
-              { "Start only" }
+              { strings.editorContent.startOnly }
             </Typography>
           </Box>
           <Box className={ classes.datePickers }>
             <Box display="flex" alignItems="center">
-              {/* TODO stylesheet localization */}
               <Typography variant="h5" style={{ marginRight: theme.spacing(3) }}>
-                { "from: " }
+                { `${strings.editorContent.from}: ` }
               </Typography>
               { renderStartDatePickersAndWeekSelector() }
             </Box>
-            <Box marginLeft={ 4 } display="flex" alignItems="center">
+            <Box ml={ 4 } display="flex" alignItems="center">
               <Typography variant="h5" style={{ marginRight: theme.spacing(3) }}>
-                { "to: " }
+                { `${strings.editorContent.to}: ` }
               </Typography>
               { renderEndDatePickersAndWeekSelector() }
             </Box>

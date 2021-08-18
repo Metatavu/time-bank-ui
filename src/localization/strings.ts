@@ -63,11 +63,16 @@ export interface IStrings extends LocalizedStringsMethods {
     selectYearEnd: string;
     selectWeekStart: string;
     selectWeekEnd: string;
+    from: string;
+    to: string;
+    startOnly: string;
   };
 
   logged: string;
   expected: string;
   total: string;
+  project: string;
+  internal: string;
   sunday: string;
   monday: string;
   tuesday: string;

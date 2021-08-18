@@ -7,6 +7,7 @@ import { WorkTimeCategory, WorkTimeData, WorkTimeTotalData } from "types";
 import theme from "theme/theme";
 import { CircularProgress, Box, Typography } from "@material-ui/core";
 import TimeUtils from "utils/time-utils";
+import strings from "localization/strings";
 
 /**
  * Component properties
@@ -46,8 +47,6 @@ const TotalChart: React.FC<Props> = ({ displayedData, isLoading }) => {
       return null;
     }
 
-    console.log(props)
-
     const selectedData = payload[0].payload;
 
     return (
@@ -59,7 +58,7 @@ const TotalChart: React.FC<Props> = ({ displayedData, isLoading }) => {
             padding: theme.spacing(1)
           }}
         >
-          { `${selectedData.name} time: ${TimeUtils.minuteToHourString(selectedData.total)}` }
+          { `${strings.total}: ${TimeUtils.minuteToHourString(selectedData.total)}` }
         </Typography>
       </Box>
     )

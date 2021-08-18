@@ -42,12 +42,17 @@
     "selectWeekEnd": "Week-end",
     "selectYearEnd": "Year-end",
     "selectYearStart": "Year-start",
-    "selectWeekStart": "Week-start"
+    "selectWeekStart": "Week-start",
+    "from": "From",
+    "to": "To",
+    "startOnly": "Start only"
   },
 
   "logged": "Logged",
   "expected": "Expected",
   "total": "Difference",
+  "project": "Project",
+  "internal": "Internal",
   "sunday": "Sunday",
   "monday": "Monday",
   "tuesday": "Tuesday",
