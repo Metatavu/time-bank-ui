@@ -133,9 +133,10 @@ const EditorContent: React.FC<Props> = () => {
   const getCurrentWeek = () => {
     const today = new Date();  
     const oneJan = new Date(today.getFullYear(), 0, 1);   
-    const numberOfDays = Math.floor((today.getTime() - oneJan.getTime()) / (24 * 60 * 60 * 1000));   
+    const numberOfDays = Math.ceil((today.getTime() - oneJan.getTime()) / (24 * 60 * 60 * 1000));   
+    const numberOfWeeks = Math.floor((numberOfDays - today.getDay() - 1) / 7);
 
-    return Math.ceil(( today.getDay() + 1 + numberOfDays) / 7);   
+    return numberOfWeeks + Math.ceil(today.getDay() / 7);   
   };
 
 
