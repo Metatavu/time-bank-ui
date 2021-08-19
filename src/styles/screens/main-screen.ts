@@ -17,4 +17,5 @@ const useMainScreenStyles = makeStyles({
 }, {
   name: "main-screen"
 });
+
 export default useMainScreenStyles;
