@@ -2,6 +2,7 @@
  * Utility class for time values
  */
 export default class TimeUtils {
+
   /**
    * Converts time in minutes to a string formatted as "x h y min"
    * 
@@ -13,5 +14,6 @@ export default class TimeUtils {
     const minute = Math.abs(minutes % 60);
 
     return `${hour} h ${minute} min`;
-  }
+  };
+
 }

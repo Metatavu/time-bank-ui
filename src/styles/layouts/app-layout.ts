@@ -3,7 +3,7 @@ import theme from "theme/theme";
 
 const drawerWidth = 400;
 
-export const useAppLayoutStyles = makeStyles({
+const useAppLayoutStyles = makeStyles({
 
   root: {
     backgroundColor: theme.palette.background.default,
@@ -15,7 +15,7 @@ export const useAppLayoutStyles = makeStyles({
   drawer: {
     top: 64,
     width: drawerWidth,
-    height: "100%",
+    height: "100%"
   },
 
   drawerPaper: {
@@ -40,7 +40,7 @@ export const useAppLayoutStyles = makeStyles({
   title: {
     marginLeft: theme.spacing(2),
     fontSize: 18,
-    fontWeight: 600, 
+    fontWeight: 600
   },
 
   logo: {
@@ -52,3 +52,5 @@ export const useAppLayoutStyles = makeStyles({
 }, {
   name: "app-layout"
 });
+
+export default useAppLayoutStyles;

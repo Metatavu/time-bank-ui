@@ -1,7 +1,7 @@
 import { makeStyles } from "@material-ui/core";
 import theme from "theme/theme";
 
-export const useEditorContentStyles = makeStyles({
+const useEditorContentStyles = makeStyles({
 
   filterContainer: {
     width: "100%",
@@ -12,14 +12,14 @@ export const useEditorContentStyles = makeStyles({
     [theme.breakpoints.down(1921)]: {
       "& .MuiTypography-root": {
         fontSize: "0.9rem"
-      },
+      }
     }
   },
 
   selectScope: {
     width: "7rem",
     marginRight: "2rem",
-    marginLeft: "2rem",
+    marginLeft: "2rem"
   },
 
   timeFilter: {
@@ -55,12 +55,14 @@ export const useEditorContentStyles = makeStyles({
   },
   
   filtersContainer: {
-    marginLeft: "auto", 
-    display: "flex", 
+    marginLeft: "auto",
+    display: "flex",
     alignItems: "center",
-    width: "45rem" 
-  },
+    width: "45rem"
+  }
   
 }, {
   name: "editor-content"
 });
+
+export default useEditorContentStyles;
