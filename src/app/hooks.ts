@@ -27,7 +27,7 @@ export const useInterval = (callback: () => any, delay: number) => {
 
   React.useEffect(() => {
     /**
-     * Needs comment!!
+     * Ticks the timer
      */
     const tick = () => {
       savedCallback.current && savedCallback.current();
