@@ -29,23 +29,7 @@ const useAppLayoutStyles = makeStyles({
       0 6px 20px 0 rgba(0,0,0,0.19)
     `,
     [theme.breakpoints.down("sm")]: {
-      width: "100%",
-      height: "calc(100vh - 264px)",
-      display: "flex",
-      flexDirection: "column",
-      overflow: "auto",
-      overflowX: "hidden",
-      padding: `0px ${theme.spacing(2)}px`,
-      scrollbarColor: "rgba(0,0,0,0.3) transparent",
-      scrollbarWidth: "auto",
-      paddingBottom: theme.spacing(12),
-      "&::-webkit-scrollbar-thumb": {
-        backgroundColor: "rgba(0,0,0,0.5)",
-        border: "none"
-      },
-      "&::-webkit-scrollbar-track": {
-        backgroundColor: "transparent"
-      }
+      width: "100%"
     }
   },
 

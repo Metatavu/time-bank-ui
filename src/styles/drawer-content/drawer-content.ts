@@ -48,7 +48,7 @@ const useDrawerContentStyles = makeStyles({
     fontSize: 14,
     fontWeight: 600,
     [theme.breakpoints.down("sm")]: {
-      fontSize: 18
+      fontSize: 16
     }
   },
 
@@ -56,7 +56,7 @@ const useDrawerContentStyles = makeStyles({
     fontSize: 14,
     fontStyle: "italic",
     [theme.breakpoints.down("sm")]: {
-      fontSize: 18
+      fontSize: 16
     }
   },
 
