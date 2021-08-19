@@ -163,7 +163,6 @@ const DrawerContent: React.FC<Props> = () => {
     if (!personTotalTime) {
       return null;
     }
-    
     let totalHour = TimeUtils.minuteToHourString(personTotalTime.total);
     personTotalTime.total >= 0 && (totalHour = `+${totalHour}`);
     const totalColor = personTotalTime.total < 0 ?
