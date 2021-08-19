@@ -56,4 +56,5 @@ const useUserInfoStyles = makeStyles({
 }, {
   name: "user-info"
 });
+
 export default useUserInfoStyles;
