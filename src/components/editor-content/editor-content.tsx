@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, Switch, Divider } from "@material-ui/core";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { DatePickerView } from "@material-ui/pickers";
-import { useEditorContentStyles } from "styles/editor-content/editor-content";
+import useEditorContentStyles from "styles/editor-content/editor-content";
 import { useAppSelector } from "app/hooks";
 import { selectPerson } from "features/person/person-slice";
 import Api from "api/api";

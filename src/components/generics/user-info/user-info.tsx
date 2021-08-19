@@ -1,6 +1,6 @@
 import React from "react";
 import { Avatar, Box, Typography } from "@material-ui/core";
-import { useUserInfoStyles } from "styles/generics/user-info/user-info";
+import useUserInfoStyles from "styles/generics/user-info/user-info";
 import { selectPerson } from "features/person/person-slice";
 import { useAppSelector } from "app/hooks";
 import strings from "localization/strings";

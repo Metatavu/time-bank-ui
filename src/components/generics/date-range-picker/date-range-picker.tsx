@@ -8,7 +8,7 @@ import theme from "theme/theme";
 import { Box, TextField, Typography, MenuItem } from "@material-ui/core";
 import TimeUtils from "utils/time-utils";
 import strings from "localization/strings";
-import { useDateRangePickerStyles } from "styles/generics/date-range-picker/date-range-picker";
+import useDateRangePickerStyles from "styles/generics/date-range-picker/date-range-picker";
 
 /**
  * Component properties

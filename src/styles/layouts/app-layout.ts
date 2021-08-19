@@ -3,7 +3,7 @@ import theme from "theme/theme";
 
 const drawerWidth = 400;
 
-export const useAppLayoutStyles = makeStyles({
+export default makeStyles({
 
   root: {
     backgroundColor: theme.palette.background.default,

@@ -3,7 +3,7 @@ import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Divider, Te
 import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer, TooltipProps } from "recharts";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import UserInfo from "components/generics/user-info/user-info";
-import { useDrawerContentStyles } from "styles/drawer-content/drawer-content";
+import useDrawerContentStyles from "styles/drawer-content/drawer-content";
 import SearchIcon from "@material-ui/icons/Search";
 import strings from "localization/strings";
 import { PersonDto, TimebankControllerGetTotalRetentionEnum } from "generated/client";

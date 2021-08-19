@@ -1,7 +1,7 @@
 import { makeStyles } from "@material-ui/core";
 import theme from "theme/theme";
 
-export const useUserInfoStyles = makeStyles({
+export default makeStyles({
 
   root: {
     width: "100%"

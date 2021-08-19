@@ -1,7 +1,7 @@
 import React from "react";
 import { selectPerson } from "features/person/person-slice";
 import { useAppSelector } from "app/hooks";
-import { useOverviewChartStyles } from "styles/generics/overview-chart/overview-chart";
+import useOverviewChartStyles from "styles/generics/overview-chart/overview-chart";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, TooltipProps } from 'recharts';
 import { WorkTimeCategory, WorkTimeData } from "types";
 import theme from "theme/theme";

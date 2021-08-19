@@ -1,7 +1,7 @@
 import React from "react";
 import { selectPerson } from "features/person/person-slice";
 import { useAppSelector } from "app/hooks";
-import { useTotalChartStyles } from "styles/generics/total-chart/total-chart";
+import useTotalChartStyles from "styles/generics/total-chart/total-chart";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine, ResponsiveContainer, TooltipProps } from 'recharts';
 import { WorkTimeTotalData } from "types";
 import theme from "theme/theme";

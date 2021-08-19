@@ -1,7 +1,7 @@
 import { makeStyles } from "@material-ui/core";
 import theme from "theme/theme";
 
-export const useEditorContentStyles = makeStyles({
+export default makeStyles({
 
   emptyFilterContainer: {
     width: "100%",
