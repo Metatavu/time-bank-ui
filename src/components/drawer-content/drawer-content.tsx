@@ -144,11 +144,12 @@ const DrawerContent: React.FC<Props> = () => {
         <Typography style={{ fontSize: 14, fontWeight: 600 }}>
           { name }
         </Typography>
-        <Typography style={{
-          fontSize: 14,
-          fontStyle: "italic",
-          color: color
-        }}
+        <Typography
+          style={{
+            fontSize: 14,
+            fontStyle: "italic",
+            color: color
+          }}
         >
           { value }
         </Typography>
