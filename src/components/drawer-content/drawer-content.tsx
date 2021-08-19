@@ -40,7 +40,11 @@ const DrawerContent: React.FC<Props> = () => {
    * Fetches the person data 
    */
   const fetchPersonData = async () => {
-    Api.getTimeBankApi().timebankControllerGetPersons().then(setPersons);
+    try {
+      Api.getTimeBankApi().timebankControllerGetPersons().then(setPersons);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   /**
@@ -48,7 +52,8 @@ const DrawerContent: React.FC<Props> = () => {
    */
   const fetchWorkTimeData = async () => {
     if (person && person.id) {
-      Api.getTimeBankApi()
+      try {
+        Api.getTimeBankApi()
         .timebankControllerGetTotal({
           personId: person.id.toString(),
           retention: TimebankControllerGetTotalRetentionEnum.ALLTIME
@@ -56,6 +61,9 @@ const DrawerContent: React.FC<Props> = () => {
         .then(fetchedPersonTotalTime =>
           dispatch(setPersonTotalTime(fetchedPersonTotalTime[0]))
         );
+      } catch (error) {
+        console.error(error);
+      }
     }
   }
 
