@@ -22,6 +22,7 @@ const useAppLayoutStyles = makeStyles({
   },
 
   drawerPaper: {
+    scrollbarWidth: "auto",
     overflowX: "hidden",
     overflowY: "scroll",
     height: "100vh",
@@ -37,7 +38,6 @@ const useAppLayoutStyles = makeStyles({
       flexDirection: "column",
       padding: `0px ${theme.spacing(2)}px`,
       scrollbarColor: "rgba(0,0,0,0.3) transparent",
-      scrollbarWidth: "auto",
       paddingBottom: theme.spacing(12),
       "&::-webkit-scrollbar-thumb": {
         backgroundColor: "rgba(0,0,0,0.3)"
