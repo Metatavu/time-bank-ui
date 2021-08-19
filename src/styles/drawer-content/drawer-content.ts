@@ -69,4 +69,5 @@ const useDrawerContentStyles = makeStyles({
 }, {
   name: "drawer-content"
 });
+
 export default useDrawerContentStyles;
