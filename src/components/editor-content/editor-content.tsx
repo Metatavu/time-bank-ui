@@ -190,17 +190,21 @@ const EditorContent: React.FC<Props> = () => {
       retention: TimebankControllerGetTotalRetentionEnum.WEEK
     });
 
-    weekEntries.sort((entry1, entry2) => TimeUtils.WeekOrMonthComparator(entry1.id?.year!, entry1.id?.week!, entry2.id?.year!, entry2.id?.week!));
+    weekEntries.sort((entry1, entry2) => TimeUtils.WeekOrMonthComparator(
+      moment().year(entry1.id?.year!).week(entry1.id?.week!),
+      moment().year(entry2.id?.year!).week(entry2.id?.week!),
+    ));
 
+    const startMoment = moment().year(selectedStartDate.getFullYear()).week(startWeek);
+    const endMoment = (!selectedEndDate || !endWeek) ? 
+    moment().year(selectedStartDate.getFullYear()).week(startWeek + 1) : 
+      moment().year(selectedEndDate.getFullYear()).week(endWeek + 1);
     
     const filteredWeekEntries = weekEntries.filter(
       entry => TimeUtils.WeekOrMonthInRange(
-        selectedStartDate.getFullYear(),
-        startWeek,
-        (!selectedEndDate || !endWeek) ? selectedStartDate.getFullYear() : selectedEndDate.getFullYear(),
-        (!selectedEndDate || !endWeek) ? startWeek : endWeek,
-        entry.id?.year!,
-        entry.id?.week!
+        startMoment,
+        endMoment,
+        moment().year(entry.id?.year!).week(entry.id?.week!)
       )
     );
 
@@ -223,16 +227,21 @@ const EditorContent: React.FC<Props> = () => {
       retention: TimebankControllerGetTotalRetentionEnum.MONTH
     });
 
-    monthEntries.sort((entry1, entry2) => TimeUtils.WeekOrMonthComparator(entry1.id?.year!, entry1.id?.month!, entry2.id?.year!, entry2.id?.month!));
+    monthEntries.sort((entry1, entry2) => TimeUtils.WeekOrMonthComparator(
+      moment().year(entry1.id?.year!).month(entry1.id?.month!),
+      moment().year(entry2.id?.year!).month(entry2.id?.month!),
+    ));
       
+    const startMoment = moment().year(selectedStartDate.getFullYear()).month(selectedStartDate.getMonth());
+    const endMoment = (!selectedEndDate) ? 
+      moment().year(selectedStartDate.getFullYear()).month(selectedStartDate.getMonth() + 1) : 
+      moment().year(selectedEndDate.getFullYear()).month(selectedEndDate.getMonth() + 1);
+
     const filteredMonthEntries = monthEntries.filter(
       entry => TimeUtils.WeekOrMonthInRange(
-        selectedStartDate.getFullYear(),
-        selectedStartDate.getMonth() + 1,
-        selectedEndDate ? selectedEndDate.getFullYear() : selectedStartDate.getFullYear() ,
-        selectedEndDate ? selectedEndDate.getMonth() + 1: selectedStartDate.getMonth() + 1,
-        entry.id?.year!,
-        entry.id?.month!
+        startMoment,
+        endMoment,
+        moment().year(entry.id?.year!).month(entry.id?.month! - 1)
       )
     );
 
@@ -258,7 +267,8 @@ const EditorContent: React.FC<Props> = () => {
     yearEntries.sort((year1, year2) => year1.id?.year! - year2.id?.year!);
 
     const filteredYearEntries = yearEntries.filter(
-      entry => (selectedStartDate.getFullYear() <= entry.id?.year!) && (entry.id?.year! <= (selectedEndDate || selectedStartDate).getFullYear())
+      entry => (selectedStartDate.getFullYear() <= entry.id?.year!) && 
+        (entry.id?.year! <= (selectedEndDate || selectedStartDate).getFullYear())
     );
 
     const { workTimeData, workTimeTotalData } = WorkTimeDataUtils.yearEntriesPreprocess(filteredYearEntries);

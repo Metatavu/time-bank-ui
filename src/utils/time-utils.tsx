@@ -11,7 +11,7 @@ export default class TimeUtils {
    * @return date string in format of yyyy-mm-dd
    */
   public static standardizedDateString = (date: Date): string => {
-    return date.toISOString().split("T")[0]
+    return moment(date).format("YYYY-MM-DD");
   }
 
   /**
@@ -28,40 +28,28 @@ export default class TimeUtils {
   }
 
   /**
-   * Compare if a week or month fall with the defined range (start & end inclusive)
+   * Compare if a week fall with the defined range (start & end inclusive)
    * 
-   * @param startYear start year
-   * @param startMonthOrWeek start month or week
-   * @param endYear end year
-   * @param endMonthOrWeek end month or week
-   * @param year year to be measured
-   * @param monthOrWeek month or week to be measured
+   * @param startDate start date
+   * @param endDate end date
+   * @param date week to be compared
    * 
    * @return true if within range, false otherwise
    */
-  public static WeekOrMonthInRange = (startYear: number, startMonthOrWeek: number, endYear: number, endMonthOrWeek: number, year: number, monthOrWeek: number): boolean => {
-    const rangeStart = parseInt(`${startYear}${startMonthOrWeek}`);
-    const rangeEnd = parseInt(`${endYear}${endMonthOrWeek}`);
-    const timeMeasured = parseInt(`${year}${monthOrWeek}`);
-
-    return rangeStart <= timeMeasured && timeMeasured <= rangeEnd;
+  public static WeekOrMonthInRange = (startDate: moment.Moment, endDate: moment.Moment, date: moment.Moment): boolean => {
+    return startDate.diff(date) <= 0 && endDate.diff(date) >= 0;
   }
 
   /**
    * Compare month or week
    * 
-   * @param year1 year one
    * @param monthOrWeek1 month or week one
-   * @param year2 year two
    * @param monthOrWeek2 month or week two
    * 
    * @return positive integer if year+month/week1 is greater than year+month/week2, negative integer if otherwise, 0 if equal
    */
-  public static WeekOrMonthComparator = (year1: number, monthOrWeek1: number, year2: number, monthOrWeek2: number,): number => {
-    const yearWeekOrMonth1 = parseInt(`${year1}${monthOrWeek1}`);
-    const yearWeekOrMonth2 = parseInt(`${year2}${monthOrWeek2}`);
-
-    return yearWeekOrMonth1 - yearWeekOrMonth2;
+  public static WeekOrMonthComparator = (monthOrWeek1: moment.Moment, monthOrWeek2: moment.Moment): number => {
+    return monthOrWeek1.diff(monthOrWeek2);
   }
 
   /**
