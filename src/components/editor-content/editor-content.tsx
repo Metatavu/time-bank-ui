@@ -163,18 +163,23 @@ const EditorContent: React.FC<Props> = () => {
       return;
     }
 
-    const dateEntries = await Api.getTimeBankApi().timebankControllerGetEntries({
-      personId: person.id.toString(),
-      after: TimeUtils.standardizedDateString(selectedStartDate),
-      before: selectedEndDate ? TimeUtils.standardizedDateString(selectedEndDate) : TimeUtils.standardizedDateString(selectedStartDate)
-    });
+    try {
+      const dateEntries = await Api.getTimeBankApi().timebankControllerGetEntries({
+        personId: person.id.toString(),
+        after: TimeUtils.standardizedDateString(selectedStartDate),
+        before: selectedEndDate ? TimeUtils.standardizedDateString(selectedEndDate) : TimeUtils.standardizedDateString(selectedStartDate)
+      });
 
-    dateEntries.sort((date1, date2) => moment(date1.date).diff(moment(date2.date)));
+      dateEntries.sort((date1, date2) => moment(date1.date).diff(moment(date2.date)));
 
-    const { workTimeData, workTimeTotalData } = WorkTimeDataUtils.dateEntriesPreprocess(dateEntries);
-
-    setDisplayedTimeData(workTimeData);
-    setDisplayedTotal(workTimeTotalData);
+      const { workTimeData, workTimeTotalData } = WorkTimeDataUtils.dateEntriesPreprocess(dateEntries);
+  
+      setDisplayedTimeData(workTimeData);
+      setDisplayedTotal(workTimeTotalData);
+    } 
+    catch (error) {
+      console.error(error);
+    }
   }
 
   /**
@@ -185,33 +190,38 @@ const EditorContent: React.FC<Props> = () => {
       return;
     }
 
-    const weekEntries = await Api.getTimeBankApi().timebankControllerGetTotal({
-      personId: person.id.toString(),
-      retention: TimebankControllerGetTotalRetentionEnum.WEEK
-    });
-
-    weekEntries.sort((entry1, entry2) => TimeUtils.WeekOrMonthComparator(
-      moment().year(entry1.id?.year!).week(entry1.id?.week!),
-      moment().year(entry2.id?.year!).week(entry2.id?.week!),
-    ));
-
-    const startMoment = moment().year(selectedStartDate.getFullYear()).week(startWeek);
-    const endMoment = (!selectedEndDate || !endWeek) ? 
-    moment().year(selectedStartDate.getFullYear()).week(startWeek + 1) : 
-      moment().year(selectedEndDate.getFullYear()).week(endWeek + 1);
-    
-    const filteredWeekEntries = weekEntries.filter(
-      entry => TimeUtils.WeekOrMonthInRange(
-        startMoment,
-        endMoment,
-        moment().year(entry.id?.year!).week(entry.id?.week!)
-      )
-    );
-
-    const { workTimeData, workTimeTotalData } = WorkTimeDataUtils.weekEntriesPreprocess(filteredWeekEntries);
-
-    setDisplayedTimeData(workTimeData);
-    setDisplayedTotal(workTimeTotalData);
+    try {
+      const weekEntries = await Api.getTimeBankApi().timebankControllerGetTotal({
+        personId: person.id.toString(),
+        retention: TimebankControllerGetTotalRetentionEnum.WEEK
+      });
+  
+      weekEntries.sort((entry1, entry2) => TimeUtils.WeekOrMonthComparator(
+        moment().year(entry1.id?.year!).week(entry1.id?.week!),
+        moment().year(entry2.id?.year!).week(entry2.id?.week!),
+      ));
+  
+      const startMoment = moment().year(selectedStartDate.getFullYear()).week(startWeek);
+      const endMoment = (!selectedEndDate || !endWeek) ? 
+      moment().year(selectedStartDate.getFullYear()).week(startWeek + 1) : 
+        moment().year(selectedEndDate.getFullYear()).week(endWeek + 1);
+      
+      const filteredWeekEntries = weekEntries.filter(
+        entry => TimeUtils.WeekOrMonthInRange(
+          startMoment,
+          endMoment,
+          moment().year(entry.id?.year!).week(entry.id?.week!)
+        )
+      );
+  
+      const { workTimeData, workTimeTotalData } = WorkTimeDataUtils.weekEntriesPreprocess(filteredWeekEntries);
+  
+      setDisplayedTimeData(workTimeData);
+      setDisplayedTotal(workTimeTotalData);
+    } 
+    catch (error) {
+      console.error(error);
+    }
   }
 
   /**
@@ -222,33 +232,38 @@ const EditorContent: React.FC<Props> = () => {
       return;
     }
 
-    const monthEntries = await Api.getTimeBankApi().timebankControllerGetTotal({
-      personId: person.id.toString(),
-      retention: TimebankControllerGetTotalRetentionEnum.MONTH
-    });
-
-    monthEntries.sort((entry1, entry2) => TimeUtils.WeekOrMonthComparator(
-      moment().year(entry1.id?.year!).month(entry1.id?.month!),
-      moment().year(entry2.id?.year!).month(entry2.id?.month!),
-    ));
-      
-    const startMoment = moment().year(selectedStartDate.getFullYear()).month(selectedStartDate.getMonth());
-    const endMoment = (!selectedEndDate) ? 
-      moment().year(selectedStartDate.getFullYear()).month(selectedStartDate.getMonth() + 1) : 
-      moment().year(selectedEndDate.getFullYear()).month(selectedEndDate.getMonth() + 1);
-
-    const filteredMonthEntries = monthEntries.filter(
-      entry => TimeUtils.WeekOrMonthInRange(
-        startMoment,
-        endMoment,
-        moment().year(entry.id?.year!).month(entry.id?.month! - 1)
-      )
-    );
-
-    const { workTimeData, workTimeTotalData } = WorkTimeDataUtils.monthEntriesPreprocess(filteredMonthEntries);
-
-    setDisplayedTimeData(workTimeData);
-    setDisplayedTotal(workTimeTotalData);
+    try {
+      const monthEntries = await Api.getTimeBankApi().timebankControllerGetTotal({
+        personId: person.id.toString(),
+        retention: TimebankControllerGetTotalRetentionEnum.MONTH
+      });
+  
+      monthEntries.sort((entry1, entry2) => TimeUtils.WeekOrMonthComparator(
+        moment().year(entry1.id?.year!).month(entry1.id?.month!),
+        moment().year(entry2.id?.year!).month(entry2.id?.month!),
+      ));
+        
+      const startMoment = moment().year(selectedStartDate.getFullYear()).month(selectedStartDate.getMonth());
+      const endMoment = (!selectedEndDate) ? 
+        moment().year(selectedStartDate.getFullYear()).month(selectedStartDate.getMonth() + 1) : 
+        moment().year(selectedEndDate.getFullYear()).month(selectedEndDate.getMonth() + 1);
+  
+      const filteredMonthEntries = monthEntries.filter(
+        entry => TimeUtils.WeekOrMonthInRange(
+          startMoment,
+          endMoment,
+          moment().year(entry.id?.year!).month(entry.id?.month! - 1)
+        )
+      );
+  
+      const { workTimeData, workTimeTotalData } = WorkTimeDataUtils.monthEntriesPreprocess(filteredMonthEntries);
+  
+      setDisplayedTimeData(workTimeData);
+      setDisplayedTotal(workTimeTotalData);
+    }
+    catch (error) {
+      console.error(error);
+    }
   }  
   
   /**
@@ -259,22 +274,27 @@ const EditorContent: React.FC<Props> = () => {
       return;
     }
 
-    const yearEntries = await Api.getTimeBankApi().timebankControllerGetTotal({
-      personId: person.id.toString(),
-      retention: TimebankControllerGetTotalRetentionEnum.YEAR
-    });
-
-    yearEntries.sort((year1, year2) => year1.id?.year! - year2.id?.year!);
-
-    const filteredYearEntries = yearEntries.filter(
-      entry => (selectedStartDate.getFullYear() <= entry.id?.year!) && 
-        (entry.id?.year! <= (selectedEndDate || selectedStartDate).getFullYear())
-    );
-
-    const { workTimeData, workTimeTotalData } = WorkTimeDataUtils.yearEntriesPreprocess(filteredYearEntries);
-
-    setDisplayedTimeData(workTimeData);
-    setDisplayedTotal(workTimeTotalData);
+    try {
+      const yearEntries = await Api.getTimeBankApi().timebankControllerGetTotal({
+        personId: person.id.toString(),
+        retention: TimebankControllerGetTotalRetentionEnum.YEAR
+      });
+  
+      yearEntries.sort((year1, year2) => year1.id?.year! - year2.id?.year!);
+  
+      const filteredYearEntries = yearEntries.filter(
+        entry => (selectedStartDate.getFullYear() <= entry.id?.year!) && 
+          (entry.id?.year! <= (selectedEndDate || selectedStartDate).getFullYear())
+      );
+  
+      const { workTimeData, workTimeTotalData } = WorkTimeDataUtils.yearEntriesPreprocess(filteredYearEntries);
+  
+      setDisplayedTimeData(workTimeData);
+      setDisplayedTotal(workTimeTotalData);
+    }
+    catch (error) {
+      console.error(error)
+    }
   }
 
   /**
