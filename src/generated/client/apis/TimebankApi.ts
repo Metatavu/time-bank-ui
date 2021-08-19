@@ -28,8 +28,8 @@ import {
 
 export interface TimebankControllerGetEntriesRequest {
     personId: string;
-    before?: Date;
-    after?: Date;
+    before?: string;
+    after?: string;
 }
 
 export interface TimebankControllerGetTotalRequest {
@@ -52,11 +52,11 @@ export class TimebankApi extends runtime.BaseAPI {
         const queryParameters: any = {};
 
         if (requestParameters.before !== undefined) {
-            queryParameters['before'] = (requestParameters.before as any).toISOString().substr(0,10);
+            queryParameters['before'] = requestParameters.before;
         }
 
         if (requestParameters.after !== undefined) {
-            queryParameters['after'] = (requestParameters.after as any).toISOString().substr(0,10);
+            queryParameters['after'] = requestParameters.after;
         }
 
         const headerParameters: runtime.HTTPHeaders = {};

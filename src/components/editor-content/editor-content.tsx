@@ -165,8 +165,8 @@ const EditorContent: React.FC<Props> = () => {
 
     const dateEntries = await Api.getTimeBankApi().timebankControllerGetEntries({
       personId: person.id.toString(),
-      after: selectedStartDate,
-      before: selectedEndDate || selectedStartDate
+      after: TimeUtils.standardizedDateString(selectedStartDate),
+      before: selectedEndDate ? TimeUtils.standardizedDateString(selectedEndDate) : TimeUtils.standardizedDateString(selectedStartDate)
     });
 
     dateEntries.sort((date1, date2) => moment(date1.date).diff(moment(date2.date)));

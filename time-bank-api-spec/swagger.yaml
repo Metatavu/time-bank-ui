@@ -57,6 +57,8 @@ components:
         updated_at:
           format: date-time
           type: string
+        start_date:
+          type: string
       required:
         - id
         - first_name
@@ -80,6 +82,7 @@ components:
         - updated_by
         - created_at
         - updated_at
+        - start_date
     TimeEntry:
       type: object
       properties:
@@ -169,13 +172,11 @@ paths:
           in: query
           schema:
             type: string
-            format: date
         - name: after
           required: false
           in: query
           schema:
             type: string
-            format: date
       responses:
         '200':
           description: ''

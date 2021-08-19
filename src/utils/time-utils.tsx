@@ -5,6 +5,16 @@ import moment from "moment";
  */
 export default class TimeUtils {
   /**
+   * Return a standardized date string
+   * 
+   * @param date date data
+   * @return date string in format of yyyy-mm-dd
+   */
+  public static standardizedDateString = (date: Date): string => {
+    return date.toISOString().split("T")[0]
+  }
+
+  /**
    * Converts time in minutes to a string formatted as "x h y min"
    * 
    * @param minutes time in minutes
