@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, Switch, Divider } from "@material-ui/core";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import "date-fns";
-import DateFnsUtils from "@date-io/date-fns";
-import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePickerView } from "@material-ui/pickers";
+import { DatePickerView } from "@material-ui/pickers";
 import { useEditorContentStyles } from "styles/editor-content/editor-content";
 import { useAppSelector } from "app/hooks";
 import { selectPerson } from "features/person/person-slice";
@@ -11,10 +9,13 @@ import Api from "api/api";
 import strings from "localization/strings";
 import theme from "theme/theme";
 import TimeUtils from "utils/time-utils";
-import { FilterScopes, DateFormats, WorkTimeData, WorkTimeCategory, WorkTimeTotalData } from "types/index";
-import { TimebankControllerGetTotalRetentionEnum, TimeEntryTotalDto } from "generated/client";
+import { FilterScopes, DateFormats, WorkTimeData, WorkTimeTotalData } from "types/index";
+import { TimebankControllerGetTotalRetentionEnum } from "generated/client";
 import TotalChart from "components/generics/total-chart/total-chart";
 import OverviewChart from "components/generics/overview-chart/overview-chart";
+import WorkTimeDataUtils from "utils/work-time-data-utils";
+import moment from "moment";
+import DateRangePicker from "components/generics/date-range-picker/date-range-picker";
 
 /**
  * Component properties
@@ -33,20 +34,15 @@ const EditorContent: React.FC<Props> = () => {
 
   const { person, personTotalTime } = useAppSelector(selectPerson);
 
-  const [ todayDate, /*setTodayDate*/ ] = useState(new Date());
   const [ startDateOnly, setStartDateOnly ] = useState(false);
-  const [ currentWeekNumber, setCurrentWeekNumber ] = useState(0);
-  const [ selectedStartDate, setSelectedStartDate ] = useState<Date>(new Date());
-  const [ selectedEndDate, setSelectedEndDate ] = useState<Date | null>(null);
   const [ scope, setScope ] = React.useState<FilterScopes>(FilterScopes.WEEK);
   const [ dateFormat, setDateFormat ] = React.useState<string | undefined>("dd/MM/yyyy");
   const [ datePickerView, setDatePickerView ] = React.useState<DatePickerView>("date");
-  const [ startWeek, setStartWeek ] = React.useState<number | undefined>(undefined);
+  const [ selectedStartDate, setSelectedStartDate ] = useState<Date>(new Date());
+  const [ selectedEndDate, setSelectedEndDate ] = useState<Date | null>(null);
+  const [ startWeek, setStartWeek ] = React.useState<number | null>(null);
   const [ endWeek, setEndWeek ] = React.useState<number | null>(null);
   const [ isLoading, setIsLoading ] = React.useState(false);
-  const [ totalWeekEntries, setTotalWeekEntries ] = React.useState<TimeEntryTotalDto[] | undefined>(undefined);
-  const [ totalMonthEntries, setTotalMonthEntries ] = React.useState<TimeEntryTotalDto[] | undefined>(undefined);
-  const [ totalYearEntries, setTotalYearEntries ] = React.useState<TimeEntryTotalDto[] | undefined>(undefined);
   const [ displayedTimeData, setDisplayedTimeData ] = React.useState<WorkTimeData[] | undefined>(undefined);
   const [ displayedTotal, setDisplayedTotal ] = React.useState<WorkTimeTotalData | undefined>(undefined);
 
@@ -101,7 +97,7 @@ const EditorContent: React.FC<Props> = () => {
   /**
    * Start date only change handler
    */
-  const onStartDateOnlyChange = () => {
+  const handleStartDateOnlyChange = () => {
     setStartDateOnly(!startDateOnly);
     setEndWeek(null);
     setSelectedEndDate(null);
@@ -126,33 +122,16 @@ const EditorContent: React.FC<Props> = () => {
   };
 
   /**
-   * Generate week numbers for the select component 
-   * 
-   * @returns current week number
-   */
-  const getCurrentWeek = () => {
-    const today = new Date();  
-    const oneJan = new Date(today.getFullYear(), 0, 1);   
-    const numberOfDays = Math.ceil((today.getTime() - oneJan.getTime()) / (24 * 60 * 60 * 1000));   
-    const numberOfWeeks = Math.floor((numberOfDays - today.getDay() - 1) / 7);
-
-    return numberOfWeeks + Math.ceil(today.getDay() / 7);   
-  };
-
-
-  /**
    * Initialize the component data
    */
   const initializeData = async () => {
-    setSelectedStartDate(todayDate)
-
-    const currentWeek = getCurrentWeek();
-    setCurrentWeekNumber(currentWeek);
+    setSelectedStartDate(new Date())
+    const currentWeek = TimeUtils.getCurrentWeek();
 
     // set scope to the current sprint
     if ((currentWeek % 2) === 0) {
       setStartWeek(currentWeek - 1);
-      setSelectedEndDate(todayDate);
+      setSelectedEndDate(new Date());
       setEndWeek(currentWeek);
     } else {
       setStartWeek(currentWeek);
@@ -172,7 +151,7 @@ const EditorContent: React.FC<Props> = () => {
     }[scope];
 
     setIsLoading(true);
-    await loadData()
+    await loadData();
     setIsLoading(false);
   }
 
@@ -184,41 +163,18 @@ const EditorContent: React.FC<Props> = () => {
       return;
     }
 
-    const timeBankApi = Api.getTimeBankApi();
-    const dateEntries = await timeBankApi.timebankControllerGetEntries({
+    const dateEntries = await Api.getTimeBankApi().timebankControllerGetEntries({
       personId: person.id.toString(),
       after: selectedStartDate,
       before: selectedEndDate || selectedStartDate
     });
 
-    dateEntries.sort((date1, date2) => date1.date.getTime() - date2.date.getTime());
+    dateEntries.sort((date1, date2) => moment(date1.date).diff(moment(date2.date)));
 
-    const workTimeDatas: WorkTimeData[] = [];
-    const TotalWorkTime: WorkTimeTotalData = {
-      name: WorkTimeCategory.TOTAL,
-      total: 0,
-      logged: 0,
-      expected: 0
-    };
+    const { workTimeData, workTimeTotalData } = WorkTimeDataUtils.dateEntriesPreprocess(dateEntries);
 
-    dateEntries.forEach(
-      entry => {
-        workTimeDatas.push({
-          name: entry.date.toISOString().split("T")[0],
-          expected: entry.expected,
-          project: entry.projectTime,
-          internal: entry.internalTime
-        });
-        TotalWorkTime.total = TotalWorkTime.total + entry.total;
-        TotalWorkTime.logged = TotalWorkTime.total + entry.logged;
-        TotalWorkTime.expected = TotalWorkTime.total + entry.expected;
-      }
-    );
-
-    setDisplayedTimeData(workTimeDatas);
-    setDisplayedTotal(TotalWorkTime);
-
-    return workTimeDatas;
+    setDisplayedTimeData(workTimeData);
+    setDisplayedTotal(workTimeTotalData);
   }
 
   /**
@@ -229,29 +185,15 @@ const EditorContent: React.FC<Props> = () => {
       return;
     }
 
-    let weekEntries: TimeEntryTotalDto[] = [];
+    const weekEntries = await Api.getTimeBankApi().timebankControllerGetTotal({
+      personId: person.id.toString(),
+      retention: TimebankControllerGetTotalRetentionEnum.WEEK
+    });
 
-    if (!totalWeekEntries) {
-      const timeBankApi = Api.getTimeBankApi();
-      weekEntries = await timeBankApi.timebankControllerGetTotal({
-        personId: person.id.toString(),
-        retention: TimebankControllerGetTotalRetentionEnum.WEEK
-      });
-      weekEntries.sort((entry1, entry2) => TimeUtils.WeekOrMonthComparator(entry1.id?.year!, entry1.id?.week!, entry2.id?.year!, entry2.id?.week!));
-      setTotalWeekEntries(weekEntries);
-    }else {
-      weekEntries = totalWeekEntries;
-    }
+    weekEntries.sort((entry1, entry2) => TimeUtils.WeekOrMonthComparator(entry1.id?.year!, entry1.id?.week!, entry2.id?.year!, entry2.id?.week!));
 
-    const workTimeDatas: WorkTimeData[] = [];
-    const TotalWorkTime: WorkTimeTotalData = {
-      name: WorkTimeCategory.TOTAL,
-      total: 0,
-      logged: 0,
-      expected: 0
-    };
     
-    weekEntries.filter(
+    const filteredWeekEntries = weekEntries.filter(
       entry => TimeUtils.WeekOrMonthInRange(
         selectedStartDate.getFullYear(),
         startWeek,
@@ -260,24 +202,12 @@ const EditorContent: React.FC<Props> = () => {
         entry.id?.year!,
         entry.id?.week!
       )
-    ).forEach(
-      entry => {
-        workTimeDatas.push({
-          name: `${entry.id?.year!} ${FilterScopes.WEEK} ${entry.id?.week!}`,
-          expected: entry.expected,
-          project: entry.projectTime,
-          internal: entry.internalTime
-        });
-        TotalWorkTime.total = TotalWorkTime.total + entry.total;
-        TotalWorkTime.logged = TotalWorkTime.total + entry.logged;
-        TotalWorkTime.expected = TotalWorkTime.total + entry.expected;
-      }
     );
 
-    setDisplayedTimeData(workTimeDatas);
-    setDisplayedTotal(TotalWorkTime);
+    const { workTimeData, workTimeTotalData } = WorkTimeDataUtils.weekEntriesPreprocess(filteredWeekEntries);
 
-    return workTimeDatas;
+    setDisplayedTimeData(workTimeData);
+    setDisplayedTotal(workTimeTotalData);
   }
 
   /**
@@ -288,29 +218,14 @@ const EditorContent: React.FC<Props> = () => {
       return;
     }
 
-    let monthEntries: TimeEntryTotalDto[] = [];
+    const monthEntries = await Api.getTimeBankApi().timebankControllerGetTotal({
+      personId: person.id.toString(),
+      retention: TimebankControllerGetTotalRetentionEnum.MONTH
+    });
 
-    if (!totalMonthEntries) {
-      const timeBankApi = Api.getTimeBankApi();
-      monthEntries = await timeBankApi.timebankControllerGetTotal({
-        personId: person.id.toString(),
-        retention: TimebankControllerGetTotalRetentionEnum.MONTH
-      });
-      monthEntries.sort((entry1, entry2) => TimeUtils.WeekOrMonthComparator(entry1.id?.year!, entry1.id?.month!, entry2.id?.year!, entry2.id?.month!));
-      setTotalMonthEntries(monthEntries);
-    }else {
-      monthEntries = totalMonthEntries;
-    }
-
-    const workTimeDatas: WorkTimeData[] = [];
-    const TotalWorkTime: WorkTimeTotalData = {
-      name: WorkTimeCategory.TOTAL,
-      total: 0,
-      logged: 0,
-      expected: 0
-    };
-    
-    monthEntries.filter(
+    monthEntries.sort((entry1, entry2) => TimeUtils.WeekOrMonthComparator(entry1.id?.year!, entry1.id?.month!, entry2.id?.year!, entry2.id?.month!));
+      
+    const filteredMonthEntries = monthEntries.filter(
       entry => TimeUtils.WeekOrMonthInRange(
         selectedStartDate.getFullYear(),
         selectedStartDate.getMonth() + 1,
@@ -319,24 +234,12 @@ const EditorContent: React.FC<Props> = () => {
         entry.id?.year!,
         entry.id?.month!
       )
-    ).forEach(
-      entry => {
-        workTimeDatas.push({
-          name: `${entry.id?.year!}-${entry.id?.month!}`,
-          expected: entry.expected,
-          project: entry.projectTime,
-          internal: entry.internalTime
-        });
-        TotalWorkTime.total = TotalWorkTime.total + entry.total;
-        TotalWorkTime.logged = TotalWorkTime.total + entry.logged;
-        TotalWorkTime.expected = TotalWorkTime.total + entry.expected;
-      }
     );
 
-    setDisplayedTimeData(workTimeDatas);
-    setDisplayedTotal(TotalWorkTime);
+    const { workTimeData, workTimeTotalData } = WorkTimeDataUtils.monthEntriesPreprocess(filteredMonthEntries);
 
-    return workTimeDatas;
+    setDisplayedTimeData(workTimeData);
+    setDisplayedTotal(workTimeTotalData);
   }  
   
   /**
@@ -347,100 +250,22 @@ const EditorContent: React.FC<Props> = () => {
       return;
     }
 
-    let yearEntries: TimeEntryTotalDto[] = [];
+    const yearEntries = await Api.getTimeBankApi().timebankControllerGetTotal({
+      personId: person.id.toString(),
+      retention: TimebankControllerGetTotalRetentionEnum.YEAR
+    });
 
-    if (!totalYearEntries) {
-      const timeBankApi = Api.getTimeBankApi();
-      yearEntries = await timeBankApi.timebankControllerGetTotal({
-        personId: person.id.toString(),
-        retention: TimebankControllerGetTotalRetentionEnum.YEAR
-      });
-      yearEntries.sort((year1, year2) => year1.id?.year! - year2.id?.year!);
-      setTotalYearEntries(yearEntries);
-    }else {
-      yearEntries = totalYearEntries;
-    }
+    yearEntries.sort((year1, year2) => year1.id?.year! - year2.id?.year!);
 
-    const workTimeDatas: WorkTimeData[] = [];
-    const TotalWorkTime: WorkTimeTotalData = {
-      name: WorkTimeCategory.TOTAL,
-      total: 0,
-      logged: 0,
-      expected: 0
-    };
-    
-    yearEntries.filter(
+    const filteredYearEntries = yearEntries.filter(
       entry => (selectedStartDate.getFullYear() <= entry.id?.year!) && (entry.id?.year! <= (selectedEndDate || selectedStartDate).getFullYear())
-    ).forEach(
-      entry => {
-        workTimeDatas.push({
-          name: `${entry.id?.year!}`,
-          expected: entry.expected,
-          project: entry.projectTime,
-          internal: entry.internalTime
-        });
-        TotalWorkTime.total = TotalWorkTime.total + entry.total;
-        TotalWorkTime.logged = TotalWorkTime.total + entry.logged;
-        TotalWorkTime.expected = TotalWorkTime.total + entry.expected;
-      }
     );
 
-    setDisplayedTimeData(workTimeDatas);
-    setDisplayedTotal(TotalWorkTime);
+    const { workTimeData, workTimeTotalData } = WorkTimeDataUtils.yearEntriesPreprocess(filteredYearEntries);
 
-    return workTimeDatas;
+    setDisplayedTimeData(workTimeData);
+    setDisplayedTotal(workTimeTotalData);
   }
-
-  /**
-   * Renders start week numbers to select component
-   */
-  const renderStartWeekNumbers = () => {
-    if (!selectedStartDate) {
-      return;
-    }
-
-    const weekOpts = []
-
-    for (let week = 1; week <= currentWeekNumber; week++) {
-      weekOpts.push((
-        <MenuItem value={ week }>
-          { week }
-        </MenuItem>
-      ))
-    } 
-    return weekOpts;
-  };
-
-  /**
-   * Renders end week numbers to select component
-   */
-  const renderEndWeekNumbers = () => {
-    if (!selectedEndDate) {
-      return;
-    }
-
-    const weekOpts = []
-
-    if (selectedStartDate?.getFullYear() === selectedEndDate.getFullYear() && !!startWeek) {
-      for (let week = startWeek; week <= currentWeekNumber; week++) {
-        weekOpts.push((
-          <MenuItem value={ week }>
-            { week }
-          </MenuItem>
-        ))
-      } 
-    } else {
-      for (let week = 1; week <= currentWeekNumber; week++) {
-        weekOpts.push((
-          <MenuItem value={ week }>
-            { week }
-          </MenuItem>
-        ))
-      } 
-    }
-
-    return weekOpts;
-  };
 
   /**
    * Renders scope options for select component
@@ -510,142 +335,6 @@ const EditorContent: React.FC<Props> = () => {
       { renderSelectOptions }
     </TextField>
   );
-
-  /**
-   * Renders start date picker 
-   */
-  const renderStartDatePicker = () => {
-    const { filterStartingDate } = strings.editorContent;
-
-    return (
-      <MuiPickersUtilsProvider utils={ DateFnsUtils } >
-        <KeyboardDatePicker
-          inputVariant="standard"
-          variant="inline"
-          views={ [ datePickerView ] }
-          format={ dateFormat }
-          maxDate={ todayDate }
-          label={ filterStartingDate }
-          value={ selectedStartDate }
-          onChange={ handleStartDateChange }
-          className={ classes.datePicker }
-          KeyboardButtonProps={{ "aria-label": `${ filterStartingDate }` }}
-        />
-      </MuiPickersUtilsProvider>
-    );
-  }
-  
-  /**
-   * Renders start year picker and week selector 
-   */
-  const renderStartYearPickerAndWeekSelector = () =>  (
-    <>
-      <MuiPickersUtilsProvider utils={ DateFnsUtils } >
-        <KeyboardDatePicker
-          views={[ FilterScopes.YEAR ]}
-          variant="inline"
-          inputVariant="standard"
-          format="yyyy"
-          maxDate={ todayDate }
-          label={ strings.editorContent.selectYearStart }
-          value={ selectedStartDate }
-          onChange={ handleStartDateChange }
-          className={ classes.yearPicker }
-          KeyboardButtonProps={{ "aria-label": `${ strings.editorContent.filterStartingDate }` }}
-        />
-      </MuiPickersUtilsProvider>
-      <TextField
-        select
-        variant="standard"
-        value={ startWeek }
-        onChange={ handleStartWeekChange }
-        label={ strings.editorContent.selectWeekStart }
-        className={ classes.weekPicker }
-      >
-        { renderStartWeekNumbers() }
-      </TextField>
-    </>
-  );
-  
-
-  /**
-   * Renders end date picker
-   */
-  const renderEndDate = () => (
-    <MuiPickersUtilsProvider utils={ DateFnsUtils }>
-      <KeyboardDatePicker
-        disabled={ startDateOnly }
-        inputVariant="standard"
-        variant="inline"
-        format={ dateFormat }
-        views={ [ datePickerView ] }
-        minDate={ selectedStartDate }
-        maxDate={ todayDate }
-        label={ strings.editorContent.filterEndingDate }
-        value={ selectedEndDate } 
-        onChange={ handleEndDateChange }
-        className={ classes.datePicker }
-        KeyboardButtonProps={{ "aria-label": `${ strings.editorContent.filterEndingDate }`}}
-      />
-    </MuiPickersUtilsProvider>
-  );
-
-  /**
-   * Renders end year picker and week selector 
-   */
-  const renderEndYearPickerAndWeekSelector = () => (
-    <>
-      <MuiPickersUtilsProvider utils={ DateFnsUtils } >
-        <KeyboardDatePicker
-          disabled={ startDateOnly }
-          inputVariant="standard"
-          variant="inline"
-          views={[ FilterScopes.YEAR ]}
-          format="yyyy"
-          minDate={ selectedStartDate }
-          maxDate={ todayDate }
-          label={ strings.editorContent.selectYearEnd }
-          value={ selectedEndDate }
-          onChange={ handleEndDateChange }
-          className={ classes.yearPicker }
-          KeyboardButtonProps={{ "aria-label": `${ strings.editorContent.filterStartingDate }` }}
-        />
-      </MuiPickersUtilsProvider>
-      <TextField
-        // TODO label when start only
-        disabled={ startDateOnly }
-        select
-        variant="standard"
-        id="scope-select-outlined"
-        value={ endWeek }
-        onChange={ handleEndWeekChange }
-        label={ strings.editorContent.selectWeekEnd }
-        className={ classes.weekPicker }
-      >
-        { renderEndWeekNumbers() }
-      </TextField>
-    </>
-  );
-  
-
-  /**
-   * Renders starting datepicker or week/year selector depending on scope
-   */
-  const renderStartDatePickersAndWeekSelector = () => {
-    return scope.toString() !== FilterScopes.WEEK ?
-      renderStartDatePicker() :
-      renderStartYearPickerAndWeekSelector();
-  }
-
-  /**
-   * Renders ending datepicker/week selector depending on scope
-   */
-  const renderEndDatePickersAndWeekSelector = () => {
-    return scope.toString() !== FilterScopes.WEEK ?
-      renderEndDate() :
-      renderEndYearPickerAndWeekSelector();
-  }
-
   /**
    * Renders the filter component
    */
@@ -676,12 +365,20 @@ const EditorContent: React.FC<Props> = () => {
       );
     }
 
-    const timeRangeText = displayedTimeData.length === 1 
-    ?
-    `${displayedTimeData[0].name}`
-    :
-    `(${displayedTimeData[0].name} - ${displayedTimeData[displayedTimeData.length - 1].name})`;
-    
+    let timeRangeText = ""
+
+    switch(displayedTimeData.length) {
+      case 0:
+        timeRangeText = ""
+        break;
+      case 1:
+        timeRangeText = `${displayedTimeData[0].name}`
+        break;
+      default:
+        timeRangeText = `(${displayedTimeData[0].name} - ${displayedTimeData[displayedTimeData.length - 1].name})`
+        break;
+    }
+
     return (
       <Accordion>
         <AccordionSummary
@@ -689,50 +386,73 @@ const EditorContent: React.FC<Props> = () => {
           aria-controls="panel1a-content"
           className={ classes.filterSummary }
         >
-          <Typography variant="h4" style={{ fontWeight: 600, fontStyle: "italic" }}>
-            { strings.editorContent.workTime }
-          </Typography>
-          <Box>
-            <Typography variant="h4" style={{ color: "rgba(0, 0, 0, 0.5)", marginLeft: theme.spacing(2), fontStyle: "italic" }}>
-              { timeRangeText }
-            </Typography>
-          </Box>
-          <Box className={ classes.filterSubtitle } >
-            { renderFilterSubtitleText(`${strings.logged}:`, displayedTotal.logged || 0, false) }
-            { renderFilterSubtitleText(`${strings.expected}:`, displayedTotal.expected || 0, false) }
-            { renderFilterSubtitleText(`${strings.total}:`, displayedTotal.total, true, displayedTotal.total >= 0) }
-          </Box>
+          { renderFilterSummary(timeRangeText) }
         </AccordionSummary>
         <AccordionDetails className={ classes.filterContent }>
-          { renderSelectScope() }
-          <Box className={ classes.startDateOnly }>
-            <Switch
-              color="secondary"
-              checked={ startDateOnly }
-              onChange={ onStartDateOnlyChange }
-            />
-            <Typography variant="h5" style={{ paddingLeft: theme.spacing(0.5) }}>
-              { strings.editorContent.startOnly }
-            </Typography>
-          </Box>
-          <Box className={ classes.datePickers }>
-            <Box display="flex" alignItems="center">
-              <Typography variant="h5" style={{ marginRight: theme.spacing(3) }}>
-                { `${strings.editorContent.from}: ` }
-              </Typography>
-              { renderStartDatePickersAndWeekSelector() }
-            </Box>
-            <Box ml={ 4 } display="flex" alignItems="center">
-              <Typography variant="h5" style={{ marginRight: theme.spacing(3) }}>
-                { `${strings.editorContent.to}: ` }
-              </Typography>
-              { renderEndDatePickersAndWeekSelector() }
-            </Box>
-          </Box>
+          { renderFilterDetails() }
         </AccordionDetails>
       </Accordion>
     );
   }
+
+  /**
+   * Renders the filter summary
+   * 
+   * @param timeRangeText time range text
+   */
+  const renderFilterSummary = (timeRangeText: string) => (
+    <>
+      <Typography variant="h4" style={{ fontWeight: 600, fontStyle: "italic" }}>
+        { strings.editorContent.workTime }
+      </Typography>
+      <Box>
+        <Typography variant="h4" style={{ color: "rgba(0, 0, 0, 0.5)", marginLeft: theme.spacing(2), fontStyle: "italic" }}>
+          { timeRangeText }
+        </Typography>
+      </Box>
+      <Box className={ classes.filterSubtitle } >
+        { renderFilterSubtitleText(`${strings.logged}:`, displayedTotal!.logged || 0, false) }
+        { renderFilterSubtitleText(`${strings.expected}:`, displayedTotal!.expected || 0, false) }
+        { renderFilterSubtitleText(`${strings.total}:`, displayedTotal!.total, true, displayedTotal!.total >= 0) }
+      </Box>
+    </>
+  )
+
+  /**
+   * Renders the filter details
+   */
+  const renderFilterDetails = () => (
+    <>
+      { renderSelectScope() }
+      <Box className={ classes.startDateOnly }>
+        <Switch
+          color="secondary"
+          checked={ startDateOnly }
+          onChange={ handleStartDateOnlyChange }
+        />
+        <Typography variant="h5" style={{ paddingLeft: theme.spacing(0.5) }}>
+          { strings.editorContent.startOnly }
+        </Typography>
+      </Box>
+      <Box className={ classes.datePickers }>
+        <DateRangePicker
+          scope={ scope }
+          dateFormat={ dateFormat }
+          selectedStartDate={ selectedStartDate }
+          selectedEndDate={ selectedEndDate }
+          startWeek={ startWeek }
+          endWeek={ endWeek }
+          startDateOnly={ startDateOnly }
+          datePickerView={ datePickerView }
+          onStartDateChange={ handleStartDateChange }
+          onEndDateChange={ handleEndDateChange }
+          onDateFormatChange={ handleDateFormatChange }
+          onStartWeekChange={ handleStartWeekChange }
+          onEndWeekChange={ handleEndWeekChange }
+        />
+      </Box>
+    </>
+  )
 
   /**
    * Renders the filter component
@@ -809,7 +529,6 @@ const EditorContent: React.FC<Props> = () => {
       { renderCharts() }
     </>
   );
-
 }
 
 export default EditorContent;

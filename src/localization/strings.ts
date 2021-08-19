@@ -71,6 +71,7 @@ export interface IStrings extends LocalizedStringsMethods {
     startOnly: string;
   };
 
+  week: string;
   logged: string;
   expected: string;
   total: string;

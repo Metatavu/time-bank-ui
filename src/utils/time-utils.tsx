@@ -1,3 +1,5 @@
+import moment from "moment";
+
 /**
  * Utility class for time values
  */
@@ -45,10 +47,20 @@ export default class TimeUtils {
    * 
    * @return positive integer if year+month/week1 is greater than year+month/week2, negative integer if otherwise, 0 if equal
    */
-    public static WeekOrMonthComparator = (year1: number, monthOrWeek1: number, year2: number, monthOrWeek2: number,): number => {
-      const yearWeekOrMonth1 = parseInt(`${year1}${monthOrWeek1}`);
-      const yearWeekOrMonth2 = parseInt(`${year2}${monthOrWeek2}`);
-  
-      return yearWeekOrMonth1 - yearWeekOrMonth2;
-    }
+  public static WeekOrMonthComparator = (year1: number, monthOrWeek1: number, year2: number, monthOrWeek2: number,): number => {
+    const yearWeekOrMonth1 = parseInt(`${year1}${monthOrWeek1}`);
+    const yearWeekOrMonth2 = parseInt(`${year2}${monthOrWeek2}`);
+
+    return yearWeekOrMonth1 - yearWeekOrMonth2;
+  }
+
+  /**
+   * Generate week numbers for the select component 
+   * 
+   * @returns current week number
+   */
+  public static getCurrentWeek = () => {
+    return moment().isoWeek();
+  };
+
 }

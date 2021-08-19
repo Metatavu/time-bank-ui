@@ -51,6 +51,7 @@
     "startOnly": "Start only"
   },
 
+  "week": "Week",
   "logged": "Logged",
   "expected": "Expected",
   "total": "Difference",

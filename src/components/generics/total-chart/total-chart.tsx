@@ -67,7 +67,6 @@ const TotalChart: React.FC<Props> = ({ displayedData, isLoading }) => {
   };
 
   // TODO domain might be change once the internal time is fixed
-  // TODO remove grid, xAxis custom axis label
   const range = Math.max(20000, Math.abs(displayedData.total));
 
   /**
@@ -80,11 +79,23 @@ const TotalChart: React.FC<Props> = ({ displayedData, isLoading }) => {
         data={[ displayedData ]}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis type="number" domain={ [-range, range] } hide/>
-        <YAxis type="category" dataKey="name" hide/>
+        <XAxis 
+          type="number" 
+          domain={ [-range, range] } 
+          tickFormatter={ value => TimeUtils.minuteToHourString(value as number) }
+        />
+        <YAxis 
+          hide
+          type="category" 
+          dataKey="name" 
+        />
         <Tooltip content={ renderCustomizedTooltip }/>
         <Legend />
-        <Bar dataKey="total" barSize={ 60 } fill={ displayedData.total > 0 ? theme.palette.success.main : theme.palette.error.main } />
+        <Bar 
+          dataKey="total" 
+          barSize={ 60 } 
+          fill={ displayedData.total > 0 ? theme.palette.success.main : theme.palette.error.main } 
+        />
         <ReferenceLine x={ 0 } stroke="rgba(0, 0, 0, 0.5)" />
       </BarChart>
     </ResponsiveContainer>

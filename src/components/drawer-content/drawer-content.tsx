@@ -1,6 +1,6 @@
 import React from "react";
 import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Divider, TextField, Typography } from "@material-ui/core";
-import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer, TooltipProps, PieLabel } from "recharts";
+import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer, TooltipProps } from "recharts";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import UserInfo from "components/generics/user-info/user-info";
 import { useDrawerContentStyles } from "styles/drawer-content/drawer-content";

@@ -29,12 +29,6 @@ export const useEditorContentStyles = makeStyles({
     paddingLeft: theme.spacing(5)
   },
 
-  datePickers: {
-    marginLeft: "auto",
-    display: "flex", 
-    alignItems: "center",
-  },
-
   scopeSelector: {
     width: 120
   },
@@ -43,21 +37,6 @@ export const useEditorContentStyles = makeStyles({
     borderColor: "rgba(0, 0, 0)"
   },
 
-  datePicker: {
-    width: 200,
-    marginRight: theme.spacing(2),
-    "& .MuiInputLabel-root": {
-      color: "rgba(0, 0, 0, 0.54)"
-    },
-  },
-
-  yearPicker: {
-    width: 120,
-    marginRight: theme.spacing(2),
-    "& .MuiInputLabel-root": {
-      color: "rgba(0, 0, 0, 0.54)"
-    },
-  },
 
   chartsContainer: {
     marginTop: theme.spacing(6),
@@ -68,11 +47,6 @@ export const useEditorContentStyles = makeStyles({
     marginLeft: theme.spacing(5),
     display: "flex",
     alignItems: "center"  
-  },
-
-  weekPicker: {
-    width: 110,
-    marginRight: theme.spacing(2),
   },
   
   filterSubtitle: {
@@ -109,7 +83,13 @@ export const useEditorContentStyles = makeStyles({
     justifyContent: "center",
     alignItems: "center"
   },
-  
+
+  datePickers: {
+    marginLeft: "auto",
+    display: "flex", 
+    alignItems: "center",
+  },
+
 }, {
   name: "editor-content"
 });

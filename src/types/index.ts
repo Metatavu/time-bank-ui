@@ -49,6 +49,14 @@ export interface WorkTimeData {
 }
 
 /**
+ * Type for work time data and total data
+ */
+export interface WorkTimeDatas {
+  workTimeData: WorkTimeData[];
+  workTimeTotalData: WorkTimeTotalData;
+}
+
+/**
  * Type for custom pie label
  */
 export interface CustomPieLabel {
