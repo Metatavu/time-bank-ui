@@ -32,7 +32,7 @@
 
   "editorContent": {
     "userNotSelected": "Valitse ensin käyttäjä.",
-    "noTimeEntries": "No Time entries found for this user.",
+    "noTimeEntries": "Valitulle käyttäjälle ei löytynyt kirjattua aikaa",
     "overview": "Overview",
     "total": "Total",
     "workTime": "Työaika",
