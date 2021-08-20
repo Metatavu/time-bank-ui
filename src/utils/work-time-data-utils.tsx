@@ -7,6 +7,7 @@ import { WorkTimeCategory, WorkTimeData, WorkTimeDatas, WorkTimeTotalData } from
  * Utility class for time values
  */
 export default class WorkTimeDataUtils {
+
   /**
    * Proprocess the date entries for graphs
    * 
