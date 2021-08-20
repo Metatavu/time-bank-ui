@@ -61,4 +61,19 @@ export default class TimeUtils {
     return moment().isoWeek();
   };
 
+  /**
+   * Gets moment instance from year and week numbers
+   *
+   * @param year year number
+   * @param week week number
+   * @returns moment instance from given parameters
+   */
+  public static getMomentFromYearAndWeek = (year?: number, week?: number) => {
+    if (!year || !week) {
+      throw new Error("Malformed data!");
+    }
+
+    return moment().year(year).week(week);
+  }
+
 }
