@@ -125,7 +125,6 @@ const EditorContent: React.FC<Props> = () => {
    * Initialize the component data
    */
   const initializeData = async () => {
-    setSelectedStartDate(new Date())
     const currentWeek = TimeUtils.getCurrentWeek();
 
     // set scope to the current sprint
