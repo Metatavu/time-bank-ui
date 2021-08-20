@@ -42,14 +42,16 @@ export default class TimeUtils {
   };
 
   /**
-   * Compare month or week
+   * Sorts two different entries by month
    * 
-   * @param monthOrWeek1 month or week one
-   * @param monthOrWeek2 month or week two
-   * @return positive integer if year+month/week1 is greater than year+month/week2, negative integer if otherwise, 0 if equal
+   * @param entry1 first entry
+   * @param entry2 second entry
+   * @return positive integer if entry1 is greater than entry2, negative integer if otherwise, 0 if equal
    */
-  public static WeekOrMonthComparator = (monthOrWeek1: moment.Moment, monthOrWeek2: moment.Moment): number => {
-    return monthOrWeek1.diff(monthOrWeek2);
+  public static sortEntriesByMonth = (entry1: TimeEntryTotalDto, entry2: TimeEntryTotalDto): number => {
+    const date1 = TimeUtils.getMonthFromEntry(entry1);
+    const date2 = TimeUtils.getMonthFromEntry(entry2);
+    return date1.diff(date2);
   };
 
   /**
@@ -77,18 +79,17 @@ export default class TimeUtils {
   };
 
   /**
-   * Gets moment instance from year and month numbers
+   * Gets moment instance from entry (precision 1 month)
    *
-   * @param year year number
-   * @param month month number
-   * @returns moment instance from given parameters
+   * @param entry TimeEntryTotalDto entry
+   * @returns moment instance from given entry
    */
-  public static getMomentFromYearAndMonth = (year?: number, month?: number) => {
-    if (!year || !month) {
+  public static getMonthFromEntry = (entry: TimeEntryTotalDto) => {
+    if (!entry.id?.year || !entry.id?.month) {
       throw new Error("Malformed data!");
     }
   
-    return moment().year(year).month(month);
+    return moment().year(entry.id.year).month(entry.id.month);
   };
 
   /**
