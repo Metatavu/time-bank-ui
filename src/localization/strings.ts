@@ -44,6 +44,7 @@ export interface IStrings extends LocalizedStringsMethods {
     },
     statistics: string;
     expected: string;
+    searchPlaceholder: string;
   };
 
   /**

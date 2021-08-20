@@ -26,7 +26,8 @@
       "updatedAt": "Updated at:"
     },
     "statistics": "Statistics",
-    "expected": "Expected"
+    "expected": "Expected",
+    "searchPlaceholder": "Select user.."
   },
 
   "editorContent": {

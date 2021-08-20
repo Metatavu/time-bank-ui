@@ -118,6 +118,7 @@ const DrawerContent: React.FC<Props> = () => {
               <TextField
                 { ...params }
                 variant="outlined"
+                placeholder={ strings.drawerContent.searchPlaceholder }
               />
             )}
             classes={{
