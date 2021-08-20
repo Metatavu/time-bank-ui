@@ -41,7 +41,8 @@ const DrawerContent: React.FC<Props> = () => {
    */
   const fetchPersonData = async () => {
     try {
-      Api.getTimeBankApi().timebankControllerGetPersons().then(setPersons);
+      const persons = await Api.getTimeBankApi().timebankControllerGetPersons();
+      setPersons(persons);
     } catch (error) {
       console.error(error);
     }
