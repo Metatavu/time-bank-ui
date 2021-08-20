@@ -145,10 +145,7 @@ const DrawerContent: React.FC<Props> = () => {
           { name }
         </Typography>
         <Typography
-          style={
-            {
-              color: color
-            }}
+          style={{ color: color }}
           className={ classes.accordinRowValues }
         >
           { value }
