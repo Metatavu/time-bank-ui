@@ -36,8 +36,8 @@ export default class TimeUtils {
    * 
    * @return true if within range, false otherwise
    */
-  public static WeekOrMonthInRange = (startDate: moment.Moment, endDate: moment.Moment, date: moment.Moment): boolean => {
-    return startDate.diff(date) <= 0 && endDate.diff(date) >= 0;
+  public static DateInRange = (startDate: Date | moment.Moment, endDate: Date | moment.Moment, date: moment.Moment): boolean => {
+    return date.isBetween(startDate, endDate);
   }
 
   /**
