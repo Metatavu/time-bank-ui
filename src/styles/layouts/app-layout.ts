@@ -76,4 +76,5 @@ const useAppLayoutStyles = makeStyles({
 }, {
   name: "app-layout"
 });
+
 export default useAppLayoutStyles;
