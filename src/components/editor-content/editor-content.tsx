@@ -176,8 +176,7 @@ const EditorContent: React.FC<Props> = () => {
   
       setDisplayedTimeData(workTimeData);
       setDisplayedTotal(workTimeTotalData);
-    } 
-    catch (error) {
+    } catch (error) {
       console.error(error);
     }
   }
