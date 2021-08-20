@@ -152,7 +152,7 @@ const EditorContent: React.FC<Props> = () => {
         )
       );
 
-      monthEntries.sort(TimeUtils.sortEntriesByMonth);
+      filteredMonthEntries.sort(TimeUtils.sortEntriesByMonth);
 
       const { workTimeData, workTimeTotalData } = WorkTimeDataUtils.weeksYearsAndMonthsPreprocess(filteredMonthEntries, FilterScopes.MONTH);
   
