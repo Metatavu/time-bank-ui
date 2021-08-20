@@ -33,7 +33,6 @@ export default class TimeUtils {
    * @param startDate start date
    * @param endDate end date
    * @param date week to be compared
-   * 
    * @return true if within range, false otherwise
    */
   public static DateInRange = (startDate: Date | moment.Moment, endDate: Date | moment.Moment, date: moment.Moment): boolean => {
