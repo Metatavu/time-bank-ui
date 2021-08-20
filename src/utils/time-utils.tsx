@@ -79,18 +79,17 @@ export default class TimeUtils {
   };
 
   /**
-   * Gets moment instance from year and month numbers
+   * Gets moment instance from entry (precision 1 month)
    *
-   * @param year year number
-   * @param month month number
-   * @returns moment instance from given parameters
+   * @param entry TimeEntryTotalDto entry
+   * @returns moment instance from given entry
    */
-  public static getMomentFromYearAndMonth = (year?: number, month?: number) => {
-    if (!year || !month) {
+  public static getMonthFromEntry = (entry: TimeEntryTotalDto) => {
+    if (!entry.id?.year || !entry.id?.month) {
       throw new Error("Malformed data!");
     }
   
-    return moment().year(year).month(month);
+    return moment().year(entry.id.year).month(entry.id.month);
   };
 
   /**
