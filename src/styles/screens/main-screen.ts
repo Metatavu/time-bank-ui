@@ -5,9 +5,9 @@ const useMainScreenStyles = makeStyles({
 
   drawerContainer: {
     height: "100%",
-    padding: `${theme.spacing(1)}px ${theme.spacing(4)}px`,
+    padding: `${theme.spacing(1)}px ${theme.spacing(2)}px ${theme.spacing(1)}px ${theme.spacing(3)}px`,
     [theme.breakpoints.down("xs")]: {
-      padding: `${theme.spacing(1)}px ${theme.spacing(1)}px`
+      padding: `${theme.spacing(1)}px ${theme.spacing(2)}px ${theme.spacing(1)}px ${theme.spacing(1)}px`
     }
   },
 

@@ -26,7 +26,8 @@
       "updatedAt": "Päivitetty:"
     },
     "statistics": "Tilastot",
-    "expected": "Odotettu"
+    "expected": "Odotettu",
+    "searchPlaceholder": "Valitse käyttäjä.."
   },
 
   "editorContent": {

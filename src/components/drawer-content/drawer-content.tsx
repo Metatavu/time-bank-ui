@@ -129,6 +129,7 @@ const DrawerContent: React.FC<Props> = () => {
               <TextField
                 { ...params }
                 variant="outlined"
+                placeholder={ strings.drawerContent.searchPlaceholder }
               />
             )}
             classes={{
@@ -324,7 +325,6 @@ const DrawerContent: React.FC<Props> = () => {
       <Box className={ classes.drawerSearchBoxContainer }>
         { renderSearchBox() }
       </Box>
-      <Divider/>
       { person &&
         <>
           <Box className={ classes.drawerUserInfoContainer }>
