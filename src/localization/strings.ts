@@ -25,7 +25,6 @@ export interface IStrings extends LocalizedStringsMethods {
     copy: string;
     save: string;
     delete: string;
-    search: string;
     language: string;
     select: string;
   };
@@ -87,6 +86,6 @@ export interface IStrings extends LocalizedStringsMethods {
 
 }
 
-const strings: IStrings = new LocalizedStrings({ en, fi });
+const strings: IStrings = new LocalizedStrings({ en: en, fi: fi });
 
 export default strings;

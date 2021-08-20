@@ -29,7 +29,6 @@ interface Props {
  * @param props component properties
  */
 const EditorContent: React.FC<Props> = () => {
-
   const classes = useEditorContentStyles();
 
   const { person, personTotalTime } = useAppSelector(selectPerson);
@@ -301,14 +300,13 @@ const EditorContent: React.FC<Props> = () => {
   /**
    * Renders scope options for select component
    */
-  const renderSelectOptions = Object.values(FilterScopes).map(scope =>
+  const renderSelectOptions = Object.values(FilterScopes).map(selectScope =>
     <MenuItem
-      value={ scope }
-      key={ scope }
+      value={ selectScope }
+      key={ selectScope }
     >
-      { strings.editorContent[scope as keyof object] }
-    </MenuItem>
-  );
+      { strings.editorContent[selectScope as keyof object] }
+    </MenuItem>);
 
   /**
    * Renders the filter subtitle text
@@ -344,7 +342,7 @@ const EditorContent: React.FC<Props> = () => {
         </Typography>
       </>
     );
-  }
+  };
 
   /**
    * Renders selector of filter scope
@@ -494,7 +492,7 @@ const EditorContent: React.FC<Props> = () => {
     }
 
     return (
-      <Paper 
+      <Paper
         elevation={ 3 }
         className={ classes.chartsContainer }
       >
@@ -560,6 +558,6 @@ const EditorContent: React.FC<Props> = () => {
       { renderCharts() }
     </>
   );
-}
+};
 
 export default EditorContent;

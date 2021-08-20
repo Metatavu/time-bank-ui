@@ -1,7 +1,8 @@
 import { makeStyles } from "@material-ui/core";
 import theme from "theme/theme";
 
-export default makeStyles({
+
+const useEditorContentStyles = makeStyles({
 
   emptyFilterContainer: {
     width: "100%",
@@ -9,6 +10,11 @@ export default makeStyles({
     display: "flex",
     alignItems: "center",
     padding: `0px ${theme.spacing(3)}px`,
+    [theme.breakpoints.down(1921)]: {
+      "& .MuiTypography-root": {
+        fontSize: "0.9rem"
+      }
+    }
   },
 
   filterSummary: {
@@ -93,3 +99,5 @@ export default makeStyles({
 }, {
   name: "editor-content"
 });
+
+export default useEditorContentStyles;

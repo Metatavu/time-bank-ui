@@ -23,7 +23,7 @@ const initialState: LocaleState = {
  */
 export const personSlice = createSlice({
   name: "person",
-  initialState,
+  initialState: initialState,
   reducers: {
     setPerson: (state, { payload }: PayloadAction<PersonDto>) => {
       state.person = payload;

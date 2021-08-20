@@ -1,5 +1,5 @@
 import React from "react";
-import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Divider, TextField, Typography } from "@material-ui/core";
+import { Accordion, AccordionDetails, AccordionSummary, Box, Divider, TextField, Typography } from "@material-ui/core";
 import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer, TooltipProps } from "recharts";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import UserInfo from "components/generics/user-info/user-info";
@@ -33,7 +33,6 @@ const DrawerContent: React.FC<Props> = () => {
 
   const classes = useDrawerContentStyles();
   const [ persons, setPersons ] = React.useState<PersonDto[]>([]);
-  const [ pendingPerson, setPendingPerson ] = React.useState<PersonDto | null>(null);
   const [ searchInput, setSearchInput ] = React.useState<string>("");
   
   /**
@@ -64,11 +63,11 @@ const DrawerContent: React.FC<Props> = () => {
         console.error(error);
       }
     }
-  }
+  };
 
   React.useEffect(() => {
     fetchPersonData();
-  }, [])
+  }, []);
 
   React.useEffect(() => {
     fetchWorkTimeData();    
@@ -76,22 +75,40 @@ const DrawerContent: React.FC<Props> = () => {
   }, [ person ]);
 
   /**
+   * Event Handler for autocomplete value change
+   * 
+   * @param newValue new value for the person data
+   */
+  const onSearchBoxChange = (newValue: string | PersonDto) => {
+    typeof newValue !== "string" && dispatch(setPerson(newValue));
+  };
+
+  /**
+   * Event Handler for autocomplete input change
+   * 
+   * @param newValue new input value
+   */
+  const onSearchBoxInputChange = (newValue: string) => {
+    setSearchInput(newValue);
+  };
+
+  /**
    * Renders the autocomplete options 
    * 
-   * @param person person option to be rendered
+   * @param personOptions person option to be rendered
    */
-  const renderOptions = (person: PersonDto) => {
+  const renderOptions = (personOptions: PersonDto) => {
     return (
       <Box p={ 0.5 }>
         <Typography variant="h5">
-          { `${person.firstName} ${person.lastName}` }
+          { `${personOptions.firstName} ${personOptions.lastName}` }
         </Typography>
         <Typography variant="h6" style={{ color: "rgba(0, 0, 0, 0.6)" }}>
-          { person.email }
+          { personOptions.email }
         </Typography>
       </Box>
     );
-  }
+  };
 
   /**
    * Renders the search box
@@ -99,38 +116,32 @@ const DrawerContent: React.FC<Props> = () => {
   const renderSearchBox = () => {
     return (
       <>
-        <Box className={ classes.searchBoxContaienr }>
+        <Box className={ classes.searchBoxContainer }>
           <SearchIcon className={ classes.searchIcon }/>
-          <Autocomplete 
+          <Autocomplete
             freeSolo
             options={ persons }
             inputValue={ searchInput }
-            getOptionLabel={ person => `${person.firstName} ${person.lastName}` }
+            getOptionLabel={ personLabel => `${personLabel.firstName} ${personLabel.lastName}` }
             renderOption={ renderOptions }
-            onChange={ (event, newValue) => onSearchBoxChange(newValue) }
-            onInputChange={ (event, newInputValue) => onSearchBoxInputChange(newInputValue)  }
+            onChange={ (event, newValue) => onSearchBoxChange(newValue as PersonDto) }
+            onInputChange={ (event, newInputValue) => onSearchBoxInputChange(newInputValue) }
             renderInput={ params => (
-              <TextField 
+              <TextField
                 { ...params }
                 variant="outlined"
               />
             )}
-            classes={{ 
+            classes={{
               root: classes.searchBox,
               inputRoot: classes.inputRoot,
               input: classes.input
             }}
           />
         </Box>
-        <Button 
-          onClick={ onSearchButtonClick }
-          className={ classes.searchButton }
-        >
-          { strings.generic.search }
-        </Button>
       </>
     );
-  }
+  };
 
   /**
    * Renders the Total work time section
@@ -142,15 +153,18 @@ const DrawerContent: React.FC<Props> = () => {
   const renderAccordinRow = (name: string, value: string, color?: string) => {
     return (
       <Box className={ classes.accordinRow }>
-        <Typography style={{ fontSize: 14, fontWeight: 600 }}>
+        <Typography className={ classes.accordinRowNames }>
           { name }
         </Typography>
-        <Typography style={{ fontSize: 14, fontStyle: "italic", color: color }}>
+        <Typography
+          style={{ color: color }}
+          className={ classes.accordinRowValues }
+        >
           { value }
         </Typography>
       </Box>
     );
-  }
+  };
 
   /**
    * Renders the Total work time section
@@ -159,9 +173,8 @@ const DrawerContent: React.FC<Props> = () => {
     if (!personTotalTime) {
       return null;
     }
-
     let totalHour = TimeUtils.minuteToHourString(personTotalTime.total);
-    personTotalTime.total >= 0 && (totalHour = `+${totalHour}`)
+    personTotalTime.total >= 0 && (totalHour = `+${totalHour}`);
     const totalColor = personTotalTime.total < 0 ?
       theme.palette.error.dark :
       theme.palette.success.main;
@@ -177,7 +190,7 @@ const DrawerContent: React.FC<Props> = () => {
       <>
         <Accordion defaultExpanded className={ classes.drawerAccordin }>
           <AccordionSummary
-            expandIcon={ <ExpandMoreIcon /> }
+            expandIcon={ <ExpandMoreIcon/> }
             aria-controls="panel1a-content"
             id="panel1a-header"
           >
@@ -189,7 +202,7 @@ const DrawerContent: React.FC<Props> = () => {
             <Box 
               p={ 1 }
               paddingRight={ 3 }
-              width="100%" 
+              width="100%"
             >
               { renderAccordinRow(`${strings.total}:`, totalHour, totalColor) }
               { renderAccordinRow(`${strings.logged}:`, TimeUtils.minuteToHourString(personTotalTime.logged)) }
@@ -215,7 +228,7 @@ const DrawerContent: React.FC<Props> = () => {
         </Accordion>
       </>
     );
-  }
+  };
 
   /**
    * Renders the customized label for charts
@@ -276,19 +289,19 @@ const DrawerContent: React.FC<Props> = () => {
       <>
         <Accordion className={ classes.drawerAccordin }>
           <AccordionSummary
-            expandIcon={ <ExpandMoreIcon /> }
+            expandIcon={ <ExpandMoreIcon/> }
             aria-controls="panel1a-content"
             id="panel1a-header"
-            >
+          >
             <Typography variant="h4" style={{ fontWeight: 600 }}>
               { strings.drawerContent.expected }
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Box 
+            <Box
               p={ 1 }
               paddingRight={ 3 }
-              width="100%" 
+              width="100%"
             >
               { renderAccordinRow(`${strings.sunday}:`, TimeUtils.minuteToHourString(person.sunday)) }
               { renderAccordinRow(`${strings.monday}:`, TimeUtils.minuteToHourString(person.monday)) }
@@ -302,32 +315,7 @@ const DrawerContent: React.FC<Props> = () => {
         </Accordion>
       </>
     );
-  }
-
-  /**
-   * Event Handler for autocomplete value change
-   * 
-   * @param newValue new value for the pending person 
-   */
-  const onSearchBoxChange = (newValue: string | PersonDto | null) => {
-    typeof newValue !== "string" && setPendingPerson(newValue);    
-  }
-
-  /**
-   * Event Handler for autocomplete input change
-   * 
-   * @param newValue new input value
-   */
-  const onSearchBoxInputChange = (newValue: string) => {
-    setSearchInput(newValue);
-  }
-
-  /**
-   * Event Handler for search button click
-   */
-  const onSearchButtonClick = () => {
-    pendingPerson && dispatch(setPerson(pendingPerson));
-  }
+  };
 
   /**
    * Component render
@@ -337,13 +325,13 @@ const DrawerContent: React.FC<Props> = () => {
       <Box className={ classes.drawerSearchBoxContainer }>
         { renderSearchBox() }
       </Box>
-      <Divider />
+      <Divider/>
       { person &&
         <>
           <Box className={ classes.drawerUserInfoContainer }>
-            <UserInfo />
+            <UserInfo/>
           </Box>
-          <Divider />
+          <Divider/>
           <Box mt={ 2 }>
             { renderTotalWorkTime() }
             { renderExpectedWork() }
@@ -352,6 +340,6 @@ const DrawerContent: React.FC<Props> = () => {
       }
     </>
   );
-}
+};
 
 export default DrawerContent;

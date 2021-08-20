@@ -1,7 +1,7 @@
 import { makeStyles } from "@material-ui/core";
 import theme from "theme/theme";
 
-export default makeStyles({
+const useUserInfoStyles = makeStyles({
 
   root: {
     width: "100%"
@@ -14,7 +14,7 @@ export default makeStyles({
   },
 
   userDetail: {
-    padding: 10,
+    padding: 10
   },
 
   status: {
@@ -34,25 +34,27 @@ export default makeStyles({
   },
 
   userDetailEntry: {
-    display: "flex", 
+    display: "flex",
     margin: "5px 0px"
   },
 
   userDetailDateEntry: {
-    display: "flex", 
-    opacity: 0.6 
+    display: "flex",
+    opacity: 0.6
   },
 
   date: {
     padding: "0px 20px",
-    display: "grid",
+    display: "grid"
   },
 
   infoValue: {
-    paddingLeft: theme.spacing(1), 
+    paddingLeft: theme.spacing(1),
     fontStyle: "italic"
   }
 
 }, {
   name: "user-info"
 });
+
+export default useUserInfoStyles;

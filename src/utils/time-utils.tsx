@@ -4,6 +4,7 @@ import moment from "moment";
  * Utility class for time values
  */
 export default class TimeUtils {
+
   /**
    * Return a standardized date string
    * 
@@ -103,5 +104,5 @@ export default class TimeUtils {
 
     return moment().year(year);
   }
+};
 
-}
