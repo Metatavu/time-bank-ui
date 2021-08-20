@@ -9,7 +9,7 @@ import { WorkTimeCategory, WorkTimeData, WorkTimeDatas, WorkTimeTotalData } from
 export default class WorkTimeDataUtils {
 
   /**
-   * Proprocess the date entries for graphs
+   * Preprocess the date entries for graphs
    * 
    * @param dateEntries sorted date entries from api request 
    * @return processed work time data, work time total data
