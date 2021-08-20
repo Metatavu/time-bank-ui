@@ -316,9 +316,7 @@ const EditorContent: React.FC<Props> = () => {
       <>
         <Typography
           variant="h5"
-          style={{
-            marginLeft: theme.spacing(2)
-          }}
+          style={{ marginLeft: theme.spacing(2) }}
         >
           { name }
         </Typography>
