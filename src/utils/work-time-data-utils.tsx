@@ -41,12 +41,13 @@ export default class WorkTimeDataUtils {
   }
 
   /**
-   * Proprocess the week entries for graphs
+   * Preprocess the week, month and year entries for graphs
    * 
-   * @param weekEntries sorted week entries from api request 
+   * @param weekEntries sorted week, month or year entries from api request 
+   * @param scope filter scope
    * @return processed work time data, work time total data
    */
-  public static weekEntriesPreprocess = (weekEntries: TimeEntryTotalDto[]): WorkTimeDatas => {
+  public static weeksYearsAndMonthsPreprocess = (weekEntries: TimeEntryTotalDto[], scope: FilterScopes): WorkTimeDatas => {
     const workTimeData: WorkTimeData[] = [];
     const workTimeTotalData: WorkTimeTotalData = {
       name: WorkTimeCategory.TOTAL,
@@ -58,7 +59,7 @@ export default class WorkTimeDataUtils {
     weekEntries.forEach(
       entry => {
         workTimeData.push({
-          name: `${entry.id?.year!} ${strings.week} ${entry.id?.week!}`,
+          name: WorkTimeDataUtils.getTimeDataName(entry, scope),
           expected: entry.expected,
           project: entry.projectTime,
           internal: entry.internalTime
@@ -70,6 +71,26 @@ export default class WorkTimeDataUtils {
     );
 
     return { workTimeData, workTimeTotalData };
+  }
+
+  /**
+   * Get time data name
+   *
+   * @param entry entry
+   * @param scope filter scope
+   * @returns time data name
+   */
+  private static getTimeDataName = (entry: TimeEntryTotalDto, scope: FilterScopes): string => {
+    if (!entry.id) {
+      return ""
+    }
+
+    return {
+      [FilterScopes.DATE]: "",
+      [FilterScopes.WEEK]: `${entry.id?.year!} ${strings.week} ${entry.id?.week!}`,
+      [FilterScopes.MONTH]: `${entry.id?.year!}-${entry.id?.month!}`,
+      [FilterScopes.YEAR]: `${entry.id?.year!}`
+    }[scope];
   }
 
   /**
