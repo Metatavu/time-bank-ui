@@ -1,6 +1,5 @@
 import { TimeEntry, TimeEntryTotalDto } from "generated/client";
 import strings from "localization/strings";
-import moment from "moment";
 import { FilterScopes, WorkTimeCategory, WorkTimeData, WorkTimeDatas, WorkTimeTotalData } from "types";
 
 /**
@@ -31,14 +30,14 @@ export default class WorkTimeDataUtils {
           project: entry.projectTime,
           internal: entry.internalTime
         });
-        workTimeTotalData.total = workTimeTotalData.total + entry.total;
+        workTimeTotalData.total += entry.total;
         workTimeTotalData.logged = workTimeTotalData.total + entry.logged;
         workTimeTotalData.expected = workTimeTotalData.total + entry.expected;
       }
     );
 
-    return { workTimeData, workTimeTotalData };
-  }
+    return { workTimeData: workTimeData, workTimeTotalData: workTimeTotalData };
+  };
 
   /**
    * Preprocess the week, month and year entries for graphs
@@ -64,14 +63,14 @@ export default class WorkTimeDataUtils {
           project: entry.projectTime,
           internal: entry.internalTime
         });
-        workTimeTotalData.total = workTimeTotalData.total + entry.total;
+        workTimeTotalData.total += entry.total;
         workTimeTotalData.logged = workTimeTotalData.total + entry.logged;
         workTimeTotalData.expected = workTimeTotalData.total + entry.expected;
       }
     );
 
-    return { workTimeData, workTimeTotalData };
-  }
+    return { workTimeData: workTimeData, workTimeTotalData: workTimeTotalData };
+  };
 
   /**
    * Get time data name
@@ -82,7 +81,7 @@ export default class WorkTimeDataUtils {
    */
   private static getTimeDataName = (entry: TimeEntryTotalDto, scope: FilterScopes): string => {
     if (!entry.id) {
-      return ""
+      return "";
     }
 
     return {
@@ -91,5 +90,6 @@ export default class WorkTimeDataUtils {
       [FilterScopes.MONTH]: `${entry.id?.year!}-${entry.id?.month!}`,
       [FilterScopes.YEAR]: `${entry.id?.year!}`
     }[scope];
-  }
+  };
+
 }

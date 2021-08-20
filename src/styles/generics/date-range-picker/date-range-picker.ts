@@ -8,7 +8,7 @@ export default makeStyles({
     marginRight: theme.spacing(2),
     "& .MuiInputLabel-root": {
       color: "rgba(0, 0, 0, 0.54)"
-    },
+    }
   },
 
   yearPicker: {
@@ -16,13 +16,13 @@ export default makeStyles({
     marginRight: theme.spacing(2),
     "& .MuiInputLabel-root": {
       color: "rgba(0, 0, 0, 0.54)"
-    },
+    }
   },
 
   weekPicker: {
     width: 110,
-    marginRight: theme.spacing(2),
-  },
+    marginRight: theme.spacing(2)
+  }
 
 }, {
   name: "date-range-picker"

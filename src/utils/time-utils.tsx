@@ -13,7 +13,7 @@ export default class TimeUtils {
    */
   public static standardizedDateString = (date: Date): string => {
     return moment(date).format("YYYY-MM-DD");
-  }
+  };
 
   /**
    * Converts time in minutes to a string formatted as "x h y min"
@@ -26,7 +26,7 @@ export default class TimeUtils {
     const minute = Math.abs(minutes % 60);
 
     return `${hour} h ${minute} min`;
-  }
+  };
 
   /**
    * Compare if a week fall with the defined range (start & end inclusive)
@@ -37,9 +37,9 @@ export default class TimeUtils {
    * @return true if within range, false otherwise
    */
   public static DateInRange = (startDate: Date | moment.Moment, endDate: Date | moment.Moment, date: moment.Moment): boolean => {
-    console.log("startDate, endDate, date", startDate, endDate, date)
+    console.log("startDate, endDate, date", startDate, endDate, date);
     return date.isBetween(startDate, endDate);
-  }
+  };
 
   /**
    * Compare month or week
@@ -50,7 +50,7 @@ export default class TimeUtils {
    */
   public static WeekOrMonthComparator = (monthOrWeek1: moment.Moment, monthOrWeek2: moment.Moment): number => {
     return monthOrWeek1.diff(monthOrWeek2);
-  }
+  };
 
   /**
    * Generate week numbers for the select component 
@@ -74,7 +74,7 @@ export default class TimeUtils {
     }
 
     return moment().year(year).week(week);
-  }
+  };
 
   /**
    * Gets moment instance from year and month numbers
@@ -83,13 +83,13 @@ export default class TimeUtils {
    * @param month month number
    * @returns moment instance from given parameters
    */
-    public static getMomentFromYearAndMonth = (year?: number, month?: number) => {
-      if (!year || !month) {
-        throw new Error("Malformed data!");
-      }
-  
-      return moment().year(year).month(month);
+  public static getMomentFromYearAndMonth = (year?: number, month?: number) => {
+    if (!year || !month) {
+      throw new Error("Malformed data!");
     }
+  
+    return moment().year(year).month(month);
+  };
 
   /**
    * Gets moment instance from year
@@ -103,6 +103,6 @@ export default class TimeUtils {
     }
 
     return moment().year(year);
-  }
-};
+  };
 
+}

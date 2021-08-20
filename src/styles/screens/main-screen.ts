@@ -16,7 +16,7 @@ const useMainScreenStyles = makeStyles({
     width: "calc(100vw - 400px)",
     [theme.breakpoints.down("sm")]: {
       display: "none"
-    },
+    }
   }
 
 }, {

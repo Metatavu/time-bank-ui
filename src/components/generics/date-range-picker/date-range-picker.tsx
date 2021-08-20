@@ -1,6 +1,4 @@
 import React from "react";
-import { selectPerson } from "features/person/person-slice";
-import { useAppSelector } from "app/hooks";
 import DateFnsUtils from "@date-io/date-fns";
 import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePickerView } from "@material-ui/pickers";
 import { FilterScopes } from "types";
@@ -24,7 +22,6 @@ interface Props {
   datePickerView: DatePickerView;
   onStartDateChange: (date: Date | null) => void;
   onEndDateChange: (date: Date | null) => void;
-  onDateFormatChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onStartWeekChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onEndWeekChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -32,8 +29,8 @@ interface Props {
 /**
  * Overview chart component
  */
-const DateRangePicker: React.FC<Props> = ({ 
-  scope, 
+const DateRangePicker: React.FC<Props> = ({
+  scope,
   dateFormat,
   selectedStartDate,
   selectedEndDate,
@@ -43,43 +40,79 @@ const DateRangePicker: React.FC<Props> = ({
   datePickerView,
   onStartDateChange,
   onEndDateChange,
-  onDateFormatChange,
   onStartWeekChange,
   onEndWeekChange
 }) => {
   const classes = useDateRangePickerStyles();
-  const { person } = useAppSelector(selectPerson);
 
-  const [ todayDate, /*setTodayDate*/ ] = React.useState(new Date());
+  const [ todayDate /* setTodayDate */ ] = React.useState(new Date());
   const [ currentWeekNumber, setCurrentWeekNumber ] = React.useState(0);
 
-  React.useEffect(() => {
-    initializeData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
+  /**
+   * Initialize the date data
+   */
   const initializeData = async () => {
     const currentWeek = TimeUtils.getCurrentWeek();
     setCurrentWeekNumber(currentWeek);
-  }
+  };
+
+  React.useEffect(() => {
+    initializeData();
+  }, []);
 
   /**
-   * Renders starting datepicker or week/year selector depending on scope
+   * Renders start week numbers to select component
    */
-  const renderStartDatePickersAndWeekSelector = () => {
-    return scope.toString() !== FilterScopes.WEEK ?
-      renderStartDatePicker() :
-      renderStartYearPickerAndWeekSelector();
-  }
+  const renderStartWeekNumbers = () => {
+    if (!selectedStartDate) {
+      return;
+    }
+
+    const weekOpts = [];
+
+    for (let week = 1; week <= currentWeekNumber; week++) {
+      weekOpts.push((
+        <MenuItem value={ week }>
+          { week }
+        </MenuItem>
+      ));
+    }
+
+    return weekOpts;
+  };
 
   /**
-   * Renders ending datepicker/week selector depending on scope
+   * Renders end week numbers to select component
    */
-  const renderEndDatePickersAndWeekSelector = () => {
-    return scope.toString() !== FilterScopes.WEEK ?
-      renderEndDate() :
-      renderEndYearPickerAndWeekSelector();
-  }
+  const renderEndWeekNumbers = () => {
+    if (!selectedEndDate) {
+      return;
+    }
+
+    const weekOpts = [];
+
+    if (selectedStartDate?.getFullYear() === selectedEndDate.getFullYear() && !!startWeek) {
+      for (let week = startWeek; week <= currentWeekNumber; week++) {
+        weekOpts.push((
+          <MenuItem value={ week }>
+            { week }
+          </MenuItem>
+        ));
+      }
+
+      return weekOpts;
+    }
+
+    for (let week = 1; week <= currentWeekNumber; week++) {
+      weekOpts.push((
+        <MenuItem value={ week }>
+          { week }
+        </MenuItem>
+      ));
+    }
+
+    return weekOpts;
+  };
 
   /**
    * Renders start date picker 
@@ -99,16 +132,16 @@ const DateRangePicker: React.FC<Props> = ({
           value={ selectedStartDate }
           onChange={ onStartDateChange }
           className={ classes.datePicker }
-          KeyboardButtonProps={{ "aria-label": `${ filterStartingDate }` }}
+          KeyboardButtonProps={{ "aria-label": `${filterStartingDate}` }}
         />
       </MuiPickersUtilsProvider>
     );
-  }
+  };
   
   /**
    * Renders start year picker and week selector 
    */
-  const renderStartYearPickerAndWeekSelector = () =>  (
+  const renderStartYearPickerAndWeekSelector = () => (
     <>
       <MuiPickersUtilsProvider utils={ DateFnsUtils } >
         <KeyboardDatePicker
@@ -121,7 +154,7 @@ const DateRangePicker: React.FC<Props> = ({
           value={ selectedStartDate }
           onChange={ onStartDateChange }
           className={ classes.yearPicker }
-          KeyboardButtonProps={{ "aria-label": `${ strings.editorContent.filterStartingDate }` }}
+          KeyboardButtonProps={{ "aria-label": `${strings.editorContent.filterStartingDate}` }}
         />
       </MuiPickersUtilsProvider>
       <TextField
@@ -136,7 +169,6 @@ const DateRangePicker: React.FC<Props> = ({
       </TextField>
     </>
   );
-  
 
   /**
    * Renders end date picker
@@ -152,10 +184,10 @@ const DateRangePicker: React.FC<Props> = ({
         minDate={ selectedStartDate }
         maxDate={ todayDate }
         label={ strings.editorContent.filterEndingDate }
-        value={ selectedEndDate } 
+        value={ selectedEndDate }
         onChange={ onEndDateChange }
         className={ classes.datePicker }
-        KeyboardButtonProps={{ "aria-label": `${ strings.editorContent.filterEndingDate }`}}
+        KeyboardButtonProps={{ "aria-label": `${strings.editorContent.filterEndingDate}` }}
       />
     </MuiPickersUtilsProvider>
   );
@@ -178,7 +210,7 @@ const DateRangePicker: React.FC<Props> = ({
           value={ selectedEndDate }
           onChange={ onEndDateChange }
           className={ classes.yearPicker }
-          KeyboardButtonProps={{ "aria-label": `${ strings.editorContent.filterStartingDate }` }}
+          KeyboardButtonProps={{ "aria-label": `${strings.editorContent.filterStartingDate}` }}
         />
       </MuiPickersUtilsProvider>
       <TextField
@@ -198,57 +230,21 @@ const DateRangePicker: React.FC<Props> = ({
   );
 
   /**
-   * Renders start week numbers to select component
+   * Renders starting datepicker or week/year selector depending on scope
    */
-  const renderStartWeekNumbers = () => {
-    if (!selectedStartDate) {
-      return;
-    }
-
-    const weekOpts = []
-
-    for (let week = 1; week <= currentWeekNumber; week++) {
-      weekOpts.push((
-        <MenuItem value={ week }>
-          { week }
-        </MenuItem>
-      ))
-    }
-
-    return weekOpts;
+  const renderStartDatePickersAndWeekSelector = () => {
+    return scope.toString() !== FilterScopes.WEEK ?
+      renderStartDatePicker() :
+      renderStartYearPickerAndWeekSelector();
   };
-
+  
   /**
-   * Renders end week numbers to select component
+   * Renders ending datepicker/week selector depending on scope
    */
-  const renderEndWeekNumbers = () => {
-    if (!selectedEndDate) {
-      return;
-    }
-
-    const weekOpts = []
-
-    if (selectedStartDate?.getFullYear() === selectedEndDate.getFullYear() && !!startWeek) {
-      for (let week = startWeek; week <= currentWeekNumber; week++) {
-        weekOpts.push((
-          <MenuItem value={ week }>
-            { week }
-          </MenuItem>
-        ))
-      } 
-
-      return weekOpts;
-    }
-
-    for (let week = 1; week <= currentWeekNumber; week++) {
-      weekOpts.push((
-        <MenuItem value={ week }>
-          { week }
-        </MenuItem>
-      ))
-    } 
-
-    return weekOpts;
+  const renderEndDatePickersAndWeekSelector = () => {
+    return scope.toString() !== FilterScopes.WEEK ?
+      renderEndDate() :
+      renderEndYearPickerAndWeekSelector();
   };
 
   /**
@@ -270,6 +266,6 @@ const DateRangePicker: React.FC<Props> = ({
       </Box>
     </>
   );
-}
+};
 
 export default DateRangePicker;

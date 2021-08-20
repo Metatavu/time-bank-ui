@@ -40,7 +40,7 @@ const useDrawerContentStyles = makeStyles({
 
   accordinDetails: {
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "column"
   },
 
   accordinRow: {
@@ -83,14 +83,14 @@ const useDrawerContentStyles = makeStyles({
     display: "flex",
     justifyContent: "center",
     "& .MuiButton-label": {
-      fontSize: 12,
+      fontSize: 12
     }
   },
 
   pieChartContainer: {
     height: "150px !important",
     "& .recharts-wrapper .recharts-surface": {
-      overflow: "visible",
+      overflow: "visible"
     }
   }
 

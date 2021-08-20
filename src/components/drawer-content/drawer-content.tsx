@@ -40,12 +40,12 @@ const DrawerContent: React.FC<Props> = () => {
    */
   const fetchPersonData = async () => {
     try {
-      const persons = await Api.getTimeBankApi().timebankControllerGetPersons();
-      setPersons(persons);
+      const fetchedPersons = await Api.getTimeBankApi().timebankControllerGetPersons();
+      setPersons(fetchedPersons);
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   /**
    * Fetches the total work time data 
@@ -53,12 +53,12 @@ const DrawerContent: React.FC<Props> = () => {
   const fetchWorkTimeData = async () => {
     if (person && person.id) {
       try {
-        const personTotalTime = await Api.getTimeBankApi()
-        .timebankControllerGetTotal({
-          personId: person.id.toString(),
-          retention: TimebankControllerGetTotalRetentionEnum.ALLTIME
-        });
-        dispatch(setPersonTotalTime(personTotalTime[0]))
+        const fetchedPersonTotalTime = await Api.getTimeBankApi()
+          .timebankControllerGetTotal({
+            personId: person.id.toString(),
+            retention: TimebankControllerGetTotalRetentionEnum.ALLTIME
+          });
+        dispatch(setPersonTotalTime(fetchedPersonTotalTime[0]));
       } catch (error) {
         console.error(error);
       }
@@ -70,8 +70,7 @@ const DrawerContent: React.FC<Props> = () => {
   }, []);
 
   React.useEffect(() => {
-    fetchWorkTimeData();    
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    fetchWorkTimeData();
   }, [ person ]);
 
   /**
@@ -167,70 +166,6 @@ const DrawerContent: React.FC<Props> = () => {
   };
 
   /**
-   * Renders the Total work time section
-   */
-  const renderTotalWorkTime = () => {
-    if (!personTotalTime) {
-      return null;
-    }
-    let totalHour = TimeUtils.minuteToHourString(personTotalTime.total);
-    personTotalTime.total >= 0 && (totalHour = `+${totalHour}`);
-    const totalColor = personTotalTime.total < 0 ?
-      theme.palette.error.dark :
-      theme.palette.success.main;
-
-    const workTimeDatas: WorkTimeTotalData[] = [
-      { name: WorkTimeCategory.PROJECT, total: personTotalTime.projectTime },
-      { name: WorkTimeCategory.INTERNAL, total: personTotalTime.internalTime, },
-    ];
-
-    const COLORS = [ theme.palette.success.main, theme.palette.warning.main ];
-
-    return (
-      <>
-        <Accordion defaultExpanded className={ classes.drawerAccordin }>
-          <AccordionSummary
-            expandIcon={ <ExpandMoreIcon/> }
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            <Typography variant="h4" style={{ fontWeight: 600 }}>
-              { strings.drawerContent.statistics }
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails className={ classes.accordinDetails }>
-            <Box 
-              p={ 1 }
-              paddingRight={ 3 }
-              width="100%"
-            >
-              { renderAccordinRow(`${strings.total}:`, totalHour, totalColor) }
-              { renderAccordinRow(`${strings.logged}:`, TimeUtils.minuteToHourString(personTotalTime.logged)) }
-              { renderAccordinRow(`${strings.expected}:`, TimeUtils.minuteToHourString(personTotalTime.expected)) }
-            </Box>
-            <ResponsiveContainer className={ classes.pieChartContainer }>
-              <PieChart>
-                <Pie
-                  cx="50%"
-                  cy="50%"
-                  dataKey="total"
-                  data={ workTimeDatas }
-                  label={ renderCustomizedLabel }
-                >
-                  { workTimeDatas.map((entry, index) => (
-                    <Cell key={ index } fill={ COLORS[index % COLORS.length] } />
-                  )) }
-                </Pie>
-                <Tooltip content={ renderCustomizedTooltip }/>
-              </PieChart>
-            </ResponsiveContainer>
-          </AccordionDetails>
-        </Accordion>
-      </>
-    );
-  };
-
-  /**
    * Renders the customized label for charts
    * 
    * @param props props of the custom label
@@ -264,7 +199,7 @@ const DrawerContent: React.FC<Props> = () => {
 
     return (
       <Box style={{ backgroundColor: "rgba(0, 0, 0)" }}>
-        <Typography 
+        <Typography
           variant="h6"
           style={{
             color: "#fff",
@@ -274,7 +209,71 @@ const DrawerContent: React.FC<Props> = () => {
           { `${sectionName}: ${TimeUtils.minuteToHourString(selectedData.value as number)}` }
         </Typography>
       </Box>
-    )
+    );
+  };
+
+  /**
+   * Renders the Total work time section
+   */
+  const renderTotalWorkTime = () => {
+    if (!personTotalTime) {
+      return null;
+    }
+    let totalHour = TimeUtils.minuteToHourString(personTotalTime.total);
+    personTotalTime.total >= 0 && (totalHour = `+${totalHour}`);
+    const totalColor = personTotalTime.total < 0 ?
+      theme.palette.error.dark :
+      theme.palette.success.main;
+
+    const workTimeDatas: WorkTimeTotalData[] = [
+      { name: WorkTimeCategory.PROJECT, total: personTotalTime.projectTime },
+      { name: WorkTimeCategory.INTERNAL, total: personTotalTime.internalTime }
+    ];
+
+    const COLORS = [ theme.palette.success.main, theme.palette.warning.main ];
+
+    return (
+      <>
+        <Accordion defaultExpanded className={ classes.drawerAccordin }>
+          <AccordionSummary
+            expandIcon={ <ExpandMoreIcon/> }
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography variant="h4" style={{ fontWeight: 600 }}>
+              { strings.drawerContent.statistics }
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails className={ classes.accordinDetails }>
+            <Box
+              p={ 1 }
+              paddingRight={ 3 }
+              width="100%"
+            >
+              { renderAccordinRow(`${strings.total}:`, totalHour, totalColor) }
+              { renderAccordinRow(`${strings.logged}:`, TimeUtils.minuteToHourString(personTotalTime.logged)) }
+              { renderAccordinRow(`${strings.expected}:`, TimeUtils.minuteToHourString(personTotalTime.expected)) }
+            </Box>
+            <ResponsiveContainer className={ classes.pieChartContainer }>
+              <PieChart>
+                <Pie
+                  cx="50%"
+                  cy="50%"
+                  dataKey="total"
+                  data={ workTimeDatas }
+                  label={ renderCustomizedLabel }
+                >
+                  { workTimeDatas.map((entry, index) => (
+                    <Cell fill={ COLORS[index % COLORS.length] }/>
+                  )) }
+                </Pie>
+                <Tooltip content={ renderCustomizedTooltip }/>
+              </PieChart>
+            </ResponsiveContainer>
+          </AccordionDetails>
+        </Accordion>
+      </>
+    );
   };
 
   /**

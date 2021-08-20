@@ -5,7 +5,7 @@ export default makeStyles({
 
   chartContainer: {
     "& .recharts-wrapper .recharts-surface": {
-      overflow: "overlay",
+      overflow: "overlay"
     }
   },
 

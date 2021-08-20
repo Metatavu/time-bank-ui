@@ -2,7 +2,7 @@ import React from "react";
 import { selectPerson } from "features/person/person-slice";
 import { useAppSelector } from "app/hooks";
 import useOverviewChartStyles from "styles/generics/overview-chart/overview-chart";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, TooltipProps } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, TooltipProps } from "recharts";
 import { WorkTimeCategory, WorkTimeData } from "types";
 import theme from "theme/theme";
 import { Box, CircularProgress, Typography } from "@material-ui/core";
@@ -31,74 +31,26 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
     return null;
   }
 
-
   /**
-   * Renders the horizontal chart 
+   * Renders the customized tooltip row
+   * 
+   * @param name name of the tooltip row
+   * @param time time of the tooltip row
+   * @param color color of the tooltip row
    */
-  const renderHorizontalChart = () => {
-    const preprocessedWorkTimeData = [
-      {
-        name: WorkTimeCategory.LOGGED,
-        project: displayedData[0].project,
-        internal: displayedData[0].internal 
-      },
-      {
-        name: WorkTimeCategory.EXPECTED,
-        expected: displayedData[0].expected
-      }
-    ]
-
+  const renderCustomizedTooltipRow = (name: string, time: number, color: string) => {
     return (
-      <ResponsiveContainer className={ classes.chartContainer }>
-        <BarChart
-          data={ preprocessedWorkTimeData }
-          layout="vertical" 
-          margin={{
-            top: 20,
-            right: 40,
-            left: 60,
-            bottom: 5,
-          }}
-        >
-          <XAxis type="number" hide/>
-          <YAxis type="category" dataKey="name"/>
-          <Tooltip content={ renderCustomizedTooltip }/>
-          <Legend />
-          <Bar dataKey="project" barSize={ 60 } stackId="a" fill={ theme.palette.success.main } />
-          <Bar dataKey="internal" barSize={ 60 } stackId="a" fill={ theme.palette.warning.main } />
-          <Bar dataKey="expected" barSize={ 60 } stackId="a" fill={ theme.palette.info.main } />
-        </BarChart>
-      </ResponsiveContainer>
+      <Typography
+        variant="h6"
+        style={{
+          color: color,
+          padding: theme.spacing(1)
+        }}
+      >
+        { `${name}: ${TimeUtils.minuteToHourString(time)}` }
+      </Typography>
     );
-  }
-
-  /**
-   * Renders the vertical chart 
-   */
-  const renderVerticalChart = () => {
-    return (
-      <ResponsiveContainer className={ classes.chartContainer }>
-        <BarChart
-          data={ displayedData }
-          margin={{
-            top: 20,
-            right: 30,
-            left: 10,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis width={ 100 } tickFormatter={ value => TimeUtils.minuteToHourString(value as number) }/>
-          <Tooltip content={ renderCustomizedTooltip }/>
-          <Legend wrapperStyle={{ position: 'relative' }}/>
-          <Bar dataKey="project" stackId="a" fill={ theme.palette.success.main } />
-          <Bar dataKey="internal" stackId="a" fill={ theme.palette.warning.main } />
-          <Bar dataKey="expected" fill={ theme.palette.info.main } />
-        </BarChart>
-      </ResponsiveContainer>
-    );
-  }
+  };
 
   /**
    * Renders the customized tooltip for charts
@@ -120,33 +72,80 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
         { (selectedData.internal !== undefined) && renderCustomizedTooltipRow(strings.internal, selectedData.internal as number, theme.palette.warning.main) }
         { (selectedData.expected !== undefined) && renderCustomizedTooltipRow(strings.expected, selectedData.expected as number, theme.palette.info.main) }
       </Box>
-    )
+    );
   };
 
   /**
-   * Renders the customized tooltip row
-   * 
-   * @param name name of the tooltip row
-   * @param time time of the tooltip row
-   * @param color color of the tooltip row
+   * Renders the horizontal chart 
    */
-  const renderCustomizedTooltipRow = (name: string, time: number, color: string) => {
+  const renderHorizontalChart = () => {
+    const preprocessedWorkTimeData = [
+      {
+        name: WorkTimeCategory.LOGGED,
+        project: displayedData[0].project,
+        internal: displayedData[0].internal
+      },
+      {
+        name: WorkTimeCategory.EXPECTED,
+        expected: displayedData[0].expected
+      }
+    ];
+
     return (
-      <Typography 
-        variant="h6"
-        style={{
-          color: color,
-          padding: theme.spacing(1)
-        }}
-      >
-      { `${name}: ${TimeUtils.minuteToHourString(time)}` }
-    </Typography>
+      <ResponsiveContainer className={ classes.chartContainer }>
+        <BarChart
+          data={ preprocessedWorkTimeData }
+          layout="vertical"
+          margin={{
+            top: 20,
+            right: 40,
+            left: 60,
+            bottom: 5
+          }}
+        >
+          <XAxis type="number" hide/>
+          <YAxis type="category" dataKey="name"/>
+          <Tooltip content={ renderCustomizedTooltip }/>
+          <Legend/>
+          <Bar dataKey="project" barSize={ 60 } stackId="a" fill={ theme.palette.success.main }/>
+          <Bar dataKey="internal" barSize={ 60 } stackId="a" fill={ theme.palette.warning.main }/>
+          <Bar dataKey="expected" barSize={ 60 } stackId="a" fill={ theme.palette.info.main }/>
+        </BarChart>
+      </ResponsiveContainer>
+    );
+  };
+
+  /**
+   * Renders the vertical chart 
+   */
+  const renderVerticalChart = () => {
+    return (
+      <ResponsiveContainer className={ classes.chartContainer }>
+        <BarChart
+          data={ displayedData }
+          margin={{
+            top: 20,
+            right: 30,
+            left: 10,
+            bottom: 5
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3"/>
+          <XAxis dataKey="name"/>
+          <YAxis width={ 100 } tickFormatter={ value => TimeUtils.minuteToHourString(value as number) }/>
+          <Tooltip content={ renderCustomizedTooltip }/>
+          <Legend wrapperStyle={{ position: "relative" }}/>
+          <Bar dataKey="project" stackId="a" fill={ theme.palette.success.main }/>
+          <Bar dataKey="internal" stackId="a" fill={ theme.palette.warning.main }/>
+          <Bar dataKey="expected" fill={ theme.palette.info.main }/>
+        </BarChart>
+      </ResponsiveContainer>
     );
   };
 
   if (isLoading) {
-    return(
-      <CircularProgress/ >
+    return (
+      <CircularProgress/>
     );
   }
 
@@ -158,6 +157,6 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
   }
 
   return renderVerticalChart();
-}
+};
 
 export default OverviewChart;

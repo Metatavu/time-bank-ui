@@ -1,7 +1,6 @@
 import { makeStyles } from "@material-ui/core";
 import theme from "theme/theme";
 
-
 const useEditorContentStyles = makeStyles({
 
   emptyFilterContainer: {
@@ -29,7 +28,7 @@ const useEditorContentStyles = makeStyles({
 
   filterContent: {
     height: 100,
-    display: "flex", 
+    display: "flex",
     alignItems: "center",
     padding: theme.spacing(3),
     paddingLeft: theme.spacing(5)
@@ -43,20 +42,19 @@ const useEditorContentStyles = makeStyles({
     borderColor: "rgba(0, 0, 0)"
   },
 
-
   chartsContainer: {
     marginTop: theme.spacing(6),
-    width: "100%",
+    width: "100%"
   },
   
   startDateOnly: {
     marginLeft: theme.spacing(5),
     display: "flex",
-    alignItems: "center"  
+    alignItems: "center"
   },
   
   filterSubtitle: {
-    display: "flex", 
+    display: "flex",
     height: "100%",
     alignItems: "center",
     marginLeft: "auto"
@@ -92,9 +90,9 @@ const useEditorContentStyles = makeStyles({
 
   datePickers: {
     marginLeft: "auto",
-    display: "flex", 
-    alignItems: "center",
-  },
+    display: "flex",
+    alignItems: "center"
+  }
 
 }, {
   name: "editor-content"
