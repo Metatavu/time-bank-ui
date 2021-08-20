@@ -1,5 +1,6 @@
 import React from "react";
 import { Accordion, AccordionDetails, AccordionSummary, Box, Divider, TextField, Typography } from "@material-ui/core";
+import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer, TooltipProps } from "recharts";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import UserInfo from "components/generics/user-info/user-info";
 import useDrawerContentStyles from "styles/drawer-content/drawer-content";
@@ -12,6 +13,8 @@ import { useAppDispatch, useAppSelector } from "app/hooks";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import TimeUtils from "utils/time-utils";
 import theme from "theme/theme";
+import { CustomPieLabel, WorkTimeCategory, WorkTimeTotalData } from "types/index";
+import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 
 /**
  * Component properties
@@ -36,7 +39,12 @@ const DrawerContent: React.FC<Props> = () => {
    * Fetches the person data 
    */
   const fetchPersonData = async () => {
-    Api.getTimeBankApi().timebankControllerGetPersons().then(setPersons);
+    try {
+      const fetchedPersons = await Api.getTimeBankApi().timebankControllerGetPersons();
+      setPersons(fetchedPersons);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   /**
@@ -44,13 +52,16 @@ const DrawerContent: React.FC<Props> = () => {
    */
   const fetchWorkTimeData = async () => {
     if (person && person.id) {
-      Api.getTimeBankApi()
-        .timebankControllerGetTotal({
-          personId: person.id.toString(),
-          retention: TimebankControllerGetTotalRetentionEnum.ALLTIME
-        })
-        .then(fetchedPersonTotalTime =>
-          dispatch(setPersonTotalTime(fetchedPersonTotalTime[0])));
+      try {
+        const fetchedPersonTotalTime = await Api.getTimeBankApi()
+          .timebankControllerGetTotal({
+            personId: person.id.toString(),
+            retention: TimebankControllerGetTotalRetentionEnum.ALLTIME
+          });
+        dispatch(setPersonTotalTime(fetchedPersonTotalTime[0]));
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
@@ -155,6 +166,53 @@ const DrawerContent: React.FC<Props> = () => {
   };
 
   /**
+   * Renders the customized label for charts
+   * 
+   * @param props props of the custom label
+   */
+  const renderCustomizedLabel = (props: CustomPieLabel) => {
+    return TimeUtils.minuteToHourString(props.value);
+  };
+
+  /**
+   * Renders the customized tooltip for charts
+   * 
+   * @param props props of the custom tooltip
+   */
+  const renderCustomizedTooltip = (props: TooltipProps<ValueType, NameType>) => {
+    const { active, payload } = props;
+
+    if (!active || !payload || !payload.length) {
+      return null;
+    }
+
+    const selectedData = payload[0];
+
+    if (!selectedData.value || !selectedData.name) {
+      return null;
+    }
+
+    const sectionName = {
+      [WorkTimeCategory.PROJECT]: strings.project,
+      [WorkTimeCategory.INTERNAL]: strings.internal
+    }[selectedData.name];
+
+    return (
+      <Box style={{ backgroundColor: "rgba(0, 0, 0)" }}>
+        <Typography
+          variant="h6"
+          style={{
+            color: "#fff",
+            padding: theme.spacing(1)
+          }}
+        >
+          { `${sectionName}: ${TimeUtils.minuteToHourString(selectedData.value as number)}` }
+        </Typography>
+      </Box>
+    );
+  };
+
+  /**
    * Renders the Total work time section
    */
   const renderTotalWorkTime = () => {
@@ -167,9 +225,16 @@ const DrawerContent: React.FC<Props> = () => {
       theme.palette.error.dark :
       theme.palette.success.main;
 
+    const workTimeDatas: WorkTimeTotalData[] = [
+      { name: WorkTimeCategory.PROJECT, total: personTotalTime.projectTime },
+      { name: WorkTimeCategory.INTERNAL, total: personTotalTime.internalTime }
+    ];
+
+    const COLORS = [ theme.palette.success.main, theme.palette.warning.main ];
+
     return (
       <>
-        <Accordion className={ classes.drawerAccordin }>
+        <Accordion defaultExpanded className={ classes.drawerAccordin }>
           <AccordionSummary
             expandIcon={ <ExpandMoreIcon/> }
             aria-controls="panel1a-content"
@@ -179,7 +244,7 @@ const DrawerContent: React.FC<Props> = () => {
               { strings.drawerContent.statistics }
             </Typography>
           </AccordionSummary>
-          <AccordionDetails>
+          <AccordionDetails className={ classes.accordinDetails }>
             <Box
               p={ 1 }
               paddingRight={ 3 }
@@ -189,6 +254,22 @@ const DrawerContent: React.FC<Props> = () => {
               { renderAccordinRow(`${strings.logged}:`, TimeUtils.minuteToHourString(personTotalTime.logged)) }
               { renderAccordinRow(`${strings.expected}:`, TimeUtils.minuteToHourString(personTotalTime.expected)) }
             </Box>
+            <ResponsiveContainer className={ classes.pieChartContainer }>
+              <PieChart>
+                <Pie
+                  cx="50%"
+                  cy="50%"
+                  dataKey="total"
+                  data={ workTimeDatas }
+                  label={ renderCustomizedLabel }
+                >
+                  { workTimeDatas.map((entry, index) => (
+                    <Cell fill={ COLORS[index % COLORS.length] }/>
+                  )) }
+                </Pie>
+                <Tooltip content={ renderCustomizedTooltip }/>
+              </PieChart>
+            </ResponsiveContainer>
           </AccordionDetails>
         </Accordion>
       </>

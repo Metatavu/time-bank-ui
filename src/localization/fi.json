@@ -30,7 +30,10 @@
   },
 
   "editorContent": {
-    "userNotSelected": "Valitse ensin käyttäjä",
+    "userNotSelected": "Valitse ensin käyttäjä.",
+    "noTimeEntries": "Valitulle käyttäjälle ei löytynyt kirjattua aikaa",
+    "overview": "Yleisnäkymä",
+    "total": "Yhteensä",
     "workTime": "Työaika",
     "filterStartingDate": "Alku",
     "filterEndingDate": "Loppu",
@@ -41,12 +44,18 @@
     "selectYearStart": "Mistä",
     "selectWeekStart": "Mistä",
     "selectWeekEnd": "Mihin",
-    "selectYearEnd": "Mihin"
+    "selectYearEnd": "Mihin",
+    "from": "Jälkeen",
+    "to": "Ennen",
+    "startOnly": "Vain aloitusviikko"
   },
 
+  "week": "Viikko",
   "logged": "Kirjattu",
   "expected": "Odotettu",
   "total": "Erotus",
+  "project": "Projekti",
+  "internal": "Sisäinen",
   "sunday": "Sunnuntai",
   "monday": "Maanantai",
   "tuesday": "Tiistai",

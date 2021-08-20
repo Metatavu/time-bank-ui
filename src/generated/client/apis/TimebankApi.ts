@@ -28,8 +28,8 @@ import {
 
 export interface TimebankControllerGetEntriesRequest {
     personId: string;
-    before?: Date;
-    after?: Date;
+    before?: string;
+    after?: string;
 }
 
 export interface TimebankControllerGetTotalRequest {

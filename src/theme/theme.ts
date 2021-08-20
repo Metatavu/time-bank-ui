@@ -97,6 +97,11 @@ export default createMuiTheme({
         justifyContent: "space-between"
       }
     },
+    MuiFormLabel: {
+      root: {
+        color: "rgba(0, 0, 0, 0.54)"
+      }
+    },
     MuiDivider: {
       root: {
         width: "100%"

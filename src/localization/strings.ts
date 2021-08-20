@@ -51,6 +51,9 @@ export interface IStrings extends LocalizedStringsMethods {
    */
   editorContent: {
     userNotSelected: string;
+    noTimeEntries: string;
+    overview: string;
+    total: string;
     workTime: string;
     filterStartingDate: string;
     filterEndingDate: string;
@@ -62,11 +65,17 @@ export interface IStrings extends LocalizedStringsMethods {
     selectYearEnd: string;
     selectWeekStart: string;
     selectWeekEnd: string;
+    from: string;
+    to: string;
+    startOnly: string;
   };
 
+  week: string;
   logged: string;
   expected: string;
   total: string;
+  project: string;
+  internal: string;
   sunday: string;
   monday: string;
   tuesday: string;

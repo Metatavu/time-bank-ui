@@ -50,6 +50,7 @@ const useAppLayoutStyles = makeStyles({
   content: {
     backgroundColor: theme.palette.background.default,
     flexGrow: 1,
+    overflowX: "hidden",
     [theme.breakpoints.down("sm")]: {
       display: "none"
     }

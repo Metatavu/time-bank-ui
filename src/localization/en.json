@@ -30,7 +30,10 @@
   },
 
   "editorContent": {
-    "userNotSelected": "Please select a user first",
+    "userNotSelected": "Please select a user first.",
+    "noTimeEntries": "No time entries found for this user.",
+    "overview": "Overview",
+    "total": "Total",
     "workTime": "Work time",
     "filterStartingDate": "Start",
     "filterEndingDate": "End",
@@ -41,12 +44,18 @@
     "selectWeekEnd": "Week-end",
     "selectYearEnd": "Year-end",
     "selectYearStart": "Year-start",
-    "selectWeekStart": "Week-start"
+    "selectWeekStart": "Week-start",
+    "from": "From",
+    "to": "To",
+    "startOnly": "Start only"
   },
 
+  "week": "Week",
   "logged": "Logged",
   "expected": "Expected",
   "total": "Difference",
+  "project": "Project",
+  "internal": "Internal",
   "sunday": "Sunday",
   "monday": "Monday",
   "tuesday": "Tuesday",
