@@ -1,3 +1,4 @@
+import { TimeEntryTotalDto } from "generated/client/models";
 import moment from "moment";
 
 /**
@@ -37,8 +38,20 @@ export default class TimeUtils {
    * @return true if within range, false otherwise
    */
   public static DateInRange = (startDate: Date | moment.Moment, endDate: Date | moment.Moment, date: moment.Moment): boolean => {
-    console.log("startDate, endDate, date", startDate, endDate, date);
     return date.isBetween(startDate, endDate);
+  };
+
+  /**
+   * Sorts two different entries by month
+   * 
+   * @param entry1 first entry
+   * @param entry2 second entry
+   * @return positive integer if entry1 is greater than entry2, negative integer if otherwise, 0 if equal
+   */
+  public static sortEntriesByWeek = (entry1: TimeEntryTotalDto, entry2: TimeEntryTotalDto): number => {
+    const date1 = TimeUtils.getWeekFromEntry(entry1);
+    const date2 = TimeUtils.getWeekFromEntry(entry2);
+    return date1.diff(date2);
   };
 
   /**
@@ -64,18 +77,17 @@ export default class TimeUtils {
   };
 
   /**
-   * Gets moment instance from year and week numbers
+   * Gets moment instance from entry (precision 1 month)
    *
-   * @param year year number
-   * @param week week number
-   * @returns moment instance from given parameters
+   * @param entry TimeEntryTotalDto entry
+   * @returns moment instance from given entry
    */
-  public static getMomentFromYearAndWeek = (year?: number, week?: number) => {
-    if (!year || !week) {
+  public static getWeekFromEntry = (entry: TimeEntryTotalDto) => {
+    if (!entry.id?.year || !entry.id?.week) {
       throw new Error("Malformed data!");
     }
-
-    return moment().year(year).week(week);
+  
+    return moment().year(entry.id.year).week(entry.id.week);
   };
 
   /**
@@ -89,21 +101,21 @@ export default class TimeUtils {
       throw new Error("Malformed data!");
     }
   
-    return moment().year(entry.id.year).month(entry.id.month);
+    return moment().year(entry.id.year).month(entry.id.month - 1);
   };
 
   /**
    * Gets moment instance from year
    *
-   * @param year year number
+   * @param entry TimeEntryTotalDto entry
    * @returns moment instance from given parameters
    */
-  public static getMomentFromYear = (year?: number) => {
-    if (!year) {
+  public static getYearFromEntry = (entry: TimeEntryTotalDto) => {
+    if (!entry.id?.year) {
       throw new Error("Malformed data!");
     }
 
-    return moment().year(year);
+    return moment().year(entry.id?.year);
   };
 
 }

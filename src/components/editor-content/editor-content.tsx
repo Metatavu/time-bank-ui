@@ -111,14 +111,11 @@ const EditorContent: React.FC<Props> = () => {
         entry => TimeUtils.DateInRange(
           startMoment.startOf("week"),
           endMoment.endOf("week"),
-          TimeUtils.getMomentFromYearAndWeek(entry.id?.year, entry.id?.week)
+          TimeUtils.getWeekFromEntry(entry)
         )
       );
 
-      filteredWeekEntries.sort((entry1, entry2) => TimeUtils.WeekOrMonthComparator(
-        TimeUtils.getMomentFromYearAndWeek(entry1.id?.year, entry1.id?.week),
-        TimeUtils.getMomentFromYearAndWeek(entry2.id?.year, entry2.id?.week)
-      ));
+      filteredWeekEntries.sort(TimeUtils.sortEntriesByWeek);
 
       const { workTimeData, workTimeTotalData } = WorkTimeDataUtils.weeksYearsAndMonthsPreprocess(filteredWeekEntries, FilterScopes.WEEK);
 
@@ -151,14 +148,11 @@ const EditorContent: React.FC<Props> = () => {
         entry => TimeUtils.DateInRange(
           startMoment.startOf("month"),
           endMoment.endOf("month"),
-          TimeUtils.getMomentFromYearAndMonth(entry.id?.year!, entry.id?.month! - 1)
+          TimeUtils.getMonthFromEntry(entry)
         )
       );
 
-      monthEntries.sort((entry1, entry2) => TimeUtils.WeekOrMonthComparator(
-        moment().year(entry1.id?.year!).month(entry1.id?.month!),
-        moment().year(entry2.id?.year!).month(entry2.id?.month!),
-      ));
+      monthEntries.sort(TimeUtils.sortEntriesByMonth);
 
       const { workTimeData, workTimeTotalData } = WorkTimeDataUtils.weeksYearsAndMonthsPreprocess(filteredMonthEntries, FilterScopes.MONTH);
   
@@ -191,7 +185,7 @@ const EditorContent: React.FC<Props> = () => {
         entry => TimeUtils.DateInRange(
           startMoment.startOf("year"),
           endMoment.endOf("year"),
-          TimeUtils.getMomentFromYear(entry.id?.year!)
+          TimeUtils.getYearFromEntry(entry)
         )
       );
   
