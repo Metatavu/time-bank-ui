@@ -3,7 +3,7 @@ import { selectPerson } from "features/person/person-slice";
 import { useAppSelector } from "app/hooks";
 import useOverviewChartStyles from "styles/generics/overview-chart/overview-chart";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, TooltipProps } from "recharts";
-import { WorkTimeCategory, WorkTimeData } from "types";
+import { WorkTimeData } from "types";
 import theme from "theme/theme";
 import { Box, CircularProgress, Typography } from "@material-ui/core";
 import TimeUtils from "utils/time-utils";
@@ -68,6 +68,14 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
 
     return (
       <Box className={ classes.customTooltipContainer }>
+        <Typography
+          variant="h6"
+          style={{
+            padding: theme.spacing(1)
+          }}
+        >
+          { selectedData.name }
+        </Typography>
         { (selectedData.project !== undefined) && renderCustomizedTooltipRow(strings.project, selectedData.project as number, theme.palette.success.main) }
         { (selectedData.internal !== undefined) && renderCustomizedTooltipRow(strings.internal, selectedData.internal as number, theme.palette.warning.main) }
         { (selectedData.expected !== undefined) && renderCustomizedTooltipRow(strings.expected, selectedData.expected as number, theme.palette.info.main) }
@@ -81,12 +89,12 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
   const renderHorizontalChart = () => {
     const preprocessedWorkTimeData = [
       {
-        name: WorkTimeCategory.LOGGED,
+        name: strings.logged,
         project: displayedData[0].project,
         internal: displayedData[0].internal
       },
       {
-        name: WorkTimeCategory.EXPECTED,
+        name: strings.expected,
         expected: displayedData[0].expected
       }
     ];
