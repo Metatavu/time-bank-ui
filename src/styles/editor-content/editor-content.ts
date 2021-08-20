@@ -3,7 +3,7 @@ import theme from "theme/theme";
 
 const useEditorContentStyles = makeStyles({
 
-  filterContainer: {
+  emptyFilterContainer: {
     width: "100%",
     height: 72,
     display: "flex",
@@ -16,51 +16,84 @@ const useEditorContentStyles = makeStyles({
     }
   },
 
-  selectScope: {
-    width: "7rem",
-    marginRight: "2rem",
-    marginLeft: "2rem"
-  },
-
-  timeFilter: {
-    width: "15rem",
-    float: "right",
-    marginLeft: "1rem",
-    marginRight: "1rem",
-    "& .MuiInputLabel-root": {
-      color: "rgba(0, 0, 0, 0.54)"
-    }
-  },
-
-  timeFilterYearSelector: {
-    width: "8rem",
-    marginRight: "1rem",
-    "& .MuiInputLabel-root": {
-      color: "rgba(0, 0, 0, 0.54)"
-    }
-  },
-
-  overviewContainer: {
-    marginTop: theme.spacing(6),
-    width: "100%",
-    height: 1200
-  },
-  
-  selectWeekNumbers: {
-    width: "8rem",
-    marginRight: "1rem",
-    "& .MuiFormLabel-root": {
-      color: "rgba(0, 0, 0, 0.54)"
-    }
-  },
-  
-  filtersContainer: {
-    marginLeft: "auto",
+  filterSummary: {
+    height: 72,
     display: "flex",
     alignItems: "center",
-    width: "45rem"
-  }
+    padding: `0px ${theme.spacing(3)}px`,
+    "&.Mui-expanded": {
+      borderBottom: "1px solid rgba(0, 0, 0, 0.2)"
+    }
+  },
+
+  filterContent: {
+    height: 100,
+    display: "flex",
+    alignItems: "center",
+    padding: theme.spacing(3),
+    paddingLeft: theme.spacing(5)
+  },
+
+  scopeSelector: {
+    width: 120
+  },
+
+  notchedOutline: {
+    borderColor: "rgba(0, 0, 0)"
+  },
+
+  chartsContainer: {
+    marginTop: theme.spacing(6),
+    width: "100%"
+  },
   
+  startDateOnly: {
+    marginLeft: theme.spacing(5),
+    display: "flex",
+    alignItems: "center"
+  },
+  
+  filterSubtitle: {
+    display: "flex",
+    height: "100%",
+    alignItems: "center",
+    marginLeft: "auto"
+  },
+
+  overViewContainer: {
+    padding: `${theme.spacing(3)}px ${theme.spacing(4)}px`
+  },
+
+  overViewChartContainer: {
+    width: "100%",
+    height: 450,
+    paddingTop: theme.spacing(5),
+    paddingBottom: theme.spacing(5),
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+
+  totalContainer: {
+    padding: `${theme.spacing(3)}px ${theme.spacing(4)}px`
+  },
+
+  totalChartContainer: {
+    width: "100%",
+    height: 250,
+    paddingTop: theme.spacing(5),
+    paddingBottom: theme.spacing(2),
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+
+  datePickers: {
+    marginLeft: "auto",
+    display: "flex",
+    alignItems: "center"
+  }
+
 }, {
   name: "editor-content"
 });

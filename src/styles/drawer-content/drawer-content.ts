@@ -46,6 +46,11 @@ const useDrawerContentStyles = makeStyles({
     boxShadow: "none"
   },
 
+  accordinDetails: {
+    display: "flex",
+    flexDirection: "column"
+  },
+
   accordinRow: {
     display: "flex",
     justifyContent: "space-between",
@@ -77,6 +82,13 @@ const useDrawerContentStyles = makeStyles({
 
   input: {
     paddingLeft: `${theme.spacing(4)}px !important`
+  },
+
+  pieChartContainer: {
+    height: "150px !important",
+    "& .recharts-wrapper .recharts-surface": {
+      overflow: "visible"
+    }
   }
 
 }, {

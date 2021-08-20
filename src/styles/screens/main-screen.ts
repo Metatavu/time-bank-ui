@@ -12,11 +12,11 @@ const useMainScreenStyles = makeStyles({
   },
 
   editorContainer: {
+    padding: `${theme.spacing(5)}px ${theme.spacing(6)}px`,
+    width: "calc(100vw - 400px)",
     [theme.breakpoints.down("sm")]: {
       display: "none"
-    },
-    width: "100%",
-    padding: `${theme.spacing(5)}px ${theme.spacing(6)}px`
+    }
   }
 
 }, {
