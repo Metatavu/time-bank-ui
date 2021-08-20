@@ -286,7 +286,7 @@ const EditorContent: React.FC<Props> = () => {
       [FilterScopes.WEEK]: DateFormats.DATE,
       [FilterScopes.MONTH]: DateFormats.MONTH,
       [FilterScopes.YEAR]: DateFormats.YEAR
-    }[selectedFilterScope]);
+    }[ selectedFilterScope ]);
   };
 
   /**
