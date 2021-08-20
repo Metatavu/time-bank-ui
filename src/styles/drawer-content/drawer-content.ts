@@ -44,6 +44,22 @@ const useDrawerContentStyles = makeStyles({
     marginBottom: theme.spacing(1)
   },
 
+  accordinRowNames: {
+    fontSize: 14,
+    fontWeight: 600,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 16
+    }
+  },
+
+  accordinRowValues: {
+    fontSize: 14,
+    fontStyle: "italic",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 16
+    }
+  },
+
   inputRoot: {
     height: 40,
     borderRadius: 20,

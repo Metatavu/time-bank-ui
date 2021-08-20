@@ -19,6 +19,7 @@
     "@typescript-eslint"
   ],
   "rules": {
+    "linebreak-style": 0,
     "object-curly-spacing": [ "error", "always" ],
     "@typescript-eslint/quotes": [ "error", "double" ],
     "react/jsx-curly-spacing": "off",
