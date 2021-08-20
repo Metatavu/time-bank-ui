@@ -74,7 +74,7 @@ export default makeStyles({
   pieChartContainer: {
     height: "150px !important",
     "& .recharts-wrapper .recharts-surface": {
-      overflow: "overlay",
+      overflow: "visible",
     }
   }
 

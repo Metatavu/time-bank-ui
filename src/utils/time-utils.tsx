@@ -36,6 +36,7 @@ export default class TimeUtils {
    * @return true if within range, false otherwise
    */
   public static DateInRange = (startDate: Date | moment.Moment, endDate: Date | moment.Moment, date: moment.Moment): boolean => {
+    console.log("startDate, endDate, date", startDate, endDate, date)
     return date.isBetween(startDate, endDate);
   }
 
@@ -72,6 +73,35 @@ export default class TimeUtils {
     }
 
     return moment().year(year).week(week);
+  }
+
+  /**
+   * Gets moment instance from year and month numbers
+   *
+   * @param year year number
+   * @param month month number
+   * @returns moment instance from given parameters
+   */
+    public static getMomentFromYearAndMonth = (year?: number, month?: number) => {
+      if (!year || !month) {
+        throw new Error("Malformed data!");
+      }
+  
+      return moment().year(year).month(month);
+    }
+
+  /**
+   * Gets moment instance from year
+   *
+   * @param year year number
+   * @returns moment instance from given parameters
+   */
+  public static getMomentFromYear = (year?: number) => {
+    if (!year) {
+      throw new Error("Malformed data!");
+    }
+
+    return moment().year(year);
   }
 
 }
