@@ -170,7 +170,7 @@ const EditorContent: React.FC<Props> = () => {
         before: selectedEndDate ? TimeUtils.standardizedDateString(selectedEndDate) : TimeUtils.standardizedDateString(selectedStartDate)
       });
 
-      dateEntries.sort((date1, date2) => moment(date1.date).diff(moment(date2.date)));
+      dateEntries.sort((date1, date2) => moment(date1.date).diff(date2.date));
 
       const { workTimeData, workTimeTotalData } = WorkTimeDataUtils.dateEntriesPreprocess(dateEntries);
   
