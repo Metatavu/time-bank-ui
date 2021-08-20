@@ -11,7 +11,6 @@ const useAppLayoutStyles = makeStyles({
     width: "100vw",
     display: "flex"
   },
-  
   drawer: {
     top: 64,
     width: drawerWidth,
