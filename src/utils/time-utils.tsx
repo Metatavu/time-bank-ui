@@ -45,7 +45,6 @@ export default class TimeUtils {
    * 
    * @param monthOrWeek1 month or week one
    * @param monthOrWeek2 month or week two
-   * 
    * @return positive integer if year+month/week1 is greater than year+month/week2, negative integer if otherwise, 0 if equal
    */
   public static WeekOrMonthComparator = (monthOrWeek1: moment.Moment, monthOrWeek2: moment.Moment): number => {
