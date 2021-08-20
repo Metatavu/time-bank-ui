@@ -213,7 +213,8 @@ const DateRangePicker: React.FC<Props> = ({
           { week }
         </MenuItem>
       ))
-    } 
+    }
+
     return weekOpts;
   };
 
