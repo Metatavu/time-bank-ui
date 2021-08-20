@@ -189,7 +189,7 @@ const EditorContent: React.FC<Props> = () => {
         )
       );
   
-      yearEntries.sort((year1, year2) => year1.id?.year! - year2.id?.year!);
+      yearEntries.sort(TimeUtils.sortEntriesByYear);
 
       const { workTimeData, workTimeTotalData } = WorkTimeDataUtils.weeksYearsAndMonthsPreprocess(filteredYearEntries, FilterScopes.YEAR);
   
@@ -286,7 +286,7 @@ const EditorContent: React.FC<Props> = () => {
       [FilterScopes.WEEK]: DateFormats.DATE,
       [FilterScopes.MONTH]: DateFormats.MONTH,
       [FilterScopes.YEAR]: DateFormats.YEAR
-    }[ selectedFilterScope ]);
+    }[selectedFilterScope]);
   };
 
   /**
@@ -448,19 +448,7 @@ const EditorContent: React.FC<Props> = () => {
       );
     }
 
-    let timeRangeText = "";
-
-    switch (displayedTimeData.length) {
-      case 0:
-        timeRangeText = "";
-        break;
-      case 1:
-        timeRangeText = `${displayedTimeData[0].name}`;
-        break;
-      default:
-        timeRangeText = `(${displayedTimeData[0].name} - ${displayedTimeData[displayedTimeData.length - 1].name})`;
-        break;
-    }
+    const timeRangeText = TimeUtils.generateTimeRangeText(displayedTimeData);
 
     return (
       <Accordion>

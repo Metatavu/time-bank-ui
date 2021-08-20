@@ -76,9 +76,9 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
         >
           { selectedData.name }
         </Typography>
-        { (selectedData.project !== undefined) && renderCustomizedTooltipRow(strings.project, selectedData.project as number, theme.palette.success.main) }
-        { (selectedData.internal !== undefined) && renderCustomizedTooltipRow(strings.internal, selectedData.internal as number, theme.palette.warning.main) }
-        { (selectedData.expected !== undefined) && renderCustomizedTooltipRow(strings.expected, selectedData.expected as number, theme.palette.info.main) }
+        { selectedData.project !== undefined && renderCustomizedTooltipRow(strings.project, selectedData.project as number, theme.palette.success.main) }
+        { selectedData.internal !== undefined && renderCustomizedTooltipRow(strings.internal, selectedData.internal as number, theme.palette.warning.main) }
+        { selectedData.expected !== undefined && renderCustomizedTooltipRow(strings.expected, selectedData.expected as number, theme.palette.info.main) }
       </Box>
     );
   };
