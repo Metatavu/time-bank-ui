@@ -1,7 +1,7 @@
 import { makeStyles } from "@material-ui/core";
 import theme from "theme/theme";
 
-export default makeStyles({
+const useOverviewChartStyles = makeStyles({
 
   chartContainer: {
     "& .recharts-wrapper .recharts-surface": {
@@ -18,3 +18,5 @@ export default makeStyles({
 }, {
   name: "overview-chart"
 });
+
+export default useOverviewChartStyles;
