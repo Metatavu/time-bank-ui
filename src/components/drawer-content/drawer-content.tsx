@@ -54,14 +54,12 @@ const DrawerContent: React.FC<Props> = () => {
   const fetchWorkTimeData = async () => {
     if (person && person.id) {
       try {
-        Api.getTimeBankApi()
+        const personTotalTime = await Api.getTimeBankApi()
         .timebankControllerGetTotal({
           personId: person.id.toString(),
           retention: TimebankControllerGetTotalRetentionEnum.ALLTIME
-        })
-        .then(fetchedPersonTotalTime =>
-          dispatch(setPersonTotalTime(fetchedPersonTotalTime[0]))
-        );
+        });
+        dispatch(setPersonTotalTime(personTotalTime[0]))
       } catch (error) {
         console.error(error);
       }
