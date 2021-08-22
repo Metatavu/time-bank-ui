@@ -6,27 +6,25 @@ const useDrawerContentStyles = makeStyles({
   drawerSearchBoxContainer: {
     display: "flex",
     alignItems: "center",
-    margin: `${theme.spacing(2)}px 0px`,
-    marginTop: 30
+    position: "fixed",
+    zIndex: 100,
+    marginTop: theme.spacing(2)
+  },
+
+  searchBoxContainer: {
+    height: 40,
+    width: 350,
+    backgroundColor: "rgb(255, 255, 255)",
+    [theme.breakpoints.down("sm")]: {
+      width: "90%"
+    }
   },
 
   drawerUserInfoContainer: {
     display: "flex",
     alignItems: "center",
     margin: theme.spacing(2),
-    marginTop: 30
-  },
-
-  searchBoxContainer: {
-    height: 40,
-    flexGrow: 200,
-    position: "fixed",
-    zIndex: 100,
-    width: 350,
-    backgroundColor: "rgb(255, 255, 255)",
-    [theme.breakpoints.down("sm")]: {
-      width: "90%"
-    }
+    marginTop: theme.spacing(9)
   },
 
   searchIcon: {
@@ -77,7 +75,11 @@ const useDrawerContentStyles = makeStyles({
     height: 40,
     borderRadius: 20,
     boxShadow: "0 4px 4px 0 rgba(0,0,0,0.05)",
-    fontSize: 14
+    fontSize: 14,
+    border: "1px solid rgba(0, 0, 0)",
+    "&.Mui-focused": {
+      border: "0px solid rgba(0, 0, 0)"
+    }
   },
 
   input: {
