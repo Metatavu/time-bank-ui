@@ -24,6 +24,7 @@ const useMainScreenStyles = makeStyles({
   },
 
   drawerContainer: {
+    height: "100%",
     width: drawerWidth,
     padding: `${theme.spacing(1)}px ${theme.spacing(2)}px ${theme.spacing(1)}px ${theme.spacing(3)}px`,
     [theme.breakpoints.down("xs")]: {

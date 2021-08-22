@@ -519,7 +519,7 @@ const EditorContent: React.FC<Props> = () => {
    * Renders the filter component
    */
   const renderCharts = () => {
-    if (!personTotalTime) {
+    if (!person || !personTotalTime) {
       return null;
     }
 

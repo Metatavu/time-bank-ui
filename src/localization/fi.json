@@ -25,6 +25,7 @@
       "createdAt": "Luotu:",
       "updatedAt": "Päivitetty:"
     },
+    "noUser": "Ei käyttäjää",
     "statistics": "Tilastot",
     "expected": "Odotettu",
     "searchPlaceholder": "Valitse käyttäjä.."

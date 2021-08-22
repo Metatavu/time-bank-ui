@@ -25,6 +25,7 @@
       "createdAt": "Created at:",
       "updatedAt": "Updated at:"
     },
+    "noUser": "No user",
     "statistics": "Statistics",
     "expected": "Expected",
     "searchPlaceholder": "Select user.."

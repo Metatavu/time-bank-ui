@@ -20,6 +20,13 @@ const useDrawerContentStyles = makeStyles({
     }
   },
 
+  noUserContainer: {
+    height: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+
   drawerUserInfoContainer: {
     display: "flex",
     alignItems: "center",
