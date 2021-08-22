@@ -395,7 +395,6 @@ const EditorContent: React.FC<Props> = () => {
           <Typography
             variant="h5"
             style={{
-              paddingLeft: theme.spacing(0.5),
               fontWeight: 600,
               textTransform: "none"
             }}
