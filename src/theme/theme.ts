@@ -106,45 +106,6 @@ export default createMuiTheme({
       root: {
         width: "100%"
       }
-    },
-    MuiButton: {
-      root: {
-        fontWeight: 600,
-        borderRadius: 20,
-        color: "#fff",
-        backgroundColor: "#000",
-        [breakpoints.down(460)]: {
-          height: 46,
-          width: "100%"
-        },
-        "&:hover": {
-          color: "#fff",
-          backgroundColor: "#000"
-        }
-      },
-      text: {
-        textTransform: "initial"
-      },
-      outlined: {
-        textTransform: "initial"
-      },
-      containedPrimary: {
-        backgroundColor: "#3E55BD",
-        textTransform: "initial"
-      },
-      outlinedPrimary: {
-        borderColor: "#3E55BD",
-        textTransform: "initial"
-      },
-      textPrimary: {
-        color: "#3E55BD",
-        textTransform: "initial"
-      },
-      containedSecondary: {
-        backgroundColor: "#F17446",
-        color: "#fff",
-        textTransform: "initial"
-      }
     }
   }
 });

@@ -18,7 +18,6 @@ interface Props {
   selectedEndDate: Date | null;
   startWeek?: number | null;
   endWeek?: number | null;
-  startDateOnly: boolean;
   datePickerView: DatePickerView;
   onStartDateChange: (date: Date | null) => void;
   onEndDateChange: (date: Date | null) => void;
@@ -36,7 +35,6 @@ const DateRangePicker: React.FC<Props> = ({
   selectedEndDate,
   startWeek,
   endWeek,
-  startDateOnly,
   datePickerView,
   onStartDateChange,
   onEndDateChange,
@@ -176,7 +174,6 @@ const DateRangePicker: React.FC<Props> = ({
   const renderEndDate = () => (
     <MuiPickersUtilsProvider utils={ DateFnsUtils }>
       <KeyboardDatePicker
-        disabled={ startDateOnly }
         inputVariant="standard"
         variant="inline"
         format={ dateFormat }
@@ -199,7 +196,6 @@ const DateRangePicker: React.FC<Props> = ({
     <>
       <MuiPickersUtilsProvider utils={ DateFnsUtils } >
         <KeyboardDatePicker
-          disabled={ startDateOnly }
           inputVariant="standard"
           variant="inline"
           views={[ FilterScopes.YEAR ]}
@@ -215,7 +211,6 @@ const DateRangePicker: React.FC<Props> = ({
       </MuiPickersUtilsProvider>
       <TextField
         // TODO label when start only
-        disabled={ startDateOnly }
         select
         variant="standard"
         id="scope-select-outlined"
