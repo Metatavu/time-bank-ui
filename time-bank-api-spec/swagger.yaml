@@ -59,6 +59,8 @@ components:
           type: string
         start_date:
           type: string
+        initial_time:
+          type: number
       required:
         - id
         - first_name
@@ -83,6 +85,7 @@ components:
         - created_at
         - updated_at
         - start_date
+        - initial_time
     TimeEntry:
       type: object
       properties:

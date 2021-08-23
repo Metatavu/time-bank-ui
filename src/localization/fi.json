@@ -56,6 +56,7 @@
   "logged": "Kirjattu",
   "expected": "Odotettu",
   "total": "Kaikki",
+  "initialTime": "Alkuperäinen aika",
   "project": "Projekti",
   "internal": "Sisäinen",
   "sunday": "Sunnuntai",

@@ -150,15 +150,15 @@ const DrawerContent: React.FC<Props> = () => {
    * @param value value of the row
    * @param color color of the row value
    */
-  const renderAccordinRow = (name: string, value: string, color?: string) => {
+  const renderAccordionRow = (name: string, value: string, color?: string) => {
     return (
-      <Box className={ classes.accordinRow }>
-        <Typography className={ classes.accordinRowNames }>
+      <Box className={ classes.accordionRow }>
+        <Typography className={ classes.accordionRowNames }>
           { name }
         </Typography>
         <Typography
           style={{ color: color }}
-          className={ classes.accordinRowValues }
+          className={ classes.accordionRowValues }
         >
           { value }
         </Typography>
@@ -172,7 +172,7 @@ const DrawerContent: React.FC<Props> = () => {
    * @param props props of the custom label
    */
   const renderCustomizedLabel = (props: CustomPieLabel) => {
-    return TimeUtils.minuteToHourString(props.value);
+    return TimeUtils.convertToMinutesAndHours(props.value);
   };
 
   /**
@@ -207,7 +207,7 @@ const DrawerContent: React.FC<Props> = () => {
             padding: theme.spacing(1)
           }}
         >
-          { `${sectionName}: ${TimeUtils.minuteToHourString(selectedData.value as number)}` }
+          { `${sectionName}: ${TimeUtils.convertToMinutesAndHours(selectedData.value as number)}` }
         </Typography>
       </Box>
     );
@@ -217,16 +217,21 @@ const DrawerContent: React.FC<Props> = () => {
    * Renders the Total work time section
    */
   const renderTotalWorkTime = () => {
-    if (!personTotalTime) {
+    if (!person || !personTotalTime) {
       return null;
     }
-    let totalHour = TimeUtils.minuteToHourString(personTotalTime.total);
-    personTotalTime.total >= 0 && (totalHour = `+${totalHour}`);
+
+    const initialTimeHours = TimeUtils.convertToMinutesAndHours(person.initialTime);
+    const initialTimeColor = person.initialTime < 0 ?
+      theme.palette.error.dark :
+      theme.palette.success.main;
+
+    const totalHours = TimeUtils.convertToMinutesAndHours(personTotalTime.total + person.initialTime);
     const totalColor = personTotalTime.total < 0 ?
       theme.palette.error.dark :
       theme.palette.success.main;
 
-    const workTimeDatas: WorkTimeTotalData[] = [
+    const workTimeData: WorkTimeTotalData[] = [
       { name: WorkTimeCategory.PROJECT, total: personTotalTime.projectTime },
       { name: WorkTimeCategory.INTERNAL, total: personTotalTime.internalTime }
     ];
@@ -235,7 +240,7 @@ const DrawerContent: React.FC<Props> = () => {
 
     return (
       <>
-        <Accordion defaultExpanded className={ classes.drawerAccordin }>
+        <Accordion defaultExpanded className={ classes.drawerAccordion }>
           <AccordionSummary
             expandIcon={ <ExpandMoreIcon/> }
             aria-controls="panel1a-content"
@@ -245,15 +250,16 @@ const DrawerContent: React.FC<Props> = () => {
               { strings.drawerContent.statistics }
             </Typography>
           </AccordionSummary>
-          <AccordionDetails className={ classes.accordinDetails }>
+          <AccordionDetails className={ classes.accordionDetails }>
             <Box
               p={ 1 }
               paddingRight={ 3 }
               width="100%"
             >
-              { renderAccordinRow(`${strings.total}:`, totalHour, totalColor) }
-              { renderAccordinRow(`${strings.logged}:`, TimeUtils.minuteToHourString(personTotalTime.logged)) }
-              { renderAccordinRow(`${strings.expected}:`, TimeUtils.minuteToHourString(personTotalTime.expected)) }
+              { renderAccordionRow(`${strings.total}:`, totalHours, totalColor) }
+              { renderAccordionRow(`${strings.initialTime}:`, initialTimeHours, initialTimeColor) }
+              { renderAccordionRow(`${strings.logged}:`, TimeUtils.convertToMinutesAndHours(personTotalTime.logged)) }
+              { renderAccordionRow(`${strings.expected}:`, TimeUtils.convertToMinutesAndHours(personTotalTime.expected)) }
             </Box>
             <ResponsiveContainer className={ classes.pieChartContainer }>
               <PieChart>
@@ -261,10 +267,10 @@ const DrawerContent: React.FC<Props> = () => {
                   cx="50%"
                   cy="50%"
                   dataKey="total"
-                  data={ workTimeDatas }
+                  data={ workTimeData }
                   label={ renderCustomizedLabel }
                 >
-                  { workTimeDatas.map((entry, index) => (
+                  { workTimeData.map((entry, index) => (
                     <Cell fill={ COLORS[index % COLORS.length] }/>
                   )) }
                 </Pie>
@@ -287,7 +293,7 @@ const DrawerContent: React.FC<Props> = () => {
 
     return (
       <>
-        <Accordion className={ classes.drawerAccordin }>
+        <Accordion className={ classes.drawerAccordion }>
           <AccordionSummary
             expandIcon={ <ExpandMoreIcon/> }
             aria-controls="panel1a-content"
@@ -303,13 +309,13 @@ const DrawerContent: React.FC<Props> = () => {
               paddingRight={ 3 }
               width="100%"
             >
-              { renderAccordinRow(`${strings.sunday}:`, TimeUtils.minuteToHourString(person.sunday)) }
-              { renderAccordinRow(`${strings.monday}:`, TimeUtils.minuteToHourString(person.monday)) }
-              { renderAccordinRow(`${strings.tuesday}:`, TimeUtils.minuteToHourString(person.tuesday)) }
-              { renderAccordinRow(`${strings.wednesday}:`, TimeUtils.minuteToHourString(person.wednesday)) }
-              { renderAccordinRow(`${strings.thursday}:`, TimeUtils.minuteToHourString(person.thursday)) }
-              { renderAccordinRow(`${strings.friday}:`, TimeUtils.minuteToHourString(person.friday)) }
-              { renderAccordinRow(`${strings.saturday}:`, TimeUtils.minuteToHourString(person.saturday)) }
+              { renderAccordionRow(`${strings.sunday}:`, TimeUtils.convertToMinutesAndHours(person.sunday)) }
+              { renderAccordionRow(`${strings.monday}:`, TimeUtils.convertToMinutesAndHours(person.monday)) }
+              { renderAccordionRow(`${strings.tuesday}:`, TimeUtils.convertToMinutesAndHours(person.tuesday)) }
+              { renderAccordionRow(`${strings.wednesday}:`, TimeUtils.convertToMinutesAndHours(person.wednesday)) }
+              { renderAccordionRow(`${strings.thursday}:`, TimeUtils.convertToMinutesAndHours(person.thursday)) }
+              { renderAccordionRow(`${strings.friday}:`, TimeUtils.convertToMinutesAndHours(person.friday)) }
+              { renderAccordionRow(`${strings.saturday}:`, TimeUtils.convertToMinutesAndHours(person.saturday)) }
             </Box>
           </AccordionDetails>
         </Accordion>

@@ -269,7 +269,7 @@ const EditorContent: React.FC<Props> = () => {
   };
 
   /**
-   * Changes the presented date format according to selected scope
+   * Changes the presented date format accordion to selected scope
    *
    * @param event React change event
    */
@@ -307,7 +307,7 @@ const EditorContent: React.FC<Props> = () => {
    */
   const renderFilterSubtitleText = (name: string, value: number, total: boolean, positiveTotal?: boolean) => {
     const valueColor = positiveTotal ? theme.palette.success.main : theme.palette.error.main;
-    const valueText = positiveTotal ? `+${TimeUtils.minuteToHourString(value)}` : `-${TimeUtils.minuteToHourString(value)}`;
+    const valueText = TimeUtils.convertToMinutesAndHours(value);
 
     return (
       <>
@@ -325,7 +325,7 @@ const EditorContent: React.FC<Props> = () => {
             fontStyle: "italic"
           }}
         >
-          { total ? valueText : TimeUtils.minuteToHourString(value) }
+          { total ? valueText : TimeUtils.convertToMinutesAndHours(value) }
         </Typography>
       </>
     );

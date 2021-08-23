@@ -60,7 +60,7 @@ const TotalChart: React.FC<Props> = ({ displayedData, isLoading }) => {
             padding: theme.spacing(1)
           }}
         >
-          { `${strings.total}: ${TimeUtils.minuteToHourString(selectedData.total)}` }
+          { `${strings.total}: ${TimeUtils.convertToMinutesAndHours(selectedData.total)}` }
         </Typography>
       </Box>
     );
@@ -83,7 +83,7 @@ const TotalChart: React.FC<Props> = ({ displayedData, isLoading }) => {
           axisLine={ false }
           domain={ [-range, range] }
           tickCount={ 10 }
-          tickFormatter={ value => TimeUtils.minuteToHourString(value as number) }
+          tickFormatter={ value => TimeUtils.convertToMinutesAndHours(value as number) }
         />
         <YAxis
           hide
