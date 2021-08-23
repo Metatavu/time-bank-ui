@@ -310,7 +310,7 @@ const EditorContent: React.FC<Props> = () => {
    */
   const renderFilterSubtitleText = (name: string, value: number, total: boolean, positiveTotal?: boolean) => {
     const valueColor = positiveTotal ? theme.palette.success.main : theme.palette.error.main;
-    const valueText = positiveTotal ? `+${TimeUtils.minuteToHourString(value)}` : `-${TimeUtils.minuteToHourString(value)}`;
+    const valueText = value >= 0 ? `+${TimeUtils.minuteToHourString(value)}` : TimeUtils.minuteToHourString(value);
 
     return (
       <>
