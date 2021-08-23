@@ -172,7 +172,7 @@ const DrawerContent: React.FC<Props> = () => {
    * @param props props of the custom label
    */
   const renderCustomizedLabel = (props: CustomPieLabel) => {
-    return TimeUtils.minuteToHourString(props.value);
+    return TimeUtils.convertToMinutesAndHours(props.value);
   };
 
   /**
@@ -207,7 +207,7 @@ const DrawerContent: React.FC<Props> = () => {
             padding: theme.spacing(1)
           }}
         >
-          { `${sectionName}: ${TimeUtils.minuteToHourString(selectedData.value as number)}` }
+          { `${sectionName}: ${TimeUtils.convertToMinutesAndHours(selectedData.value as number)}` }
         </Typography>
       </Box>
     );
@@ -220,13 +220,13 @@ const DrawerContent: React.FC<Props> = () => {
     if (!person || !personTotalTime) {
       return null;
     }
-    let initialTimeHour = TimeUtils.minuteToHourString(person.initialTime);
+    let initialTimeHour = TimeUtils.convertToMinutesAndHours(person.initialTime);
     person.initialTime >= 0 && (initialTimeHour = `+${initialTimeHour}`);
     const initialTimeColor = person.initialTime < 0 ?
       theme.palette.error.dark :
       theme.palette.success.main;
 
-    let totalHour = TimeUtils.minuteToHourString(personTotalTime.total + person.initialTime);
+    let totalHour = TimeUtils.convertToMinutesAndHours(personTotalTime.total + person.initialTime);
     personTotalTime.total >= 0 && (totalHour = `+${totalHour}`);
     const totalColor = personTotalTime.total < 0 ?
       theme.palette.error.dark :
@@ -259,8 +259,8 @@ const DrawerContent: React.FC<Props> = () => {
             >
               { renderAccordionRow(`${strings.total}:`, totalHour, totalColor) }
               { renderAccordionRow(`${strings.initialTime}:`, initialTimeHour, initialTimeColor) }
-              { renderAccordionRow(`${strings.logged}:`, TimeUtils.minuteToHourString(personTotalTime.logged)) }
-              { renderAccordionRow(`${strings.expected}:`, TimeUtils.minuteToHourString(personTotalTime.expected)) }
+              { renderAccordionRow(`${strings.logged}:`, TimeUtils.convertToMinutesAndHours(personTotalTime.logged)) }
+              { renderAccordionRow(`${strings.expected}:`, TimeUtils.convertToMinutesAndHours(personTotalTime.expected)) }
             </Box>
             <ResponsiveContainer className={ classes.pieChartContainer }>
               <PieChart>
@@ -310,13 +310,13 @@ const DrawerContent: React.FC<Props> = () => {
               paddingRight={ 3 }
               width="100%"
             >
-              { renderAccordionRow(`${strings.sunday}:`, TimeUtils.minuteToHourString(person.sunday)) }
-              { renderAccordionRow(`${strings.monday}:`, TimeUtils.minuteToHourString(person.monday)) }
-              { renderAccordionRow(`${strings.tuesday}:`, TimeUtils.minuteToHourString(person.tuesday)) }
-              { renderAccordionRow(`${strings.wednesday}:`, TimeUtils.minuteToHourString(person.wednesday)) }
-              { renderAccordionRow(`${strings.thursday}:`, TimeUtils.minuteToHourString(person.thursday)) }
-              { renderAccordionRow(`${strings.friday}:`, TimeUtils.minuteToHourString(person.friday)) }
-              { renderAccordionRow(`${strings.saturday}:`, TimeUtils.minuteToHourString(person.saturday)) }
+              { renderAccordionRow(`${strings.sunday}:`, TimeUtils.convertToMinutesAndHours(person.sunday)) }
+              { renderAccordionRow(`${strings.monday}:`, TimeUtils.convertToMinutesAndHours(person.monday)) }
+              { renderAccordionRow(`${strings.tuesday}:`, TimeUtils.convertToMinutesAndHours(person.tuesday)) }
+              { renderAccordionRow(`${strings.wednesday}:`, TimeUtils.convertToMinutesAndHours(person.wednesday)) }
+              { renderAccordionRow(`${strings.thursday}:`, TimeUtils.convertToMinutesAndHours(person.thursday)) }
+              { renderAccordionRow(`${strings.friday}:`, TimeUtils.convertToMinutesAndHours(person.friday)) }
+              { renderAccordionRow(`${strings.saturday}:`, TimeUtils.convertToMinutesAndHours(person.saturday)) }
             </Box>
           </AccordionDetails>
         </Accordion>

@@ -47,7 +47,7 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
           padding: theme.spacing(1)
         }}
       >
-        { `${name}: ${TimeUtils.minuteToHourString(time)}` }
+        { `${name}: ${TimeUtils.convertToMinutesAndHours(time)}` }
       </Typography>
     );
   };
@@ -140,7 +140,7 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
         >
           <CartesianGrid strokeDasharray="3 3"/>
           <XAxis dataKey="name"/>
-          <YAxis width={ 100 } tickFormatter={ value => TimeUtils.minuteToHourString(value as number) }/>
+          <YAxis width={ 100 } tickFormatter={ value => TimeUtils.convertToMinutesAndHours(value as number) }/>
           <Tooltip content={ renderCustomizedTooltip }/>
           <Legend wrapperStyle={{ position: "relative" }}/>
           <Bar dataKey="project" stackId="a" fill={ theme.palette.success.main }/>
