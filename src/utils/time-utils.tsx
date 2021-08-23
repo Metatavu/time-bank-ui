@@ -13,7 +13,7 @@ export default class TimeUtils {
    * @param date date data
    * @return date string in format of yyyy-mm-dd
    */
-  public static standardizedDateString = (date: Date): string => {
+  public static standardizedDateString = (date: Date | moment.Moment): string => {
     return moment(date).format("YYYY-MM-DD");
   };
 
