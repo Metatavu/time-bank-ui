@@ -221,10 +221,6 @@ const DrawerContent: React.FC<Props> = () => {
       return null;
     }
 
-    console.log({
-      person: person
-    });
-
     const initialTimeHours = TimeUtils.convertToMinutesAndHours(person.initialTime);
     const initialTimeColor = person.initialTime < 0 ?
       theme.palette.error.dark :
