@@ -20,8 +20,10 @@ const MainScreen: React.FC = () => {
     return (
       <>
         <Toolbar/>
-        <Box className={ classes.drawerContainer }>
-          <DrawerContent/>
+        <Box className={ classes.scrollableContainer }>
+          <Box className={ classes.drawerContainer }>
+            <DrawerContent/>
+          </Box>
         </Box>
       </>
     );

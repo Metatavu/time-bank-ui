@@ -42,6 +42,7 @@ export interface IStrings extends LocalizedStringsMethods {
       createdAt: string;
       updatedAt: string;
     },
+    noUser: string;
     statistics: string;
     expected: string;
     searchPlaceholder: string;

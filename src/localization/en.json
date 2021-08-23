@@ -25,6 +25,7 @@
       "createdAt": "Created at:",
       "updatedAt": "Updated at:"
     },
+    "noUser": "No user",
     "statistics": "Statistics",
     "expected": "Expected",
     "searchPlaceholder": "Select user.."
@@ -54,7 +55,7 @@
   "week": "Week",
   "logged": "Logged",
   "expected": "Expected",
-  "total": "Difference",
+  "total": "Total",
   "project": "Project",
   "internal": "Internal",
   "sunday": "Sunday",
