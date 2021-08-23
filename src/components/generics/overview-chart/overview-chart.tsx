@@ -114,7 +114,7 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
           <XAxis
             type="number"
             axisLine={ false }
-            tickFormatter={ value => TimeUtils.minuteToHourString(value as number) }
+            tickFormatter={ value => TimeUtils.convertToMinutesAndHours(value as number) }
           />
           <YAxis type="category" dataKey="name"/>
           <Tooltip content={ renderCustomizedTooltip }/>
