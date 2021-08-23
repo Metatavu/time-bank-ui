@@ -53,7 +53,9 @@ const GenericDialog: React.FC<Props> = ({
 
     onClose();
   };
-
+  /**
+   * Component render
+   */
   return (
     <Dialog
       disableEnforceFocus={ disableEnforceFocus }
