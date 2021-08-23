@@ -337,7 +337,7 @@ const DrawerContent: React.FC<Props> = () => {
           </Box>
         </> :
         <Box className={ classes.noUserContainer }>
-          <Typography style={{ fontStyle: "italic" }}>
+          <Typography style={{ fontStyle: "italic", fontWeight: 600 }}>
             { strings.drawerContent.noUser }
           </Typography>
         </Box>
