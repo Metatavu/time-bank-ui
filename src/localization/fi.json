@@ -1,6 +1,7 @@
 {
   "header": {
-    "title": "Aikapankki"
+    "title": "Aikapankki",
+    "logo": "Sivun logo"
   },
 
   "generic": {
@@ -10,7 +11,6 @@
     "copy": "Kopioi",
     "save": "Tallenna",
     "delete": "Poista",
-    "search": "Haku",
     "language": "Kieli",
     "select": "Valitse"
   },
@@ -25,18 +25,47 @@
       "createdAt": "Luotu:",
       "updatedAt": "Päivitetty:"
     },
+    "noUser": "Ei käyttäjää",
     "statistics": "Tilastot",
-    "expected": "Odotettu"
+    "expected": "Odotettu",
+    "searchPlaceholder": "Valitse käyttäjä.."
   },
 
   "editorContent": {
-    "userNotSelected": "Valitse ensin käyttäjä",
-    "workTime": "Työaika"
+    "userNotSelected": "Valitse ensin käyttäjä.",
+    "noTimeEntries": "Valitulle käyttäjälle ei löytynyt kirjattua aikaa",
+    "overview": "Yleisnäkymä",
+    "total": "Yhteensä",
+    "workTime": "Työaika",
+    "filterStartingDate": "Alku",
+    "filterEndingDate": "Loppu",
+    "week": "Viikko",
+    "date": "Pvm",
+    "month": "Kuukausi",
+    "year": "Vuosi",
+    "selectYearStart": "Mistä",
+    "selectWeekStart": "Mistä",
+    "selectWeekEnd": "Mihin",
+    "selectYearEnd": "Mihin",
+    "from": "Jälkeen",
+    "to": "Ennen",
+    "startOnly": "Vain aloitusviikko"
   },
 
+  "errorHandling": {
+    "fetchDateDataFailed": "Tietojen haku päivämäärän perusteella epäonnistui",
+    "fetchTimeDataFailed": "Aikatietojen haku epäonnistui",
+    "fetchUserDataFailed": "Käyttäjätietojen haku epäonnistui",
+    "title": "Error"
+  },
+
+  "week": "Viikko",
   "logged": "Kirjattu",
   "expected": "Odotettu",
-  "total": "Yhteensä",
+  "total": "Kaikki",
+  "initialTime": "Alkuperäinen aika",
+  "project": "Projekti",
+  "internal": "Sisäinen",
   "sunday": "Sunnuntai",
   "monday": "Maanantai",
   "tuesday": "Tiistai",

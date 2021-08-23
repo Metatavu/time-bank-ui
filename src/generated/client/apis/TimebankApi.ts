@@ -28,8 +28,8 @@ import {
 
 export interface TimebankControllerGetEntriesRequest {
     personId: string;
-    before?: Date;
-    after?: Date;
+    before?: string;
+    after?: string;
 }
 
 export interface TimebankControllerGetTotalRequest {
@@ -129,7 +129,7 @@ export class TimebankApi extends runtime.BaseAPI {
 
     /**
      */
-    async timebankControllerGetTotal(requestParameters: TimebankControllerGetTotalRequest): Promise<Array<TimeEntryTotalDto>> {
+    async timebankControllerGetTotal(requestParameters: TimebankControllerGetTotalRequest): Promise<Array<any>> {
         const response = await this.timebankControllerGetTotalRaw(requestParameters);
         return await response.value();
     }

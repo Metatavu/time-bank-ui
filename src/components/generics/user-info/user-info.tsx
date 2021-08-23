@@ -1,6 +1,6 @@
 import React from "react";
 import { Avatar, Box, Typography } from "@material-ui/core";
-import { useUserInfoStyles } from "styles/generics/user-info/user-info";
+import useUserInfoStyles from "styles/generics/user-info/user-info";
 import { selectPerson } from "features/person/person-slice";
 import { useAppSelector } from "app/hooks";
 import strings from "localization/strings";
@@ -27,26 +27,26 @@ const UserInfo: React.FC = () => {
   const renderUserStatus = (status: string, color: string) => {
     return (
       <Box style={{ display: "flex", alignItems: "center" }}>
-        <FiberManualRecordIcon 
+        <FiberManualRecordIcon
           htmlColor={ color }
           style={{
             width: 6,
             height: 6
-          }}  
+          }}
         />
-        <Typography 
-          variant="h6" 
-          style={{ 
+        <Typography
+          variant="h6"
+          style={{
             color: color,
             marginLeft: 4,
-            fontStyle: "italic",
+            fontStyle: "italic"
           }}
         >
           { status }
         </Typography>
       </Box>
     );
-  }
+  };
 
   /**
    * Renders the username section 
@@ -72,23 +72,23 @@ const UserInfo: React.FC = () => {
           </Typography>
         </Box>
         <Box className={ classes.status }>
-          <Typography 
+          <Typography
             variant="h6"
-            style={{ 
+            style={{
               color: "rgba(0, 0, 0, 0.6)",
-              fontStyle: "italic" 
+              fontStyle: "italic"
             }}
           >
             { `${strings.drawerContent.userInfo.id}: ${person.id}` }
           </Typography>
-          { person.active ? 
-              renderUserStatus(strings.drawerContent.userInfo.active, theme.palette.success.main) : 
-              renderUserStatus(strings.drawerContent.userInfo.inactive, theme.palette.error.main) 
+          { person.active ?
+            renderUserStatus(strings.drawerContent.userInfo.active, theme.palette.success.main) :
+            renderUserStatus(strings.drawerContent.userInfo.inactive, theme.palette.error.main)
           }
         </Box>
       </>
     );
-  }
+  };
 
   /**
    * Renders the username section 
@@ -100,13 +100,13 @@ const UserInfo: React.FC = () => {
   const renderUserDetailEntry = (name: string, value: string, variant: "h5" | "h6") => {
     return (
       <>
-        <Typography 
-          variant={ variant } 
+        <Typography
+          variant={ variant }
           style={{ fontWeight: 600 }}
         >
           { name }
         </Typography>
-        <Typography 
+        <Typography
           variant={ variant }
           className={ classes.infoValue }
         >
@@ -114,7 +114,7 @@ const UserInfo: React.FC = () => {
         </Typography>
       </>
     );
-  }
+  };
 
   /**
    * Renders the user detail section 
@@ -138,7 +138,7 @@ const UserInfo: React.FC = () => {
         </Box>
       </>
     );
-  }
+  };
 
   /**
    * Component render
@@ -153,6 +153,6 @@ const UserInfo: React.FC = () => {
       </Box>
     </Box>
   );
-}
+};
 
 export default UserInfo;

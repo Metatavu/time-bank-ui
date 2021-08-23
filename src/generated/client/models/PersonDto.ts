@@ -151,6 +151,18 @@ export interface PersonDto {
      * @memberof PersonDto
      */
     updatedAt: Date;
+    /**
+     * 
+     * @type {string}
+     * @memberof PersonDto
+     */
+    startDate: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PersonDto
+     */
+    initialTime: number;
 }
 
 export function PersonDtoFromJSON(json: any): PersonDto {
@@ -185,6 +197,8 @@ export function PersonDtoFromJSONTyped(json: any, ignoreDiscriminator: boolean):
         'updatedBy': json['updated_by'],
         'createdAt': (new Date(json['created_at'])),
         'updatedAt': (new Date(json['updated_at'])),
+        'startDate': json['start_date'],
+        'initialTime': json['initial_time'],
     };
 }
 
@@ -219,6 +233,8 @@ export function PersonDtoToJSON(value?: PersonDto | null): any {
         'updated_by': value.updatedBy,
         'created_at': (value.createdAt.toISOString()),
         'updated_at': (value.updatedAt.toISOString()),
+        'start_date': value.startDate,
+        'initial_time': value.initialTime,
     };
 }
 

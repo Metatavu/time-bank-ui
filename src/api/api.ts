@@ -12,7 +12,7 @@ export default class Api {
    */
   private static getConfiguration() {
     return new Configuration({
-      basePath: process.env.REACT_APP_API_BASE_PATH,
+      basePath: process.env.REACT_APP_API_BASE_PATH
     });
   }
 
@@ -25,4 +25,5 @@ export default class Api {
   public static getTimeBankApi() {
     return new TimebankApi(Api.getConfiguration());
   }
+
 }

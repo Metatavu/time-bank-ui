@@ -1,12 +1,12 @@
 import { createMuiTheme } from "@material-ui/core";
 
-const breakpoints = createMuiTheme().breakpoints;
+const { breakpoints } = createMuiTheme();
 
 export default createMuiTheme({
 
   palette: {
     primary: {
-      main: "#000000",
+      main: "#000000"
     },
     secondary: {
       main: "#F9473B",
@@ -39,7 +39,7 @@ export default createMuiTheme({
     h2: {
       fontFamily: "ambroise-std, serif",
       fontWeight: 800,
-      fontSize: 30,
+      fontSize: 30
     },
     h3: {
       fontSize: 26
@@ -59,7 +59,7 @@ export default createMuiTheme({
     body2: {
       fontSize: 16,
       lineHeight: 1.63
-    },
+    }
   },
 
   props: {
@@ -97,49 +97,15 @@ export default createMuiTheme({
         justifyContent: "space-between"
       }
     },
+    MuiFormLabel: {
+      root: {
+        color: "rgba(0, 0, 0, 0.54)"
+      }
+    },
     MuiDivider: {
       root: {
         width: "100%"
       }
-    },
-    MuiButton: {
-      root: {
-        fontWeight: 600,
-        borderRadius: 20,
-        color: "#fff",
-        backgroundColor: "#000",
-        [breakpoints.down(460)]: {
-          height: 46,
-          width: "100%"
-        },
-        "&:hover": {
-          color: "#fff",
-          backgroundColor: "#000",
-        }
-      },
-      text: {
-        textTransform: "initial"
-      },
-      outlined: {
-        textTransform: "initial"
-      },
-      containedPrimary: {
-        backgroundColor: "#3E55BD",
-        textTransform: "initial"
-      },
-      outlinedPrimary: {
-        borderColor: "#3E55BD",
-        textTransform: "initial"
-      },
-      textPrimary: {
-        color: "#3E55BD",
-        textTransform: "initial"
-      },
-      containedSecondary: {
-        backgroundColor: "#F17446",
-        color: "#fff",
-        textTransform: "initial"
-      },
     }
   }
 });
