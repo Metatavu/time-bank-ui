@@ -25,10 +25,11 @@ export default class TimeUtils {
    */
   public static convertToMinutesAndHours = (totalMinutes: number): string => {
     const momentValue = moment.duration(totalMinutes, "minutes");
+    const days = momentValue.days();
     const hours = momentValue.hours();
     const minutes = momentValue.minutes();
 
-    return `${hours} h ${minutes} min`;
+    return `${hours + days * 24} h ${minutes} min`;
   };
 
   /**
