@@ -217,10 +217,16 @@ const DrawerContent: React.FC<Props> = () => {
    * Renders the Total work time section
    */
   const renderTotalWorkTime = () => {
-    if (!personTotalTime) {
+    if (!person || !personTotalTime) {
       return null;
     }
-    let totalHour = TimeUtils.minuteToHourString(personTotalTime.total);
+    let initialTimeHour = TimeUtils.minuteToHourString(person.initialTime);
+    person.initialTime >= 0 && (initialTimeHour = `+${initialTimeHour}`);
+    const initialTimeColor = person.initialTime < 0 ?
+      theme.palette.error.dark :
+      theme.palette.success.main;
+
+    let totalHour = TimeUtils.minuteToHourString(personTotalTime.total + person.initialTime);
     personTotalTime.total >= 0 && (totalHour = `+${totalHour}`);
     const totalColor = personTotalTime.total < 0 ?
       theme.palette.error.dark :
@@ -252,6 +258,7 @@ const DrawerContent: React.FC<Props> = () => {
               width="100%"
             >
               { renderAccordinRow(`${strings.total}:`, totalHour, totalColor) }
+              { renderAccordinRow(`${strings.initialTime}:`, initialTimeHour, initialTimeColor) }
               { renderAccordinRow(`${strings.logged}:`, TimeUtils.minuteToHourString(personTotalTime.logged)) }
               { renderAccordinRow(`${strings.expected}:`, TimeUtils.minuteToHourString(personTotalTime.expected)) }
             </Box>

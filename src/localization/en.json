@@ -55,6 +55,7 @@
   "logged": "Logged",
   "expected": "Expected",
   "total": "Difference",
+  "initialTime": "Initial time",
   "project": "Project",
   "internal": "Internal",
   "sunday": "Sunday",
