@@ -21,9 +21,6 @@ const useAppLayoutStyles = makeStyles({
   },
 
   drawerPaper: {
-    scrollbarWidth: "auto",
-    overflowX: "hidden",
-    overflowY: "scroll",
     height: "100vh",
     width: drawerWidth,
     backgroundColor: theme.palette.background.paper,
@@ -33,17 +30,7 @@ const useAppLayoutStyles = makeStyles({
     `,
     [theme.breakpoints.down("sm")]: {
       width: "100%",
-      display: "flex",
-      flexDirection: "column",
-      padding: `0px ${theme.spacing(2)}px`,
-      scrollbarColor: "rgba(0,0,0,0.3) transparent",
-      paddingBottom: theme.spacing(12),
-      "&::-webkit-scrollbar-thumb": {
-        backgroundColor: "rgba(0,0,0,0.3)"
-      },
-      "&::-webkit-scrollbar": {
-        border: "none"
-      }
+      padding: `0px ${theme.spacing(2)}px`
     }
   },
 
