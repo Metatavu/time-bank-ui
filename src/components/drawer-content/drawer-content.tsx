@@ -15,6 +15,7 @@ import TimeUtils from "utils/time-utils";
 import theme from "theme/theme";
 import { CustomPieLabel, WorkTimeCategory, WorkTimeTotalData } from "types/index";
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
+import { ErrorContext } from "components/error-handler/error-handler";
 
 /**
  * Component properties
@@ -34,6 +35,7 @@ const DrawerContent: React.FC<Props> = () => {
   const classes = useDrawerContentStyles();
   const [ persons, setPersons ] = React.useState<PersonDto[]>([]);
   const [ searchInput, setSearchInput ] = React.useState<string>("");
+  const context = React.useContext(ErrorContext);
   
   /**
    * Fetches the person data 
@@ -43,7 +45,7 @@ const DrawerContent: React.FC<Props> = () => {
       const fetchedPersons = await Api.getTimeBankApi().timebankControllerGetPersons();
       setPersons(fetchedPersons);
     } catch (error) {
-      console.error(error);
+      context.setError(strings.errorHandling.fetchUserDataFailed, error);
     }
   };
 
@@ -60,7 +62,7 @@ const DrawerContent: React.FC<Props> = () => {
           });
         dispatch(setPersonTotalTime(fetchedPersonTotalTime[0]));
       } catch (error) {
-        console.error(error);
+        context.setError(strings.errorHandling.fetchTimeDataFailed, error);
       }
     }
   };

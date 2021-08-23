@@ -62,3 +62,11 @@ export interface WorkTimeDatas {
 export interface CustomPieLabel {
   value: number;
 }
+
+/**
+ * Interface for error context type
+ */
+export interface ErrorContextType {
+  error?: string;
+  setError: (message: string, error?: any) => void;
+}

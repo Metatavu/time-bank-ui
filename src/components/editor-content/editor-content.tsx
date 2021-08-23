@@ -16,6 +16,7 @@ import OverviewChart from "components/generics/overview-chart/overview-chart";
 import WorkTimeDataUtils from "utils/work-time-data-utils";
 import moment from "moment";
 import DateRangePicker from "components/generics/date-range-picker/date-range-picker";
+import { ErrorContext } from "components/error-handler/error-handler";
 
 /**
  * Component properties
@@ -44,6 +45,7 @@ const EditorContent: React.FC<Props> = () => {
   const [ isLoading, setIsLoading ] = React.useState(false);
   const [ displayedTimeData, setDisplayedTimeData ] = React.useState<WorkTimeData[] | undefined>(undefined);
   const [ displayedTotal, setDisplayedTotal ] = React.useState<WorkTimeTotalData | undefined>(undefined);
+  const context = React.useContext(ErrorContext);
 
   /**
    * Initialize the component data
@@ -84,7 +86,7 @@ const EditorContent: React.FC<Props> = () => {
       setDisplayedTimeData(workTimeData);
       setDisplayedTotal(workTimeTotalData);
     } catch (error) {
-      console.error(error);
+      context.setError(strings.errorHandling.fetchDateDataFailed, error);
     }
   };
 
@@ -122,7 +124,7 @@ const EditorContent: React.FC<Props> = () => {
       setDisplayedTimeData(workTimeData);
       setDisplayedTotal(workTimeTotalData);
     } catch (error) {
-      console.error(error);
+      context.setError(strings.errorHandling.fetchTimeDataFailed, error);
     }
   };
 
@@ -159,7 +161,7 @@ const EditorContent: React.FC<Props> = () => {
       setDisplayedTimeData(workTimeData);
       setDisplayedTotal(workTimeTotalData);
     } catch (error) {
-      console.error(error);
+      context.setError(strings.errorHandling.fetchTimeDataFailed, error);
     }
   };
   
@@ -196,7 +198,7 @@ const EditorContent: React.FC<Props> = () => {
       setDisplayedTimeData(workTimeData);
       setDisplayedTotal(workTimeTotalData);
     } catch (error) {
-      console.error(error);
+      context.setError(strings.errorHandling.fetchTimeDataFailed, error);
     }
   };
 

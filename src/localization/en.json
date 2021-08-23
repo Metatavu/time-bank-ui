@@ -51,6 +51,13 @@
     "startOnly": "Start only"
   },
 
+  "errorHandling": {
+    "fetchDateDataFailed": "Fetching date data failed",
+    "fetchTimeDataFailed": "Fetching time data failed",
+    "fetchUserDataFailed": "Fetching user data failed",
+    "title": "Error"
+  },
+
   "week": "Week",
   "logged": "Logged",
   "expected": "Expected",
