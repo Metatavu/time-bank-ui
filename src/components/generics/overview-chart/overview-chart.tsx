@@ -111,10 +111,14 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
             bottom: 5
           }}
         >
-          <XAxis type="number" hide/>
+          <XAxis
+            type="number"
+            axisLine={ false }
+            tickFormatter={ value => TimeUtils.minuteToHourString(value as number) }
+          />
           <YAxis type="category" dataKey="name"/>
           <Tooltip content={ renderCustomizedTooltip }/>
-          <Legend/>
+          <Legend wrapperStyle={{ position: "relative" }}/>
           <Bar dataKey="project" barSize={ 60 } stackId="a" fill={ theme.palette.success.main }/>
           <Bar dataKey="internal" barSize={ 60 } stackId="a" fill={ theme.palette.warning.main }/>
           <Bar dataKey="expected" barSize={ 60 } stackId="a" fill={ theme.palette.info.main }/>

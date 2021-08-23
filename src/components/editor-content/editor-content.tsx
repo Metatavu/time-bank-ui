@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, Switch, Divider } from "@material-ui/core";
+import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, Divider, Button } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { DatePickerView } from "@material-ui/pickers";
 import useEditorContentStyles from "styles/editor-content/editor-content";
@@ -33,7 +33,6 @@ const EditorContent: React.FC<Props> = () => {
 
   const { person, personTotalTime } = useAppSelector(selectPerson);
 
-  const [ startDateOnly, setStartDateOnly ] = useState(false);
   const [ scope, setScope ] = React.useState<FilterScopes>(FilterScopes.WEEK);
   const [ dateFormat, setDateFormat ] = React.useState<string | undefined>("dd/MM/yyyy");
   const [ datePickerView, setDatePickerView ] = React.useState<DatePickerView>("date");
@@ -58,7 +57,6 @@ const EditorContent: React.FC<Props> = () => {
       setEndWeek(currentWeek);
     } else {
       setStartWeek(currentWeek);
-      setStartDateOnly(true);
     }
   };
 
@@ -265,8 +263,7 @@ const EditorContent: React.FC<Props> = () => {
   /**
    * Start date only change handler
    */
-  const handleStartDateOnlyChange = () => {
-    setStartDateOnly(!startDateOnly);
+  const handleStartDateOnlyClick = () => {
     setEndWeek(null);
     setSelectedEndDate(null);
   };
@@ -390,14 +387,21 @@ const EditorContent: React.FC<Props> = () => {
     <>
       { renderSelectScope() }
       <Box className={ classes.startDateOnly }>
-        <Switch
+        <Button
+          variant="text"
           color="secondary"
-          checked={ startDateOnly }
-          onChange={ handleStartDateOnlyChange }
-        />
-        <Typography variant="h5" style={{ paddingLeft: theme.spacing(0.5) }}>
-          { strings.editorContent.startOnly }
-        </Typography>
+          onClick={ handleStartDateOnlyClick }
+        >
+          <Typography
+            variant="h5"
+            style={{
+              fontWeight: 600,
+              textTransform: "none"
+            }}
+          >
+            { strings.editorContent.startOnly }
+          </Typography>
+        </Button>
       </Box>
       <Box className={ classes.datePickers }>
         <DateRangePicker
@@ -407,7 +411,6 @@ const EditorContent: React.FC<Props> = () => {
           selectedEndDate={ selectedEndDate }
           startWeek={ startWeek }
           endWeek={ endWeek }
-          startDateOnly={ startDateOnly }
           datePickerView={ datePickerView }
           onStartDateChange={ handleStartDateChange }
           onEndDateChange={ handleEndDateChange }
@@ -516,7 +519,7 @@ const EditorContent: React.FC<Props> = () => {
    * Renders the filter component
    */
   const renderCharts = () => {
-    if (!personTotalTime) {
+    if (!person || !personTotalTime) {
       return null;
     }
 

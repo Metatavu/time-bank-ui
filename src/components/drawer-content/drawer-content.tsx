@@ -331,7 +331,7 @@ const DrawerContent: React.FC<Props> = () => {
       <Box className={ classes.drawerSearchBoxContainer }>
         { renderSearchBox() }
       </Box>
-      { person &&
+      { person ?
         <>
           <Box className={ classes.drawerUserInfoContainer }>
             <UserInfo/>
@@ -341,7 +341,12 @@ const DrawerContent: React.FC<Props> = () => {
             { renderTotalWorkTime() }
             { renderExpectedWork() }
           </Box>
-        </>
+        </> :
+        <Box className={ classes.noUserContainer }>
+          <Typography style={{ fontStyle: "italic", fontWeight: 600 }}>
+            { strings.drawerContent.noUser }
+          </Typography>
+        </Box>
       }
     </>
   );

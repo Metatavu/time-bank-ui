@@ -25,6 +25,7 @@
       "createdAt": "Luotu:",
       "updatedAt": "Päivitetty:"
     },
+    "noUser": "Ei käyttäjää",
     "statistics": "Tilastot",
     "expected": "Odotettu",
     "searchPlaceholder": "Valitse käyttäjä.."
@@ -54,7 +55,7 @@
   "week": "Viikko",
   "logged": "Kirjattu",
   "expected": "Odotettu",
-  "total": "Erotus",
+  "total": "Kaikki",
   "initialTime": "Alkuperäinen aika",
   "project": "Projekti",
   "internal": "Sisäinen",
