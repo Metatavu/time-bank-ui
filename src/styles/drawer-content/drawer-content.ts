@@ -8,16 +8,16 @@ const useDrawerContentStyles = makeStyles({
     alignItems: "center",
     position: "fixed",
     zIndex: 100,
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
+    [theme.breakpoints.down("sm")]: {
+      width: "90%"
+    }
   },
 
   searchBoxContainer: {
     height: 40,
     width: 350,
-    backgroundColor: "rgb(255, 255, 255)",
-    [theme.breakpoints.down("sm")]: {
-      width: "90%"
-    }
+    backgroundColor: "rgb(255, 255, 255)"
   },
 
   noUserContainer: {

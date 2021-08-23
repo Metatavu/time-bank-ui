@@ -36,8 +36,10 @@ const MainScreen: React.FC = () => {
     return (
       <>
         <Toolbar/>
-        <Box className={ classes.editorContainer }>
-          <EditorContent/>
+        <Box className={ classes.scrollableEditorContainer }>
+          <Box className={ classes.editorContainer }>
+            <EditorContent/>
+          </Box>
         </Box>
       </>
     );
