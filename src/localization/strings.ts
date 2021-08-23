@@ -72,6 +72,9 @@ export interface IStrings extends LocalizedStringsMethods {
     startOnly: string;
   };
 
+  /**
+   * Translations related to error handling
+   */
   errorHandling: {
     fetchDateDataFailed: string;
     fetchTimeDataFailed: string;
