@@ -52,6 +52,13 @@
     "startOnly": "Vain aloitusviikko"
   },
 
+  "errorHandling": {
+    "fetchDateDataFailed": "Tietojen haku päivämäärän perusteella epäonnistui",
+    "fetchTimeDataFailed": "Aikatietojen haku epäonnistui",
+    "fetchUserDataFailed": "Käyttäjätietojen haku epäonnistui",
+    "title": "Error"
+  },
+
   "week": "Viikko",
   "logged": "Kirjattu",
   "expected": "Odotettu",
