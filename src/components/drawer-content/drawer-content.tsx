@@ -220,19 +220,18 @@ const DrawerContent: React.FC<Props> = () => {
     if (!person || !personTotalTime) {
       return null;
     }
-    let initialTimeHour = TimeUtils.convertToMinutesAndHours(person.initialTime);
-    person.initialTime >= 0 && (initialTimeHour = `+${initialTimeHour}`);
+
+    const initialTimeHours = TimeUtils.convertToMinutesAndHours(person.initialTime);
     const initialTimeColor = person.initialTime < 0 ?
       theme.palette.error.dark :
       theme.palette.success.main;
 
-    let totalHour = TimeUtils.convertToMinutesAndHours(personTotalTime.total + person.initialTime);
-    personTotalTime.total >= 0 && (totalHour = `+${totalHour}`);
+    const totalHours = TimeUtils.convertToMinutesAndHours(personTotalTime.total + person.initialTime);
     const totalColor = personTotalTime.total < 0 ?
       theme.palette.error.dark :
       theme.palette.success.main;
 
-    const workTimeDatas: WorkTimeTotalData[] = [
+    const workTimeData: WorkTimeTotalData[] = [
       { name: WorkTimeCategory.PROJECT, total: personTotalTime.projectTime },
       { name: WorkTimeCategory.INTERNAL, total: personTotalTime.internalTime }
     ];
@@ -257,8 +256,8 @@ const DrawerContent: React.FC<Props> = () => {
               paddingRight={ 3 }
               width="100%"
             >
-              { renderAccordionRow(`${strings.total}:`, totalHour, totalColor) }
-              { renderAccordionRow(`${strings.initialTime}:`, initialTimeHour, initialTimeColor) }
+              { renderAccordionRow(`${strings.total}:`, totalHours, totalColor) }
+              { renderAccordionRow(`${strings.initialTime}:`, initialTimeHours, initialTimeColor) }
               { renderAccordionRow(`${strings.logged}:`, TimeUtils.convertToMinutesAndHours(personTotalTime.logged)) }
               { renderAccordionRow(`${strings.expected}:`, TimeUtils.convertToMinutesAndHours(personTotalTime.expected)) }
             </Box>
@@ -268,10 +267,10 @@ const DrawerContent: React.FC<Props> = () => {
                   cx="50%"
                   cy="50%"
                   dataKey="total"
-                  data={ workTimeDatas }
+                  data={ workTimeData }
                   label={ renderCustomizedLabel }
                 >
-                  { workTimeDatas.map((entry, index) => (
+                  { workTimeData.map((entry, index) => (
                     <Cell fill={ COLORS[index % COLORS.length] }/>
                   )) }
                 </Pie>
