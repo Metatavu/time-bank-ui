@@ -42,22 +42,22 @@ const useDrawerContentStyles = makeStyles({
     width: "100%"
   },
 
-  drawerAccordin: {
+  drawerAccordion: {
     boxShadow: "none"
   },
 
-  accordinDetails: {
+  accordionDetails: {
     display: "flex",
     flexDirection: "column"
   },
 
-  accordinRow: {
+  accordionRow: {
     display: "flex",
     justifyContent: "space-between",
     marginBottom: theme.spacing(1)
   },
 
-  accordinRowNames: {
+  accordionRowNames: {
     fontSize: 14,
     fontWeight: 600,
     [theme.breakpoints.down("sm")]: {
@@ -65,7 +65,7 @@ const useDrawerContentStyles = makeStyles({
     }
   },
 
-  accordinRowValues: {
+  accordionRowValues: {
     fontSize: 14,
     fontStyle: "italic",
     [theme.breakpoints.down("sm")]: {

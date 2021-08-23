@@ -272,7 +272,7 @@ const EditorContent: React.FC<Props> = () => {
   };
 
   /**
-   * Changes the presented date format according to selected scope
+   * Changes the presented date format accordion to selected scope
    *
    * @param event React change event
    */

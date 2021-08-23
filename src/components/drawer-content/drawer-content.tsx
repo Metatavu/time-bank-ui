@@ -150,15 +150,15 @@ const DrawerContent: React.FC<Props> = () => {
    * @param value value of the row
    * @param color color of the row value
    */
-  const renderAccordinRow = (name: string, value: string, color?: string) => {
+  const renderAccordionRow = (name: string, value: string, color?: string) => {
     return (
-      <Box className={ classes.accordinRow }>
-        <Typography className={ classes.accordinRowNames }>
+      <Box className={ classes.accordionRow }>
+        <Typography className={ classes.accordionRowNames }>
           { name }
         </Typography>
         <Typography
           style={{ color: color }}
-          className={ classes.accordinRowValues }
+          className={ classes.accordionRowValues }
         >
           { value }
         </Typography>
@@ -241,7 +241,7 @@ const DrawerContent: React.FC<Props> = () => {
 
     return (
       <>
-        <Accordion defaultExpanded className={ classes.drawerAccordin }>
+        <Accordion defaultExpanded className={ classes.drawerAccordion }>
           <AccordionSummary
             expandIcon={ <ExpandMoreIcon/> }
             aria-controls="panel1a-content"
@@ -251,16 +251,16 @@ const DrawerContent: React.FC<Props> = () => {
               { strings.drawerContent.statistics }
             </Typography>
           </AccordionSummary>
-          <AccordionDetails className={ classes.accordinDetails }>
+          <AccordionDetails className={ classes.accordionDetails }>
             <Box
               p={ 1 }
               paddingRight={ 3 }
               width="100%"
             >
-              { renderAccordinRow(`${strings.total}:`, totalHour, totalColor) }
-              { renderAccordinRow(`${strings.initialTime}:`, initialTimeHour, initialTimeColor) }
-              { renderAccordinRow(`${strings.logged}:`, TimeUtils.minuteToHourString(personTotalTime.logged)) }
-              { renderAccordinRow(`${strings.expected}:`, TimeUtils.minuteToHourString(personTotalTime.expected)) }
+              { renderAccordionRow(`${strings.total}:`, totalHour, totalColor) }
+              { renderAccordionRow(`${strings.initialTime}:`, initialTimeHour, initialTimeColor) }
+              { renderAccordionRow(`${strings.logged}:`, TimeUtils.minuteToHourString(personTotalTime.logged)) }
+              { renderAccordionRow(`${strings.expected}:`, TimeUtils.minuteToHourString(personTotalTime.expected)) }
             </Box>
             <ResponsiveContainer className={ classes.pieChartContainer }>
               <PieChart>
@@ -294,7 +294,7 @@ const DrawerContent: React.FC<Props> = () => {
 
     return (
       <>
-        <Accordion className={ classes.drawerAccordin }>
+        <Accordion className={ classes.drawerAccordion }>
           <AccordionSummary
             expandIcon={ <ExpandMoreIcon/> }
             aria-controls="panel1a-content"
@@ -310,13 +310,13 @@ const DrawerContent: React.FC<Props> = () => {
               paddingRight={ 3 }
               width="100%"
             >
-              { renderAccordinRow(`${strings.sunday}:`, TimeUtils.minuteToHourString(person.sunday)) }
-              { renderAccordinRow(`${strings.monday}:`, TimeUtils.minuteToHourString(person.monday)) }
-              { renderAccordinRow(`${strings.tuesday}:`, TimeUtils.minuteToHourString(person.tuesday)) }
-              { renderAccordinRow(`${strings.wednesday}:`, TimeUtils.minuteToHourString(person.wednesday)) }
-              { renderAccordinRow(`${strings.thursday}:`, TimeUtils.minuteToHourString(person.thursday)) }
-              { renderAccordinRow(`${strings.friday}:`, TimeUtils.minuteToHourString(person.friday)) }
-              { renderAccordinRow(`${strings.saturday}:`, TimeUtils.minuteToHourString(person.saturday)) }
+              { renderAccordionRow(`${strings.sunday}:`, TimeUtils.minuteToHourString(person.sunday)) }
+              { renderAccordionRow(`${strings.monday}:`, TimeUtils.minuteToHourString(person.monday)) }
+              { renderAccordionRow(`${strings.tuesday}:`, TimeUtils.minuteToHourString(person.tuesday)) }
+              { renderAccordionRow(`${strings.wednesday}:`, TimeUtils.minuteToHourString(person.wednesday)) }
+              { renderAccordionRow(`${strings.thursday}:`, TimeUtils.minuteToHourString(person.thursday)) }
+              { renderAccordionRow(`${strings.friday}:`, TimeUtils.minuteToHourString(person.friday)) }
+              { renderAccordionRow(`${strings.saturday}:`, TimeUtils.minuteToHourString(person.saturday)) }
             </Box>
           </AccordionDetails>
         </Accordion>
