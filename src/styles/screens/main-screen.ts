@@ -35,12 +35,32 @@ const useMainScreenStyles = makeStyles({
     }
   },
 
-  editorContainer: {
-    padding: `${theme.spacing(5)}px ${theme.spacing(6)}px`,
+  scrollableEditorContainer: {
+    overflow: "auto",
+    overflowX: "hidden",
+    height: "calc(100vh - 64px)",
     width: "calc(100vw - 400px)",
     [theme.breakpoints.down("sm")]: {
       display: "none"
+    },
+    scrollbarWidth: "auto",
+    scrollbarColor: "rgba(0,0,0,0.3) transparent",
+    "&::-webkit-scrollbar-thumb": {
+      backgroundColor: "rgba(0,0,0,0.5)",
+      border: "none"
+    },
+    "&::-webkit-scrollbar-track": {
+      backgroundColor: "transparent",
+      color: "transparent",
+      border: "none"
     }
+  },
+
+  editorContainer: {
+    height: "100%",
+    width: "calc(100vw - 400px)",
+    padding: `${theme.spacing(5)}px ${theme.spacing(6)}px`,
+    scrollbarWidth: "auto"
   }
 
 }, {
