@@ -95,7 +95,7 @@ const TotalChart: React.FC<Props> = ({ displayedData, isLoading }) => {
         <Bar
           dataKey="total"
           barSize={ 50 }
-          fill={ displayedData.total > 0 ? theme.palette.success.main : theme.palette.error.main }
+          fill={ displayedData.total => 0 ? theme.palette.success.main : theme.palette.error.main }
         />
         <ReferenceLine x={ 0 } stroke="rgba(0, 0, 0, 0.5)"/>
       </BarChart>
