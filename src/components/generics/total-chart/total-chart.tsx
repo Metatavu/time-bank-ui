@@ -56,7 +56,7 @@ const TotalChart: React.FC<Props> = ({ displayedData, isLoading }) => {
         <Typography
           variant="h6"
           style={{
-            color: displayedData.total > 0 ? theme.palette.success.main : theme.palette.error.main,
+            color: displayedData.total >= 0 ? theme.palette.success.main : theme.palette.error.main,
             padding: theme.spacing(1)
           }}
         >
@@ -95,7 +95,7 @@ const TotalChart: React.FC<Props> = ({ displayedData, isLoading }) => {
         <Bar
           dataKey="total"
           barSize={ 50 }
-          fill={ displayedData.total > 0 ? theme.palette.success.main : theme.palette.error.main }
+          fill={ displayedData.total >= 0 ? theme.palette.success.main : theme.palette.error.main }
         />
         <ReferenceLine x={ 0 } stroke="rgba(0, 0, 0, 0.5)"/>
       </BarChart>
