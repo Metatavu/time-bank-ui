@@ -32,8 +32,8 @@ export default class WorkTimeDataUtils {
           internal: entry.internalTime
         });
         workTimeTotalData.total += entry.total;
-        workTimeTotalData.logged = workTimeTotalData.total + entry.logged;
-        workTimeTotalData.expected = workTimeTotalData.total + entry.expected;
+        workTimeTotalData.logged! += entry.logged;
+        workTimeTotalData.expected! += entry.expected;
       }
     );
 
@@ -65,8 +65,8 @@ export default class WorkTimeDataUtils {
           internal: entry.internalTime
         });
         workTimeTotalData.total += entry.total;
-        workTimeTotalData.logged = workTimeTotalData.total + entry.logged;
-        workTimeTotalData.expected = workTimeTotalData.total + entry.expected;
+        workTimeTotalData.logged! += entry.logged;
+        workTimeTotalData.expected! += entry.expected;
       }
     );
 
