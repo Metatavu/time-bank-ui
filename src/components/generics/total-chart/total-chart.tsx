@@ -56,7 +56,7 @@ const TotalChart: React.FC<Props> = ({ displayedData, isLoading }) => {
         <Typography
           variant="h6"
           style={{
-            color: displayedData.total > 0 ? theme.palette.success.main : theme.palette.error.main,
+            color: displayedData.total >= 0 ? theme.palette.success.main : theme.palette.error.main,
             padding: theme.spacing(1)
           }}
         >
