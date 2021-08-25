@@ -7,6 +7,10 @@ import { Box, TextField, Typography, MenuItem } from "@material-ui/core";
 import TimeUtils from "utils/time-utils";
 import strings from "localization/strings";
 import useDateRangePickerStyles from "styles/generics/date-range-picker/date-range-picker";
+import fiLocale from "date-fns/locale/fi";
+import enLocale from "date-fns/locale/en-US";
+import { useAppSelector } from "app/hooks";
+import { selectLocale } from "features/locale/locale-slice";
 
 /**
  * Component properties
@@ -21,8 +25,8 @@ interface Props {
   datePickerView: DatePickerView;
   onStartDateChange: (date: Date | null) => void;
   onEndDateChange: (date: Date | null) => void;
-  onStartWeekChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onEndWeekChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onStartWeekChange: (weekNumber: number) => void;
+  onEndWeekChange: (weekNumber: number) => void;
 }
 
 /**
@@ -43,13 +47,17 @@ const DateRangePicker: React.FC<Props> = ({
 }) => {
   const classes = useDateRangePickerStyles();
 
+  const { locale } = useAppSelector(selectLocale);
+
   const [ todayDate /* setTodayDate */ ] = React.useState(new Date());
   const [ currentWeekNumber, setCurrentWeekNumber ] = React.useState(0);
+  const [ pickerLocale, setPickerLocale ] = React.useState(enLocale);
 
   /**
    * Initialize the date data
    */
   const initializeData = async () => {
+    locale === "fi" ? setPickerLocale(fiLocale) : setPickerLocale(enLocale);
     const currentWeek = TimeUtils.getCurrentWeek();
     setCurrentWeekNumber(currentWeek);
   };
@@ -57,6 +65,22 @@ const DateRangePicker: React.FC<Props> = ({
   React.useEffect(() => {
     initializeData();
   }, []);
+
+  /**
+   * Event handler for week change
+   *
+   * @param event React change event
+   */
+  const handleWeekChange = (start: boolean) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+
+    const numberValue = Number(value);
+    if (start) {
+      onStartWeekChange(numberValue);
+    } else {
+      onEndWeekChange(numberValue);
+    }
+  };
 
   /**
    * Renders start week numbers to select component
@@ -119,7 +143,7 @@ const DateRangePicker: React.FC<Props> = ({
     const { filterStartingDate } = strings.editorContent;
 
     return (
-      <MuiPickersUtilsProvider utils={ DateFnsUtils } >
+      <MuiPickersUtilsProvider locale={ pickerLocale } utils={ DateFnsUtils } >
         <KeyboardDatePicker
           inputVariant="standard"
           variant="inline"
@@ -141,7 +165,7 @@ const DateRangePicker: React.FC<Props> = ({
    */
   const renderStartYearPickerAndWeekSelector = () => (
     <>
-      <MuiPickersUtilsProvider utils={ DateFnsUtils } >
+      <MuiPickersUtilsProvider locale={ pickerLocale } utils={ DateFnsUtils } >
         <KeyboardDatePicker
           views={[ FilterScopes.YEAR ]}
           variant="inline"
@@ -159,7 +183,7 @@ const DateRangePicker: React.FC<Props> = ({
         select
         variant="standard"
         value={ startWeek }
-        onChange={ onStartWeekChange }
+        onChange={ handleWeekChange(true) }
         label={ strings.editorContent.selectWeekStart }
         className={ classes.weekPicker }
       >
@@ -172,7 +196,7 @@ const DateRangePicker: React.FC<Props> = ({
    * Renders end date picker
    */
   const renderEndDate = () => (
-    <MuiPickersUtilsProvider utils={ DateFnsUtils }>
+    <MuiPickersUtilsProvider locale={ pickerLocale } utils={ DateFnsUtils }>
       <KeyboardDatePicker
         inputVariant="standard"
         variant="inline"
@@ -194,7 +218,7 @@ const DateRangePicker: React.FC<Props> = ({
    */
   const renderEndYearPickerAndWeekSelector = () => (
     <>
-      <MuiPickersUtilsProvider utils={ DateFnsUtils } >
+      <MuiPickersUtilsProvider locale={ pickerLocale } utils={ DateFnsUtils } >
         <KeyboardDatePicker
           inputVariant="standard"
           variant="inline"
@@ -215,7 +239,7 @@ const DateRangePicker: React.FC<Props> = ({
         variant="standard"
         id="scope-select-outlined"
         value={ endWeek }
-        onChange={ onEndWeekChange }
+        onChange={ handleWeekChange(false) }
         label={ strings.editorContent.selectWeekEnd }
         className={ classes.weekPicker }
       >

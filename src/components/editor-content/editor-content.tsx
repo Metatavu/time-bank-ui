@@ -35,7 +35,7 @@ const EditorContent: React.FC<Props> = () => {
   const { person, personTotalTime } = useAppSelector(selectPerson);
 
   const [ scope, setScope ] = React.useState<FilterScopes>(FilterScopes.WEEK);
-  const [ dateFormat, setDateFormat ] = React.useState<string | undefined>("dd/MM/yyyy");
+  const [ dateFormat, setDateFormat ] = React.useState<string | undefined>("dd.MM.yyyy");
   const [ datePickerView, setDatePickerView ] = React.useState<DatePickerView>("date");
   const [ selectedStartDate, setSelectedStartDate ] = useState<Date>(new Date());
   const [ selectedEndDate, setSelectedEndDate ] = useState<Date | null>(null);
@@ -73,7 +73,7 @@ const EditorContent: React.FC<Props> = () => {
     try {
       const dateEntries = await Api.getTimeBankApi().timebankControllerGetEntries({
         personId: person.id.toString(),
-        after: TimeUtils.standardizedDateString(moment(selectedStartDate).subtract(1, "day")),
+        after: TimeUtils.standardizedDateString(selectedStartDate),
         before: selectedEndDate ?
           TimeUtils.standardizedDateString(selectedEndDate) :
           TimeUtils.standardizedDateString(selectedStartDate)
@@ -247,21 +247,19 @@ const EditorContent: React.FC<Props> = () => {
   /**
    * Method to handle starting week change
    *
-   * @param event React change event 
+   * @param newValue new value
    */
-  const handleStartWeekChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    setStartWeek(Number(value));
+  const handleStartWeekChange = (newValue: number) => {
+    setStartWeek(newValue);
   };
 
   /**
    * Method to handle ending week change
    * 
-   * @param event React change event
+   * @param newValue new value
    */
-  const handleEndWeekChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    setEndWeek(Number(value));
+  const handleEndWeekChange = (newValue: number) => {
+    setEndWeek(newValue);
   };
 
   /**

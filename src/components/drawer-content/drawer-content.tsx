@@ -60,7 +60,6 @@ const DrawerContent: React.FC<Props> = () => {
             personId: person.id.toString(),
             retention: TimebankControllerGetTotalRetentionEnum.ALLTIME
           });
-        console.log("fetchedPersonTotalTime", fetchedPersonTotalTime);
         dispatch(setPersonTotalTime(fetchedPersonTotalTime[0]));
       } catch (error) {
         context.setError(strings.errorHandling.fetchTimeDataFailed, error);
@@ -224,21 +223,8 @@ const DrawerContent: React.FC<Props> = () => {
       return null;
     }
 
-    const initialTimeHours = TimeUtils.convertToMinutesAndHours(person.initialTime);
-    const initialTimeColor = person.initialTime < 0 ?
-      theme.palette.error.dark :
-      theme.palette.success.main;
-
-    console.log({
-      "personTotalTime.total": personTotalTime.total,
-      "person.initialTime": person.initialTime,
-      total: (personTotalTime.total + person.initialTime)
-    });
-
-    const totalHours = personTotalTime.total + person.initialTime;
-
-    const totalHourString = TimeUtils.convertToMinutesAndHours(personTotalTime.total + person.initialTime);
-    const totalColor = totalHours < 0 ?
+    const totalHourString = TimeUtils.convertToMinutesAndHours(personTotalTime.total);
+    const totalColor = personTotalTime.total < 0 ?
       theme.palette.error.dark :
       theme.palette.success.main;
 
@@ -268,7 +254,6 @@ const DrawerContent: React.FC<Props> = () => {
               width="100%"
             >
               { renderAccordionRow(`${strings.total}:`, totalHourString, totalColor) }
-              { renderAccordionRow(`${strings.initialTime}:`, initialTimeHours, initialTimeColor) }
               { renderAccordionRow(`${strings.logged}:`, TimeUtils.convertToMinutesAndHours(personTotalTime.logged)) }
               { renderAccordionRow(`${strings.expected}:`, TimeUtils.convertToMinutesAndHours(personTotalTime.expected)) }
             </Box>
@@ -320,13 +305,13 @@ const DrawerContent: React.FC<Props> = () => {
               paddingRight={ 3 }
               width="100%"
             >
-              { renderAccordionRow(`${strings.sunday}:`, TimeUtils.convertToMinutesAndHours(person.sunday)) }
               { renderAccordionRow(`${strings.monday}:`, TimeUtils.convertToMinutesAndHours(person.monday)) }
               { renderAccordionRow(`${strings.tuesday}:`, TimeUtils.convertToMinutesAndHours(person.tuesday)) }
               { renderAccordionRow(`${strings.wednesday}:`, TimeUtils.convertToMinutesAndHours(person.wednesday)) }
               { renderAccordionRow(`${strings.thursday}:`, TimeUtils.convertToMinutesAndHours(person.thursday)) }
               { renderAccordionRow(`${strings.friday}:`, TimeUtils.convertToMinutesAndHours(person.friday)) }
               { renderAccordionRow(`${strings.saturday}:`, TimeUtils.convertToMinutesAndHours(person.saturday)) }
+              { renderAccordionRow(`${strings.sunday}:`, TimeUtils.convertToMinutesAndHours(person.sunday)) }
             </Box>
           </AccordionDetails>
         </Accordion>

@@ -24,6 +24,7 @@ interface Props {
 const TotalChart: React.FC<Props> = ({ displayedData, isLoading }) => {
   const classes = useTotalChartStyles();
   const { person } = useAppSelector(selectPerson);
+  const range = 1 * 60 * 24;
 
   // TODO when the user is selected but no selected range
   // Can be added later
@@ -56,7 +57,7 @@ const TotalChart: React.FC<Props> = ({ displayedData, isLoading }) => {
         <Typography
           variant="h6"
           style={{
-            color: displayedData.total > 0 ? theme.palette.success.main : theme.palette.error.main,
+            color: displayedData.total >= 0 ? theme.palette.success.main : theme.palette.error.main,
             padding: theme.spacing(1)
           }}
         >
@@ -65,9 +66,6 @@ const TotalChart: React.FC<Props> = ({ displayedData, isLoading }) => {
       </Box>
     );
   };
-
-  // TODO domain might be change once the internal time is fixed
-  // const range = Math.max(5 * 24 * 60, Math.abs(displayedData.total));
 
   /**
    * Component render
@@ -87,7 +85,7 @@ const TotalChart: React.FC<Props> = ({ displayedData, isLoading }) => {
           <XAxis
             type="number"
             axisLine={ false }
-            domain={ [1 * 60 * -24, 1 * 60 * 24] }
+            domain={[ -range, range ]}
             tickCount={ 9 }
             tickFormatter={ value => TimeUtils.convertToMinutesAndHours(value as number) }
             interval={ 0 }
