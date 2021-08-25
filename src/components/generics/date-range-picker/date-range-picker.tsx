@@ -67,9 +67,9 @@ const DateRangePicker: React.FC<Props> = ({
   }, []);
 
   /**
-   * Event handler for week change
+   * Event handler creator for week change
    *
-   * @param event React change event
+   * @param start is start week
    */
   const handleWeekChange = (start: boolean) => (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
