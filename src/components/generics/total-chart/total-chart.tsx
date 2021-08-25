@@ -24,7 +24,8 @@ interface Props {
 const TotalChart: React.FC<Props> = ({ displayedData, isLoading }) => {
   const classes = useTotalChartStyles();
   const { person } = useAppSelector(selectPerson);
-  const range = 1 * 60 * 24;
+  const domainStart = 1 * 60 * -20;
+  const domainEnd = 1 * 60 * 40;
 
   // TODO when the user is selected but no selected range
   // Can be added later
