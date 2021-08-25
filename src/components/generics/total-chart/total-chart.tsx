@@ -67,39 +67,48 @@ const TotalChart: React.FC<Props> = ({ displayedData, isLoading }) => {
   };
 
   // TODO domain might be change once the internal time is fixed
-  const range = Math.max(5 * 24 * 60, Math.abs(displayedData.total));
+  // const range = Math.max(5 * 24 * 60, Math.abs(displayedData.total));
 
   /**
    * Component render
    */
   return (
-    <ResponsiveContainer className={ classes.chartContainer }>
-      <BarChart
-        layout="vertical"
-        data={[ displayedData ]}
+    <Box className={ classes.root }>
+      <ResponsiveContainer
+        className={ classes.chartContainer }
+        width="100%"
+        height={ 100 }
+        debounce={ 0 }
       >
-        <XAxis
-          type="number"
-          axisLine={ false }
-          domain={ [-range, range] }
-          tickCount={ 10 }
-          tickFormatter={ value => TimeUtils.convertToMinutesAndHours(value as number) }
-        />
-        <YAxis
-          hide
-          type="category"
-          dataKey="name"
-        />
-        <Tooltip content={ renderCustomizedTooltip }/>
-        <Legend/>
-        <Bar
-          dataKey="total"
-          barSize={ 50 }
-          fill={ displayedData.total > 0 ? theme.palette.success.main : theme.palette.error.main }
-        />
-        <ReferenceLine x={ 0 } stroke="rgba(0, 0, 0, 0.5)"/>
-      </BarChart>
-    </ResponsiveContainer>
+        <BarChart
+          layout="vertical"
+          data={[ displayedData ]}
+        >
+          <XAxis
+            type="number"
+            axisLine={ false }
+            domain={ [1 * 60 * -24, 1 * 60 * 24] }
+            tickCount={ 9 }
+            tickFormatter={ value => TimeUtils.convertToMinutesAndHours(value as number) }
+            interval={ 0 }
+            minTickGap={ 0 }
+          />
+          <YAxis
+            hide
+            type="category"
+            dataKey="name"
+          />
+          <Tooltip content={ renderCustomizedTooltip }/>
+          <Legend/>
+          <Bar
+            dataKey="total"
+            barSize={ 100 }
+            fill={ displayedData.total > 0 ? theme.palette.success.main : theme.palette.error.main }
+          />
+          <ReferenceLine x={ 0 } stroke="rgba(0, 0, 0, 0.5)"/>
+        </BarChart>
+      </ResponsiveContainer>
+    </Box>
   );
 };
 

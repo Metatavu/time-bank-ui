@@ -60,6 +60,7 @@ const DrawerContent: React.FC<Props> = () => {
             personId: person.id.toString(),
             retention: TimebankControllerGetTotalRetentionEnum.ALLTIME
           });
+        console.log("fetchedPersonTotalTime", fetchedPersonTotalTime);
         dispatch(setPersonTotalTime(fetchedPersonTotalTime[0]));
       } catch (error) {
         context.setError(strings.errorHandling.fetchTimeDataFailed, error);
@@ -228,8 +229,16 @@ const DrawerContent: React.FC<Props> = () => {
       theme.palette.error.dark :
       theme.palette.success.main;
 
-    const totalHours = TimeUtils.convertToMinutesAndHours(personTotalTime.total + person.initialTime);
-    const totalColor = personTotalTime.total < 0 ?
+    console.log({
+      "personTotalTime.total": personTotalTime.total,
+      "person.initialTime": person.initialTime,
+      total: (personTotalTime.total + person.initialTime)
+    });
+
+    const totalHours = personTotalTime.total + person.initialTime;
+
+    const totalHourString = TimeUtils.convertToMinutesAndHours(personTotalTime.total + person.initialTime);
+    const totalColor = totalHours < 0 ?
       theme.palette.error.dark :
       theme.palette.success.main;
 
@@ -258,7 +267,7 @@ const DrawerContent: React.FC<Props> = () => {
               paddingRight={ 3 }
               width="100%"
             >
-              { renderAccordionRow(`${strings.total}:`, totalHours, totalColor) }
+              { renderAccordionRow(`${strings.total}:`, totalHourString, totalColor) }
               { renderAccordionRow(`${strings.initialTime}:`, initialTimeHours, initialTimeColor) }
               { renderAccordionRow(`${strings.logged}:`, TimeUtils.convertToMinutesAndHours(personTotalTime.logged)) }
               { renderAccordionRow(`${strings.expected}:`, TimeUtils.convertToMinutesAndHours(personTotalTime.expected)) }
