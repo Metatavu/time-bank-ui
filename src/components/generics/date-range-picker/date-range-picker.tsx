@@ -25,8 +25,8 @@ interface Props {
   datePickerView: DatePickerView;
   onStartDateChange: (date: Date | null) => void;
   onEndDateChange: (date: Date | null) => void;
-  onStartWeekChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onEndWeekChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onStartWeekChange: (weekNumber: number) => void;
+  onEndWeekChange: (weekNumber: number) => void;
 }
 
 /**
@@ -65,6 +65,22 @@ const DateRangePicker: React.FC<Props> = ({
   React.useEffect(() => {
     initializeData();
   }, []);
+
+  /**
+   * Event handler creator for week change
+   *
+   * @param start is start week
+   */
+  const handleWeekChange = (start: boolean) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+
+    const numberValue = Number(value);
+    if (start) {
+      onStartWeekChange(numberValue);
+    } else {
+      onEndWeekChange(numberValue);
+    }
+  };
 
   /**
    * Renders start week numbers to select component
@@ -167,7 +183,7 @@ const DateRangePicker: React.FC<Props> = ({
         select
         variant="standard"
         value={ startWeek }
-        onChange={ onStartWeekChange }
+        onChange={ handleWeekChange(true) }
         label={ strings.editorContent.selectWeekStart }
         className={ classes.weekPicker }
       >
@@ -223,7 +239,7 @@ const DateRangePicker: React.FC<Props> = ({
         variant="standard"
         id="scope-select-outlined"
         value={ endWeek }
-        onChange={ onEndWeekChange }
+        onChange={ handleWeekChange(false) }
         label={ strings.editorContent.selectWeekEnd }
         className={ classes.weekPicker }
       >

@@ -1,7 +1,12 @@
 import { makeStyles } from "@material-ui/core";
-import theme from "theme/theme";
 
-const useTotalChartStyles = makeStyles({
+const useTotalChartStyles = makeStyles(theme => ({
+
+  root: {
+    width: "100%",
+    maxHeight: 200,
+    padding: theme.spacing(3)
+  },
 
   chartContainer: {
     "& .recharts-wrapper .recharts-surface": {
@@ -15,7 +20,7 @@ const useTotalChartStyles = makeStyles({
     border: "1px solid rgba(0, 0, 0, 0.4)"
   }
 
-}, {
+}), {
   name: "total-chart"
 });
 

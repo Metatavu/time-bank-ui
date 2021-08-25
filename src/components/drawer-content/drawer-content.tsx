@@ -223,12 +223,7 @@ const DrawerContent: React.FC<Props> = () => {
       return null;
     }
 
-    const initialTimeHours = TimeUtils.convertToMinutesAndHours(person.initialTime);
-    const initialTimeColor = person.initialTime < 0 ?
-      theme.palette.error.dark :
-      theme.palette.success.main;
-
-    const totalHours = TimeUtils.convertToMinutesAndHours(personTotalTime.total + person.initialTime);
+    const totalHourString = TimeUtils.convertToMinutesAndHours(personTotalTime.total);
     const totalColor = personTotalTime.total < 0 ?
       theme.palette.error.dark :
       theme.palette.success.main;
@@ -258,8 +253,7 @@ const DrawerContent: React.FC<Props> = () => {
               paddingRight={ 3 }
               width="100%"
             >
-              { renderAccordionRow(`${strings.total}:`, totalHours, totalColor) }
-              { renderAccordionRow(`${strings.initialTime}:`, initialTimeHours, initialTimeColor) }
+              { renderAccordionRow(`${strings.total}:`, totalHourString, totalColor) }
               { renderAccordionRow(`${strings.logged}:`, TimeUtils.convertToMinutesAndHours(personTotalTime.logged)) }
               { renderAccordionRow(`${strings.expected}:`, TimeUtils.convertToMinutesAndHours(personTotalTime.expected)) }
             </Box>
