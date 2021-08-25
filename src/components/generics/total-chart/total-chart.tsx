@@ -86,7 +86,7 @@ const TotalChart: React.FC<Props> = ({ displayedData, isLoading }) => {
           <XAxis
             type="number"
             axisLine={ false }
-            domain={[ -range, range ]}
+            domain={[ domainStart, domainEnd ]}
             tickCount={ 9 }
             tickFormatter={ value => TimeUtils.convertToMinutesAndHours(value as number) }
             interval={ 0 }
