@@ -58,6 +58,29 @@ const useAppLayoutStyles = makeStyles({
     maxHeight: 76,
     marginLeft: 15,
     padding: 5
+  },
+
+  languageSelect: {
+    marginLeft: theme.spacing(4),
+    marginRight: theme.spacing(4),
+    color: "#fff",
+
+    [theme.breakpoints.down("sm")]: {
+      "& .MuiSelect-icon": {
+        color: "#fff"
+      }
+    },
+    [theme.breakpoints.up("md")]: {
+      color: theme.palette.text.primary,
+      marginLeft: theme.spacing(6),
+      marginRight: theme.spacing(4)
+    },
+    "&:before": {
+      display: "none"
+    },
+    "& .MuiSelect-select": {
+      textTransform: "uppercase"
+    }
   }
 
 }, {

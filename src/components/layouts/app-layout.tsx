@@ -1,8 +1,10 @@
 import React from "react";
-import { AppBar, Box, Drawer, Toolbar, Typography } from "@material-ui/core";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { AppBar, Box, Drawer, Toolbar, Typography, Select, MenuItem } from "@material-ui/core";
 import useAppLayoutStyles from "styles/layouts/app-layout";
 import siteLogo from "../../gfx/Metatavu-icon.svg";
 import strings from "localization/strings";
+import { selectLocale, setLocale } from "features/locale/locale-slice";
 
 /**
  * Component properties
@@ -19,6 +21,27 @@ interface Props {
  */
 const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, editorContent }) => {
   const classes = useAppLayoutStyles();
+  const dispatch = useAppDispatch();
+  const { locale } = useAppSelector(selectLocale);
+
+  /**
+   * Renders language selection
+   */
+  const renderLanguageSelection = () => {
+    return (
+      <Select
+        className={ classes.languageSelect }
+        value={ locale }
+        onChange={ event => dispatch(setLocale(event.target.value as string)) }
+      >
+        {
+          strings.getAvailableLanguages().map(language =>
+            <MenuItem key={ language } value={ language }>
+              { language }
+            </MenuItem>)}
+      </Select>
+    );
+  };
 
   /**
    * Renders the header component 
@@ -36,6 +59,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, editorCo
             <Typography className={ classes.title }>
               { strings.header.title }
             </Typography>
+            { renderLanguageSelection() }
           </Box>
         </Toolbar>
       </AppBar>
