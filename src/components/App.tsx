@@ -1,7 +1,6 @@
 import React from "react";
-import { useAppDispatch } from "app/hooks";
-import { setLocale } from "features/locale/locale-slice";
-import strings from "localization/strings";
+import { useAppDispatch, useAppSelector } from "app/hooks";
+import { selectLocale, setLocale } from "features/locale/locale-slice";
 import MainScreen from "./screens/main-screen";
 
 /**
@@ -9,9 +8,10 @@ import MainScreen from "./screens/main-screen";
  */
 const App: React.FC = () => {
   const dispatch = useAppDispatch();
+  const { locale } = useAppSelector(selectLocale);
 
   React.useLayoutEffect(() => {
-    dispatch(setLocale(strings.getLanguage()));
+    dispatch(setLocale(locale));
     // eslint-disable-next-line
   }, []);
 
