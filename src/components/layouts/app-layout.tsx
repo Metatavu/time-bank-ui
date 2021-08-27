@@ -37,7 +37,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, editorCo
         {
           strings.getAvailableLanguages().map(language =>
             <MenuItem key={ language } value={ language }>
-              { language }
+              { language.toUpperCase() }
             </MenuItem>)}
       </Select>
     );

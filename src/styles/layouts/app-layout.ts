@@ -61,17 +61,13 @@ const useAppLayoutStyles = makeStyles({
   },
 
   languageSelect: {
-    marginLeft: theme.spacing(4),
-    marginRight: theme.spacing(4),
+    marginLeft: theme.spacing(20),
     color: "#fff",
-    [theme.breakpoints.up("md")]: {
-      marginLeft: theme.spacing(10),
-      marginRight: theme.spacing(4)
+    [theme.breakpoints.down("sm")]: {
+      marginLeft: theme.spacing(50)
     },
-    "&:before": {
-      display: "none"
-    },
-    "& .MuiSelect-select": {
+    [theme.breakpoints.down("xs")]: {
+      marginLeft: theme.spacing(18)
     }
   }
 
