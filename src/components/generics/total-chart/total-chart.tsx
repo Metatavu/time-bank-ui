@@ -101,7 +101,7 @@ const TotalChart: React.FC<Props> = ({ displayedData, isLoading }) => {
           <Legend/>
           <Bar
             dataKey="total"
-            name={ strings.total}
+            name={ strings.total }
             barSize={ 100 }
             fill={ displayedData.total > 0 ? theme.palette.success.main : theme.palette.error.main }
           />
