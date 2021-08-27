@@ -64,22 +64,14 @@ const useAppLayoutStyles = makeStyles({
     marginLeft: theme.spacing(4),
     marginRight: theme.spacing(4),
     color: "#fff",
-
-    [theme.breakpoints.down("sm")]: {
-      "& .MuiSelect-icon": {
-        color: "#fff"
-      }
-    },
     [theme.breakpoints.up("md")]: {
-      color: theme.palette.text.primary,
-      marginLeft: theme.spacing(6),
+      marginLeft: theme.spacing(10),
       marginRight: theme.spacing(4)
     },
     "&:before": {
       display: "none"
     },
     "& .MuiSelect-select": {
-      textTransform: "uppercase"
     }
   }
 
