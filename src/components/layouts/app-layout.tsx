@@ -27,21 +27,21 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, editorCo
   /**
    * Renders language selection
    */
-  const renderLanguageSelection = () => {
-    return (
-      <Select
-        className={ classes.languageSelect }
-        value={ locale }
-        onChange={ event => dispatch(setLocale(event.target.value as string)) }
-      >
-        {
-          strings.getAvailableLanguages().map(language =>
-            <MenuItem key={ language } value={ language }>
-              { language.toUpperCase() }
-            </MenuItem>)}
+  const renderLanguageSelection = () => (
+    <Select
+      className={ classes.languageSelect }
+      value={ locale }
+      onChange={ event => dispatch(setLocale(event.target.value as string)) }
+    >
+      {
+        strings.getAvailableLanguages().map(language =>
+          <MenuItem key={ language } value={ language }>
+            { language.toUpperCase() }
+          </MenuItem>
+          )
+        }
       </Select>
-    );
-  };
+  );
 
   /**
    * Renders the header component 
