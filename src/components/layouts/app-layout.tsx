@@ -25,6 +25,19 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, editorCo
   const { locale } = useAppSelector(selectLocale);
 
   /**
+   * 
+   * @returns Menu items for language select
+   */
+  const renderLanguageSelectOptions = () => {
+    return (
+      strings.getAvailableLanguages().map(language =>
+        <MenuItem key={ language } value={ language }>
+          { language.toUpperCase() }
+        </MenuItem>)
+    );
+  };
+  
+  /**
    * Renders language selection
    */
   const renderLanguageSelection = () => (
@@ -33,14 +46,8 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, editorCo
       value={ locale }
       onChange={ event => dispatch(setLocale(event.target.value as string)) }
     >
-      {
-        strings.getAvailableLanguages().map(language =>
-          <MenuItem key={ language } value={ language }>
-            { language.toUpperCase() }
-          </MenuItem>
-          )
-        }
-      </Select>
+      { renderLanguageSelectOptions() }
+    </Select>
   );
 
   /**
