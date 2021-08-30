@@ -4,6 +4,7 @@ import theme from "theme/theme";
 const useEditorContentStyles = makeStyles({
 
   emptyFilterContainer: {
+    borderRadius: 10,
     width: "100%",
     height: 72,
     display: "flex",
@@ -16,11 +17,15 @@ const useEditorContentStyles = makeStyles({
     }
   },
 
+  filterAccordion: {
+    borderRadius: "10px !important",
+    boxShadow: "0px 3px 3px -2px rgb(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0,0,0,0.14), 0px 1px 8px 0px rgb(0,0,0,0.12)"
+  },
+
   filterSummary: {
-    height: 72,
     display: "flex",
     alignItems: "center",
-    padding: `0px ${theme.spacing(3)}px`,
+    padding: theme.spacing(4),
     "&.Mui-expanded": {
       borderBottom: "1px solid rgba(0, 0, 0, 0.2)"
     }
@@ -30,12 +35,13 @@ const useEditorContentStyles = makeStyles({
     height: 100,
     display: "flex",
     alignItems: "center",
-    padding: theme.spacing(3),
-    paddingLeft: theme.spacing(5)
+    padding: theme.spacing(4),
+    justifyContent: "space-between"
   },
 
   scopeSelector: {
-    width: 120
+    width: 200,
+    borderRadius: "10px !important"
   },
 
   notchedOutline: {
@@ -43,8 +49,10 @@ const useEditorContentStyles = makeStyles({
   },
 
   chartsContainer: {
-    marginTop: theme.spacing(6),
-    width: "100%"
+    marginTop: theme.spacing(2),
+    width: "100%",
+    borderRadius: "10px !important",
+    padding: theme.spacing(4)
   },
   
   startDateOnly: {
@@ -60,29 +68,15 @@ const useEditorContentStyles = makeStyles({
     marginLeft: "auto"
   },
 
-  overViewContainer: {
-    padding: `${theme.spacing(3)}px ${theme.spacing(4)}px`
-  },
-
   overViewChartContainer: {
     width: "100%",
-    height: 450,
-    paddingTop: theme.spacing(5),
-    paddingBottom: theme.spacing(5),
-    display: "flex",
+    paddingBottom: theme.spacing(2),
     justifyContent: "center",
     alignItems: "center"
   },
 
-  totalContainer: {
-    padding: `${theme.spacing(3)}px ${theme.spacing(4)}px`
-  },
-
   totalChartContainer: {
     width: "100%",
-    height: 250,
-    paddingTop: theme.spacing(5),
-    paddingBottom: theme.spacing(2),
     display: "flex",
     justifyContent: "center",
     alignItems: "center"
@@ -92,6 +86,13 @@ const useEditorContentStyles = makeStyles({
     marginLeft: "auto",
     display: "flex",
     alignItems: "center"
+  },
+
+  deleteButton: {
+    padding: "0px !important",
+    alignSelf: "flex-end",
+    color: "#F9473B",
+    marginLeft: theme.spacing(1)
   }
 
 }, {
