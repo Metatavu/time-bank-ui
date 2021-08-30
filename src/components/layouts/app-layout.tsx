@@ -1,8 +1,10 @@
 import React from "react";
-import { AppBar, Box, Drawer, Toolbar, Typography } from "@material-ui/core";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { AppBar, Box, Drawer, Toolbar, Typography, Select, MenuItem } from "@material-ui/core";
 import useAppLayoutStyles from "styles/layouts/app-layout";
 import siteLogo from "../../gfx/Metatavu-icon.svg";
 import strings from "localization/strings";
+import { selectLocale, setLocale } from "features/locale/locale-slice";
 
 /**
  * Component properties
@@ -19,6 +21,34 @@ interface Props {
  */
 const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, editorContent }) => {
   const classes = useAppLayoutStyles();
+  const dispatch = useAppDispatch();
+  const { locale } = useAppSelector(selectLocale);
+
+  /**
+   * 
+   * @returns Menu items for language select
+   */
+  const renderLanguageSelectOptions = () => {
+    return (
+      strings.getAvailableLanguages().map(language =>
+        <MenuItem key={ language } value={ language }>
+          { language.toUpperCase() }
+        </MenuItem>)
+    );
+  };
+  
+  /**
+   * Renders language selection
+   */
+  const renderLanguageSelection = () => (
+    <Select
+      className={ classes.languageSelect }
+      value={ locale }
+      onChange={ event => dispatch(setLocale(event.target.value as string)) }
+    >
+      { renderLanguageSelectOptions() }
+    </Select>
+  );
 
   /**
    * Renders the header component 
@@ -33,9 +63,10 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, editorCo
               className={ classes.logo }
               alt={ strings.header.logo }
             />
-            <Typography className={ classes.title }>
+            <Typography variant="h1" className={ classes.title }>
               { strings.header.title }
             </Typography>
+            { renderLanguageSelection() }
           </Box>
         </Toolbar>
       </AppBar>

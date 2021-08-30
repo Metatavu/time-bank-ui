@@ -1,12 +1,19 @@
 import { makeStyles } from "@material-ui/core";
-import theme from "theme/theme";
 
-const useTotalChartStyles = makeStyles({
+const useTotalChartStyles = makeStyles(theme => ({
+
+  root: {
+    width: "100%",
+    maxHeight: 200,
+    paddingLeft: theme.spacing(4),
+    paddingRight: theme.spacing(4)
+  },
 
   chartContainer: {
     "& .recharts-wrapper .recharts-surface": {
       overflow: "overlay"
-    }
+    },
+    marginTop: `${theme.spacing(2)}px !important`
   },
 
   customTooltipContainer: {
@@ -15,7 +22,7 @@ const useTotalChartStyles = makeStyles({
     border: "1px solid rgba(0, 0, 0, 0.4)"
   }
 
-}, {
+}), {
   name: "total-chart"
 });
 

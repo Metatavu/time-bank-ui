@@ -8,49 +8,18 @@ const useUserInfoStyles = makeStyles({
   },
 
   userNameContainer: {
-    padding: `${theme.spacing(1)}px 0px`,
     display: "flex",
-    alignItems: "center"
-  },
-
-  userDetail: {
-    padding: 10
-  },
-
-  status: {
-    marginLeft: "auto",
-    minWidth: 75,
-    height: "100%",
-    paddingLeft: theme.spacing(1),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
+    marginTop: theme.spacing(4),
+    marginBottom: theme.spacing(1),
+    justifyContent: "center"
   },
 
   avatar: {
     width: 45,
     height: 45,
-    backgroundColor: theme.palette.secondary.main
-  },
-
-  userDetailEntry: {
-    display: "flex",
-    margin: "5px 0px"
-  },
-
-  userDetailDateEntry: {
-    display: "flex",
-    opacity: 0.6
-  },
-
-  date: {
-    padding: "0px 20px",
-    display: "grid"
-  },
-
-  infoValue: {
-    paddingLeft: theme.spacing(1),
-    fontStyle: "italic"
+    backgroundColor: theme.palette.secondary.main,
+    color: theme.palette.text.secondary
   }
 
 }, {

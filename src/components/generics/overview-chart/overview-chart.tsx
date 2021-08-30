@@ -100,16 +100,11 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
     ];
 
     return (
-      <ResponsiveContainer className={ classes.chartContainer }>
+      <ResponsiveContainer className={ classes.horizontalChartContainer }>
         <BarChart
           data={ preprocessedWorkTimeData }
           layout="vertical"
-          margin={{
-            top: 20,
-            right: 40,
-            left: 60,
-            bottom: 5
-          }}
+          barGap={ 0 }
         >
           <XAxis
             type="number"
@@ -119,9 +114,9 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
           <YAxis type="category" dataKey="name"/>
           <Tooltip content={ renderCustomizedTooltip }/>
           <Legend wrapperStyle={{ position: "relative" }}/>
-          <Bar dataKey="project" barSize={ 60 } stackId="a" fill={ theme.palette.success.main }/>
-          <Bar dataKey="internal" barSize={ 60 } stackId="a" fill={ theme.palette.warning.main }/>
-          <Bar dataKey="expected" barSize={ 60 } stackId="a" fill={ theme.palette.info.main }/>
+          <Bar dataKey="project" name={ strings.project } barSize={ 60 } stackId="a" fill={ theme.palette.success.main }/>
+          <Bar dataKey="internal" name={ strings.internal } barSize={ 60 } stackId="a" fill={ theme.palette.warning.main }/>
+          <Bar dataKey="expected" name={ strings.expected } barSize={ 60 } stackId="a" fill={ theme.palette.info.main }/>
         </BarChart>
       </ResponsiveContainer>
     );
@@ -132,7 +127,7 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
    */
   const renderVerticalChart = () => {
     return (
-      <ResponsiveContainer className={ classes.chartContainer }>
+      <ResponsiveContainer className={ classes.verticalChartContainer }>
         <BarChart
           data={ displayedData }
           margin={{
@@ -147,9 +142,9 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
           <YAxis width={ 100 } tickFormatter={ value => TimeUtils.convertToMinutesAndHours(value as number) }/>
           <Tooltip content={ renderCustomizedTooltip }/>
           <Legend wrapperStyle={{ position: "relative" }}/>
-          <Bar dataKey="project" stackId="a" fill={ theme.palette.success.main }/>
-          <Bar dataKey="internal" stackId="a" fill={ theme.palette.warning.main }/>
-          <Bar dataKey="expected" fill={ theme.palette.info.main }/>
+          <Bar dataKey="project" name={ strings.project } stackId="a" fill={ theme.palette.success.main }/>
+          <Bar dataKey="internal" name={ strings.internal } stackId="a" fill={ theme.palette.warning.main }/>
+          <Bar dataKey="expected" name={ strings.expected } fill={ theme.palette.info.main }/>
         </BarChart>
       </ResponsiveContainer>
     );

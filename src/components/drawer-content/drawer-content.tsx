@@ -1,10 +1,9 @@
 import React from "react";
-import { Accordion, AccordionDetails, AccordionSummary, Box, Divider, TextField, Typography } from "@material-ui/core";
+import { Accordion, AccordionDetails, AccordionSummary, Box, TextField, Typography } from "@material-ui/core";
 import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer, TooltipProps } from "recharts";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import UserInfo from "components/generics/user-info/user-info";
 import useDrawerContentStyles from "styles/drawer-content/drawer-content";
-import SearchIcon from "@material-ui/icons/Search";
 import strings from "localization/strings";
 import { PersonDto, TimebankControllerGetTotalRetentionEnum } from "generated/client";
 import Api from "api/api";
@@ -16,6 +15,7 @@ import theme from "theme/theme";
 import { CustomPieLabel, WorkTimeCategory, WorkTimeTotalData } from "types/index";
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 import { ErrorContext } from "components/error-handler/error-handler";
+import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 
 /**
  * Component properties
@@ -118,8 +118,8 @@ const DrawerContent: React.FC<Props> = () => {
     return (
       <>
         <Box className={ classes.searchBoxContainer }>
-          <SearchIcon className={ classes.searchIcon }/>
           <Autocomplete
+            forcePopupIcon={ false }
             freeSolo
             options={ persons }
             inputValue={ searchInput }
@@ -137,7 +137,8 @@ const DrawerContent: React.FC<Props> = () => {
             classes={{
               root: classes.searchBox,
               inputRoot: classes.inputRoot,
-              input: classes.input
+              input: classes.input,
+              endAdornment: classes.endAdornment
             }}
           />
         </Box>
@@ -223,12 +224,7 @@ const DrawerContent: React.FC<Props> = () => {
       return null;
     }
 
-    const initialTimeHours = TimeUtils.convertToMinutesAndHours(person.initialTime);
-    const initialTimeColor = person.initialTime < 0 ?
-      theme.palette.error.dark :
-      theme.palette.success.main;
-
-    const totalHours = TimeUtils.convertToMinutesAndHours(personTotalTime.total + person.initialTime);
+    const totalHourString = TimeUtils.convertToMinutesAndHours(personTotalTime.total);
     const totalColor = personTotalTime.total < 0 ?
       theme.palette.error.dark :
       theme.palette.success.main;
@@ -248,18 +244,15 @@ const DrawerContent: React.FC<Props> = () => {
             aria-controls="panel1a-content"
             id="panel1a-header"
           >
-            <Typography variant="h4" style={{ fontWeight: 600 }}>
+            <Typography variant="h3">
               { strings.drawerContent.statistics }
             </Typography>
           </AccordionSummary>
           <AccordionDetails className={ classes.accordionDetails }>
             <Box
-              p={ 1 }
-              paddingRight={ 3 }
               width="100%"
             >
-              { renderAccordionRow(`${strings.total}:`, totalHours, totalColor) }
-              { renderAccordionRow(`${strings.initialTime}:`, initialTimeHours, initialTimeColor) }
+              { renderAccordionRow(`${strings.total}:`, totalHourString, totalColor) }
               { renderAccordionRow(`${strings.logged}:`, TimeUtils.convertToMinutesAndHours(personTotalTime.logged)) }
               { renderAccordionRow(`${strings.expected}:`, TimeUtils.convertToMinutesAndHours(personTotalTime.expected)) }
             </Box>
@@ -301,23 +294,126 @@ const DrawerContent: React.FC<Props> = () => {
             aria-controls="panel1a-content"
             id="panel1a-header"
           >
-            <Typography variant="h4" style={{ fontWeight: 600 }}>
+            <Typography variant="h3">
               { strings.drawerContent.expected }
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
             <Box
-              p={ 1 }
-              paddingRight={ 3 }
               width="100%"
             >
-              { renderAccordionRow(`${strings.sunday}:`, TimeUtils.convertToMinutesAndHours(person.sunday)) }
               { renderAccordionRow(`${strings.monday}:`, TimeUtils.convertToMinutesAndHours(person.monday)) }
               { renderAccordionRow(`${strings.tuesday}:`, TimeUtils.convertToMinutesAndHours(person.tuesday)) }
               { renderAccordionRow(`${strings.wednesday}:`, TimeUtils.convertToMinutesAndHours(person.wednesday)) }
               { renderAccordionRow(`${strings.thursday}:`, TimeUtils.convertToMinutesAndHours(person.thursday)) }
               { renderAccordionRow(`${strings.friday}:`, TimeUtils.convertToMinutesAndHours(person.friday)) }
               { renderAccordionRow(`${strings.saturday}:`, TimeUtils.convertToMinutesAndHours(person.saturday)) }
+              { renderAccordionRow(`${strings.sunday}:`, TimeUtils.convertToMinutesAndHours(person.sunday)) }
+            </Box>
+          </AccordionDetails>
+        </Accordion>
+      </>
+    );
+  };
+
+  /**
+   * Renders the active/inactive status for user
+   * 
+   * @param status user status
+   * @param color color for the status
+   */
+  const renderUserStatus = (status: string, color: string) => {
+    return (
+      <Box style={{ display: "flex", alignItems: "center" }}>
+        <FiberManualRecordIcon
+          htmlColor={ color }
+          style={{
+            width: 6,
+            height: 6
+          }}
+        />
+        <Typography
+          variant="h6"
+          style={{
+            color: color,
+            marginLeft: 4,
+            fontStyle: "italic"
+          }}
+        >
+          { status }
+        </Typography>
+      </Box>
+    );
+  };
+
+  /**
+   * Renders the user account detail entrys 
+   * 
+   * @param name name of the subtitle text
+   * @param value value of the subtitle text
+   */
+  const renderUserDetailEntry = (name: string, value: string | number) => {
+    return (
+      <>
+        <Typography
+          variant="body1"
+          className={ classes.infoValue }
+          style={{ fontWeight: 600 }}
+        >
+          { name }
+        </Typography>
+        <Typography
+          variant="body1"
+          className={ classes.infoValue }
+          style={{ textAlign: "right" }}
+        >
+          { value }
+        </Typography>
+      </>
+    );
+  };
+
+  /**
+   * Renders the user account info section
+   */
+  const renderUserAccountInfo = () => {
+    if (!person) {
+      return null;
+    }
+
+    return (
+      <>
+        <Accordion className={ classes.drawerAccordion }>
+          <AccordionSummary
+            expandIcon={ <ExpandMoreIcon/> }
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography variant="h3">
+              { strings.drawerContent.additional }
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails className={ classes.accordionDetails }>
+            <Box className={ classes.userDetailEntry }>
+              { person.active ?
+                renderUserStatus(strings.drawerContent.userInfo.active, theme.palette.success.main) :
+                renderUserStatus(strings.drawerContent.userInfo.inactive, theme.palette.error.main)
+              }
+            </Box>
+            <Box className={ classes.userDetailEntry }>
+              { renderUserDetailEntry(strings.drawerContent.userInfo.id, person.id) }
+            </Box>
+            <Box className={ classes.userDetailEntry }>
+              { renderUserDetailEntry(strings.drawerContent.userInfo.userType, person.userType) }
+            </Box>
+            <Box className={ classes.userDetailEntry }>
+              { renderUserDetailEntry(strings.drawerContent.userInfo.language, person.language) }
+            </Box>
+            <Box className={ classes.userDetailEntry }>
+              { renderUserDetailEntry(strings.drawerContent.userInfo.createdAt, person.createdAt.toLocaleString()) }
+            </Box>
+            <Box className={ classes.userDetailEntry }>
+              { renderUserDetailEntry(strings.drawerContent.userInfo.updatedAt, person.updatedAt.toLocaleString()) }
             </Box>
           </AccordionDetails>
         </Accordion>
@@ -330,18 +426,14 @@ const DrawerContent: React.FC<Props> = () => {
    */
   return (
     <>
-      <Box className={ classes.drawerSearchBoxContainer }>
-        { renderSearchBox() }
-      </Box>
+      { renderSearchBox() }
       { person ?
         <>
-          <Box className={ classes.drawerUserInfoContainer }>
-            <UserInfo/>
-          </Box>
-          <Divider/>
-          <Box mt={ 2 }>
+          <UserInfo/>
+          <Box >
             { renderTotalWorkTime() }
             { renderExpectedWork() }
+            { renderUserAccountInfo() }
           </Box>
         </> :
         <Box className={ classes.noUserContainer }>

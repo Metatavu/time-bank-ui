@@ -33,8 +33,10 @@ const ErrorHandler: React.FC = ({ children }) => {
     if (error) {
       if (error instanceof Response) {
         try {
+          // eslint-disable-next-line no-console
           console.error(await error.json());
         } catch (e) {
+          // eslint-disable-next-line no-console
           console.error(error);
         }
       }

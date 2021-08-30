@@ -49,15 +49,24 @@ const useAppLayoutStyles = makeStyles({
   },
 
   title: {
-    marginLeft: theme.spacing(2),
-    fontSize: 18,
-    fontWeight: 600
+    marginLeft: theme.spacing(2)
   },
 
   logo: {
     maxHeight: 76,
     marginLeft: 15,
     padding: 5
+  },
+
+  languageSelect: {
+    marginLeft: theme.spacing(20),
+    color: "#fff",
+    [theme.breakpoints.down("sm")]: {
+      marginLeft: theme.spacing(50)
+    },
+    [theme.breakpoints.down("xs")]: {
+      marginLeft: theme.spacing(18)
+    }
   }
 
 }, {

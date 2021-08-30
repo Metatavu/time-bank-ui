@@ -3,43 +3,22 @@ import theme from "theme/theme";
 
 const useDrawerContentStyles = makeStyles({
 
-  drawerSearchBoxContainer: {
-    display: "flex",
-    alignItems: "center",
-    position: "fixed",
-    zIndex: 100,
-    marginTop: theme.spacing(2),
-    [theme.breakpoints.down("sm")]: {
-      width: "90%"
-    }
-  },
-
   searchBoxContainer: {
+    width: "100%",
     height: 40,
-    width: 350,
-    backgroundColor: "rgb(255, 255, 255)"
+    marginTop: theme.spacing(2)
   },
 
   noUserContainer: {
-    height: "100%",
+    flex: 1,
     display: "flex",
     alignItems: "center",
     justifyContent: "center"
   },
 
-  drawerUserInfoContainer: {
-    display: "flex",
-    alignItems: "center",
-    margin: theme.spacing(2),
-    marginTop: theme.spacing(9)
-  },
-
-  searchIcon: {
-    top: "50%",
-    color: "rgba(0, 0, 0, 0.8)",
-    left: theme.spacing(1),
-    position: "absolute",
-    transform: "translateY(-50%)"
+  endAdornment: {
+    top: "9px !important",
+    paddingRight: `${theme.spacing(1)}px !important`
   },
 
   searchBox: {
@@ -48,7 +27,14 @@ const useDrawerContentStyles = makeStyles({
   },
 
   drawerAccordion: {
-    boxShadow: "none"
+    boxShadow: "none",
+    borderWidth: 1,
+    borderColor: "rgba(0, 0, 0, 0.25)",
+    borderTopLeftRadius: "30px !important",
+    borderBottomRightRadius: "30px !important",
+    borderStyle: "solid",
+    marginTop: `${theme.spacing(2)}px !important`,
+    padding: theme.spacing(2)
   },
 
   accordionDetails: {
@@ -58,8 +44,7 @@ const useDrawerContentStyles = makeStyles({
 
   accordionRow: {
     display: "flex",
-    justifyContent: "space-between",
-    marginBottom: theme.spacing(1)
+    justifyContent: "space-between"
   },
 
   accordionRowNames: {
@@ -81,16 +66,16 @@ const useDrawerContentStyles = makeStyles({
   inputRoot: {
     height: 40,
     borderRadius: 20,
-    boxShadow: "0 4px 4px 0 rgba(0,0,0,0.05)",
+    backgroundColor: "rgb(255, 255, 255)",
+    boxShadow: "0 2px 8px 0 rgba(0,0,0,0.1)",
     fontSize: 14,
-    border: "1px solid rgba(0, 0, 0)",
     "&.Mui-focused": {
       border: "0px solid rgba(0, 0, 0)"
     }
   },
 
   input: {
-    paddingLeft: `${theme.spacing(4)}px !important`
+    paddingLeft: `${theme.spacing(2)}px !important`
   },
 
   pieChartContainer: {
@@ -98,6 +83,15 @@ const useDrawerContentStyles = makeStyles({
     "& .recharts-wrapper .recharts-surface": {
       overflow: "visible"
     }
+  },
+
+  userDetailEntry: {
+    display: "flex",
+    width: "100%"
+  },
+
+  infoValue: {
+    flex: 1
   }
 
 }, {
