@@ -1,5 +1,4 @@
 import { TimeEntry, TimeEntryTotalDto } from "generated/client";
-import strings from "localization/strings";
 import moment from "moment";
 import { FilterScopes, WorkTimeCategory, WorkTimeData, WorkTimeDatas, WorkTimeTotalData } from "types";
 
@@ -87,7 +86,7 @@ export default class WorkTimeDataUtils {
 
     return {
       [FilterScopes.DATE]: "",
-      [FilterScopes.WEEK]: `${entry.id?.year!} ${strings.week} ${entry.id?.week!}`,
+      [FilterScopes.WEEK]: `${entry.id?.year!}/${entry.id?.week!}`,
       [FilterScopes.MONTH]: `${entry.id?.year!}-${entry.id?.month!}`,
       [FilterScopes.YEAR]: `${entry.id?.year!}`
     }[scope];
