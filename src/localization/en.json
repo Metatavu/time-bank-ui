@@ -28,7 +28,8 @@
     "noUser": "No user selected",
     "statistics": "Statistics",
     "expected": "Expected",
-    "searchPlaceholder": "Select user.."
+    "searchPlaceholder": "Select user..",
+    "additional": "User account info"
   },
 
   "editorContent": {

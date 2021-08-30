@@ -2,8 +2,7 @@ import React from "react";
 import DateFnsUtils from "@date-io/date-fns";
 import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePickerView } from "@material-ui/pickers";
 import { FilterScopes } from "types";
-import theme from "theme/theme";
-import { Box, TextField, Typography, MenuItem } from "@material-ui/core";
+import { Box, TextField, MenuItem } from "@material-ui/core";
 import TimeUtils from "utils/time-utils";
 import strings from "localization/strings";
 import useDateRangePickerStyles from "styles/generics/date-range-picker/date-range-picker";
@@ -272,15 +271,9 @@ const DateRangePicker: React.FC<Props> = ({
   return (
     <>
       <Box display="flex" alignItems="center">
-        <Typography variant="h5" style={{ marginRight: theme.spacing(3) }}>
-          { `${strings.editorContent.from}: ` }
-        </Typography>
         { renderStartDatePickersAndWeekSelector() }
       </Box>
       <Box ml={ 4 } display="flex" alignItems="center">
-        <Typography variant="h5" style={{ marginRight: theme.spacing(3) }}>
-          { `${strings.editorContent.to}: ` }
-        </Typography>
         { renderEndDatePickersAndWeekSelector() }
       </Box>
     </>

@@ -3,10 +3,20 @@ import theme from "theme/theme";
 
 const useOverviewChartStyles = makeStyles({
 
-  chartContainer: {
+  horizontalChartContainer: {
     "& .recharts-wrapper .recharts-surface": {
       overflow: "overlay"
-    }
+    },
+    height: "20vh !important",
+    marginTop: `${theme.spacing(2)}px !important`
+  },
+
+  verticalChartContainer: {
+    "& .recharts-wrapper .recharts-surface": {
+      overflow: "overlay"
+    },
+    height: "30vh !important",
+    marginTop: `${theme.spacing(2)}px !important`
   },
 
   customTooltipContainer: {

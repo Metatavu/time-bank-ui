@@ -100,16 +100,11 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
     ];
 
     return (
-      <ResponsiveContainer className={ classes.chartContainer }>
+      <ResponsiveContainer className={ classes.horizontalChartContainer }>
         <BarChart
           data={ preprocessedWorkTimeData }
           layout="vertical"
-          margin={{
-            top: 20,
-            right: 40,
-            left: 60,
-            bottom: 5
-          }}
+          barGap={ 0 }
         >
           <XAxis
             type="number"
@@ -132,7 +127,7 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
    */
   const renderVerticalChart = () => {
     return (
-      <ResponsiveContainer className={ classes.chartContainer }>
+      <ResponsiveContainer className={ classes.verticalChartContainer }>
         <BarChart
           data={ displayedData }
           margin={{

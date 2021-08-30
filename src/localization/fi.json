@@ -17,10 +17,10 @@
 
   "drawerContent": {
     "userInfo": {
-      "id": "tunniste",
-      "active": "aktiivinen",
-      "inactive": "ei-aktiivinen",
-      "userType": "käyttäjän tyyppi:",
+      "id": "Tunniste",
+      "active": "Aktiivinen",
+      "inactive": "Ei-aktiivinen",
+      "userType": "Käyttäjän tyyppi:",
       "language": "Kieli:",
       "createdAt": "Luotu:",
       "updatedAt": "Päivitetty:"
@@ -28,7 +28,8 @@
     "noUser": "Ei käyttäjää valittuna",
     "statistics": "Tilastot",
     "expected": "Odotettu",
-    "searchPlaceholder": "Valitse käyttäjä.."
+    "searchPlaceholder": "Valitse käyttäjä..",
+    "additional": "Käyttäjätilin tiedot"
   },
 
   "editorContent": {

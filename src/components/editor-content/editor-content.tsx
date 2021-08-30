@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, Divider, Button } from "@material-ui/core";
+import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, IconButton } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { DatePickerView } from "@material-ui/pickers";
 import useEditorContentStyles from "styles/editor-content/editor-content";
@@ -17,6 +17,7 @@ import WorkTimeDataUtils from "utils/work-time-data-utils";
 import moment from "moment";
 import DateRangePicker from "components/generics/date-range-picker/date-range-picker";
 import { ErrorContext } from "components/error-handler/error-handler";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 /**
  * Component properties
@@ -361,16 +362,11 @@ const EditorContent: React.FC<Props> = () => {
    */
   const renderFilterSummary = (timeRangeText: string) => (
     <>
-      <Typography variant="h4" style={{ fontWeight: 600, fontStyle: "italic" }}>
+      <Typography variant="h2">
         { strings.editorContent.workTime }
       </Typography>
       <Box>
-        <Typography
-          variant="h4"
-          style={{
-            color: "rgba(0, 0, 0, 0.5)", marginLeft: theme.spacing(2), fontStyle: "italic"
-          }}
-        >
+        <Typography variant="h4">
           { timeRangeText }
         </Typography>
       </Box>
@@ -388,23 +384,6 @@ const EditorContent: React.FC<Props> = () => {
   const renderFilterDetails = () => (
     <>
       { renderSelectScope() }
-      <Box className={ classes.startDateOnly }>
-        <Button
-          variant="text"
-          color="secondary"
-          onClick={ handleStartDateOnlyClick }
-        >
-          <Typography
-            variant="h5"
-            style={{
-              fontWeight: 600,
-              textTransform: "none"
-            }}
-          >
-            { strings.editorContent.startOnly }
-          </Typography>
-        </Button>
-      </Box>
       <Box className={ classes.datePickers }>
         <DateRangePicker
           scope={ scope }
@@ -420,6 +399,13 @@ const EditorContent: React.FC<Props> = () => {
           onEndWeekChange={ handleEndWeekChange }
         />
       </Box>
+      <IconButton
+        onClick={ handleStartDateOnlyClick }
+        aria-label="delete"
+        className={ classes.deleteButton }
+      >
+        <DeleteIcon fontSize="medium"/>
+      </IconButton>
     </>
   );
 
@@ -456,7 +442,7 @@ const EditorContent: React.FC<Props> = () => {
     const timeRangeText = TimeUtils.generateTimeRangeText(displayedTimeData);
 
     return (
-      <Accordion>
+      <Accordion className={ classes.filterAccordion }>
         <AccordionSummary
           expandIcon={ <ExpandMoreIcon/> }
           aria-controls="panel1a-content"
@@ -480,16 +466,14 @@ const EditorContent: React.FC<Props> = () => {
     }
 
     return (
-      <Box className={ classes.overViewContainer }>
+      <Box className={ classes.overViewChartContainer }>
         <Typography variant="h2">
           { strings.editorContent.overview }
         </Typography>
-        <Box className={ classes.overViewChartContainer }>
-          <OverviewChart
-            displayedData={ displayedTimeData }
-            isLoading={ isLoading }
-          />
-        </Box>
+        <OverviewChart
+          displayedData={ displayedTimeData }
+          isLoading={ isLoading }
+        />
       </Box>
     );
   };
@@ -503,7 +487,7 @@ const EditorContent: React.FC<Props> = () => {
     }
 
     return (
-      <Box className={ classes.totalContainer }>
+      <Box>
         <Typography variant="h2">
           { strings.editorContent.total }
         </Typography>
@@ -526,14 +510,20 @@ const EditorContent: React.FC<Props> = () => {
     }
 
     return (
-      <Paper
-        elevation={ 3 }
-        className={ classes.chartsContainer }
-      >
-        { renderOverview() }
-        <Divider/>
-        { renderTotal() }
-      </Paper>
+      <>
+        <Paper
+          elevation={ 3 }
+          className={ classes.chartsContainer }
+        >
+          { renderOverview() }
+        </Paper>
+        <Paper
+          elevation={ 3 }
+          className={ classes.chartsContainer }
+        >
+          { renderTotal() }
+        </Paper>
+      </>
     );
   };
 

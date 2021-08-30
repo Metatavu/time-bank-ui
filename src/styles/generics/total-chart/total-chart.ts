@@ -5,13 +5,15 @@ const useTotalChartStyles = makeStyles(theme => ({
   root: {
     width: "100%",
     maxHeight: 200,
-    padding: theme.spacing(3)
+    paddingLeft: theme.spacing(4),
+    paddingRight: theme.spacing(4)
   },
 
   chartContainer: {
     "& .recharts-wrapper .recharts-surface": {
       overflow: "overlay"
-    }
+    },
+    marginTop: `${theme.spacing(2)}px !important`
   },
 
   customTooltipContainer: {

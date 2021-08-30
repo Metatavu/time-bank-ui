@@ -5,7 +5,7 @@ const useDateRangePickerStyles = makeStyles({
 
   datePicker: {
     width: 200,
-    marginRight: theme.spacing(2),
+    marginLeft: theme.spacing(2),
     "& .MuiInputLabel-root": {
       color: "rgba(0, 0, 0, 0.54)"
     }
@@ -14,14 +14,14 @@ const useDateRangePickerStyles = makeStyles({
   yearPicker: {
     width: 120,
     marginRight: theme.spacing(2),
+    marginLeft: theme.spacing(2),
     "& .MuiInputLabel-root": {
       color: "rgba(0, 0, 0, 0.54)"
     }
   },
 
   weekPicker: {
-    width: 110,
-    marginRight: theme.spacing(2)
+    width: 60
   }
 
 }, {

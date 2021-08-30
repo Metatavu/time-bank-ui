@@ -49,9 +49,7 @@ const useAppLayoutStyles = makeStyles({
   },
 
   title: {
-    marginLeft: theme.spacing(2),
-    fontSize: 18,
-    fontWeight: 600
+    marginLeft: theme.spacing(2)
   },
 
   logo: {
