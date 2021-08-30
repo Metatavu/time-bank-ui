@@ -33,7 +33,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, editorCo
               className={ classes.logo }
               alt={ strings.header.logo }
             />
-            <Typography className={ classes.title }>
+            <Typography variant="h1" className={ classes.title }>
               { strings.header.title }
             </Typography>
           </Box>
