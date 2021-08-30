@@ -25,7 +25,7 @@
       "createdAt": "Created at:",
       "updatedAt": "Updated at:"
     },
-    "noUser": "No user",
+    "noUser": "No user selected",
     "statistics": "Statistics",
     "expected": "Expected",
     "searchPlaceholder": "Select user.."
@@ -35,7 +35,7 @@
     "userNotSelected": "Please select a user first.",
     "noTimeEntries": "No time entries found for this user.",
     "overview": "Overview",
-    "total": "Total",
+    "total": "Total balance",
     "workTime": "Work time",
     "filterStartingDate": "Start",
     "filterEndingDate": "End",
@@ -62,7 +62,7 @@
   "week": "Week",
   "logged": "Logged",
   "expected": "Expected",
-  "total": "Total",
+  "total": "Balance",
   "initialTime": "Initial time",
   "project": "Project",
   "internal": "Internal",

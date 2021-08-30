@@ -4,6 +4,7 @@ import theme from "theme/theme";
 const useDrawerContentStyles = makeStyles({
 
   drawerSearchBoxContainer: {
+    width: 350,
     display: "flex",
     alignItems: "center",
     position: "fixed",
@@ -15,9 +16,8 @@ const useDrawerContentStyles = makeStyles({
   },
 
   searchBoxContainer: {
-    height: 40,
-    width: 350,
-    backgroundColor: "rgb(255, 255, 255)"
+    width: "100%",
+    height: 40
   },
 
   noUserContainer: {
@@ -35,6 +35,7 @@ const useDrawerContentStyles = makeStyles({
   },
 
   searchIcon: {
+    zIndex: 101,
     top: "50%",
     color: "rgba(0, 0, 0, 0.8)",
     left: theme.spacing(1),
@@ -81,6 +82,7 @@ const useDrawerContentStyles = makeStyles({
   inputRoot: {
     height: 40,
     borderRadius: 20,
+    backgroundColor: "rgb(255, 255, 255)",
     boxShadow: "0 4px 4px 0 rgba(0,0,0,0.05)",
     fontSize: 14,
     border: "1px solid rgba(0, 0, 0)",

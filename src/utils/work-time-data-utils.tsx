@@ -1,5 +1,6 @@
 import { TimeEntry, TimeEntryTotalDto } from "generated/client";
 import strings from "localization/strings";
+import moment from "moment";
 import { FilterScopes, WorkTimeCategory, WorkTimeData, WorkTimeDatas, WorkTimeTotalData } from "types";
 
 /**
@@ -25,14 +26,14 @@ export default class WorkTimeDataUtils {
     dateEntries.forEach(
       entry => {
         workTimeData.push({
-          name: entry.date.toISOString().split("T")[0],
+          name: moment(entry.date).format("YYYY-MM-DD"),
           expected: entry.expected,
           project: entry.projectTime,
           internal: entry.internalTime
         });
         workTimeTotalData.total += entry.total;
-        workTimeTotalData.logged = workTimeTotalData.total + entry.logged;
-        workTimeTotalData.expected = workTimeTotalData.total + entry.expected;
+        workTimeTotalData.logged! += entry.logged;
+        workTimeTotalData.expected! += entry.expected;
       }
     );
 
@@ -64,8 +65,8 @@ export default class WorkTimeDataUtils {
           internal: entry.internalTime
         });
         workTimeTotalData.total += entry.total;
-        workTimeTotalData.logged = workTimeTotalData.total + entry.logged;
-        workTimeTotalData.expected = workTimeTotalData.total + entry.expected;
+        workTimeTotalData.logged! += entry.logged;
+        workTimeTotalData.expected! += entry.expected;
       }
     );
 

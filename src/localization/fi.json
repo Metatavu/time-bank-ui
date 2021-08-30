@@ -25,7 +25,7 @@
       "createdAt": "Luotu:",
       "updatedAt": "Päivitetty:"
     },
-    "noUser": "Ei käyttäjää",
+    "noUser": "Ei käyttäjää valittuna",
     "statistics": "Tilastot",
     "expected": "Odotettu",
     "searchPlaceholder": "Valitse käyttäjä.."
@@ -35,7 +35,7 @@
     "userNotSelected": "Valitse ensin käyttäjä.",
     "noTimeEntries": "Valitulle käyttäjälle ei löytynyt kirjattua aikaa",
     "overview": "Yleisnäkymä",
-    "total": "Yhteensä",
+    "total": "Kokonaissaldo",
     "workTime": "Työaika",
     "filterStartingDate": "Alku",
     "filterEndingDate": "Loppu",
@@ -62,7 +62,7 @@
   "week": "Viikko",
   "logged": "Kirjattu",
   "expected": "Odotettu",
-  "total": "Kaikki",
+  "total": "Saldo",
   "initialTime": "Alkuperäinen aika",
   "project": "Projekti",
   "internal": "Sisäinen",
