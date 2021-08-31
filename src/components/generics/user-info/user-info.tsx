@@ -3,6 +3,9 @@ import { Avatar, Box, Typography } from "@material-ui/core";
 import useUserInfoStyles from "styles/generics/user-info/user-info";
 import { selectPerson } from "features/person/person-slice";
 import { useAppSelector } from "app/hooks";
+import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
+import strings from "localization/strings";
+import theme from "theme/theme";
 
 /**
  * User info component
@@ -14,6 +17,36 @@ const UserInfo: React.FC = () => {
   if (!person) {
     return null;
   }
+
+  /**
+   * Renders the active/inactive status for user
+   * 
+   * @param status user status
+   * @param color color for the status
+   */
+  const renderUserStatus = (status: string, color: string) => {
+    return (
+      <Box style={{ display: "flex", alignItems: "center" }}>
+        <FiberManualRecordIcon
+          htmlColor={ color }
+          style={{
+            width: 6,
+            height: 6
+          }}
+        />
+        <Typography
+          variant="h6"
+          style={{
+            color: color,
+            marginLeft: 4,
+            fontStyle: "italic"
+          }}
+        >
+          { status }
+        </Typography>
+      </Box>
+    );
+  };
 
   /**
    * Renders the username section 
@@ -47,8 +80,14 @@ const UserInfo: React.FC = () => {
    */
   return (
     <Box className={ classes.root }>
-      <Box className={ classes.userNameContainer }>
-        { renderUsername() }
+      <Box className={ classes.userNameStatusContainer }>
+        <Box className={ classes.userNameContainer }>
+          { renderUsername() }
+        </Box>
+        { person.active ?
+          renderUserStatus(strings.drawerContent.userInfo.active, theme.palette.success.main) :
+          renderUserStatus(strings.drawerContent.userInfo.inactive, theme.palette.error.main)
+        }
       </Box>
     </Box>
   );
