@@ -7,12 +7,18 @@ const useUserInfoStyles = makeStyles({
     width: "100%"
   },
 
-  userNameContainer: {
+  userNameStatusContainer: {
+    width: "100%",
     display: "flex",
     alignItems: "center",
+    justifyContent: "space-between",
     marginTop: theme.spacing(4),
     marginBottom: theme.spacing(1),
-    justifyContent: "center"
+    padding: `0px ${theme.spacing(2)}px`
+  },
+
+  userNameContainer: {
+    display: "flex"
   },
 
   avatar: {

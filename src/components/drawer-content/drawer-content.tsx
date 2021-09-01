@@ -15,7 +15,6 @@ import theme from "theme/theme";
 import { CustomPieLabel, WorkTimeCategory, WorkTimeTotalData } from "types/index";
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 import { ErrorContext } from "components/error-handler/error-handler";
-import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 
 /**
  * Component properties
@@ -317,36 +316,6 @@ const DrawerContent: React.FC<Props> = () => {
   };
 
   /**
-   * Renders the active/inactive status for user
-   * 
-   * @param status user status
-   * @param color color for the status
-   */
-  const renderUserStatus = (status: string, color: string) => {
-    return (
-      <Box style={{ display: "flex", alignItems: "center" }}>
-        <FiberManualRecordIcon
-          htmlColor={ color }
-          style={{
-            width: 6,
-            height: 6
-          }}
-        />
-        <Typography
-          variant="h6"
-          style={{
-            color: color,
-            marginLeft: 4,
-            fontStyle: "italic"
-          }}
-        >
-          { status }
-        </Typography>
-      </Box>
-    );
-  };
-
-  /**
    * Renders the user account detail entrys 
    * 
    * @param name name of the subtitle text
@@ -394,12 +363,6 @@ const DrawerContent: React.FC<Props> = () => {
             </Typography>
           </AccordionSummary>
           <AccordionDetails className={ classes.accordionDetails }>
-            <Box className={ classes.userDetailEntry }>
-              { person.active ?
-                renderUserStatus(strings.drawerContent.userInfo.active, theme.palette.success.main) :
-                renderUserStatus(strings.drawerContent.userInfo.inactive, theme.palette.error.main)
-              }
-            </Box>
             <Box className={ classes.userDetailEntry }>
               { renderUserDetailEntry(strings.drawerContent.userInfo.id, person.id) }
             </Box>
