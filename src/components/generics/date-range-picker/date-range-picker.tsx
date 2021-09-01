@@ -56,7 +56,6 @@ const DateRangePicker: React.FC<Props> = ({
    * Initialize the date data
    */
   const initializeData = async () => {
-    locale === "fi" ? setPickerLocale(fiLocale) : setPickerLocale(enLocale);
     const currentWeek = TimeUtils.getCurrentWeek();
     setCurrentWeekNumber(currentWeek);
   };
@@ -64,6 +63,10 @@ const DateRangePicker: React.FC<Props> = ({
   React.useEffect(() => {
     initializeData();
   }, []);
+
+  React.useEffect(() => {
+    locale === "fi" ? setPickerLocale(fiLocale) : setPickerLocale(enLocale);
+  }, [locale]);
 
   /**
    * Event handler creator for week change
