@@ -50,7 +50,8 @@ const useAppLayoutStyles = makeStyles({
   },
 
   title: {
-    marginLeft: theme.spacing(2)
+    marginLeft: theme.spacing(2),
+    color: theme.palette.text.secondary
   },
 
   logo: {
@@ -70,7 +71,33 @@ const useAppLayoutStyles = makeStyles({
     }
   },
 
+  managementLinkContainer: {
+    marginLeft: theme.spacing(30),
+    height: 64,
+    paddingTop: theme.spacing(2)
+  },
+
   managementLink: {
+    backgroundColor: "rgba(255, 255, 255, 0.3)",
+    height: "100%",
+    padding: `0px ${theme.spacing(4)}px`,
+    alignItems: "center",
+    display: "flex",
+    borderRadius: "20px 20px 0px 0px"
+  },
+
+  activeManagementLink: {
+    backgroundColor: "rgba(255, 255, 255) !important"
+  },
+
+  managementLinkText: {
+    color: theme.palette.text.secondary,
+    fontSize: 16,
+    fontWeight: 600
+  },
+
+  activeManagementLinkText: {
+    color: "rgba(0, 0, 0) !important"
   }
 
 }, {

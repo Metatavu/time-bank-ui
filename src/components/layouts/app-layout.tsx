@@ -6,6 +6,7 @@ import siteLogo from "../../gfx/Metatavu-icon.svg";
 import strings from "localization/strings";
 import { Link } from "react-router-dom";
 import { selectLocale, setLocale } from "features/locale/locale-slice";
+import classNames from "classnames";
 
 /**
  * Component properties
@@ -13,6 +14,7 @@ import { selectLocale, setLocale } from "features/locale/locale-slice";
 interface Props {
   drawerContent?: React.ReactNode;
   children: React.ReactNode;
+  managementScreen?: boolean
 }
 
 /**
@@ -20,7 +22,7 @@ interface Props {
  *
  * @param props component properties
  */
-const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children }) => {
+const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children, managementScreen }) => {
   const classes = useAppLayoutStyles();
   const dispatch = useAppDispatch();
   const { locale } = useAppSelector(selectLocale);
@@ -58,21 +60,33 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
     return (
       <AppBar style={{ zIndex: 1201 }}>
         <Toolbar style={{ width: "100%" }}>
-          <Box className={ classes.titleContainer }>
-            <img
-              src={ siteLogo }
-              className={ classes.logo }
-              alt={ strings.header.logo }
-            />
-            <Typography variant="h1" className={ classes.title }>
-              { strings.header.title }
-            </Typography>
-          </Box>
-          <Box className={ classes.managementLink }>
-            <Link to="/management">
-              <Typography>
-                { strings.header.managementLink }
+          <Link to="/">
+            <Box className={ classes.titleContainer }>
+              <img
+                src={ siteLogo }
+                className={ classes.logo }
+                alt={ strings.header.logo }
+              />
+              <Typography variant="h1" className={ classes.title }>
+                { strings.header.title }
               </Typography>
+            </Box>
+          </Link>
+          <Box className={ classes.managementLinkContainer }>
+            <Link to="/management">
+              <Box
+                className={
+                  classNames(classes.managementLink, managementScreen && classes.activeManagementLink)
+                }
+              >
+                <Typography
+                  className={
+                    classNames(classes.managementLinkText, managementScreen && classes.activeManagementLinkText)
+                  }
+                >
+                  { strings.header.managementLink }
+                </Typography>
+              </Box>
             </Link>
           </Box>
           <Box marginLeft="auto">

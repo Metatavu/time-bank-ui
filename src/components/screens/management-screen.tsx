@@ -197,7 +197,7 @@ const ManagementScreen: React.FC = () => {
 
   if (isLoading) {
     return (
-      <AppLayout>
+      <AppLayout managementScreen>
         <Box className={ classes.loadingContainer }>
           <CircularProgress/>
         </Box>
@@ -209,7 +209,7 @@ const ManagementScreen: React.FC = () => {
    * Component render
    */
   return (
-    <AppLayout>
+    <AppLayout managementScreen>
       <Toolbar/>
       <Box className={ classes.root }>
         { renderTimeList() }
