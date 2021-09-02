@@ -1,9 +1,18 @@
 import { makeStyles } from "@material-ui/core";
 import theme from "theme/theme";
 
-const drawerWidth = 400;
-
 const useManagementScreenStyles = makeStyles({
+
+  root: {
+    display: "flex",
+    justifyContent: "center",
+    overflow: "auto",
+    overflowX: "hidden",
+    height: "calc(100vh - 64px)",
+    width: "100%",
+    padding: theme.spacing(7),
+    position: "relative"
+  },
 
   loadingContainer: {
     height: "100%",
@@ -13,35 +22,45 @@ const useManagementScreenStyles = makeStyles({
     alignItems: "center"
   },
 
-  scrollableContainer: {
-    overflow: "auto",
-    overflowX: "hidden",
-    height: "calc(100vh - 64px)",
-    width: "100%"
+  redirectLinkPaper: {
+    position: "absolute",
+    bottom: theme.spacing(8),
+    left: theme.spacing(8),
+    padding: `${theme.spacing(1)}px ${theme.spacing(1.3)}px`,
+    borderRadius: "10px !important",
+    boxShadow: "0px 3px 3px -2px rgb(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0,0,0,0.14), 0px 1px 8px 0px rgb(0,0,0,0.12)"
   },
 
-  drawerContainer: {
-    height: "100%",
+  timeListContainer: {
+    width: "55%"
+  },
+
+  personEntrySubtitle: {
     display: "flex",
-    flexDirection: "column",
-    width: drawerWidth,
-    padding: theme.spacing(2),
-    [theme.breakpoints.down("xs")]: {
-      padding: theme.spacing(1)
-    },
-    [theme.breakpoints.down("sm")]: {
-      width: "100%"
-    }
+    marginLeft: "auto",
+    marginRight: theme.spacing(2)
   },
 
-  scrollableEditorContainer: {
-    overflow: "auto",
-    overflowX: "hidden",
-    height: "calc(100vh - 64px)",
-    width: "calc(100vw - 400px)",
-    [theme.breakpoints.down("sm")]: {
-      display: "none"
-    }
+  personRedirect: {
+    borderRadius: 0,
+    height: "100%",
+    width: 60
+  },
+
+  personEntry: {
+    width: "100%",
+    borderRadius: "10px !important",
+    boxShadow: "0px 3px 3px -2px rgb(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0,0,0,0.14), 0px 1px 8px 0px rgb(0,0,0,0.12)",
+    marginBottom: theme.spacing(2),
+    height: 72,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingLeft: theme.spacing(4)
+  },
+
+  userInfoContainer: {
+    display: "flex"
   },
 
   editorContainer: {
