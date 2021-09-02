@@ -4,7 +4,6 @@ import useMainScreenStyles from "styles/screens/main-screen";
 import { Toolbar, Box } from "@material-ui/core";
 import DrawerContent from "components/drawer-content/drawer-content";
 import EditorContent from "components/editor-content/editor-content";
-import ErrorHandler from "components/error-handler/error-handler";
 
 /** Minimum time that loader is visible */
 
@@ -50,12 +49,10 @@ const MainScreen: React.FC = () => {
    * Component render
    */
   return (
-    <ErrorHandler>
-      <AppLayout
-        drawerContent={ renderDrawer() }
-        editorContent={ renderEditorContent() }
-      />
-    </ErrorHandler>
+    <AppLayout
+      drawerContent={ renderDrawer() }
+      editorContent={ renderEditorContent() }
+    />
   );
 };
 

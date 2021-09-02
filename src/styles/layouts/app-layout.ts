@@ -67,6 +67,9 @@ const useAppLayoutStyles = makeStyles({
     [theme.breakpoints.down("xs")]: {
       marginLeft: theme.spacing(18)
     }
+  },
+
+  managementLink: {
   }
 
 }, {

@@ -4,6 +4,7 @@ import { AppBar, Box, Drawer, Toolbar, Typography, Select, MenuItem } from "@mat
 import useAppLayoutStyles from "styles/layouts/app-layout";
 import siteLogo from "../../gfx/Metatavu-icon.svg";
 import strings from "localization/strings";
+import { Link } from "react-router-dom";
 import { selectLocale, setLocale } from "features/locale/locale-slice";
 
 /**
@@ -56,7 +57,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, editorCo
   const renderHeader = () => {
     return (
       <AppBar style={{ zIndex: 1201 }}>
-        <Toolbar>
+        <Toolbar style={{ width: "100%" }}>
           <Box className={ classes.titleContainer }>
             <img
               src={ siteLogo }
@@ -66,6 +67,15 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, editorCo
             <Typography variant="h1" className={ classes.title }>
               { strings.header.title }
             </Typography>
+          </Box>
+          <Box className={ classes.managementLink }>
+            <Link to="/management">
+              <Typography>
+                Management
+              </Typography>
+            </Link>
+          </Box>
+          <Box marginLeft="auto">
             { renderLanguageSelection() }
           </Box>
         </Toolbar>
