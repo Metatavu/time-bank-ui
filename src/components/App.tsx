@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { selectLocale, setLocale } from "features/locale/locale-slice";
 import MainScreen from "./screens/main-screen";
 import ErrorHandler from "components/error-handler/error-handler";
+import ManagementScreen from "./screens/management-screen";
 
 /**
  * App component
@@ -31,7 +32,7 @@ const App: React.FC = () => {
           <Route
             path="/management"
             exact
-            component={ MainScreen }
+            component={ ManagementScreen }
           />
         </Switch>
       </Router>

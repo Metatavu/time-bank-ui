@@ -13,6 +13,7 @@ export interface IStrings extends LocalizedStringsMethods {
   header: {
     title: string;
     logo: string;
+    managementLink: string;
   }
 
   /**
@@ -71,6 +72,12 @@ export interface IStrings extends LocalizedStringsMethods {
     from: string;
     to: string;
     startOnly: string;
+  };
+
+  /**
+   * Translations related to management screen
+   */
+  managementScreen: {
   };
 
   /**

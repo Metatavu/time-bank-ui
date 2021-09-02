@@ -51,8 +51,9 @@ const MainScreen: React.FC = () => {
   return (
     <AppLayout
       drawerContent={ renderDrawer() }
-      editorContent={ renderEditorContent() }
-    />
+    >
+      { renderEditorContent() }
+    </AppLayout>
   );
 };
 

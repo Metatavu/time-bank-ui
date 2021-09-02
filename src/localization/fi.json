@@ -1,7 +1,8 @@
 {
   "header": {
     "title": "Aikapankki",
-    "logo": "Sivun logo"
+    "logo": "Sivun logo",
+    "managementLink": "Management"
   },
 
   "generic": {
@@ -53,6 +54,9 @@
     "startOnly": "Vain aloitusviikko"
   },
 
+  "managementScreen": {
+  },
+  
   "errorHandling": {
     "fetchDateDataFailed": "Tietojen haku päivämäärän perusteella epäonnistui",
     "fetchTimeDataFailed": "Aikatietojen haku epäonnistui",

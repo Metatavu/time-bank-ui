@@ -11,8 +11,8 @@ import { selectLocale, setLocale } from "features/locale/locale-slice";
  * Component properties
  */
 interface Props {
-  drawerContent: React.ReactNode;
-  editorContent: React.ReactNode;
+  drawerContent?: React.ReactNode;
+  children: React.ReactNode;
 }
 
 /**
@@ -20,7 +20,7 @@ interface Props {
  *
  * @param props component properties
  */
-const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, editorContent }) => {
+const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children }) => {
   const classes = useAppLayoutStyles();
   const dispatch = useAppDispatch();
   const { locale } = useAppSelector(selectLocale);
@@ -71,7 +71,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, editorCo
           <Box className={ classes.managementLink }>
             <Link to="/management">
               <Typography>
-                Management
+                { strings.header.managementLink }
               </Typography>
             </Link>
           </Box>
@@ -89,15 +89,17 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, editorCo
   return (
     <Box className={ classes.root }>
       { renderHeader() }
-      <Drawer
-        variant="permanent"
-        className={ classes.drawer }
-        classes={{ paper: classes.drawerPaper }}
-      >
-        { drawerContent }
-      </Drawer>
-      <main className={ classes.content }>
-        { editorContent }
+      { drawerContent &&
+        <Drawer
+          variant="permanent"
+          className={ classes.drawer }
+          classes={{ paper: classes.drawerPaper }}
+        >
+          { drawerContent }
+        </Drawer>
+      }
+      <main className={ `${classes.content}` }>
+        { children }
       </main>
     </Box>
   );

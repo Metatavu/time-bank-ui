@@ -1,3 +1,5 @@
+import { PersonDto, TimeEntryTotalDto } from "generated/client";
+
 /**
  * Values for filtering scopes
  */
@@ -61,6 +63,14 @@ export interface WorkTimeDatas {
  */
 export interface CustomPieLabel {
   value: number;
+}
+
+/**
+ * Interface for person with total time
+ */
+export interface PersonWithTotalTime {
+  person: PersonDto;
+  timeEntryTotal?: TimeEntryTotalDto;
 }
 
 /**
