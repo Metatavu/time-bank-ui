@@ -1,6 +1,6 @@
 import React from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { AppBar, Box, Drawer, Toolbar, Typography, Select, MenuItem } from "@material-ui/core";
+import { AppBar, Box, Drawer, Toolbar, Typography, Select, MenuItem, Button } from "@material-ui/core";
 import useAppLayoutStyles from "styles/layouts/app-layout";
 import siteLogo from "../../gfx/Metatavu-icon.svg";
 import strings from "localization/strings";
@@ -8,7 +8,8 @@ import { Link } from "react-router-dom";
 import { selectLocale, setLocale } from "features/locale/locale-slice";
 import classNames from "classnames";
 import jwt_decode from "jwt-decode";
-import { selectAuth } from "features/auth/auth-slice";
+import { logout, selectAuth } from "features/auth/auth-slice";
+import theme from "theme/theme";
 
 /**
  * Component properties
@@ -56,7 +57,28 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
         </MenuItem>)
     );
   };
-  
+
+  /**
+   * Renders logout
+   */
+  const renderLogout = () => (
+    <Button
+      color="primary"
+      variant="text"
+      onClick={ () => dispatch(logout()) }
+    >
+      <Typography
+        style={{
+          color: theme.palette.secondary.main,
+          textDecoration: "none",
+          fontWeight: 600
+        }}
+      >
+        { strings.header.logout }
+      </Typography>
+    </Button>
+  );
+
   /**
    * Renders language selection
    */
@@ -109,6 +131,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
             </Box>
           }
           <Box marginLeft="auto">
+            { renderLogout() }
             { renderLanguageSelection() }
           </Box>
         </Toolbar>

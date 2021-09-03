@@ -2,7 +2,8 @@
   "header": {
     "title": "Aikapankki",
     "logo": "Sivun logo",
-    "managementLink": "Management"
+    "managementLink": "Management",
+    "logout": "Kirjaudu ulos"
   },
 
   "generic": {

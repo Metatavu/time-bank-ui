@@ -2,7 +2,8 @@
   "header": {
     "title": "Time Bank",
     "logo": "Site logo",
-    "managementLink": "Management"
+    "managementLink": "Management",
+    "logout": "Log out"
   },
   
   "generic": {

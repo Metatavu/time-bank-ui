@@ -61,7 +61,7 @@ const useAppLayoutStyles = makeStyles({
   },
 
   languageSelect: {
-    marginLeft: theme.spacing(20),
+    marginLeft: theme.spacing(5),
     color: "#fff",
     [theme.breakpoints.down("sm")]: {
       marginLeft: theme.spacing(50)

@@ -14,6 +14,7 @@ export interface IStrings extends LocalizedStringsMethods {
     title: string;
     logo: string;
     managementLink: string;
+    logout: string;
   }
 
   /**
