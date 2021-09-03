@@ -78,6 +78,8 @@ export interface IStrings extends LocalizedStringsMethods {
    * Translations related to management screen
    */
   managementScreen: {
+    seeMore: string;
+    searchPlaceholder: string;
   };
 
   /**

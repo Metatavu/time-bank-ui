@@ -3,6 +3,12 @@ import theme from "theme/theme";
 
 const useDrawerContentStyles = makeStyles({
 
+  userInfoContainer: {
+    marginTop: theme.spacing(4),
+    marginBottom: theme.spacing(1),
+    padding: `0px ${theme.spacing(2)}px`
+  },
+
   searchBoxContainer: {
     width: "100%",
     height: 40,

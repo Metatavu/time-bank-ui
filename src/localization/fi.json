@@ -55,6 +55,8 @@
   },
 
   "managementScreen": {
+    "seeMore": "see More",
+    "searchPlaceholder": "Search user.."
   },
   
   "errorHandling": {

@@ -1,12 +1,14 @@
 import React from "react";
 import AppLayout from "../layouts/app-layout";
 import useManagementScreenStyles from "styles/screens/management-screen";
-import { Toolbar, Box, CircularProgress, Paper, Typography, List, ListItem, Divider, IconButton } from "@material-ui/core";
+import { Toolbar, Box, CircularProgress, Paper, Typography, List, ListItem, Divider, Button, TextField } from "@material-ui/core";
+import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer, TooltipProps } from "recharts";
+import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 import { useAppDispatch } from "app/hooks";
 import Api from "api/api";
 import { PersonDto, TimebankControllerGetTotalRetentionEnum } from "generated/client";
 import { ErrorContext } from "components/error-handler/error-handler";
-import { PersonWithTotalTime } from "types";
+import { CustomPieLabel, PersonWithTotalTime, WorkTimeCategory, WorkTimeTotalData } from "types";
 import strings from "localization/strings";
 import SubdirectoryArrowLeftIcon from "@material-ui/icons/SubdirectoryArrowLeft";
 import { useHistory, Link } from "react-router-dom";
@@ -14,8 +16,8 @@ import TimeUtils from "utils/time-utils";
 import theme from "theme/theme";
 import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import { setPerson } from "features/person/person-slice";
-
-/** Minimum time that loader is visible */
+import UserInfo from "components/generics/user-info/user-info";
+import SearchIcon from "@material-ui/icons/Search";
 
 /**
  * Management screen screen component
@@ -26,6 +28,9 @@ const ManagementScreen: React.FC = () => {
   const classes = useManagementScreenStyles();
   const [ isLoading, setIsLoading ] = React.useState(false);
   const [ personsTotalTime, setPersonsTotalTime ] = React.useState<PersonWithTotalTime[]>([]);
+  const [ displayedPersonsTotalTime, setDisplayedPersonsTotalTime ] = React.useState<PersonWithTotalTime[]>([]);
+  const [ selectedPersonWithTotalTime, setSelectedPersonWithTotalTime ] = React.useState<PersonWithTotalTime | undefined>(undefined);
+  const [ searchInput, setSearchInput ] = React.useState("");
   const context = React.useContext(ErrorContext);
   const history = useHistory();
 
@@ -62,6 +67,7 @@ const ManagementScreen: React.FC = () => {
     const fetchedPersons: PersonWithTotalTime[] = [];
 
     setIsLoading(true);
+
     try {
       await Api.getTimeBankApi()
         .timebankControllerGetPersons()
@@ -80,6 +86,7 @@ const ManagementScreen: React.FC = () => {
     const fetchedPersonsTotalTime = await Promise.all(personsTotalTimePromises);
 
     setPersonsTotalTime(fetchedPersonsTotalTime);
+    setDisplayedPersonsTotalTime(fetchedPersonsTotalTime);
     setIsLoading(false);
   };
 
@@ -98,6 +105,55 @@ const ManagementScreen: React.FC = () => {
   };
 
   /**
+   * List Item click handler
+   * 
+   * @param event mouse event
+   * @param personWithTotalTime person with total time data
+   */
+  const handleListItemClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>, personWithTotalTime: PersonWithTotalTime) => {
+    setSelectedPersonWithTotalTime(personWithTotalTime);
+  };
+
+  /**
+   * search input change handler
+   * 
+   * @param event input change event
+   */
+  const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newSearchInput = event.target.value;
+    setSearchInput(newSearchInput);
+
+    if (newSearchInput === "") {
+      setDisplayedPersonsTotalTime(personsTotalTime);
+      return;
+    }
+
+    const newDisplayedPersonsTotalTime = personsTotalTime.filter(personTotalTime =>
+      `${personTotalTime.person.firstName} ${personTotalTime.person.lastName}`.toLowerCase().includes(newSearchInput.toLowerCase()));
+
+    setDisplayedPersonsTotalTime(newDisplayedPersonsTotalTime);
+  };
+
+  /**
+   * Renders the search 
+   */
+  const renderSearch = () => {
+    return (
+      <Box className={ classes.searchContainer }>
+        <TextField
+          value={ searchInput }
+          onChange={ handleSearchInputChange }
+          placeholder={ strings.managementScreen.searchPlaceholder }
+          variant="outlined"
+          className={ classes.searchTextField }
+          inputProps={{ style: { paddingLeft: theme.spacing(5) } }}
+        />
+        <SearchIcon className={ classes.searchIcon }/>
+      </Box>
+    );
+  };
+
+  /**
    * Renders the redirect link 
    */
   const renderRedirect = () => {
@@ -107,6 +163,139 @@ const ManagementScreen: React.FC = () => {
           <SubdirectoryArrowLeftIcon fontSize="large"/>
         </Paper>
       </Link>
+    );
+  };
+
+  /**
+   * Renders the customized label for charts
+   * 
+   * @param props props of the custom label
+   */
+  const renderCustomizedLabel = (props: CustomPieLabel) => {
+    return TimeUtils.convertToMinutesAndHours(props.value);
+  };
+
+  /**
+   * Renders the customized tooltip for charts
+   * 
+   * @param props props of the custom tooltip
+   */
+  const renderCustomizedTooltip = (props: TooltipProps<ValueType, NameType>) => {
+    const { active, payload } = props;
+
+    if (!active || !payload || !payload.length) {
+      return null;
+    }
+
+    const selectedData = payload[0];
+
+    if (!selectedData.value || !selectedData.name) {
+      return null;
+    }
+
+    const sectionName = {
+      [WorkTimeCategory.PROJECT]: strings.project,
+      [WorkTimeCategory.INTERNAL]: strings.internal
+    }[selectedData.name];
+
+    return (
+      <Box style={{ backgroundColor: "rgba(0, 0, 0)" }}>
+        <Typography
+          variant="h6"
+          style={{
+            color: "#fff",
+            padding: theme.spacing(1)
+          }}
+        >
+          { `${sectionName}: ${TimeUtils.convertToMinutesAndHours(selectedData.value as number)}` }
+        </Typography>
+      </Box>
+    );
+  };
+
+  /**
+   * Renders the Total work time section
+   * 
+   * @param name name of the row
+   * @param value value of the row
+   * @param color color of the row value
+   */
+  const renderExpectedWorkRow = (name: string, value: string, color?: string) => {
+    return (
+      <Box className={ classes.expectedWorkRow }>
+        <Typography className={ classes.expectedWorkNames }>
+          { name }
+        </Typography>
+        <Typography
+          style={{ color: color }}
+          className={ classes.expectedWorkValues }
+        >
+          { value }
+        </Typography>
+      </Box>
+    );
+  };
+
+  /**
+   * Renders the person detail 
+   */
+  const renderPersonDetail = () => {
+    if (!selectedPersonWithTotalTime || !selectedPersonWithTotalTime.timeEntryTotal) {
+      return;
+    }
+
+    const { person, timeEntryTotal } = selectedPersonWithTotalTime;
+
+    const workTimeData: WorkTimeTotalData[] = [
+      { name: WorkTimeCategory.PROJECT, total: timeEntryTotal.projectTime },
+      { name: WorkTimeCategory.INTERNAL, total: timeEntryTotal.internalTime }
+    ];
+
+    const COLORS = [ theme.palette.success.main, theme.palette.warning.main ];
+
+    return (
+      <Paper className={ classes.redirectPersonDetailPaper }>
+        <Box mb={ 2 }>
+          <UserInfo
+            person={ selectedPersonWithTotalTime.person }
+          />
+        </Box>
+        <Divider/>
+        <Box width="100%" my={ 2 }>
+          { renderExpectedWorkRow(`${strings.monday}:`, TimeUtils.convertToMinutesAndHours(person.monday)) }
+          { renderExpectedWorkRow(`${strings.tuesday}:`, TimeUtils.convertToMinutesAndHours(person.tuesday)) }
+          { renderExpectedWorkRow(`${strings.wednesday}:`, TimeUtils.convertToMinutesAndHours(person.wednesday)) }
+          { renderExpectedWorkRow(`${strings.thursday}:`, TimeUtils.convertToMinutesAndHours(person.thursday)) }
+          { renderExpectedWorkRow(`${strings.friday}:`, TimeUtils.convertToMinutesAndHours(person.friday)) }
+          { renderExpectedWorkRow(`${strings.saturday}:`, TimeUtils.convertToMinutesAndHours(person.saturday)) }
+          { renderExpectedWorkRow(`${strings.sunday}:`, TimeUtils.convertToMinutesAndHours(person.sunday)) }
+        </Box>
+        <ResponsiveContainer className={ classes.pieChartContainer }>
+          <PieChart>
+            <Pie
+              cx="50%"
+              cy="50%"
+              dataKey="total"
+              data={ workTimeData }
+              label={ renderCustomizedLabel }
+            >
+              { workTimeData.map((entry, index) => (
+                <Cell fill={ COLORS[index % COLORS.length] }/>
+              )) }
+            </Pie>
+            <Tooltip content={ renderCustomizedTooltip }/>
+          </PieChart>
+        </ResponsiveContainer>
+        <Button
+          onClick={ () => handlePersonRedirectClick(person) }
+          className={ classes.personRedirect }
+        >
+          <Typography style={{ fontWeight: 600 }}>
+            { strings.managementScreen.seeMore }
+          </Typography>
+          <KeyboardArrowRightIcon/>
+        </Button>
+      </Paper>
     );
   };
 
@@ -155,7 +344,14 @@ const ManagementScreen: React.FC = () => {
     }
 
     return (
-      <ListItem style={{ width: "100%" }}>
+      <ListItem
+        button
+        disableRipple
+        disableTouchRipple
+        selected={ selectedPersonWithTotalTime?.person.id === person.id }
+        onClick={ event => handleListItemClick(event, personTotalTime) }
+        className={ classes.personListEntry }
+      >
         <Paper className={ classes.personEntry }>
           <Box className={ classes.userInfoContainer }>
             <Typography variant="h2">
@@ -170,13 +366,6 @@ const ManagementScreen: React.FC = () => {
             { renderPersonEntrySubtitleText(`${strings.expected}:`, timeEntryTotal!.expected || 0, false) }
             { renderPersonEntrySubtitleText(`${strings.total}:`, timeEntryTotal!.total, true, timeEntryTotal!.total >= 0) }
           </Box>
-          <Divider orientation="vertical"/>
-          <IconButton
-            onClick={ () => handlePersonRedirectClick(person) }
-            className={ classes.personRedirect }
-          >
-            <KeyboardArrowRightIcon/>
-          </IconButton>
         </Paper>
       </ListItem>
     );
@@ -189,7 +378,7 @@ const ManagementScreen: React.FC = () => {
     return (
       <>
         <List className={ classes.timeListContainer }>
-          { personsTotalTime.map(renderPersonEntry) }
+          { displayedPersonsTotalTime.map(renderPersonEntry) }
         </List>
       </>
     );
@@ -212,9 +401,13 @@ const ManagementScreen: React.FC = () => {
     <AppLayout managementScreen>
       <Toolbar/>
       <Box className={ classes.root }>
-        { renderTimeList() }
+        <Box className={ classes.mainContent }>
+          { renderTimeList() }
+        </Box>
+        { renderSearch() }
+        { renderRedirect() }
+        { renderPersonDetail() }
       </Box>
-      { renderRedirect() }
     </AppLayout>
   );
 };

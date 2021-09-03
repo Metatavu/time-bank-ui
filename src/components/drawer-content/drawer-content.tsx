@@ -392,8 +392,12 @@ const DrawerContent: React.FC<Props> = () => {
       { renderSearchBox() }
       { person ?
         <>
-          <UserInfo/>
-          <Box >
+          <Box className={ classes.userInfoContainer }>
+            <UserInfo
+              person={ person }
+            />
+          </Box>
+          <Box>
             { renderTotalWorkTime() }
             { renderExpectedWork() }
             { renderUserAccountInfo() }
