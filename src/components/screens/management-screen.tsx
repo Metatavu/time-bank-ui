@@ -300,15 +300,18 @@ const ManagementScreen: React.FC = () => {
             <Tooltip content={ renderCustomizedTooltip }/>
           </PieChart>
         </ResponsiveContainer>
-        <Button
-          onClick={ () => handlePersonRedirectClick(person) }
-          className={ classes.personRedirect }
-        >
-          <Typography style={{ fontWeight: 600 }}>
-            { strings.managementScreen.seeMore }
-          </Typography>
-          <KeyboardArrowRightIcon/>
-        </Button>
+        <Box className={ classes.personRedirect }>
+          <Divider/>
+          <Button
+            onClick={ () => handlePersonRedirectClick(person) }
+            className={ classes.personRedirectButton }
+          >
+            <Typography style={{ fontWeight: 600 }}>
+              { strings.managementScreen.seeMore }
+            </Typography>
+            <KeyboardArrowRightIcon/>
+          </Button>
+        </Box>
       </Paper>
     );
   };
@@ -386,13 +389,37 @@ const ManagementScreen: React.FC = () => {
   };
 
   /**
+   * Renders bottom padding 
+   */
+  const renderBottomPadding = () => {
+    return (
+      <ListItem>
+        <Box style={{ height: theme.spacing(14) }}>
+          <></>
+        </Box>
+      </ListItem>
+    );
+  };
+
+  /**
    * Renders the time list 
    */
   const renderTimeList = () => {
+    if (displayedPersonsTotalTime.length === 0) {
+      return (
+        <List className={ classes.timeListContainer }>
+          <Typography variant="h4">
+            { strings.managementScreen.noUser }
+          </Typography>
+        </List>
+      );
+    }
+
     return (
       <>
         <List className={ classes.timeListContainer }>
           { displayedPersonsTotalTime.map(renderPersonEntry) }
+          { renderBottomPadding() }
         </List>
       </>
     );

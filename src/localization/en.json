@@ -57,7 +57,8 @@
 
   "managementScreen": {
     "seeMore": "see More",
-    "searchPlaceholder": "Search user.."
+    "searchPlaceholder": "Search user..",
+    "noUser": "No user to display."
   },
   
   "errorHandling": {

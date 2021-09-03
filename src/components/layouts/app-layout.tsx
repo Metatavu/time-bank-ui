@@ -130,7 +130,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
               </Link>
             </Box>
           }
-          <Box marginLeft="auto">
+          <Box className={ classes.settings }>
             { renderLogout() }
             { renderLanguageSelection() }
           </Box>

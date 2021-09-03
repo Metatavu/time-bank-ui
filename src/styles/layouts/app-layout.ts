@@ -60,6 +60,12 @@ const useAppLayoutStyles = makeStyles({
     padding: 5
   },
 
+  settings: {
+    marginLeft: "auto",
+    display: "flex",
+    alignItems: "center"
+  },
+
   languageSelect: {
     marginLeft: theme.spacing(5),
     color: "#fff",

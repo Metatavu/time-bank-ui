@@ -81,6 +81,7 @@ export interface IStrings extends LocalizedStringsMethods {
   managementScreen: {
     seeMore: string;
     searchPlaceholder: string;
+    noUser: string;
   };
 
   /**

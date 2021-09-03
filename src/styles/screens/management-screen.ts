@@ -100,7 +100,10 @@ const useManagementScreenStyles = makeStyles({
   },
 
   timeListContainer: {
-    width: "55%"
+    width: "55%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
   },
 
   personEntrySubtitle: {
@@ -114,8 +117,15 @@ const useManagementScreenStyles = makeStyles({
     bottom: 0,
     width: "100%",
     display: "flex",
-    justifyContent: "flex-end",
+    flexDirection: "column"
+  },
+
+  personRedirectButton: {
+    height: "100%",
+    width: "100%",
     padding: theme.spacing(2),
+    display: "flex",
+    justifyContent: "flex-end",
     borderRadius: "0px 0px 10px 10px"
   },
 
@@ -132,7 +142,7 @@ const useManagementScreenStyles = makeStyles({
     borderRadius: "10px !important",
     boxShadow: "0px 3px 3px -2px rgb(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0,0,0,0.14), 0px 1px 8px 0px rgb(0,0,0,0.12)",
     marginBottom: theme.spacing(1),
-    height: 80,
+    height: 72,
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
