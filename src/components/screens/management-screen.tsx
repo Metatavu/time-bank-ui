@@ -39,6 +39,8 @@ const ManagementScreen: React.FC = () => {
 
   /**
    * Populate one person's total work data
+   * 
+   * @param person person with total time data
    */
   const populatePersonTotalTimeData = async (person: PersonWithTotalTime) => {
     let personTotalTime: PersonWithTotalTime = {
@@ -351,7 +353,9 @@ const ManagementScreen: React.FC = () => {
   };
 
   /**
-   * Renders person entry 
+   * Renders person entry
+   * 
+   * @param personTotalTime person total time data
    */
   const renderPersonEntry = (personTotalTime: PersonWithTotalTime) => {
     const { person, timeEntryTotal } = personTotalTime;
@@ -394,9 +398,7 @@ const ManagementScreen: React.FC = () => {
   const renderBottomPadding = () => {
     return (
       <ListItem>
-        <Box style={{ height: theme.spacing(14) }}>
-          <></>
-        </Box>
+        <Box style={{ height: theme.spacing(14) }}/>
       </ListItem>
     );
   };
