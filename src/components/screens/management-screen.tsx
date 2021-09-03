@@ -4,7 +4,7 @@ import useManagementScreenStyles from "styles/screens/management-screen";
 import { Toolbar, Box, CircularProgress, Paper, Typography, List, ListItem, Divider, Button, TextField } from "@material-ui/core";
 import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer, TooltipProps } from "recharts";
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
-import { useAppDispatch } from "app/hooks";
+import { useAppDispatch, useAppSelector } from "app/hooks";
 import Api from "api/api";
 import { PersonDto, TimebankControllerGetTotalRetentionEnum } from "generated/client";
 import { ErrorContext } from "components/error-handler/error-handler";
@@ -18,6 +18,8 @@ import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import { setPerson } from "features/person/person-slice";
 import UserInfo from "components/generics/user-info/user-info";
 import SearchIcon from "@material-ui/icons/Search";
+import jwt_decode from "jwt-decode";
+import { selectAuth } from "features/auth/auth-slice";
 
 /**
  * Management screen screen component
@@ -25,6 +27,7 @@ import SearchIcon from "@material-ui/icons/Search";
 const ManagementScreen: React.FC = () => {
   const dispatch = useAppDispatch();
 
+  const { accessToken } = useAppSelector(selectAuth);
   const classes = useManagementScreenStyles();
   const [ isLoading, setIsLoading ] = React.useState(false);
   const [ personsTotalTime, setPersonsTotalTime ] = React.useState<PersonWithTotalTime[]>([]);
@@ -91,6 +94,17 @@ const ManagementScreen: React.FC = () => {
   };
 
   React.useEffect(() => {
+    if (!accessToken) {
+      return;
+    }
+
+    const decodedToken: any = jwt_decode(accessToken.access_token);
+    const roles = decodedToken.realm_access.roles as string[];
+
+    if (!roles.includes("admin")) {
+      history.push("/");
+    }
+
     fetchData();
   }, []);
 

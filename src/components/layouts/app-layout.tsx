@@ -7,6 +7,8 @@ import strings from "localization/strings";
 import { Link } from "react-router-dom";
 import { selectLocale, setLocale } from "features/locale/locale-slice";
 import classNames from "classnames";
+import jwt_decode from "jwt-decode";
+import { selectAuth } from "features/auth/auth-slice";
 
 /**
  * Component properties
@@ -25,7 +27,22 @@ interface Props {
 const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children, managementScreen }) => {
   const classes = useAppLayoutStyles();
   const dispatch = useAppDispatch();
+  const { accessToken } = useAppSelector(selectAuth);
+  const [ isAdmin, setIsAdmin ] = React.useState(false);
   const { locale } = useAppSelector(selectLocale);
+
+  React.useEffect(() => {
+    if (!accessToken) {
+      return;
+    }
+
+    const decodedToken: any = jwt_decode(accessToken.access_token);
+    const roles = decodedToken.realm_access.roles as string[];
+
+    if (roles.includes("admin")) {
+      setIsAdmin(true);
+    }
+  }, []);
 
   /**
    * 
@@ -72,23 +89,25 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
               </Typography>
             </Box>
           </Link>
-          <Box className={ classes.managementLinkContainer }>
-            <Link to="/management">
-              <Box
-                className={
-                  classNames(classes.managementLink, managementScreen && classes.activeManagementLink)
-                }
-              >
-                <Typography
+          { isAdmin &&
+            <Box className={ classes.managementLinkContainer }>
+              <Link to="/management">
+                <Box
                   className={
-                    classNames(classes.managementLinkText, managementScreen && classes.activeManagementLinkText)
+                    classNames(classes.managementLink, managementScreen && classes.activeManagementLink)
                   }
                 >
-                  { strings.header.managementLink }
-                </Typography>
-              </Box>
-            </Link>
-          </Box>
+                  <Typography
+                    className={
+                      classNames(classes.managementLinkText, managementScreen && classes.activeManagementLinkText)
+                    }
+                  >
+                    { strings.header.managementLink }
+                  </Typography>
+                </Box>
+              </Link>
+            </Box>
+          }
           <Box marginLeft="auto">
             { renderLanguageSelection() }
           </Box>
