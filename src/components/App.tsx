@@ -1,6 +1,7 @@
 import React from "react";
 import { useAppDispatch, useAppSelector } from "app/hooks";
 import { selectLocale, setLocale } from "features/locale/locale-slice";
+import AccessTokenRefresh from "../containers/access-token-refresh";
 import MainScreen from "./screens/main-screen";
 
 /**
@@ -16,7 +17,9 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <MainScreen/>
+    <AccessTokenRefresh>
+      <MainScreen/>
+    </AccessTokenRefresh>
   );
 };
 
