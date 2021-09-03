@@ -17,7 +17,7 @@ const useManagementScreenStyles = makeStyles({
     overflowX: "hidden",
     display: "flex",
     justifyContent: "center",
-    padding: theme.spacing(7)
+    padding: theme.spacing(6)
   },
 
   searchContainer: {
