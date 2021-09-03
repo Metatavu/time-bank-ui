@@ -2,8 +2,8 @@ import React from "react";
 import { useAppDispatch, useAppSelector } from "app/hooks";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { selectLocale, setLocale } from "features/locale/locale-slice";
+import AccessTokenRefresh from "../containers/access-token-refresh";
 import MainScreen from "./screens/main-screen";
-import ErrorHandler from "components/error-handler/error-handler";
 import ManagementScreen from "./screens/management-screen";
 
 /**
@@ -19,7 +19,7 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <ErrorHandler>
+    <AccessTokenRefresh>
       <Router>
         <Switch>
           <Route
@@ -36,7 +36,7 @@ const App: React.FC = () => {
           />
         </Switch>
       </Router>
-    </ErrorHandler>
+    </AccessTokenRefresh>
   );
 };
 

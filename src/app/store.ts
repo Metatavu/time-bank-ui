@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import localeReducer from "features/locale/locale-slice";
 import personReducer from "features/person/person-slice";
+import authReducer from "features/auth/auth-slice";
 
 /**
  * Initialized Redux store
@@ -9,7 +10,8 @@ export const store = configureStore({
   middleware: getDefaultMiddleware => getDefaultMiddleware({ serializableCheck: false }),
   reducer: {
     locale: localeReducer,
-    person: personReducer
+    person: personReducer,
+    auth: authReducer
   }
 });
 

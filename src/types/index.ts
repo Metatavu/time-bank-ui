@@ -1,6 +1,35 @@
 import { PersonDto, TimeEntryTotalDto } from "generated/client";
 
 /**
+ * Access token
+ */
+export interface AccessToken {
+  created: Date;
+  access_token: string;
+  expires_in?: number;
+  refresh_token?: string;
+  refresh_expires_in?: number;
+  firstName?: string;
+  lastName?: string;
+  userId?: string;
+  roles?: string[];
+}
+
+/**
+ * Configuration
+ */
+export interface Configuration {
+  auth: {
+    url: string;
+    realm: string;
+    clientId: string;
+  };
+  api: {
+    baseUrl: string;
+  };
+}
+
+/**
  * Values for filtering scopes
  */
 export enum FilterScopes {
