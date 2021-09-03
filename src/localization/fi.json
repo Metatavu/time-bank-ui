@@ -55,8 +55,8 @@
   },
 
   "managementScreen": {
-    "seeMore": "see More",
-    "searchPlaceholder": "Search user.."
+    "seeMore": "Näytä lisää",
+    "searchPlaceholder": "Hae käyttäjää.."
   },
   
   "errorHandling": {
