@@ -146,7 +146,7 @@ const useManagementScreenStyles = makeStyles({
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    padding: `0px ${theme.spacing(4)}px`
+    paddingLeft: theme.spacing(3)
   },
 
   userInfoContainer: {
