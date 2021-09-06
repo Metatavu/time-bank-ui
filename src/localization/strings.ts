@@ -94,6 +94,7 @@ export interface IStrings extends LocalizedStringsMethods {
     title: string;
   }
 
+  startDate: string;
   week: string;
   logged: string;
   expected: string;

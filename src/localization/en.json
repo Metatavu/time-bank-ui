@@ -68,6 +68,7 @@
     "title": "Error"
   },
 
+  "startDate": "Start Date",
   "week": "Week",
   "logged": "Logged",
   "expected": "Expected",

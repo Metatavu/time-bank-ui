@@ -150,8 +150,19 @@ const useManagementScreenStyles = makeStyles({
     paddingRight: theme.spacing(1)
   },
 
+  personEntryDate: {
+    fontSize: 18,
+    fontStyle: "normal"
+  },
+
+  personEntryTime: {
+    fontSize: 24,
+    marginLeft: theme.spacing(1)
+  },
+
   userInfoContainer: {
-    display: "flex"
+    display: "flex",
+    alignItems: "center"
   },
 
   editorContainer: {

@@ -20,6 +20,7 @@ import UserInfo from "components/generics/user-info/user-info";
 import SearchIcon from "@material-ui/icons/Search";
 import jwt_decode from "jwt-decode";
 import { selectAuth } from "features/auth/auth-slice";
+import moment from "moment";
 
 /**
  * Management screen screen component
@@ -271,13 +272,14 @@ const ManagementScreen: React.FC = () => {
 
     return (
       <Paper className={ classes.redirectPersonDetailPaper }>
-        <Box mb={ 2 }>
+        <Box mb={ 2 } width="100%">
           <UserInfo
             person={ selectedPersonWithTotalTime.person }
           />
         </Box>
         <Divider/>
         <Box width="100%" my={ 2 }>
+          { renderExpectedWorkRow(`${strings.startDate}:`, moment(person.startDate).format("DD.MM.YYYY")) }
           { renderExpectedWorkRow(`${strings.monday}:`, TimeUtils.convertToMinutesAndHours(person.monday)) }
           { renderExpectedWorkRow(`${strings.tuesday}:`, TimeUtils.convertToMinutesAndHours(person.tuesday)) }
           { renderExpectedWorkRow(`${strings.wednesday}:`, TimeUtils.convertToMinutesAndHours(person.wednesday)) }
@@ -344,8 +346,11 @@ const ManagementScreen: React.FC = () => {
             <Typography variant="h2">
               { `${person.firstName} ${person.lastName}` }
             </Typography>
-            <Typography variant="h4">
-              { `${person.startDate}-` }
+            <Typography
+              variant="h4"
+              className={ classes.personEntryDate }
+            >
+              { `${moment(person.startDate).format("DD.MM.YYYY")}-` }
             </Typography>
           </Box>
           <Box className={ classes.personEntrySubtitle } >
@@ -353,11 +358,9 @@ const ManagementScreen: React.FC = () => {
               title={ `${strings.expected}: ${TimeUtils.convertToHours(timeEntryTotal!.expected)}, ${strings.logged}: ${TimeUtils.convertToHours(timeEntryTotal!.logged)}` }
             >
               <Typography
+                className={ classes.personEntryTime }
                 style={{
-                  fontSize: 20,
-                  color: timeEntryTotal!.total >= 0 ? theme.palette.success.main : theme.palette.error.main,
-                  marginLeft: theme.spacing(1),
-                  fontStyle: "italic"
+                  color: timeEntryTotal!.total >= 0 ? theme.palette.success.main : theme.palette.error.main
                 }}
               >
                 { TimeUtils.convertToHours(timeEntryTotal!.total) }

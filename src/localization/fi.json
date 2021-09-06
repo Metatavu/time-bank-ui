@@ -68,6 +68,7 @@
     "title": "Error"
   },
 
+  "startDate": "Aloituspäivämäärä",
   "week": "Viikko",
   "logged": "Kirjattu",
   "expected": "Odotettu",
