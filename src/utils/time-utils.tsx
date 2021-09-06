@@ -44,7 +44,7 @@ export default class TimeUtils {
     const decimal = Math.round((momentValue.minutes() / 60) * 100);
     const negative = hours < 0 || decimal < 0;
 
-    return `${negative ? "-" : ""}${Math.abs(hours)},${Math.abs(decimal).toString().padEnd(2, "0")} h`;
+    return `${negative ? "-" : ""}${Math.abs(hours)},${Math.abs(decimal).toString().padStart(2, "0")} h`;
   };
 
   /**
