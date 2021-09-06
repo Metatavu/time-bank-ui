@@ -21,7 +21,7 @@ const useManagementScreenStyles = makeStyles({
   },
 
   searchContainer: {
-    width: `calc((45vw - 2 * ${theme.spacing(8)}px) / 2)`,
+    width: `calc((55vw - 2 * ${theme.spacing(8)}px) / 2)`,
     position: "absolute",
     top: theme.spacing(8),
     left: theme.spacing(8),
@@ -57,7 +57,7 @@ const useManagementScreenStyles = makeStyles({
   },
 
   redirectPersonDetailPaper: {
-    width: `calc((45vw - 2 * ${theme.spacing(8)}px) / 2)`,
+    width: `calc((55vw - 2 * ${theme.spacing(8)}px) / 2)`,
     position: "absolute",
     top: theme.spacing(8),
     right: theme.spacing(8),
@@ -100,7 +100,7 @@ const useManagementScreenStyles = makeStyles({
   },
 
   timeListContainer: {
-    width: "55%",
+    width: "45%",
     display: "flex",
     flexDirection: "column",
     alignItems: "center"
@@ -146,7 +146,8 @@ const useManagementScreenStyles = makeStyles({
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingLeft: theme.spacing(3)
+    paddingLeft: theme.spacing(3),
+    paddingRight: theme.spacing(1)
   },
 
   userInfoContainer: {

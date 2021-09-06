@@ -337,7 +337,7 @@ const EditorContent: React.FC<Props> = () => {
             fontStyle: "italic"
           }}
         >
-          { total ? valueText : TimeUtils.convertToMinutesAndHours(value) }
+          { valueText }
         </Typography>
       </>
     );

@@ -1,8 +1,8 @@
 import React from "react";
 import AppLayout from "../layouts/app-layout";
 import useManagementScreenStyles from "styles/screens/management-screen";
-import { Toolbar, Box, CircularProgress, Paper, Typography, List, ListItem, Divider, Button, TextField } from "@material-ui/core";
-import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer, TooltipProps } from "recharts";
+import { Toolbar, Box, CircularProgress, Paper, Typography, List, ListItem, Divider, Button, TextField, Tooltip } from "@material-ui/core";
+import { PieChart, Pie, Cell, ResponsiveContainer, TooltipProps, Tooltip as RechartTooltip } from "recharts";
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 import { useAppDispatch, useAppSelector } from "app/hooks";
 import Api from "api/api";
@@ -299,7 +299,7 @@ const ManagementScreen: React.FC = () => {
                 <Cell fill={ COLORS[index % COLORS.length] }/>
               )) }
             </Pie>
-            <Tooltip content={ renderCustomizedTooltip }/>
+            <RechartTooltip content={ renderCustomizedTooltip }/>
           </PieChart>
         </ResponsiveContainer>
         <Box className={ classes.personRedirect }>
@@ -318,39 +318,35 @@ const ManagementScreen: React.FC = () => {
     );
   };
 
-  /**
-   * Renders the person entry text
-   * 
-   * @param name name of the subtitle text
-   * @param value value of the subtitle text
-   * @param total if it's displaying the total value
-   * @param positiveTotal if the total is positive
-   */
-  const renderPersonEntrySubtitleText = (name: string, value: number, total: boolean, positiveTotal?: boolean) => {
-    const valueColor = positiveTotal ? theme.palette.success.main : theme.palette.error.main;
-    const valueText = TimeUtils.convertToMinutesAndHours(value);
+  // /**
+  //  * Renders the person entry text
+  //  * 
+  //  * @param name name of the subtitle text
+  //  * @param value value of the subtitle text
+  //  */
+  // const renderPersonEntrySubtitleText = (name: string, value: number) => {
+  //   const valueText = TimeUtils.convertToMinutesAndHours(value);
 
-    return (
-      <>
-        <Typography
-          variant="h5"
-          style={{ marginLeft: theme.spacing(2) }}
-        >
-          { name }
-        </Typography>
-        <Typography
-          variant="h5"
-          style={{
-            color: total ? valueColor : undefined,
-            marginLeft: theme.spacing(1),
-            fontStyle: "italic"
-          }}
-        >
-          { total ? valueText : TimeUtils.convertToMinutesAndHours(value) }
-        </Typography>
-      </>
-    );
-  };
+  //   return (
+  //     <>
+  //       <Typography
+  //         variant="h5"
+  //         style={{ marginLeft: theme.spacing(2) }}
+  //       >
+  //         { name }
+  //       </Typography>
+  //       <Typography
+  //         variant="h5"
+  //         style={{
+  //           marginLeft: theme.spacing(1),
+  //           fontStyle: "italic"
+  //         }}
+  //       >
+  //         { valueText }
+  //       </Typography>
+  //     </>
+  //   );
+  // };
 
   /**
    * Renders person entry
@@ -378,14 +374,22 @@ const ManagementScreen: React.FC = () => {
             <Typography variant="h2">
               { `${person.firstName} ${person.lastName}` }
             </Typography>
-            <Typography variant="h4">
-              { `${person.startDate}-` }
-            </Typography>
           </Box>
           <Box className={ classes.personEntrySubtitle } >
-            { renderPersonEntrySubtitleText(`${strings.logged}:`, timeEntryTotal!.logged || 0, false) }
-            { renderPersonEntrySubtitleText(`${strings.expected}:`, timeEntryTotal!.expected || 0, false) }
-            { renderPersonEntrySubtitleText(`${strings.total}:`, timeEntryTotal!.total, true, timeEntryTotal!.total >= 0) }
+            <Tooltip
+              title={ `${strings.expected}: ${TimeUtils.convertToHours(timeEntryTotal!.expected)}, ${strings.logged}: ${TimeUtils.convertToHours(timeEntryTotal!.logged)}` }
+            >
+              <Typography
+                style={{
+                  fontSize: 20,
+                  color: timeEntryTotal!.total >= 0 ? theme.palette.success.main : theme.palette.error.main,
+                  marginLeft: theme.spacing(1),
+                  fontStyle: "italic"
+                }}
+              >
+                { TimeUtils.convertToHours(timeEntryTotal!.total) }
+              </Typography>
+            </Tooltip>
           </Box>
         </Paper>
       </ListItem>
