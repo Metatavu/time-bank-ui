@@ -318,36 +318,6 @@ const ManagementScreen: React.FC = () => {
     );
   };
 
-  // /**
-  //  * Renders the person entry text
-  //  * 
-  //  * @param name name of the subtitle text
-  //  * @param value value of the subtitle text
-  //  */
-  // const renderPersonEntrySubtitleText = (name: string, value: number) => {
-  //   const valueText = TimeUtils.convertToMinutesAndHours(value);
-
-  //   return (
-  //     <>
-  //       <Typography
-  //         variant="h5"
-  //         style={{ marginLeft: theme.spacing(2) }}
-  //       >
-  //         { name }
-  //       </Typography>
-  //       <Typography
-  //         variant="h5"
-  //         style={{
-  //           marginLeft: theme.spacing(1),
-  //           fontStyle: "italic"
-  //         }}
-  //       >
-  //         { valueText }
-  //       </Typography>
-  //     </>
-  //   );
-  // };
-
   /**
    * Renders person entry
    * 
@@ -373,6 +343,9 @@ const ManagementScreen: React.FC = () => {
           <Box className={ classes.userInfoContainer }>
             <Typography variant="h2">
               { `${person.firstName} ${person.lastName}` }
+            </Typography>
+            <Typography variant="h4">
+              { `${person.startDate}-` }
             </Typography>
           </Box>
           <Box className={ classes.personEntrySubtitle } >
