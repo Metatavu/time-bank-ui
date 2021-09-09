@@ -120,4 +120,14 @@ export default class AuthUtils {
     };
   };
 
+  /**
+   * Check if a user is admin
+   *
+   * @param accessToken access token
+   * @returns boolean indicates if a user is admin
+   */
+  public static isAdmin = (accessToken?: AccessToken): boolean => {
+    return !!accessToken?.roles && accessToken.roles.includes("admin");
+  };
+
 }

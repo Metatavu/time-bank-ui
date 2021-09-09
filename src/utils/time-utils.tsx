@@ -25,11 +25,26 @@ export default class TimeUtils {
    */
   public static convertToMinutesAndHours = (totalMinutes: number): string => {
     const momentValue = moment.duration(totalMinutes, "minutes");
-    const days = momentValue.days();
-    const hours = momentValue.hours();
+    const hours = momentValue.hours() + (momentValue.days() * 24);
     const minutes = momentValue.minutes();
+    const negative = hours < 0 || minutes < 0;
 
-    return `${hours + days * 24} h ${minutes} min`;
+    return `${negative ? "-" : ""}${Math.abs(hours)} h ${Math.abs(minutes)} min`;
+  };
+
+  /**
+   * Converts time in minutes to a string formatted as "x,y h"
+   * 
+   * @param totalMinutes total time in minutes
+   * @return formatted string of time 
+   */
+  public static convertToHours = (totalMinutes: number): string => {
+    const momentValue = moment.duration(totalMinutes, "minutes");
+    const hours = momentValue.hours() + (momentValue.days() * 24);
+    const decimal = Math.round((momentValue.minutes() / 60) * 100);
+    const negative = hours < 0 || decimal < 0;
+
+    return `${negative ? "-" : ""}${Math.abs(hours)},${Math.abs(decimal).toString().padStart(2, "0")} h`;
   };
 
   /**

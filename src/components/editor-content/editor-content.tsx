@@ -18,6 +18,7 @@ import moment from "moment";
 import DateRangePicker from "components/generics/date-range-picker/date-range-picker";
 import { ErrorContext } from "components/error-handler/error-handler";
 import DeleteIcon from "@material-ui/icons/Delete";
+import { selectAuth } from "features/auth/auth-slice";
 
 /**
  * Component properties
@@ -34,7 +35,7 @@ const EditorContent: React.FC<Props> = () => {
   const classes = useEditorContentStyles();
 
   const { person, personTotalTime } = useAppSelector(selectPerson);
-
+  const { accessToken } = useAppSelector(selectAuth);
   const [ scope, setScope ] = React.useState<FilterScopes>(FilterScopes.WEEK);
   const [ dateFormat, setDateFormat ] = React.useState<string | undefined>("dd.MM.yyyy");
   const [ datePickerView, setDatePickerView ] = React.useState<DatePickerView>("date");
@@ -220,10 +221,18 @@ const EditorContent: React.FC<Props> = () => {
   };
 
   React.useEffect(() => {
+    if (!accessToken) {
+      return;
+    }
+
     initializeData();
   }, []);
 
   React.useEffect(() => {
+    if (!accessToken) {
+      return;
+    }
+
     updateTimeData();
   }, [person, scope, startWeek, endWeek, selectedStartDate, selectedEndDate]);
 
@@ -328,7 +337,7 @@ const EditorContent: React.FC<Props> = () => {
             fontStyle: "italic"
           }}
         >
-          { total ? valueText : TimeUtils.convertToMinutesAndHours(value) }
+          { valueText }
         </Typography>
       </>
     );

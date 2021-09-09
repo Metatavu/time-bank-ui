@@ -1,18 +1,23 @@
 import React from "react";
 import { Avatar, Box, Typography } from "@material-ui/core";
 import useUserInfoStyles from "styles/generics/user-info/user-info";
-import { selectPerson } from "features/person/person-slice";
-import { useAppSelector } from "app/hooks";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import strings from "localization/strings";
 import theme from "theme/theme";
+import { PersonDto } from "generated/client";
+
+/**
+ * Component properties
+ */
+interface Props {
+  person: PersonDto;
+}
 
 /**
  * User info component
  */
-const UserInfo: React.FC = () => {
+const UserInfo: React.FC<Props> = ({ person }) => {
   const classes = useUserInfoStyles();
-  const { person } = useAppSelector(selectPerson);
 
   if (!person) {
     return null;
@@ -80,15 +85,13 @@ const UserInfo: React.FC = () => {
    */
   return (
     <Box className={ classes.root }>
-      <Box className={ classes.userNameStatusContainer }>
-        <Box className={ classes.userNameContainer }>
-          { renderUsername() }
-        </Box>
-        { person.active ?
-          renderUserStatus(strings.drawerContent.userInfo.active, theme.palette.success.main) :
-          renderUserStatus(strings.drawerContent.userInfo.inactive, theme.palette.error.main)
-        }
+      <Box className={ classes.userNameContainer }>
+        { renderUsername() }
       </Box>
+      { person.active ?
+        renderUserStatus(strings.drawerContent.userInfo.active, theme.palette.success.main) :
+        renderUserStatus(strings.drawerContent.userInfo.inactive, theme.palette.error.main)
+      }
     </Box>
   );
 };

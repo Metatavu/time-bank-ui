@@ -1,3 +1,5 @@
+import { PersonDto, TimeEntryTotalDto } from "generated/client";
+
 /**
  * Access token
  */
@@ -90,6 +92,14 @@ export interface WorkTimeDatas {
  */
 export interface CustomPieLabel {
   value: number;
+}
+
+/**
+ * Interface for person with total time
+ */
+export interface PersonWithTotalTime {
+  person: PersonDto;
+  timeEntryTotal?: TimeEntryTotalDto;
 }
 
 /**
