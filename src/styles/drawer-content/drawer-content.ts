@@ -1,7 +1,6 @@
 import { makeStyles } from "@material-ui/core";
-import theme from "theme/theme";
 
-const useDrawerContentStyles = makeStyles({
+const useDrawerContentStyles = makeStyles(theme => ({
 
   userInfoContainer: {
     marginTop: theme.spacing(4),
@@ -100,7 +99,7 @@ const useDrawerContentStyles = makeStyles({
     flex: 1
   }
 
-}, {
+}), {
   name: "drawer-content"
 });
 

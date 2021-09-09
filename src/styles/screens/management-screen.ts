@@ -1,6 +1,5 @@
 import { makeStyles } from "@material-ui/core";
 import { fade } from "@material-ui/core/styles/colorManipulator";
-import theme from "theme/theme";
 
 const useManagementScreenStyles = makeStyles(theme => ({
 
@@ -173,7 +172,7 @@ const useManagementScreenStyles = makeStyles(theme => ({
   }
 
 }), {
-  name: "main-screen"
+  name: "management-screen"
 });
 
 export default useManagementScreenStyles;

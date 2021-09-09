@@ -1,9 +1,8 @@
 import { makeStyles } from "@material-ui/core";
-import theme from "theme/theme";
 
 const drawerWidth = 400;
 
-const useMainScreenStyles = makeStyles({
+const useMainScreenStyles = makeStyles(theme => ({
 
   scrollableContainer: {
     overflow: "auto",
@@ -43,7 +42,7 @@ const useMainScreenStyles = makeStyles({
     scrollbarWidth: "auto"
   }
 
-}, {
+}), {
   name: "main-screen"
 });
 

@@ -1,7 +1,6 @@
 import { makeStyles } from "@material-ui/core";
-import theme from "theme/theme";
 
-const useUserInfoStyles = makeStyles({
+const useUserInfoStyles = makeStyles(theme => ({
 
   root: {
     width: "100%",
@@ -21,7 +20,7 @@ const useUserInfoStyles = makeStyles({
     color: theme.palette.text.secondary
   }
 
-}, {
+}), {
   name: "user-info"
 });
 

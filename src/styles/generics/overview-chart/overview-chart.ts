@@ -1,7 +1,6 @@
 import { makeStyles } from "@material-ui/core";
-import theme from "theme/theme";
 
-const useOverviewChartStyles = makeStyles({
+const useOverviewChartStyles = makeStyles(theme => ({
 
   horizontalChartContainer: {
     "& .recharts-wrapper .recharts-surface": {
@@ -25,7 +24,7 @@ const useOverviewChartStyles = makeStyles({
     border: "1px solid rgba(0, 0, 0, 0.4)"
   }
 
-}, {
+}), {
   name: "overview-chart"
 });
 

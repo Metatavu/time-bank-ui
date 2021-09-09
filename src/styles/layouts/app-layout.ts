@@ -1,9 +1,8 @@
 import { makeStyles } from "@material-ui/core";
-import theme from "theme/theme";
 
 const drawerWidth = 400;
 
-const useAppLayoutStyles = makeStyles({
+const useAppLayoutStyles = makeStyles(theme => ({
 
   root: {
     backgroundColor: theme.palette.background.default,
@@ -106,7 +105,7 @@ const useAppLayoutStyles = makeStyles({
     color: "rgba(0, 0, 0) !important"
   }
 
-}, {
+}), {
   name: "app-layout"
 });
 
