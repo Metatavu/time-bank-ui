@@ -7,9 +7,9 @@ import strings from "localization/strings";
 import { Link } from "react-router-dom";
 import { selectLocale, setLocale } from "features/locale/locale-slice";
 import classNames from "classnames";
-import jwt_decode from "jwt-decode";
 import { logout, selectAuth } from "features/auth/auth-slice";
 import theme from "theme/theme";
+import AuthUtils from "utils/auth";
 
 /**
  * Component properties
@@ -29,21 +29,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
   const classes = useAppLayoutStyles();
   const dispatch = useAppDispatch();
   const { accessToken } = useAppSelector(selectAuth);
-  const [ isAdmin, setIsAdmin ] = React.useState(false);
   const { locale } = useAppSelector(selectLocale);
-
-  React.useEffect(() => {
-    if (!accessToken) {
-      return;
-    }
-
-    const decodedToken: any = jwt_decode(accessToken.access_token);
-    const roles = decodedToken.realm_access.roles as string[];
-
-    if (roles.includes("admin")) {
-      setIsAdmin(true);
-    }
-  }, []);
 
   /**
    * 
@@ -111,7 +97,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
               </Typography>
             </Box>
           </Link>
-          { isAdmin &&
+          { AuthUtils.isAdmin(accessToken) &&
             <Box className={ classes.managementLinkContainer }>
               <Link to="/management">
                 <Box

@@ -18,9 +18,9 @@ import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import { setPerson } from "features/person/person-slice";
 import UserInfo from "components/generics/user-info/user-info";
 import SearchIcon from "@material-ui/icons/Search";
-import jwt_decode from "jwt-decode";
 import { selectAuth } from "features/auth/auth-slice";
 import moment from "moment";
+import AuthUtils from "utils/auth";
 
 /**
  * Management screen screen component
@@ -101,10 +101,7 @@ const ManagementScreen: React.FC = () => {
       return;
     }
 
-    const decodedToken: any = jwt_decode(accessToken.access_token);
-    const roles = decodedToken.realm_access.roles as string[];
-
-    if (!roles.includes("admin")) {
+    if (!AuthUtils.isAdmin(accessToken)) {
       history.push("/");
     }
 
