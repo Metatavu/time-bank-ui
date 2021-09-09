@@ -366,12 +366,10 @@ const ManagementScreen: React.FC = () => {
     }
 
     return (
-      <>
-        <List className={ classes.timeListContainer }>
-          { displayedPersonsTotalTime.map(renderPersonEntry) }
-          { renderBottomPadding() }
-        </List>
-      </>
+      <List className={ classes.timeListContainer }>
+        { displayedPersonsTotalTime.map(renderPersonEntry) }
+        { renderBottomPadding() }
+      </List>
     );
   };
 
