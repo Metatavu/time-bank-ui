@@ -43,27 +43,22 @@ const ManagementScreen: React.FC = () => {
    * 
    * @param person person with total time data
    */
-  const populatePersonTotalTimeData = async (person: PersonWithTotalTime) => {
-    let personTotalTime: PersonWithTotalTime = {
-      ...person
-    };
+  const populatePersonTotalTimeData = async (person: PersonWithTotalTime): Promise<PersonWithTotalTime> => {
+    let totalTime: any[] = [];
 
     try {
-      await Api.getTimeBankApi()
-        .timebankControllerGetTotal({
-          personId: personTotalTime.person.id.toString(),
-          retention: TimebankControllerGetTotalRetentionEnum.ALLTIME
-        })
-        .then(totalTime => {
-          personTotalTime = {
-            ...personTotalTime,
-            timeEntryTotal: totalTime[0]
-          };
-        });
+      totalTime = await Api.getTimeBankApi().timebankControllerGetTotal({
+        personId: person.person.id.toString(),
+        retention: TimebankControllerGetTotalRetentionEnum.ALLTIME
+      });
     } catch (error) {
       context.setError(strings.errorHandling.fetchTimeDataFailed, error);
     }
-    return personTotalTime;
+
+    return {
+      ...person,
+      timeEntryTotal: totalTime[0]
+    };
   };
 
   /**
