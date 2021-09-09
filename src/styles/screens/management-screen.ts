@@ -172,7 +172,7 @@ const useManagementScreenStyles = makeStyles(theme => ({
     scrollbarWidth: "auto"
   }
 
-}, {
+}), {
   name: "main-screen"
 });
 
