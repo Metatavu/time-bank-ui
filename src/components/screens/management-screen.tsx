@@ -70,29 +70,20 @@ const ManagementScreen: React.FC = () => {
    * Fetches the person data & person total time data
    */
   const fetchData = async () => {
-    const fetchedPersons: PersonWithTotalTime[] = [];
-
     setIsLoading(true);
 
     try {
-      await Api.getTimeBankApi()
-        .timebankControllerGetPersons()
-        .then(persons => {
-          persons.forEach(person =>
-            fetchedPersons.push({
-              person: person
-            } as PersonWithTotalTime));
-        });
+      const persons = await Api.getTimeBankApi().timebankControllerGetPersons();
+      const fetchedPersons: PersonWithTotalTime[] = persons.map(_person => ({ person: _person }));
+
+      const fetchedPersonsTotalTime = await Promise.all(fetchedPersons.map(populatePersonTotalTimeData));
+
+      setPersonsTotalTime(fetchedPersonsTotalTime);
+      setDisplayedPersonsTotalTime(fetchedPersonsTotalTime);
     } catch (error) {
       context.setError(strings.errorHandling.fetchUserDataFailed, error);
     }
 
-    const personsTotalTimePromises = fetchedPersons.map(populatePersonTotalTimeData);
-
-    const fetchedPersonsTotalTime = await Promise.all(personsTotalTimePromises);
-
-    setPersonsTotalTime(fetchedPersonsTotalTime);
-    setDisplayedPersonsTotalTime(fetchedPersonsTotalTime);
     setIsLoading(false);
   };
 
