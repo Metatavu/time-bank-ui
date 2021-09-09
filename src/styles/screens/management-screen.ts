@@ -2,7 +2,7 @@ import { makeStyles } from "@material-ui/core";
 import { fade } from "@material-ui/core/styles/colorManipulator";
 import theme from "theme/theme";
 
-const useManagementScreenStyles = makeStyles({
+const useManagementScreenStyles = makeStyles(theme => ({
 
   root: {
     height: "calc(100vh - 64px)",
