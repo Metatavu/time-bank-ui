@@ -1,18 +1,16 @@
 import { makeStyles } from "@material-ui/core";
-import theme from "theme/theme";
 
-const useUserInfoStyles = makeStyles({
+const useUserInfoStyles = makeStyles(theme => ({
 
   root: {
-    width: "100%"
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between"
   },
 
   userNameContainer: {
-    display: "flex",
-    alignItems: "center",
-    marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(1),
-    justifyContent: "center"
+    display: "flex"
   },
 
   avatar: {
@@ -22,7 +20,7 @@ const useUserInfoStyles = makeStyles({
     color: theme.palette.text.secondary
   }
 
-}, {
+}), {
   name: "user-info"
 });
 

@@ -15,7 +15,7 @@ import theme from "theme/theme";
 import { CustomPieLabel, WorkTimeCategory, WorkTimeTotalData } from "types/index";
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 import { ErrorContext } from "components/error-handler/error-handler";
-import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
+import { selectAuth } from "features/auth/auth-slice";
 
 /**
  * Component properties
@@ -31,7 +31,7 @@ interface Props {
 const DrawerContent: React.FC<Props> = () => {
   const dispatch = useAppDispatch();
   const { person, personTotalTime } = useAppSelector(selectPerson);
-
+  const { accessToken } = useAppSelector(selectAuth);
   const classes = useDrawerContentStyles();
   const [ persons, setPersons ] = React.useState<PersonDto[]>([]);
   const [ searchInput, setSearchInput ] = React.useState<string>("");
@@ -68,10 +68,18 @@ const DrawerContent: React.FC<Props> = () => {
   };
 
   React.useEffect(() => {
+    if (!accessToken) {
+      return;
+    }
+
     fetchPersonData();
   }, []);
 
   React.useEffect(() => {
+    if (!accessToken) {
+      return;
+    }
+
     fetchWorkTimeData();
   }, [ person ]);
 
@@ -317,36 +325,6 @@ const DrawerContent: React.FC<Props> = () => {
   };
 
   /**
-   * Renders the active/inactive status for user
-   * 
-   * @param status user status
-   * @param color color for the status
-   */
-  const renderUserStatus = (status: string, color: string) => {
-    return (
-      <Box style={{ display: "flex", alignItems: "center" }}>
-        <FiberManualRecordIcon
-          htmlColor={ color }
-          style={{
-            width: 6,
-            height: 6
-          }}
-        />
-        <Typography
-          variant="h6"
-          style={{
-            color: color,
-            marginLeft: 4,
-            fontStyle: "italic"
-          }}
-        >
-          { status }
-        </Typography>
-      </Box>
-    );
-  };
-
-  /**
    * Renders the user account detail entrys 
    * 
    * @param name name of the subtitle text
@@ -395,12 +373,6 @@ const DrawerContent: React.FC<Props> = () => {
           </AccordionSummary>
           <AccordionDetails className={ classes.accordionDetails }>
             <Box className={ classes.userDetailEntry }>
-              { person.active ?
-                renderUserStatus(strings.drawerContent.userInfo.active, theme.palette.success.main) :
-                renderUserStatus(strings.drawerContent.userInfo.inactive, theme.palette.error.main)
-              }
-            </Box>
-            <Box className={ classes.userDetailEntry }>
               { renderUserDetailEntry(strings.drawerContent.userInfo.id, person.id) }
             </Box>
             <Box className={ classes.userDetailEntry }>
@@ -429,8 +401,12 @@ const DrawerContent: React.FC<Props> = () => {
       { renderSearchBox() }
       { person ?
         <>
-          <UserInfo/>
-          <Box >
+          <Box className={ classes.userInfoContainer }>
+            <UserInfo
+              person={ person }
+            />
+          </Box>
+          <Box>
             { renderTotalWorkTime() }
             { renderExpectedWork() }
             { renderUserAccountInfo() }

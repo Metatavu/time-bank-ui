@@ -1,7 +1,6 @@
 import { makeStyles } from "@material-ui/core";
-import theme from "theme/theme";
 
-const useEditorContentStyles = makeStyles({
+const useEditorContentStyles = makeStyles(theme => ({
 
   emptyFilterContainer: {
     borderRadius: 10,
@@ -95,7 +94,7 @@ const useEditorContentStyles = makeStyles({
     marginLeft: theme.spacing(1)
   }
 
-}, {
+}), {
   name: "editor-content"
 });
 

@@ -1,7 +1,12 @@
 import { makeStyles } from "@material-ui/core";
-import theme from "theme/theme";
 
-const useDrawerContentStyles = makeStyles({
+const useDrawerContentStyles = makeStyles(theme => ({
+
+  userInfoContainer: {
+    marginTop: theme.spacing(4),
+    marginBottom: theme.spacing(1),
+    padding: `0px ${theme.spacing(2)}px`
+  },
 
   searchBoxContainer: {
     width: "100%",
@@ -94,7 +99,7 @@ const useDrawerContentStyles = makeStyles({
     flex: 1
   }
 
-}, {
+}), {
   name: "drawer-content"
 });
 

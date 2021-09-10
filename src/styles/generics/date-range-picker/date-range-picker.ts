@@ -1,7 +1,6 @@
 import { makeStyles } from "@material-ui/core";
-import theme from "theme/theme";
 
-const useDateRangePickerStyles = makeStyles({
+const useDateRangePickerStyles = makeStyles(theme => ({
 
   datePicker: {
     width: 200,
@@ -24,7 +23,7 @@ const useDateRangePickerStyles = makeStyles({
     width: 60
   }
 
-}, {
+}), {
   name: "date-range-picker"
 });
 

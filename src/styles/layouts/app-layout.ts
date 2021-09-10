@@ -1,9 +1,8 @@
 import { makeStyles } from "@material-ui/core";
-import theme from "theme/theme";
 
 const drawerWidth = 400;
 
-const useAppLayoutStyles = makeStyles({
+const useAppLayoutStyles = makeStyles(theme => ({
 
   root: {
     backgroundColor: theme.palette.background.default,
@@ -11,6 +10,7 @@ const useAppLayoutStyles = makeStyles({
     width: "100vw",
     display: "flex"
   },
+  
   drawer: {
     top: 64,
     width: drawerWidth,
@@ -49,7 +49,8 @@ const useAppLayoutStyles = makeStyles({
   },
 
   title: {
-    marginLeft: theme.spacing(2)
+    marginLeft: theme.spacing(2),
+    color: theme.palette.text.secondary
   },
 
   logo: {
@@ -58,8 +59,14 @@ const useAppLayoutStyles = makeStyles({
     padding: 5
   },
 
+  settings: {
+    marginLeft: "auto",
+    display: "flex",
+    alignItems: "center"
+  },
+
   languageSelect: {
-    marginLeft: theme.spacing(20),
+    marginLeft: theme.spacing(5),
     color: "#fff",
     [theme.breakpoints.down("sm")]: {
       marginLeft: theme.spacing(50)
@@ -67,9 +74,38 @@ const useAppLayoutStyles = makeStyles({
     [theme.breakpoints.down("xs")]: {
       marginLeft: theme.spacing(18)
     }
+  },
+
+  managementLinkContainer: {
+    marginLeft: theme.spacing(30),
+    height: 64,
+    paddingTop: theme.spacing(2)
+  },
+
+  managementLink: {
+    backgroundColor: "rgba(255, 255, 255, 0.3)",
+    height: "100%",
+    padding: `0px ${theme.spacing(4)}px`,
+    alignItems: "center",
+    display: "flex",
+    borderRadius: "20px 20px 0px 0px"
+  },
+
+  activeManagementLink: {
+    backgroundColor: "rgba(255, 255, 255) !important"
+  },
+
+  managementLinkText: {
+    color: theme.palette.text.secondary,
+    fontSize: 16,
+    fontWeight: 600
+  },
+
+  activeManagementLinkText: {
+    color: "rgba(0, 0, 0) !important"
   }
 
-}, {
+}), {
   name: "app-layout"
 });
 

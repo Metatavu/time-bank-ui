@@ -13,6 +13,8 @@ export interface IStrings extends LocalizedStringsMethods {
   header: {
     title: string;
     logo: string;
+    managementLink: string;
+    logout: string;
   }
 
   /**
@@ -74,6 +76,15 @@ export interface IStrings extends LocalizedStringsMethods {
   };
 
   /**
+   * Translations related to management screen
+   */
+  managementScreen: {
+    seeMore: string;
+    searchPlaceholder: string;
+    noUser: string;
+  };
+
+  /**
    * Translations related to error handling
    */
   errorHandling: {
@@ -83,6 +94,7 @@ export interface IStrings extends LocalizedStringsMethods {
     title: string;
   }
 
+  startDate: string;
   week: string;
   logged: string;
   expected: string;
