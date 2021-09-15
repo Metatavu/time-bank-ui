@@ -1,9 +1,6 @@
 import React from "react";
 import { Avatar, Box, Typography } from "@material-ui/core";
 import useUserInfoStyles from "styles/generics/user-info/user-info";
-import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
-import strings from "localization/strings";
-import theme from "theme/theme";
 import { PersonDto } from "generated/client";
 
 /**
@@ -22,36 +19,6 @@ const UserInfo: React.FC<Props> = ({ person }) => {
   if (!person) {
     return null;
   }
-
-  /**
-   * Renders the active/inactive status for user
-   * 
-   * @param status user status
-   * @param color color for the status
-   */
-  const renderUserStatus = (status: string, color: string) => {
-    return (
-      <Box style={{ display: "flex", alignItems: "center" }}>
-        <FiberManualRecordIcon
-          htmlColor={ color }
-          style={{
-            width: 6,
-            height: 6
-          }}
-        />
-        <Typography
-          variant="h6"
-          style={{
-            color: color,
-            marginLeft: 4,
-            fontStyle: "italic"
-          }}
-        >
-          { status }
-        </Typography>
-      </Box>
-    );
-  };
 
   /**
    * Renders the username section 
@@ -88,10 +55,6 @@ const UserInfo: React.FC<Props> = ({ person }) => {
       <Box className={ classes.userNameContainer }>
         { renderUsername() }
       </Box>
-      { person.active ?
-        renderUserStatus(strings.drawerContent.userInfo.active, theme.palette.success.main) :
-        renderUserStatus(strings.drawerContent.userInfo.inactive, theme.palette.error.main)
-      }
     </Box>
   );
 };
