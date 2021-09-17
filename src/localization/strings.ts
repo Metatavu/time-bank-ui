@@ -93,6 +93,7 @@ export interface IStrings extends LocalizedStringsMethods {
     fetchDateDataFailed: string;
     fetchTimeDataFailed: string;
     fetchUserDataFailed: string;
+    syncTimeDataFailed: string;
     title: string;
   }
 

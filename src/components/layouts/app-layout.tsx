@@ -47,7 +47,8 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
     try {
       await Api.getTimeBankApi().timebankControllerSyncWorkTime();
     } catch (error) {
-      context.setError("Sync data failed", error);
+      console.log("error", error);
+      context.setError(strings.errorHandling.syncTimeDataFailed, error);
     }
 
     if (person) {

@@ -67,6 +67,7 @@
     "fetchDateDataFailed": "Tietojen haku päivämäärän perusteella epäonnistui",
     "fetchTimeDataFailed": "Aikatietojen haku epäonnistui",
     "fetchUserDataFailed": "Käyttäjätietojen haku epäonnistui",
+    "syncTimeDataFailed": "Aikatietojen synkronointi epäonnistui",
     "title": "Error"
   },
 

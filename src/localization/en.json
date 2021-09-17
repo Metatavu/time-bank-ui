@@ -67,6 +67,7 @@
     "fetchDateDataFailed": "Fetching date data failed",
     "fetchTimeDataFailed": "Fetching time data failed",
     "fetchUserDataFailed": "Fetching user data failed",
+    "syncTimeDataFailed": "Synchronizing time data failed",
     "title": "Error"
   },
 
