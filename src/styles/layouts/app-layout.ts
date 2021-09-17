@@ -11,6 +11,17 @@ const useAppLayoutStyles = makeStyles(theme => ({
     display: "flex"
   },
   
+  loadingDialog: {
+    height: "100%",
+    width: "100%"
+  },
+
+  loadingContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
+  },
+
   drawer: {
     top: 64,
     width: drawerWidth,

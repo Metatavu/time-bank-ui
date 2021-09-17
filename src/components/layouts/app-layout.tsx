@@ -1,6 +1,6 @@
 import React from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { AppBar, Box, Drawer, Toolbar, Typography, Select, MenuItem, Button } from "@material-ui/core";
+import { AppBar, Box, Drawer, Toolbar, Typography, Select, MenuItem, Button, Dialog, CircularProgress } from "@material-ui/core";
 import useAppLayoutStyles from "styles/layouts/app-layout";
 import siteLogo from "../../gfx/Metatavu-icon.svg";
 import strings from "localization/strings";
@@ -10,6 +10,7 @@ import classNames from "classnames";
 import { logout, selectAuth } from "features/auth/auth-slice";
 import theme from "theme/theme";
 import AuthUtils from "utils/auth";
+import Api from "api/api";
 
 /**
  * Component properties
@@ -30,10 +31,47 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
   const dispatch = useAppDispatch();
   const { accessToken } = useAppSelector(selectAuth);
   const { locale } = useAppSelector(selectLocale);
+  const [ isSyncing, setIsSyncing ] = React.useState(false);
 
   /**
-   * 
-   * @returns Menu items for language select
+   * Event handler for sync button click
+   */
+  const handleSyncButtonClick = async () => {
+    setIsSyncing(true);
+    await Api.getTimeBankApi().timebankControllerSyncWorkTime();
+    setIsSyncing(false);
+  };
+
+  /**
+   * Renders the loading dialog
+   */
+  const renderLoadingDialog = () => {
+    return (
+      <Dialog
+        className={ classes.loadingDialog }
+        open={ isSyncing }
+        PaperProps={{
+          style: {
+            backgroundColor: "transparent",
+            boxShadow: "none"
+          }
+        }}
+      >
+        <Box className={ classes.loadingContainer }>
+          <CircularProgress
+            color="secondary"
+            size={ 60 }
+          />
+          <Typography style={{ marginTop: theme.spacing(1) }}>
+            Syncing data, please be patient
+          </Typography>
+        </Box>
+      </Dialog>
+    );
+  };
+
+  /**
+   * Renders language selection options
    */
   const renderLanguageSelectOptions = () => {
     return (
@@ -43,6 +81,28 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
         </MenuItem>)
     );
   };
+
+  /**
+   * Renders logout
+   */
+  const renderSyncButton = () => (
+    <Button
+      disabled={ isSyncing }
+      color="secondary"
+      variant="contained"
+      onClick={ handleSyncButtonClick }
+    >
+      <Typography
+        style={{
+          color: "white",
+          textDecoration: "none",
+          fontWeight: 600
+        }}
+      >
+        Sync
+      </Typography>
+    </Button>
+  );
 
   /**
    * Renders logout
@@ -117,6 +177,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
             </Box>
           }
           <Box className={ classes.settings }>
+            { renderSyncButton() }
             { renderLogout() }
             { renderLanguageSelection() }
           </Box>
@@ -143,6 +204,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
       <main className={ `${classes.content}` }>
         { children }
       </main>
+      { renderLoadingDialog() }
     </Box>
   );
 };

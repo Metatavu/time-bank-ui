@@ -59,8 +59,6 @@ components:
           type: string
         start_date:
           type: string
-        initial_time:
-          type: number
       required:
         - id
         - first_name
@@ -85,7 +83,6 @@ components:
         - created_at
         - updated_at
         - start_date
-        - initial_time
     TimeEntry:
       type: object
       properties:
@@ -189,6 +186,19 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/TimeEntry'
+      tags:
+        - timebank
+  /timebank/sync:
+    post:
+      operationId: TimebankController_syncWorkTime
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: string
       tags:
         - timebank
   '/timebank/total/{personId}':

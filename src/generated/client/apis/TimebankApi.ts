@@ -129,8 +129,32 @@ export class TimebankApi extends runtime.BaseAPI {
 
     /**
      */
-    async timebankControllerGetTotal(requestParameters: TimebankControllerGetTotalRequest): Promise<Array<any>> {
+    async timebankControllerGetTotal(requestParameters: TimebankControllerGetTotalRequest): Promise<Array<TimeEntryTotalDto>> {
         const response = await this.timebankControllerGetTotalRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async timebankControllerSyncWorkTimeRaw(): Promise<runtime.ApiResponse<string>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/timebank/sync`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.TextApiResponse(response) as any;
+    }
+
+    /**
+     */
+    async timebankControllerSyncWorkTime(): Promise<string> {
+        const response = await this.timebankControllerSyncWorkTimeRaw();
         return await response.value();
     }
 
