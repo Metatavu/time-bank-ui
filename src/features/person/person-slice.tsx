@@ -25,10 +25,10 @@ export const personSlice = createSlice({
   name: "person",
   initialState: initialState,
   reducers: {
-    setPerson: (state, { payload }: PayloadAction<PersonDto>) => {
+    setPerson: (state, { payload }: PayloadAction<PersonDto | undefined>) => {
       state.person = payload;
     },
-    setPersonTotalTime: (state, { payload }: PayloadAction<TimeEntryTotalDto>) => {
+    setPersonTotalTime: (state, { payload }: PayloadAction<TimeEntryTotalDto | undefined>) => {
       state.personTotalTime = payload;
     }
   }

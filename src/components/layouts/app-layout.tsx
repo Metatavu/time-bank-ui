@@ -11,6 +11,9 @@ import { logout, selectAuth } from "features/auth/auth-slice";
 import theme from "theme/theme";
 import AuthUtils from "utils/auth";
 import Api from "api/api";
+import { selectPerson, setPerson } from "features/person/person-slice";
+import { PersonDto } from "generated/client";
+import { ErrorContext } from "components/error-handler/error-handler";
 
 /**
  * Component properties
@@ -29,17 +32,31 @@ interface Props {
 const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children, managementScreen }) => {
   const classes = useAppLayoutStyles();
   const dispatch = useAppDispatch();
+  const { person } = useAppSelector(selectPerson);
   const { accessToken } = useAppSelector(selectAuth);
   const { locale } = useAppSelector(selectLocale);
-  const [ isSyncing, setIsSyncing ] = React.useState(false);
+  const [ syncingData, setSyncingData ] = React.useState(false);
+  const context = React.useContext(ErrorContext);
 
   /**
    * Event handler for sync button click
    */
   const handleSyncButtonClick = async () => {
-    setIsSyncing(true);
-    await Api.getTimeBankApi().timebankControllerSyncWorkTime();
-    setIsSyncing(false);
+    setSyncingData(true);
+
+    try {
+      await Api.getTimeBankApi().timebankControllerSyncWorkTime();
+    } catch (error) {
+      context.setError("Sync data failed", error);
+    }
+
+    if (person) {
+      const personCloned = { ...person } as PersonDto;
+      dispatch(setPerson(undefined));
+      dispatch(setPerson(personCloned));
+    }
+
+    setSyncingData(false);
   };
 
   /**
@@ -49,7 +66,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
     return (
       <Dialog
         className={ classes.loadingDialog }
-        open={ isSyncing }
+        open={ syncingData }
         PaperProps={{
           style: {
             backgroundColor: "transparent",
@@ -62,7 +79,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
             color="secondary"
             size={ 60 }
           />
-          <Typography style={{ marginTop: theme.spacing(1) }}>
+          <Typography className={ classes.loadingText }>
             Syncing data, please be patient
           </Typography>
         </Box>
@@ -87,7 +104,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
    */
   const renderSyncButton = () => (
     <Button
-      disabled={ isSyncing }
+      disabled={ syncingData }
       color="secondary"
       variant="contained"
       onClick={ handleSyncButtonClick }
@@ -112,6 +129,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
       color="primary"
       variant="text"
       onClick={ () => dispatch(logout()) }
+      className={ classes.syncButton }
     >
       <Typography
         style={{

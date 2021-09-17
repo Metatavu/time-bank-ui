@@ -15,6 +15,8 @@ export interface IStrings extends LocalizedStringsMethods {
     logo: string;
     managementLink: string;
     logout: string;
+    syncData: string;
+    syncDataLoading: string;
   }
 
   /**

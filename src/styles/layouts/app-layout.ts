@@ -22,6 +22,11 @@ const useAppLayoutStyles = makeStyles(theme => ({
     alignItems: "center"
   },
 
+  loadingText: {
+    marginTop: theme.spacing(1),
+    color: "#FFF"
+  },
+
   drawer: {
     top: 64,
     width: drawerWidth,
@@ -76,14 +81,25 @@ const useAppLayoutStyles = makeStyles(theme => ({
     alignItems: "center"
   },
 
+  syncButton: {
+    marginLeft: theme.spacing(5),
+    color: "#fff",
+    [theme.breakpoints.down("sm")]: {
+      marginLeft: theme.spacing(3)
+    },
+    [theme.breakpoints.down("xs")]: {
+      marginLeft: theme.spacing(2)
+    }
+  },
+
   languageSelect: {
     marginLeft: theme.spacing(5),
     color: "#fff",
     [theme.breakpoints.down("sm")]: {
-      marginLeft: theme.spacing(50)
+      marginLeft: theme.spacing(3)
     },
     [theme.breakpoints.down("xs")]: {
-      marginLeft: theme.spacing(18)
+      marginLeft: theme.spacing(2)
     }
   },
 
