@@ -80,7 +80,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
             size={ 60 }
           />
           <Typography className={ classes.loadingText }>
-            Syncing data, please be patient
+            { strings.header.syncDataLoading }
           </Typography>
         </Box>
       </Dialog>
@@ -116,7 +116,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
           fontWeight: 600
         }}
       >
-        Sync
+        { strings.header.syncData }
       </Typography>
     </Button>
   );
