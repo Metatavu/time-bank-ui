@@ -37,6 +37,11 @@ export interface TimebankControllerGetTotalRequest {
     retention?: TimebankControllerGetTotalRetentionEnum;
 }
 
+export interface TimebankControllerSyncWorkTimeRequest {
+    before?: string;
+    after?: string;
+}
+
 /**
  * 
  */
@@ -136,8 +141,16 @@ export class TimebankApi extends runtime.BaseAPI {
 
     /**
      */
-    async timebankControllerSyncWorkTimeRaw(): Promise<runtime.ApiResponse<string>> {
+    async timebankControllerSyncWorkTimeRaw(requestParameters: TimebankControllerSyncWorkTimeRequest): Promise<runtime.ApiResponse<void>> {
         const queryParameters: any = {};
+
+        if (requestParameters.before !== undefined) {
+            queryParameters['before'] = requestParameters.before;
+        }
+
+        if (requestParameters.after !== undefined) {
+            queryParameters['after'] = requestParameters.after;
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -148,14 +161,13 @@ export class TimebankApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.TextApiResponse(response) as any;
+        return new runtime.VoidApiResponse(response);
     }
 
     /**
      */
-    async timebankControllerSyncWorkTime(): Promise<string> {
-        const response = await this.timebankControllerSyncWorkTimeRaw();
-        return await response.value();
+    async timebankControllerSyncWorkTime(requestParameters: TimebankControllerSyncWorkTimeRequest): Promise<void> {
+        await this.timebankControllerSyncWorkTimeRaw(requestParameters);
     }
 
 }

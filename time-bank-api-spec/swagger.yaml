@@ -191,14 +191,20 @@ paths:
   /timebank/sync:
     post:
       operationId: TimebankController_syncWorkTime
-      parameters: []
+      parameters:
+        - name: before
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: after
+          required: false
+          in: query
+          schema:
+            type: string
       responses:
         '200':
           description: ''
-          content:
-            application/json:
-              schema:
-                type: string
       tags:
         - timebank
   '/timebank/total/{personId}':
