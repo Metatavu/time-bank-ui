@@ -4,8 +4,8 @@
     "logo": "Sivun logo",
     "managementLink": "Hallinta",
     "logout": "Kirjaudu ulos",
-    "syncData": "Synkronoida",
-    "syncDataLoading": "Tietojen synkronointi, ole kärsivällinen."
+    "syncData": "Synkronoi",
+    "syncDataLoading": "Tietoja synkronoidaan, odota hetki."
   },
 
   "generic": {
