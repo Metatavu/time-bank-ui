@@ -12,7 +12,7 @@ import theme from "theme/theme";
 import AuthUtils from "utils/auth";
 import Api from "api/api";
 import { selectPerson, setPerson } from "features/person/person-slice";
-import { PersonDto } from "generated/client";
+import { PersonDto, TimebankControllerSyncWorkTimeRequest } from "generated/client";
 import { ErrorContext } from "components/error-handler/error-handler";
 
 /**
@@ -45,7 +45,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
     setSyncingData(true);
 
     try {
-      await Api.getTimeBankApi().timebankControllerSyncWorkTime();
+      await Api.getTimeBankApi().timebankControllerSyncWorkTime({} as TimebankControllerSyncWorkTimeRequest);
     } catch (error) {
       console.log("error", error);
       context.setError(strings.errorHandling.syncTimeDataFailed, error);
@@ -110,13 +110,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
       variant="contained"
       onClick={ handleSyncButtonClick }
     >
-      <Typography
-        style={{
-          color: "white",
-          textDecoration: "none",
-          fontWeight: 600
-        }}
-      >
+      <Typography className={ classes.syncDataText }>
         { strings.header.syncData }
       </Typography>
     </Button>

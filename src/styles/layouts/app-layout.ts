@@ -103,6 +103,12 @@ const useAppLayoutStyles = makeStyles(theme => ({
     }
   },
 
+  syncDataText: {
+    color: "white",
+    textDecoration: "none",
+    fontWeight: 600
+  },
+
   managementLinkContainer: {
     marginLeft: theme.spacing(30),
     height: 64,
