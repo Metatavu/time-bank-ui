@@ -20,8 +20,6 @@
   "drawerContent": {
     "userInfo": {
       "id": "Tunniste",
-      "active": "Aktiivinen",
-      "inactive": "Ei-aktiivinen",
       "userType": "Käyttäjän tyyppi:",
       "language": "Kieli:",
       "createdAt": "Luotu:",

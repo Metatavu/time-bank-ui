@@ -37,8 +37,6 @@ export interface IStrings extends LocalizedStringsMethods {
   drawerContent: {
     userInfo: {
       id: string;
-      active: string;
-      inactive: string;
       userType: string;
       language: string;
       createdAt: string;

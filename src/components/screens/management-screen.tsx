@@ -21,6 +21,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import { selectAuth } from "features/auth/auth-slice";
 import moment from "moment";
 import AuthUtils from "utils/auth";
+import PersonUtils from "utils/person-utils";
 
 /**
  * Management screen screen component
@@ -69,12 +70,13 @@ const ManagementScreen: React.FC = () => {
 
     try {
       const persons = await Api.getTimeBankApi().timebankControllerGetPersons();
-      const fetchedPersons: PersonWithTotalTime[] = persons.map(_person => ({ person: _person }));
+      const filteredPersons = PersonUtils.filterPerson(persons);
+      const personTotalsTimeList: PersonWithTotalTime[] = filteredPersons.map(_person => ({ person: _person }));
 
-      const fetchedPersonsTotalTime = await Promise.all(fetchedPersons.map(populatePersonTotalTimeData));
+      const populatedPersonTotalsTimeList = await Promise.all(personTotalsTimeList.map(populatePersonTotalTimeData));
 
-      setPersonsTotalTime(fetchedPersonsTotalTime);
-      setDisplayedPersonsTotalTime(fetchedPersonsTotalTime);
+      setPersonsTotalTime(populatedPersonTotalsTimeList);
+      setDisplayedPersonsTotalTime(populatedPersonTotalsTimeList);
     } catch (error) {
       context.setError(strings.errorHandling.fetchUserDataFailed, error);
     }
@@ -295,7 +297,7 @@ const ManagementScreen: React.FC = () => {
   const renderPersonEntry = (personTotalTime: PersonWithTotalTime) => {
     const { person, timeEntryTotal } = personTotalTime;
 
-    if (!person.active || !timeEntryTotal || timeEntryTotal.expected === 0) {
+    if (!timeEntryTotal) {
       return null;
     }
 
