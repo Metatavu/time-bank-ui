@@ -62,10 +62,12 @@ const DrawerContent: React.FC<Props> = () => {
             retention: TimebankControllerGetTotalRetentionEnum.ALLTIME
           });
         dispatch(setPersonTotalTime(fetchedPersonTotalTime[0]));
+        return;
       } catch (error) {
         context.setError(strings.errorHandling.fetchTimeDataFailed, error);
       }
     }
+    dispatch(setPersonTotalTime(undefined));
   };
 
   React.useEffect(() => {

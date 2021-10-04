@@ -3,7 +3,9 @@
     "title": "Time Bank",
     "logo": "Site logo",
     "managementLink": "Management",
-    "logout": "Log out"
+    "logout": "Log out",
+    "syncData": "Synchronize",
+    "syncDataLoading": "Synchronizing data, please be patient."
   },
   
   "generic": {
@@ -63,6 +65,7 @@
     "fetchDateDataFailed": "Fetching date data failed",
     "fetchTimeDataFailed": "Fetching time data failed",
     "fetchUserDataFailed": "Fetching user data failed",
+    "syncTimeDataFailed": "Synchronizing time data failed",
     "title": "Error"
   },
 
