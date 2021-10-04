@@ -1,6 +1,6 @@
 import React from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { AppBar, Box, Drawer, Toolbar, Typography, Select, MenuItem, Button } from "@material-ui/core";
+import { AppBar, Box, Drawer, Toolbar, Typography, Select, MenuItem, Button, Dialog, CircularProgress } from "@material-ui/core";
 import useAppLayoutStyles from "styles/layouts/app-layout";
 import siteLogo from "../../gfx/Metatavu-icon.svg";
 import strings from "localization/strings";
@@ -10,6 +10,10 @@ import classNames from "classnames";
 import { logout, selectAuth } from "features/auth/auth-slice";
 import theme from "theme/theme";
 import AuthUtils from "utils/auth";
+import Api from "api/api";
+import { selectPerson, setPerson } from "features/person/person-slice";
+import { PersonDto } from "generated/client";
+import { ErrorContext } from "components/error-handler/error-handler";
 
 /**
  * Component properties
@@ -28,12 +32,63 @@ interface Props {
 const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children, managementScreen }) => {
   const classes = useAppLayoutStyles();
   const dispatch = useAppDispatch();
+  const { person } = useAppSelector(selectPerson);
   const { accessToken } = useAppSelector(selectAuth);
   const { locale } = useAppSelector(selectLocale);
+  const [ syncingData, setSyncingData ] = React.useState(false);
+  const context = React.useContext(ErrorContext);
 
   /**
-   * 
-   * @returns Menu items for language select
+   * Event handler for sync button click
+   */
+  const handleSyncButtonClick = async () => {
+    setSyncingData(true);
+
+    try {
+      await Api.getTimeBankApi().timebankControllerSyncWorkTime({});
+    } catch (error) {
+      context.setError(strings.errorHandling.syncTimeDataFailed, error);
+    }
+
+    if (person) {
+      const personCloned = { ...person } as PersonDto;
+      dispatch(setPerson(undefined));
+      dispatch(setPerson(personCloned));
+    }
+
+    setSyncingData(false);
+  };
+
+  /**
+   * Renders the loading dialog
+   */
+  const renderLoadingDialog = () => {
+    return (
+      <Dialog
+        className={ classes.loadingDialog }
+        open={ syncingData }
+        PaperProps={{
+          style: {
+            backgroundColor: "transparent",
+            boxShadow: "none"
+          }
+        }}
+      >
+        <Box className={ classes.loadingContainer }>
+          <CircularProgress
+            color="secondary"
+            size={ 60 }
+          />
+          <Typography className={ classes.loadingText }>
+            { strings.header.syncDataLoading }
+          </Typography>
+        </Box>
+      </Dialog>
+    );
+  };
+
+  /**
+   * Renders language selection options
    */
   const renderLanguageSelectOptions = () => {
     return (
@@ -47,11 +102,28 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
   /**
    * Renders logout
    */
+  const renderSyncButton = () => (
+    <Button
+      disabled={ syncingData }
+      color="secondary"
+      variant="contained"
+      onClick={ handleSyncButtonClick }
+    >
+      <Typography className={ classes.syncDataText }>
+        { strings.header.syncData }
+      </Typography>
+    </Button>
+  );
+
+  /**
+   * Renders logout
+   */
   const renderLogout = () => (
     <Button
       color="primary"
       variant="text"
       onClick={ () => dispatch(logout()) }
+      className={ classes.syncButton }
     >
       <Typography
         style={{
@@ -117,6 +189,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
             </Box>
           }
           <Box className={ classes.settings }>
+            { renderSyncButton() }
             { renderLogout() }
             { renderLanguageSelection() }
           </Box>
@@ -143,6 +216,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
       <main className={ `${classes.content}` }>
         { children }
       </main>
+      { renderLoadingDialog() }
     </Box>
   );
 };

@@ -3,7 +3,9 @@
     "title": "Aikapankki",
     "logo": "Sivun logo",
     "managementLink": "Hallinta",
-    "logout": "Kirjaudu ulos"
+    "logout": "Kirjaudu ulos",
+    "syncData": "Synkronoi",
+    "syncDataLoading": "Tietoja synkronoidaan, odota hetki."
   },
 
   "generic": {
@@ -20,8 +22,6 @@
   "drawerContent": {
     "userInfo": {
       "id": "Tunniste",
-      "active": "Aktiivinen",
-      "inactive": "Ei-aktiivinen",
       "userType": "Käyttäjän tyyppi:",
       "language": "Kieli:",
       "createdAt": "Luotu:",
@@ -65,6 +65,7 @@
     "fetchDateDataFailed": "Tietojen haku päivämäärän perusteella epäonnistui",
     "fetchTimeDataFailed": "Aikatietojen haku epäonnistui",
     "fetchUserDataFailed": "Käyttäjätietojen haku epäonnistui",
+    "syncTimeDataFailed": "Aikatietojen synkronointi epäonnistui",
     "title": "Error"
   },
 

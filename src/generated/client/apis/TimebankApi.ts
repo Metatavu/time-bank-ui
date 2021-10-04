@@ -37,6 +37,11 @@ export interface TimebankControllerGetTotalRequest {
     retention?: TimebankControllerGetTotalRetentionEnum;
 }
 
+export interface TimebankControllerSyncWorkTimeRequest {
+    before?: string;
+    after?: string;
+}
+
 /**
  * 
  */
@@ -129,9 +134,40 @@ export class TimebankApi extends runtime.BaseAPI {
 
     /**
      */
-    async timebankControllerGetTotal(requestParameters: TimebankControllerGetTotalRequest): Promise<Array<any>> {
+    async timebankControllerGetTotal(requestParameters: TimebankControllerGetTotalRequest): Promise<Array<TimeEntryTotalDto>> {
         const response = await this.timebankControllerGetTotalRaw(requestParameters);
         return await response.value();
+    }
+
+    /**
+     */
+    async timebankControllerSyncWorkTimeRaw(requestParameters: TimebankControllerSyncWorkTimeRequest): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
+
+        if (requestParameters.before !== undefined) {
+            queryParameters['before'] = requestParameters.before;
+        }
+
+        if (requestParameters.after !== undefined) {
+            queryParameters['after'] = requestParameters.after;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/timebank/sync`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async timebankControllerSyncWorkTime(requestParameters: TimebankControllerSyncWorkTimeRequest): Promise<void> {
+        await this.timebankControllerSyncWorkTimeRaw(requestParameters);
     }
 
 }

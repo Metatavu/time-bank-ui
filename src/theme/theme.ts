@@ -105,6 +105,11 @@ export default createMuiTheme({
         justifyContent: "space-between"
       }
     },
+    MuiButton: {
+      root: {
+        borderRadius: 20
+      }
+    },
     MuiFormLabel: {
       root: {
         color: "rgba(0, 0, 0, 0.54)"

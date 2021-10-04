@@ -156,7 +156,8 @@ const useManagementScreenStyles = makeStyles(theme => ({
 
   personEntryTime: {
     fontSize: 24,
-    marginLeft: theme.spacing(1)
+    marginLeft: theme.spacing(1),
+    fontWeight: 600
   },
 
   userInfoContainer: {

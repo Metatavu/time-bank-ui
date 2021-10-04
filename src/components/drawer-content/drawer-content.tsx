@@ -16,6 +16,7 @@ import { CustomPieLabel, WorkTimeCategory, WorkTimeTotalData } from "types/index
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 import { ErrorContext } from "components/error-handler/error-handler";
 import { selectAuth } from "features/auth/auth-slice";
+import PersonUtils from "utils/person-utils";
 
 /**
  * Component properties
@@ -43,7 +44,7 @@ const DrawerContent: React.FC<Props> = () => {
   const fetchPersonData = async () => {
     try {
       const fetchedPersons = await Api.getTimeBankApi().timebankControllerGetPersons();
-      setPersons(fetchedPersons);
+      setPersons(PersonUtils.filterPerson(fetchedPersons));
     } catch (error) {
       context.setError(strings.errorHandling.fetchUserDataFailed, error);
     }
@@ -61,10 +62,12 @@ const DrawerContent: React.FC<Props> = () => {
             retention: TimebankControllerGetTotalRetentionEnum.ALLTIME
           });
         dispatch(setPersonTotalTime(fetchedPersonTotalTime[0]));
+        return;
       } catch (error) {
         context.setError(strings.errorHandling.fetchTimeDataFailed, error);
       }
     }
+    dispatch(setPersonTotalTime(undefined));
   };
 
   React.useEffect(() => {

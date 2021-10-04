@@ -5,8 +5,7 @@ const useUserInfoStyles = makeStyles(theme => ({
   root: {
     width: "100%",
     display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between"
+    justifyContent: "center"
   },
 
   userNameContainer: {

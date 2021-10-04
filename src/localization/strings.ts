@@ -15,6 +15,8 @@ export interface IStrings extends LocalizedStringsMethods {
     logo: string;
     managementLink: string;
     logout: string;
+    syncData: string;
+    syncDataLoading: string;
   }
 
   /**
@@ -37,8 +39,6 @@ export interface IStrings extends LocalizedStringsMethods {
   drawerContent: {
     userInfo: {
       id: string;
-      active: string;
-      inactive: string;
       userType: string;
       language: string;
       createdAt: string;
@@ -91,6 +91,7 @@ export interface IStrings extends LocalizedStringsMethods {
     fetchDateDataFailed: string;
     fetchTimeDataFailed: string;
     fetchUserDataFailed: string;
+    syncTimeDataFailed: string;
     title: string;
   }
 
