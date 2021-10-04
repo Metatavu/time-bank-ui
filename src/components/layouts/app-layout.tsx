@@ -12,7 +12,7 @@ import theme from "theme/theme";
 import AuthUtils from "utils/auth";
 import Api from "api/api";
 import { selectPerson, setPerson } from "features/person/person-slice";
-import { PersonDto, TimebankControllerSyncWorkTimeRequest } from "generated/client";
+import { PersonDto } from "generated/client";
 import { ErrorContext } from "components/error-handler/error-handler";
 
 /**
