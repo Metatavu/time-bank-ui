@@ -16,6 +16,13 @@ export interface AccessToken {
 }
 
 /**
+ * Decoded token
+ */
+export interface DecodedToken {
+  email: string
+}
+
+/**
  * Configuration
  */
 export interface Configuration {

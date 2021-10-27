@@ -12,11 +12,12 @@ import { useAppDispatch, useAppSelector } from "app/hooks";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import TimeUtils from "utils/time-utils";
 import theme from "theme/theme";
-import { CustomPieLabel, WorkTimeCategory, WorkTimeTotalData } from "types/index";
+import { CustomPieLabel, DecodedToken, WorkTimeCategory, WorkTimeTotalData } from "types/index";
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 import { ErrorContext } from "components/error-handler/error-handler";
 import { selectAuth } from "features/auth/auth-slice";
 import PersonUtils from "utils/person-utils";
+import jwt_decode from "jwt-decode";
 
 /**
  * Component properties
@@ -38,6 +39,13 @@ const DrawerContent: React.FC<Props> = () => {
   const [ searchInput, setSearchInput ] = React.useState<string>("");
   const context = React.useContext(ErrorContext);
   
+  React.useEffect(() => {
+    const decodedEmail = jwt_decode<DecodedToken>(accessToken?.access_token || "").email;
+    const foundPerson = persons.find(personData => personData.email === decodedEmail);
+
+    (!person && foundPerson) && dispatch(setPerson(foundPerson));
+  }, [persons, accessToken]);
+
   /**
    * Fetches the person data 
    */
