@@ -6,6 +6,7 @@ import { PersonDto, TimeEntryTotalDto } from "generated/client";
 export interface AccessToken {
   created: Date;
   access_token: string;
+  email?: string;
   expires_in?: number;
   refresh_token?: string;
   refresh_expires_in?: number;

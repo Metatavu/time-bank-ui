@@ -38,6 +38,12 @@ const DrawerContent: React.FC<Props> = () => {
   const [ searchInput, setSearchInput ] = React.useState<string>("");
   const context = React.useContext(ErrorContext);
   
+  React.useEffect(() => {
+    const foundPerson = persons.find(personData => personData.email === accessToken?.email);
+
+    (!person && foundPerson) && dispatch(setPerson(foundPerson));
+  }, [persons, accessToken]);
+
   /**
    * Fetches the person data 
    */

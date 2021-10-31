@@ -112,6 +112,7 @@ export default class AuthUtils {
       access_token: token,
       expires_in: tokenParsed.exp,
       refresh_token: refreshToken,
+      email: profile?.email,
       refresh_expires_in: refreshTokenParsed?.exp,
       firstName: profile?.firstName,
       lastName: profile?.lastName,
