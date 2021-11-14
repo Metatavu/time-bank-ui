@@ -6,13 +6,16 @@ import { Provider } from "react-redux";
 import App from "./components/App";
 import reportWebVitals from "./reportWebVitals";
 import theme from "theme/theme";
+import ErrorHandler from "components/error-handler/error-handler";
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={ store }>
       <ThemeProvider theme={ responsiveFontSizes(theme) }>
         <CssBaseline/>
-        <App/>
+        <ErrorHandler>
+          <App/>
+        </ErrorHandler>
       </ThemeProvider>
     </Provider>
   </React.StrictMode>,
