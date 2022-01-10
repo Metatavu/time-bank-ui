@@ -114,10 +114,10 @@ export default class TimeUtils {
    * @returns moment instance from given entry
    */
   public static getWeekFromEntry = (entry: TimeEntryTotalDto) => {
-    if (!entry.id?.year || !entry.id?.week) {
+    if (entry.id?.year === undefined || entry.id?.week === undefined) {
       throw new Error("Malformed data!");
     }
-  
+
     return moment().year(entry.id.year).week(entry.id.week);
   };
 
@@ -128,10 +128,10 @@ export default class TimeUtils {
    * @returns moment instance from given entry
    */
   public static getMonthFromEntry = (entry: TimeEntryTotalDto) => {
-    if (!entry.id?.year || !entry.id?.month) {
+    if (entry.id?.year === undefined || entry.id?.month === undefined) {
       throw new Error("Malformed data!");
     }
-  
+
     return moment().year(entry.id.year).month(entry.id.month - 1);
   };
 
@@ -142,7 +142,7 @@ export default class TimeUtils {
    * @returns moment instance from given parameters
    */
   public static getYearFromEntry = (entry: TimeEntryTotalDto) => {
-    if (!entry.id?.year) {
+    if (entry.id?.year === undefined) {
       throw new Error("Malformed data!");
     }
 
