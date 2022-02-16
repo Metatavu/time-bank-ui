@@ -24,9 +24,8 @@ export default class TimeUtils {
    * @return formatted string of time 
    */
   public static convertToMinutesAndHours = (totalMinutes: number): string => {
-    const momentValue = moment.duration(totalMinutes, "minutes");
-    const hours = momentValue.hours() + (momentValue.days() * 24);
-    const minutes = momentValue.minutes();
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
     const negative = hours < 0 || minutes < 0;
 
     return `${negative ? "-" : ""}${Math.abs(hours)} h ${Math.abs(minutes)} min`;
@@ -39,9 +38,9 @@ export default class TimeUtils {
    * @return formatted string of time 
    */
   public static convertToHours = (totalMinutes: number): string => {
-    const momentValue = moment.duration(totalMinutes, "minutes");
-    const hours = momentValue.hours() + (momentValue.days() * 24);
-    const decimal = Math.round((momentValue.minutes() / 60) * 100);
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    const decimal = Math.round((minutes / 60) * 100);
     const negative = hours < 0 || decimal < 0;
 
     return `${negative ? "-" : ""}${Math.abs(hours)},${Math.abs(decimal).toString().padStart(2, "0")} h`;
