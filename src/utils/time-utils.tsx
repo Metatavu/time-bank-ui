@@ -25,7 +25,7 @@ export default class TimeUtils {
    */
   public static convertToMinutesAndHours = (totalMinutes: number): string => {
     const negative = totalMinutes < 0;
-    const absoluteMinutes = Math.abs(totalMinutes)
+    const absoluteMinutes = Math.abs(totalMinutes);
     const hours = Math.floor(absoluteMinutes / 60);
     const minutes = absoluteMinutes % 60;
 
