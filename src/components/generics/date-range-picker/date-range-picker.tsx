@@ -10,6 +10,7 @@ import fiLocale from "date-fns/locale/fi";
 import enLocale from "date-fns/locale/en-US";
 import { useAppSelector } from "app/hooks";
 import { selectLocale } from "features/locale/locale-slice";
+import moment from "moment";
 
 /**
  * Component properties
@@ -85,6 +86,20 @@ const DateRangePicker: React.FC<Props> = ({
   };
 
   /**
+   * Get max start week
+   */
+  const getMaxStartWeek = () => {
+    return todayDate.getFullYear() === selectedStartDate.getFullYear() ? currentWeekNumber : moment(selectedStartDate).weeksInYear();
+  };
+
+  /**
+   * Get max end week
+   */
+  const getMaxEndWeek = () => {
+    return todayDate.getFullYear() === selectedEndDate?.getFullYear() ? currentWeekNumber : moment(selectedEndDate).weeksInYear();
+  };
+
+  /**
    * Renders start week numbers to select component
    */
   const renderStartWeekNumbers = () => {
@@ -93,8 +108,7 @@ const DateRangePicker: React.FC<Props> = ({
     }
 
     const weekOpts = [];
-
-    for (let week = 1; week <= currentWeekNumber; week++) {
+    for (let week = 1; week <= getMaxStartWeek(); week++) {
       weekOpts.push((
         <MenuItem value={ week }>
           { week }
@@ -116,7 +130,7 @@ const DateRangePicker: React.FC<Props> = ({
     const weekOpts = [];
 
     if (selectedStartDate?.getFullYear() === selectedEndDate.getFullYear() && !!startWeek) {
-      for (let week = startWeek; week <= currentWeekNumber; week++) {
+      for (let week = startWeek; week <= getMaxEndWeek(); week++) {
         weekOpts.push((
           <MenuItem value={ week }>
             { week }
@@ -127,7 +141,7 @@ const DateRangePicker: React.FC<Props> = ({
       return weekOpts;
     }
 
-    for (let week = 1; week <= currentWeekNumber; week++) {
+    for (let week = 1; week <= getMaxEndWeek(); week++) {
       weekOpts.push((
         <MenuItem value={ week }>
           { week }
