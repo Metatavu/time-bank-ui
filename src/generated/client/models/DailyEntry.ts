@@ -14,83 +14,76 @@
 
 import { exists, mapValues } from '../runtime';
 /**
- * Person's single time entry
+ * Person's daily entry
  * @export
- * @interface TimeEntry
+ * @interface DailyEntry
  */
-export interface TimeEntry {
-    /**
-     * ID of DailyEntry in UUID
-     * @type {string}
-     * @memberof TimeEntry
-     */
-    id?: string;
-    /**
-     * TimeEntry ID in Forecast
-     * @type {number}
-     * @memberof TimeEntry
-     */
-    forecastId: number;
+export interface DailyEntry {
     /**
      * Person ID in Forecast
      * @type {number}
-     * @memberof TimeEntry
+     * @memberof DailyEntry
      */
     person: number;
     /**
      * Amount of internal time per time entry
      * @type {number}
-     * @memberof TimeEntry
+     * @memberof DailyEntry
      */
     internalTime: number;
     /**
      * Amount of project time per time entry
      * @type {number}
-     * @memberof TimeEntry
+     * @memberof DailyEntry
      */
     projectTime: number;
     /**
+     * Amount of time logged per time entry
+     * @type {number}
+     * @memberof DailyEntry
+     */
+    logged: number;
+    /**
+     * Amount of time expected per time entry
+     * @type {number}
+     * @memberof DailyEntry
+     */
+    expected: number;
+    /**
+     * Total amount of worktime per time entry
+     * @type {number}
+     * @memberof DailyEntry
+     */
+    balance: number;
+    /**
      * Date of time entry
      * @type {Date}
-     * @memberof TimeEntry
+     * @memberof DailyEntry
      */
     date: Date;
-    /**
-     * Date time of time entry registration
-     * @type {Date}
-     * @memberof TimeEntry
-     */
-    createdAt: Date;
-    /**
-     * Date time of time entry update
-     * @type {Date}
-     * @memberof TimeEntry
-     */
-    updatedAt: Date;
 }
 
-export function TimeEntryFromJSON(json: any): TimeEntry {
-    return TimeEntryFromJSONTyped(json, false);
+export function DailyEntryFromJSON(json: any): DailyEntry {
+    return DailyEntryFromJSONTyped(json, false);
 }
 
-export function TimeEntryFromJSONTyped(json: any, ignoreDiscriminator: boolean): TimeEntry {
+export function DailyEntryFromJSONTyped(json: any, ignoreDiscriminator: boolean): DailyEntry {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'forecastId': json['forecastId'],
         'person': json['person'],
         'internalTime': json['internalTime'],
         'projectTime': json['projectTime'],
+        'logged': json['logged'],
+        'expected': json['expected'],
+        'balance': json['balance'],
         'date': (new Date(json['date'])),
-        'createdAt': (new Date(json['createdAt'])),
-        'updatedAt': (new Date(json['updatedAt'])),
     };
 }
 
-export function TimeEntryToJSON(value?: TimeEntry | null): any {
+export function DailyEntryToJSON(value?: DailyEntry | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -99,14 +92,13 @@ export function TimeEntryToJSON(value?: TimeEntry | null): any {
     }
     return {
         
-        'id': value.id,
-        'forecastId': value.forecastId,
         'person': value.person,
         'internalTime': value.internalTime,
         'projectTime': value.projectTime,
+        'logged': value.logged,
+        'expected': value.expected,
+        'balance': value.balance,
         'date': (value.date.toISOString().substr(0,10)),
-        'createdAt': (value.createdAt.toISOString()),
-        'updatedAt': (value.updatedAt.toISOString()),
     };
 }
 

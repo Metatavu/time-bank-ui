@@ -21,14 +21,24 @@ import * as runtime from '../runtime';
 export class SystemApi extends runtime.BaseAPI {
 
     /**
+     * Replies ping with pong
+     * Replies with pong
      */
-    async systemControllerGetPersonsRaw(): Promise<runtime.ApiResponse<string>> {
+    async pingRaw(): Promise<runtime.ApiResponse<string>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = typeof token === 'function' ? token("bearerAuth", []) : token;
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         const response = await this.request({
-            path: `/system/ping`,
+            path: `/v1/system/ping`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -38,9 +48,11 @@ export class SystemApi extends runtime.BaseAPI {
     }
 
     /**
+     * Replies ping with pong
+     * Replies with pong
      */
-    async systemControllerGetPersons(): Promise<string> {
-        const response = await this.systemControllerGetPersonsRaw();
+    async ping(): Promise<string> {
+        const response = await this.pingRaw();
         return await response.value();
     }
 
