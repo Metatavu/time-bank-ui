@@ -1,4 +1,4 @@
-import { Configuration, TimebankApi } from "../generated/client";
+import { Configuration, DailyEntriesApi, PersonsApi, SynchronizeApi } from "../generated/client";
 
 /**
  * Utility class for loading api with predefined configuration
@@ -19,11 +19,28 @@ export default class Api {
   /**
    * Gets initialized Knots API
    * 
-   * @param AccessToken Gets knots API
    * @returns initialized Knots API
    */
-  public static getTimeBankApi() {
-    return new TimebankApi(Api.getConfiguration());
+  public static getDailyEntriesApi() {
+    return new DailyEntriesApi(Api.getConfiguration());
+  }
+
+  /**
+   * Gets initialized Knots API
+   * 
+   * @returns initialized Knots API
+   */
+  public static getPersonsApi() {
+    return new PersonsApi(Api.getConfiguration());
+  }
+
+  /**
+   * Gets initialized Knots API
+   * 
+   * @returns initialized Knots API
+   */
+  public static getSynchronizeApi() {
+    return new SynchronizeApi(Api.getConfiguration());
   }
 
 }

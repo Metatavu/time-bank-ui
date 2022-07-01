@@ -58,11 +58,11 @@ const TotalChart: React.FC<Props> = ({ displayedData, isLoading }) => {
         <Typography
           variant="h6"
           style={{
-            color: displayedData.total >= 0 ? theme.palette.success.main : theme.palette.error.main,
+            color: displayedData.balance >= 0 ? theme.palette.success.main : theme.palette.error.main,
             padding: theme.spacing(1)
           }}
         >
-          { `${strings.total}: ${TimeUtils.convertToMinutesAndHours(selectedData.total)}` }
+          { `${strings.balance}: ${TimeUtils.convertToMinutesAndHours(selectedData.balance)}` }
         </Typography>
       </Box>
     );
@@ -100,10 +100,10 @@ const TotalChart: React.FC<Props> = ({ displayedData, isLoading }) => {
           <Tooltip content={ renderCustomizedTooltip }/>
           <Legend/>
           <Bar
-            dataKey="total"
-            name={ strings.total }
+            dataKey="balance"
+            name={ strings.balance }
             barSize={ 100 }
-            fill={ displayedData.total > 0 ? theme.palette.success.main : theme.palette.error.main }
+            fill={ displayedData.balance > 0 ? theme.palette.success.main : theme.palette.error.main }
           />
           <ReferenceLine x={ 0 } stroke="rgba(0, 0, 0, 0.5)"/>
         </BarChart>

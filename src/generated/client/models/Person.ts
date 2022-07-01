@@ -92,17 +92,17 @@ export interface Person {
      */
     active: boolean;
     /**
-     * ID of default role.
-     * @type {number}
+     * Persons language
+     * @type {string}
      * @memberof Person
      */
-    defaultRole?: number;
+    language?: string;
     /**
      * Start date of employment, String.
      * @type {string}
      * @memberof Person
      */
-    startDate: string;
+    startDate?: string;
 }
 
 export function PersonFromJSON(json: any): Person {
@@ -127,8 +127,8 @@ export function PersonFromJSONTyped(json: any, ignoreDiscriminator: boolean): Pe
         'saturday': json['saturday'],
         'sunday': json['sunday'],
         'active': json['active'],
-        'defaultRole': !exists(json, 'defaultRole') ? undefined : json['defaultRole'],
-        'startDate': json['startDate'],
+        'language': !exists(json, 'language') ? undefined : json['language'],
+        'startDate': !exists(json, 'startDate') ? undefined : json['startDate'],
     };
 }
 
@@ -153,7 +153,7 @@ export function PersonToJSON(value?: Person | null): any {
         'saturday': value.saturday,
         'sunday': value.sunday,
         'active': value.active,
-        'defaultRole': value.defaultRole,
+        'language': value.language,
         'startDate': value.startDate,
     };
 }

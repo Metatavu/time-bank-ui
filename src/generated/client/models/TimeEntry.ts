@@ -24,7 +24,7 @@ export interface TimeEntry {
      * @type {string}
      * @memberof TimeEntry
      */
-    id?: string;
+    entryId: string;
     /**
      * TimeEntry ID in Forecast
      * @type {number}
@@ -79,7 +79,7 @@ export function TimeEntryFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
+        'entryId': json['entryId'],
         'forecastId': json['forecastId'],
         'person': json['person'],
         'internalTime': json['internalTime'],
@@ -99,7 +99,7 @@ export function TimeEntryToJSON(value?: TimeEntry | null): any {
     }
     return {
         
-        'id': value.id,
+        'entryId': value.entryId,
         'forecastId': value.forecastId,
         'person': value.person,
         'internalTime': value.internalTime,

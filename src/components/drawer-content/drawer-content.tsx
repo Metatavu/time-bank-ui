@@ -5,7 +5,7 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import UserInfo from "components/generics/user-info/user-info";
 import useDrawerContentStyles from "styles/drawer-content/drawer-content";
 import strings from "localization/strings";
-import { PersonDto, TimebankControllerGetTotalRetentionEnum } from "generated/client";
+import { Person, Timespan } from "generated/client";
 import Api from "api/api";
 import { selectPerson, setPerson, setPersonTotalTime } from "features/person/person-slice";
 import { useAppDispatch, useAppSelector } from "app/hooks";
@@ -15,8 +15,7 @@ import theme from "theme/theme";
 import { CustomPieLabel, WorkTimeCategory, WorkTimeTotalData } from "types/index";
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 import { ErrorContext } from "components/error-handler/error-handler";
-import { selectAuth } from "features/auth/auth-slice";
-import PersonUtils from "utils/person-utils";
+/* import { selectAuth } from "features/auth/auth-slice"; */
 
 /**
  * Component properties
@@ -32,25 +31,27 @@ interface Props {
 const DrawerContent: React.FC<Props> = () => {
   const dispatch = useAppDispatch();
   const { person, personTotalTime } = useAppSelector(selectPerson);
-  const { accessToken } = useAppSelector(selectAuth);
+  // const { //accessToken } = useAppSelector(selectAuth);
   const classes = useDrawerContentStyles();
-  const [ persons, setPersons ] = React.useState<PersonDto[]>([]);
+  const [ persons, setPersons ] = React.useState<Person[]>([]);
   const [ searchInput, setSearchInput ] = React.useState<string>("");
   const context = React.useContext(ErrorContext);
   
   React.useEffect(() => {
-    const foundPerson = persons.find(personData => personData.email === accessToken?.email);
+    const foundPerson = persons.find(personData => personData.email /* === accessToken?.email */);
 
     (!person && foundPerson) && dispatch(setPerson(foundPerson));
-  }, [persons, accessToken]);
+  }, [persons/* , accessToken */]);
 
   /**
    * Fetches the person data 
    */
   const fetchPersonData = async () => {
     try {
-      const fetchedPersons = await Api.getTimeBankApi().timebankControllerGetPersons();
-      setPersons(PersonUtils.filterPerson(fetchedPersons));
+      const fetchedPersons = await Api.getPersonsApi().listPersons({
+        active: true
+      });
+      setPersons(fetchedPersons);
     } catch (error) {
       context.setError(strings.errorHandling.fetchUserDataFailed, error);
     }
@@ -62,10 +63,10 @@ const DrawerContent: React.FC<Props> = () => {
   const fetchWorkTimeData = async () => {
     if (person && person.id) {
       try {
-        const fetchedPersonTotalTime = await Api.getTimeBankApi()
-          .timebankControllerGetTotal({
-            personId: person.id.toString(),
-            retention: TimebankControllerGetTotalRetentionEnum.ALLTIME
+        const fetchedPersonTotalTime = await Api.getPersonsApi()
+          .listPersonTotalTime({
+            personId: person.id,
+            timespan: Timespan.ALLTIME
           });
         dispatch(setPersonTotalTime(fetchedPersonTotalTime[0]));
         return;
@@ -77,17 +78,17 @@ const DrawerContent: React.FC<Props> = () => {
   };
 
   React.useEffect(() => {
-    if (!accessToken) {
+  /*   if (!accessToken) {
       return;
-    }
+    } */
 
     fetchPersonData();
   }, []);
 
   React.useEffect(() => {
-    if (!accessToken) {
+    /* if (!accessToken) {
       return;
-    }
+    } */
 
     fetchWorkTimeData();
   }, [ person ]);
@@ -97,7 +98,7 @@ const DrawerContent: React.FC<Props> = () => {
    * 
    * @param newValue new value for the person data
    */
-  const onSearchBoxChange = (newValue: string | PersonDto) => {
+  const onSearchBoxChange = (newValue: string | Person) => {
     typeof newValue !== "string" && dispatch(setPerson(newValue));
   };
 
@@ -115,7 +116,7 @@ const DrawerContent: React.FC<Props> = () => {
    * 
    * @param personOptions person option to be rendered
    */
-  const renderOptions = (personOptions: PersonDto) => {
+  const renderOptions = (personOptions: Person) => {
     return (
       <Box p={ 0.5 }>
         <Typography variant="h5">
@@ -142,7 +143,7 @@ const DrawerContent: React.FC<Props> = () => {
             inputValue={ searchInput }
             getOptionLabel={ personLabel => `${personLabel.firstName} ${personLabel.lastName}` }
             renderOption={ renderOptions }
-            onChange={ (event, newValue) => onSearchBoxChange(newValue as PersonDto) }
+            onChange={ (event, newValue) => onSearchBoxChange(newValue as Person) }
             onInputChange={ (event, newInputValue) => onSearchBoxInputChange(newInputValue) }
             renderInput={ params => (
               <TextField
@@ -241,14 +242,14 @@ const DrawerContent: React.FC<Props> = () => {
       return null;
     }
 
-    const totalHourString = TimeUtils.convertToMinutesAndHours(personTotalTime.total);
-    const totalColor = personTotalTime.total < 0 ?
+    const totalHourString = TimeUtils.convertToMinutesAndHours(personTotalTime.balance);
+    const totalColor = personTotalTime.balance < 0 ?
       theme.palette.error.dark :
       theme.palette.success.main;
 
     const workTimeData: WorkTimeTotalData[] = [
-      { name: WorkTimeCategory.PROJECT, total: personTotalTime.projectTime },
-      { name: WorkTimeCategory.INTERNAL, total: personTotalTime.internalTime }
+      { name: WorkTimeCategory.PROJECT, balance: personTotalTime.projectTime },
+      { name: WorkTimeCategory.INTERNAL, balance: personTotalTime.internalTime }
     ];
 
     const COLORS = [ theme.palette.success.main, theme.palette.warning.main ];
@@ -269,7 +270,7 @@ const DrawerContent: React.FC<Props> = () => {
             <Box
               width="100%"
             >
-              { renderAccordionRow(`${strings.total}:`, totalHourString, totalColor) }
+              { renderAccordionRow(`${strings.balance}:`, totalHourString, totalColor) }
               { renderAccordionRow(`${strings.logged}:`, TimeUtils.convertToMinutesAndHours(personTotalTime.logged)) }
               { renderAccordionRow(`${strings.expected}:`, TimeUtils.convertToMinutesAndHours(personTotalTime.expected)) }
             </Box>
@@ -339,7 +340,7 @@ const DrawerContent: React.FC<Props> = () => {
    * @param name name of the subtitle text
    * @param value value of the subtitle text
    */
-  const renderUserDetailEntry = (name: string, value: string | number) => {
+  const renderUserDetailEntry = (name: string, value: string | number | undefined) => {
     return (
       <>
         <Typography
@@ -384,17 +385,15 @@ const DrawerContent: React.FC<Props> = () => {
             <Box className={ classes.userDetailEntry }>
               { renderUserDetailEntry(strings.drawerContent.userInfo.id, person.id) }
             </Box>
-            <Box className={ classes.userDetailEntry }>
-              { renderUserDetailEntry(strings.drawerContent.userInfo.userType, person.userType) }
-            </Box>
+          </AccordionDetails>
+          <AccordionDetails className={ classes.accordionDetails }>
             <Box className={ classes.userDetailEntry }>
               { renderUserDetailEntry(strings.drawerContent.userInfo.language, person.language) }
             </Box>
+          </AccordionDetails>
+          <AccordionDetails className={ classes.accordionDetails }>
             <Box className={ classes.userDetailEntry }>
-              { renderUserDetailEntry(strings.drawerContent.userInfo.createdAt, person.createdAt.toLocaleString()) }
-            </Box>
-            <Box className={ classes.userDetailEntry }>
-              { renderUserDetailEntry(strings.drawerContent.userInfo.updatedAt, person.updatedAt.toLocaleString()) }
+              { renderUserDetailEntry(strings.drawerContent.userInfo.startDate, person.startDate) }
             </Box>
           </AccordionDetails>
         </Accordion>

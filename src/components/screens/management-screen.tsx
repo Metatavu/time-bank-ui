@@ -6,7 +6,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, TooltipProps, Tooltip as Rech
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 import { useAppDispatch, useAppSelector } from "app/hooks";
 import Api from "api/api";
-import { PersonDto, TimebankControllerGetTotalRetentionEnum } from "generated/client";
+import { Person, Timespan } from "generated/client";
 import { ErrorContext } from "components/error-handler/error-handler";
 import { PersonWithTotalTime, WorkTimeCategory, WorkTimeTotalData } from "types";
 import strings from "localization/strings";
@@ -21,7 +21,6 @@ import SearchIcon from "@material-ui/icons/Search";
 import { selectAuth } from "features/auth/auth-slice";
 import moment from "moment";
 import AuthUtils from "utils/auth";
-import PersonUtils from "utils/person-utils";
 
 /**
  * Management screen screen component
@@ -48,9 +47,9 @@ const ManagementScreen: React.FC = () => {
     let totalTime: any[] = [];
 
     try {
-      totalTime = await Api.getTimeBankApi().timebankControllerGetTotal({
-        personId: person.person.id.toString(),
-        retention: TimebankControllerGetTotalRetentionEnum.ALLTIME
+      totalTime = await Api.getPersonsApi().listPersonTotalTime({
+        personId: person.person.id,
+        timespan: Timespan.ALLTIME
       });
     } catch (error) {
       context.setError(strings.errorHandling.fetchTimeDataFailed, error);
@@ -58,7 +57,7 @@ const ManagementScreen: React.FC = () => {
 
     return {
       ...person,
-      timeEntryTotal: totalTime[0]
+      personTotalTime: totalTime[0]
     };
   };
 
@@ -69,9 +68,10 @@ const ManagementScreen: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const persons = await Api.getTimeBankApi().timebankControllerGetPersons();
-      const filteredPersons = PersonUtils.filterPerson(persons);
-      const personTotalsTimeList: PersonWithTotalTime[] = filteredPersons.map(_person => ({ person: _person }));
+      const persons = await Api.getPersonsApi().listPersons({
+        active: true
+      });
+      const personTotalsTimeList: PersonWithTotalTime[] = persons.map(_person => ({ person: _person }));
 
       const populatedPersonTotalsTimeList = await Promise.all(personTotalsTimeList.map(populatePersonTotalTimeData));
 
@@ -101,7 +101,7 @@ const ManagementScreen: React.FC = () => {
    * 
    * @param person person data
    */
-  const handlePersonRedirectClick = (person: PersonDto) => {
+  const handlePersonRedirectClick = (person: Person) => {
     dispatch(setPerson(person));
     history.push("/");
   };
@@ -226,15 +226,15 @@ const ManagementScreen: React.FC = () => {
    * Renders the person detail 
    */
   const renderPersonDetail = () => {
-    if (!selectedPersonWithTotalTime || !selectedPersonWithTotalTime.timeEntryTotal) {
+    if (!selectedPersonWithTotalTime || !selectedPersonWithTotalTime.personTotalTime) {
       return null;
     }
 
-    const { person, timeEntryTotal } = selectedPersonWithTotalTime;
+    const { person, personTotalTime } = selectedPersonWithTotalTime;
 
     const workTimeData: WorkTimeTotalData[] = [
-      { name: WorkTimeCategory.PROJECT, total: timeEntryTotal.projectTime },
-      { name: WorkTimeCategory.INTERNAL, total: timeEntryTotal.internalTime }
+      { name: WorkTimeCategory.PROJECT, balance: personTotalTime.projectTime },
+      { name: WorkTimeCategory.INTERNAL, balance: personTotalTime.internalTime }
     ];
 
     const COLORS = [ theme.palette.success.main, theme.palette.warning.main ];
@@ -292,17 +292,17 @@ const ManagementScreen: React.FC = () => {
   /**
    * Renders person entry
    * 
-   * @param personTotalTime person total time data
+   * @param personsTotalTimeEntry person total time data
    */
-  const renderPersonEntry = (personTotalTime: PersonWithTotalTime) => {
-    const { person, timeEntryTotal } = personTotalTime;
+  const renderPersonEntry = (personsTotalTimeEntry: PersonWithTotalTime) => {
+    const { person, personTotalTime } = personsTotalTimeEntry;
 
-    if (!timeEntryTotal) {
-      return null;
+    if (!personTotalTime) {
+      return;
     }
 
-    const expectedTime = TimeUtils.convertToHours(timeEntryTotal.expected);
-    const loggedTime = TimeUtils.convertToHours(timeEntryTotal.logged);
+    const expectedTime = TimeUtils.convertToHours(personTotalTime.expected);
+    const loggedTime = TimeUtils.convertToHours(personTotalTime.logged);
 
     return (
       <ListItem
@@ -310,7 +310,7 @@ const ManagementScreen: React.FC = () => {
         disableRipple
         disableTouchRipple
         selected={ selectedPersonWithTotalTime?.person.id === person.id }
-        onClick={ handleListItemClick(personTotalTime) }
+        onClick={ handleListItemClick(personsTotalTimeEntry) }
         className={ classes.personListEntry }
       >
         <Paper className={ classes.personEntry }>
@@ -332,10 +332,10 @@ const ManagementScreen: React.FC = () => {
               <Typography
                 className={ classes.personEntryTime }
                 style={{
-                  color: timeEntryTotal!.total >= 0 ? theme.palette.success.main : theme.palette.error.main
+                  color: personTotalTime!.balance >= 0 ? theme.palette.success.main : theme.palette.error.main
                 }}
               >
-                { TimeUtils.convertToHours(timeEntryTotal.total) }
+                { TimeUtils.convertToHours(personTotalTime.balance) }
               </Typography>
             </Tooltip>
           </Box>

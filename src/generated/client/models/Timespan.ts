@@ -18,7 +18,7 @@
  * @enum {string}
  */
 export enum Timespan {
-    ALLTIME = 'ALL TIME',
+    ALLTIME = 'ALL_TIME',
     YEAR = 'YEAR',
     MONTH = 'MONTH',
     WEEK = 'WEEK'

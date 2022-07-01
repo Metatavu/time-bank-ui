@@ -1,13 +1,13 @@
 import React from "react";
 import { Avatar, Box, Typography } from "@material-ui/core";
 import useUserInfoStyles from "styles/generics/user-info/user-info";
-import { PersonDto } from "generated/client";
+import { Person } from "generated/client";
 
 /**
  * Component properties
  */
 interface Props {
-  person: PersonDto;
+  person: Person;
 }
 
 /**
