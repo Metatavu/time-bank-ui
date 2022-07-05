@@ -14,11 +14,6 @@
 
 
 import * as runtime from '../runtime';
-import {
-    TimeEntry,
-    TimeEntryFromJSON,
-    TimeEntryToJSON,
-} from '../models';
 
 export interface SynchronizeTimeEntriesRequest {
     before?: Date;
@@ -34,7 +29,7 @@ export class SynchronizeApi extends runtime.BaseAPI {
      * Retrieves and synchronizes time entries from Forecast API.
      * Synchronizes time entries from Forecast API.
      */
-    async synchronizeTimeEntriesRaw(requestParameters: SynchronizeTimeEntriesRequest): Promise<runtime.ApiResponse<Array<TimeEntry>>> {
+    async synchronizeTimeEntriesRaw(requestParameters: SynchronizeTimeEntriesRequest): Promise<runtime.ApiResponse<void>> {
         const queryParameters: any = {};
 
         if (requestParameters.before !== undefined) {
@@ -47,7 +42,7 @@ export class SynchronizeApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        headerParameters["Authorization"] = `bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJjZklBRE5feHhDSm1Wa1d5Ti1QTlhFRXZNVVdzMnI2OEN4dG1oRUROelhVIn0.eyJleHAiOjE2NTY2ODM4MTMsImlhdCI6MTY1NjY1NTAxMywianRpIjoiNmRmMjc4ZDQtYzYwZS00ZWEzLTk5ZTAtYzFlNjUxY2FkM2QxIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL3JlYWxtcy9xdWFya3VzIiwic3ViIjoiZWI0MTIzYTMtYjcyMi00Nzk4LTlhZjUtODk1N2Y4MjM2NTdhIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYmFja2VuZC1zZXJ2aWNlIiwic2Vzc2lvbl9zdGF0ZSI6IjBhOTJlYzBlLTdjZTAtNDI2Yi1iOGYyLTViZThhZmE5ZDJkNiIsImFjciI6IjEiLCJzY29wZSI6IiIsInNpZCI6IjBhOTJlYzBlLTdjZTAtNDI2Yi1iOGYyLTViZThhZmE5ZDJkNiJ9.JO8G3PM-Jb0DxL5riVFCI8OnOPvMkeKdyHj_Sy8GiHRAGVMlkVImxk4YwrmPWQDTTBvTfDipoSzEiwnfLPrF4tbh1pf3CYoR9u61BffN_zeQ6mK6VHismvQIp3ZzPm2xH4ngVC-YjAMmc5VwMR2YZvylj3qtL4zqpSApGIVDEAcntHQ0R5ah0lvOfgawuEDkPap519NpUseYzEYT-0L_Ugcp2mHVOZ63rcaP3TWskvEf_0twXQE3oVDGmOnrSw-h5Rcn7-OUeUavq4odLPox0e3PzDzPYZIGshTqzmZsbTesviVE8_o5pKBlqv-L5fdDxag6k8yHjuI0PkHyaReAcA`;
+        headerParameters["Authorization"] = `bearer `;
 
         const response = await this.request({
             path: `/v1/synchronize`,
@@ -56,15 +51,15 @@ export class SynchronizeApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(TimeEntryFromJSON));
+        return new runtime.VoidApiResponse(response);
     }
 
     /**
      * Retrieves and synchronizes time entries from Forecast API.
      * Synchronizes time entries from Forecast API.
      */
-    async synchronizeTimeEntries(requestParameters: SynchronizeTimeEntriesRequest): Promise<Array<TimeEntry>> {
-        const response = await this.synchronizeTimeEntriesRaw(requestParameters);
-        return await response.value();
+    async synchronizeTimeEntries(requestParameters: SynchronizeTimeEntriesRequest): Promise<void> {
+        await this.synchronizeTimeEntriesRaw(requestParameters);
     }
+
 }

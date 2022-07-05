@@ -4,7 +4,7 @@
     "logo": "Sivun logo",
     "managementLink": "Hallinta",
     "logout": "Kirjaudu ulos",
-    "syncData": "Synkronoi",
+    "syncData": "Synkronointi",
     "syncDataLoading": "Tietoja synkronoidaan, odota hetki."
   },
 
@@ -63,12 +63,15 @@
     "fetchDateDataFailed": "Tietojen haku päivämäärän perusteella epäonnistui",
     "fetchTimeDataFailed": "Aikatietojen haku epäonnistui",
     "fetchUserDataFailed": "Käyttäjätietojen haku epäonnistui",
-    "syncTimeDataFailed": "Aikatietojen synkronointi epäonnistui tai synkronoitavia aikatietoja ei ole",
+    "syncTimeDataFailed": "Aikatietojen synkronointi epäonnistui",
     "title": "Error"
   },
 
   "syncHandling": {
     "syncTimeDataSuccess": "Aikatietojen synkronointi onnistui",
+    "syncAll": "Synkronoi kaikki aikakirjaukset",
+    "syncStart": "Synkronoi valitusta päivästä",
+    "syncStartDate": "Aloita synkronointi päivästä: ",
     "title": "Synkronointi"
   },
 

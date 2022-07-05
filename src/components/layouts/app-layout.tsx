@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { AppBar, Box, Drawer, Toolbar, Typography, Select, MenuItem, Button, Dialog, CircularProgress } from "@material-ui/core";
+import { AppBar, Box, Drawer, Toolbar, Typography, Select, MenuItem, Button, Dialog, CircularProgress, IconButton } from "@material-ui/core";
 import useAppLayoutStyles from "styles/layouts/app-layout";
 import siteLogo from "../../gfx/Metatavu-icon.svg";
 import strings from "localization/strings";
@@ -15,6 +15,9 @@ import { selectPerson, setPerson } from "features/person/person-slice";
 import { Person } from "generated/client";
 import { SyncContext } from "components/sync-handler/sync-handler";
 import { ErrorContext } from "components/error-handler/error-handler";
+import GenericDialog from "components/generics/generic-dialog/generic-dialog";
+import DeleteIcon from "@material-ui/icons/Delete";
+import GenericDatePicker from "components/generics/date-picker/date-picker";
 
 /**
  * Component properties
@@ -39,15 +42,19 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
   const [ syncingData, setSyncingData ] = React.useState(false);
   const errorContext = React.useContext(ErrorContext);
   const syncContext = React.useContext(SyncContext);
+  const [syncSelection, setSyncSelection] = React.useState(false);
+  const [ selectedStartDate, setSelectedStartDate ] = useState<Date | null>(null);
 
   /**
    * Event handler for sync button click
    */
   const handleSyncButtonClick = async () => {
     setSyncingData(true);
-   
+    setSyncSelection(false);
     try {
-      await Api.getSynchronizeApi().synchronizeTimeEntries({});
+      await Api.getSynchronizeApi().synchronizeTimeEntries({
+        after: selectedStartDate || undefined
+      });
       syncContext.setSynched(strings.syncHandling.syncTimeDataSuccess);
     } catch (error) {
       errorContext.setError(strings.errorHandling.syncTimeDataFailed, error);
@@ -58,6 +65,20 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
       dispatch(setPerson(personCloned));
     }
     setSyncingData(false);
+  };
+
+  /**
+   * Handler for sync-date selection dialog
+   */
+  const handleClickOpen = () => {
+    setSyncSelection(true);
+  };
+
+  /**
+  * Handler for sync start date
+  */
+  const resetSyncDate = () => {
+    setSelectedStartDate(null);
   };
 
   /**
@@ -89,6 +110,46 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
   };
 
   /**
+   * Renders sync selection dialog
+   */
+  const renderSyncSelectionDialog = () => {
+    return (
+      <GenericDialog
+        title={ strings.syncHandling.title }
+        open={ syncSelection }
+        error={ false }
+        onClose={ () => setSyncSelection(false) }
+        onCancel={ () => setSyncSelection(false) }
+        onConfirm={ () => setSyncSelection(false) }
+      >
+        <Box className={ classes.datePickers }>
+          <GenericDatePicker
+            selectedStartDate={ selectedStartDate }
+            onStartDateChange={ setSelectedStartDate }
+          />
+          <IconButton
+            onClick={ resetSyncDate }
+            aria-label="delete"
+            className={ classes.deleteButton }
+          >
+            <DeleteIcon fontSize="medium"/>
+          </IconButton>
+        </Box>
+        <Button
+          onClick={ handleSyncButtonClick }
+          color="secondary"
+          variant="contained"
+        >
+          { selectedStartDate !== null ? (
+            strings.syncHandling.syncStartDate + selectedStartDate.toLocaleDateString("fi-FI")) : (
+            strings.syncHandling.syncAll
+          ) }
+        </Button>
+      </GenericDialog>
+    );
+  };
+
+  /**
    * Renders language selection options
    */
   const renderLanguageSelectOptions = () => {
@@ -101,14 +162,14 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
   };
 
   /**
-   * Renders sync button
+   * Renders sync selection button
    */
   const renderSyncButton = () => (
     <Button
       disabled={ syncingData }
       color="secondary"
       variant="contained"
-      onClick={ handleSyncButtonClick }
+      onClick={ handleClickOpen }
     >
       <Typography className={ classes.syncDataText }>
         { strings.header.syncData }
@@ -218,6 +279,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
         { children }
       </main>
       { renderLoadingDialog() }
+      { renderSyncSelectionDialog() }
     </Box>
   );
 };

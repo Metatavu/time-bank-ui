@@ -4,7 +4,7 @@
     "logo": "Site logo",
     "managementLink": "Management",
     "logout": "Log out",
-    "syncData": "Synchronize",
+    "syncData": "Syncronizing",
     "syncDataLoading": "Synchronizing data, please be patient."
   },
   
@@ -63,12 +63,15 @@
     "fetchDateDataFailed": "Fetching date data failed",
     "fetchTimeDataFailed": "Fetching time data failed",
     "fetchUserDataFailed": "Fetching user data failed",
-    "syncTimeDataFailed": "Synchronizing time data failed or there is no time data to synchronize",
+    "syncTimeDataFailed": "Synchronizing time data failed",
     "title": "Error"
   },
 
   "syncHandling": {
     "syncTimeDataSuccess": "Timedata was successfully synchronized",
+    "syncAll": "Synchronize all time data",
+    "syncStart": "Synchronize from given date",
+    "syncStartDate": "Start syncing from: ",
     "title": "Syncronizing"
   },
 

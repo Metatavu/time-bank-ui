@@ -14,9 +14,21 @@
 
 
 import * as runtime from '../runtime';
+import {
+    TimeEntry,
+    TimeEntryFromJSON,
+    TimeEntryToJSON,
+} from '../models';
 
 export interface DeleteTimeEntryRequest {
     entryId: string;
+}
+
+export interface ListTimeEntriesRequest {
+    personId?: number;
+    before?: Date;
+    after?: Date;
+    vacation?: boolean;
 }
 
 /**
@@ -61,6 +73,58 @@ export class TimeEntriesApi extends runtime.BaseAPI {
      */
     async deleteTimeEntry(requestParameters: DeleteTimeEntryRequest): Promise<void> {
         await this.deleteTimeEntryRaw(requestParameters);
+    }
+
+    /**
+     * Lists time entries.
+     * Lists time entries.
+     */
+    async listTimeEntriesRaw(requestParameters: ListTimeEntriesRequest): Promise<runtime.ApiResponse<Array<TimeEntry>>> {
+        const queryParameters: any = {};
+
+        if (requestParameters.personId !== undefined) {
+            queryParameters['personId'] = requestParameters.personId;
+        }
+
+        if (requestParameters.before !== undefined) {
+            queryParameters['before'] = (requestParameters.before as any).toISOString().substr(0,10);
+        }
+
+        if (requestParameters.after !== undefined) {
+            queryParameters['after'] = (requestParameters.after as any).toISOString().substr(0,10);
+        }
+
+        if (requestParameters.vacation !== undefined) {
+            queryParameters['vacation'] = requestParameters.vacation;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = typeof token === 'function' ? token("bearerAuth", []) : token;
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/v1/timeEntries`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(TimeEntryFromJSON));
+    }
+
+    /**
+     * Lists time entries.
+     * Lists time entries.
+     */
+    async listTimeEntries(requestParameters: ListTimeEntriesRequest): Promise<Array<TimeEntry>> {
+        const response = await this.listTimeEntriesRaw(requestParameters);
+        return await response.value();
     }
 
 }
