@@ -279,7 +279,7 @@ const DrawerContent: React.FC<Props> = () => {
                 <Pie
                   cx="50%"
                   cy="50%"
-                  dataKey="total"
+                  dataKey="balance"
                   data={ workTimeData }
                   label={ renderCustomizedLabel }
                 >
