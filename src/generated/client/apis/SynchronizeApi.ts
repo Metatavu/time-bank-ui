@@ -14,11 +14,6 @@
 
 
 import * as runtime from '../runtime';
-import {
-    TimeEntry,
-    TimeEntryFromJSON,
-    TimeEntryToJSON,
-} from '../models';
 
 export interface SynchronizeTimeEntriesRequest {
     before?: Date;
@@ -34,7 +29,7 @@ export class SynchronizeApi extends runtime.BaseAPI {
      * Retrieves and synchronizes time entries from Forecast API.
      * Synchronizes time entries from Forecast API.
      */
-    async synchronizeTimeEntriesRaw(requestParameters: SynchronizeTimeEntriesRequest): Promise<runtime.ApiResponse<Array<TimeEntry>>> {
+    async synchronizeTimeEntriesRaw(requestParameters: SynchronizeTimeEntriesRequest): Promise<runtime.ApiResponse<void>> {
         const queryParameters: any = {};
 
         if (requestParameters.before !== undefined) {
@@ -47,8 +42,14 @@ export class SynchronizeApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        headerParameters["Authorization"] = `bearer `;
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = typeof token === 'function' ? token("bearerAuth", []) : token;
 
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         const response = await this.request({
             path: `/v1/synchronize`,
             method: 'POST',
@@ -56,15 +57,15 @@ export class SynchronizeApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(TimeEntryFromJSON));
+        return new runtime.VoidApiResponse(response);
     }
 
     /**
      * Retrieves and synchronizes time entries from Forecast API.
      * Synchronizes time entries from Forecast API.
      */
-    async synchronizeTimeEntries(requestParameters: SynchronizeTimeEntriesRequest): Promise<Array<TimeEntry>> {
-        const response = await this.synchronizeTimeEntriesRaw(requestParameters);
-        return await response.value();
+    async synchronizeTimeEntries(requestParameters: SynchronizeTimeEntriesRequest): Promise<void> {
+        await this.synchronizeTimeEntriesRaw(requestParameters);
     }
+
 }

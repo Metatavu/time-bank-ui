@@ -24,6 +24,7 @@ export interface ListDailyEntriesRequest {
     personId?: number;
     before?: Date;
     after?: Date;
+    vacation?: boolean;
 }
 
 /**
@@ -32,8 +33,8 @@ export interface ListDailyEntriesRequest {
 export class DailyEntriesApi extends runtime.BaseAPI {
 
     /**
-     * Lists daily time entries.
-     * Lists daily time entries.
+     * Lists daily entries.
+     * Lists daily entries.
      */
     async listDailyEntriesRaw(requestParameters: ListDailyEntriesRequest): Promise<runtime.ApiResponse<Array<DailyEntry>>> {
         const queryParameters: any = {};
@@ -50,10 +51,20 @@ export class DailyEntriesApi extends runtime.BaseAPI {
             queryParameters['after'] = (requestParameters.after as any).toISOString().substr(0,10);
         }
 
+        if (requestParameters.vacation !== undefined) {
+            queryParameters['vacation'] = requestParameters.vacation;
+        }
+
         const headerParameters: runtime.HTTPHeaders = {};
 
-        headerParameters["Authorization"] = `bearer `;
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = typeof token === 'function' ? token("bearerAuth", []) : token;
 
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         const response = await this.request({
             path: `/v1/dailyEntries`,
             method: 'GET',
@@ -65,8 +76,8 @@ export class DailyEntriesApi extends runtime.BaseAPI {
     }
 
     /**
-     * Lists daily time entries.
-     * Lists daily time entries.
+     * Lists daily entries.
+     * Lists daily entries.
      */
     async listDailyEntries(requestParameters: ListDailyEntriesRequest): Promise<Array<DailyEntry>> {
         const response = await this.listDailyEntriesRaw(requestParameters);

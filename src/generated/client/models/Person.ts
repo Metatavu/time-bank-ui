@@ -103,6 +103,18 @@ export interface Person {
      * @memberof Person
      */
     startDate?: string;
+    /**
+     * Amount of unspent vacations from last year.
+     * @type {number}
+     * @memberof Person
+     */
+    unspentVacations: number;
+    /**
+     * Amount of spent vacations from last year.
+     * @type {number}
+     * @memberof Person
+     */
+    spentVacations: number;
 }
 
 export function PersonFromJSON(json: any): Person {
@@ -129,6 +141,8 @@ export function PersonFromJSONTyped(json: any, ignoreDiscriminator: boolean): Pe
         'active': json['active'],
         'language': !exists(json, 'language') ? undefined : json['language'],
         'startDate': !exists(json, 'startDate') ? undefined : json['startDate'],
+        'unspentVacations': json['unspentVacations'],
+        'spentVacations': json['spentVacations'],
     };
 }
 
@@ -155,6 +169,8 @@ export function PersonToJSON(value?: Person | null): any {
         'active': value.active,
         'language': value.language,
         'startDate': value.startDate,
+        'unspentVacations': value.unspentVacations,
+        'spentVacations': value.spentVacations,
     };
 }
 

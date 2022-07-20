@@ -24,7 +24,7 @@ export interface TimeEntry {
      * @type {string}
      * @memberof TimeEntry
      */
-    entryId: string;
+    id?: string;
     /**
      * TimeEntry ID in Forecast
      * @type {number}
@@ -67,6 +67,12 @@ export interface TimeEntry {
      * @memberof TimeEntry
      */
     updatedAt: Date;
+    /**
+     * Is time entry vacation or not
+     * @type {boolean}
+     * @memberof TimeEntry
+     */
+    isVacation: boolean;
 }
 
 export function TimeEntryFromJSON(json: any): TimeEntry {
@@ -79,7 +85,7 @@ export function TimeEntryFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     }
     return {
         
-        'entryId': json['entryId'],
+        'id': !exists(json, 'id') ? undefined : json['id'],
         'forecastId': json['forecastId'],
         'person': json['person'],
         'internalTime': json['internalTime'],
@@ -87,6 +93,7 @@ export function TimeEntryFromJSONTyped(json: any, ignoreDiscriminator: boolean):
         'date': (new Date(json['date'])),
         'createdAt': (new Date(json['createdAt'])),
         'updatedAt': (new Date(json['updatedAt'])),
+        'isVacation': json['isVacation'],
     };
 }
 
@@ -99,7 +106,7 @@ export function TimeEntryToJSON(value?: TimeEntry | null): any {
     }
     return {
         
-        'entryId': value.entryId,
+        'id': value.id,
         'forecastId': value.forecastId,
         'person': value.person,
         'internalTime': value.internalTime,
@@ -107,6 +114,7 @@ export function TimeEntryToJSON(value?: TimeEntry | null): any {
         'date': (value.date.toISOString().substr(0,10)),
         'createdAt': (value.createdAt.toISOString()),
         'updatedAt': (value.updatedAt.toISOString()),
+        'isVacation': value.isVacation,
     };
 }
 

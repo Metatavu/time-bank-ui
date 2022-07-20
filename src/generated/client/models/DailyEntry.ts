@@ -61,6 +61,12 @@ export interface DailyEntry {
      * @memberof DailyEntry
      */
     date: Date;
+    /**
+     * Is daily entry vacation or not
+     * @type {boolean}
+     * @memberof DailyEntry
+     */
+    isVacation: boolean;
 }
 
 export function DailyEntryFromJSON(json: any): DailyEntry {
@@ -80,6 +86,7 @@ export function DailyEntryFromJSONTyped(json: any, ignoreDiscriminator: boolean)
         'expected': json['expected'],
         'balance': json['balance'],
         'date': (new Date(json['date'])),
+        'isVacation': json['isVacation'],
     };
 }
 
@@ -99,6 +106,7 @@ export function DailyEntryToJSON(value?: DailyEntry | null): any {
         'expected': value.expected,
         'balance': value.balance,
         'date': (value.date.toISOString().substr(0,10)),
+        'isVacation': value.isVacation,
     };
 }
 
