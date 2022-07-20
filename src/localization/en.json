@@ -21,7 +21,7 @@
 
   "drawerContent": {
     "userInfo": {
-      "id": "id",
+      "id": "Id",
       "language": "Language",
       "startDate":"Start Date"
     },
@@ -37,6 +37,12 @@
     "noTimeEntries": "No time entries found for this user.",
     "overview": "Overview",
     "balance": "Total balance",
+    "vacationDays": "Vacation days of current vacation accumulation season",
+    "spentVacationDays": "Used vacation days: ",
+    "unspentVacationDays": "Unused vacation days: ",
+    "extraVacationDays": "Extra vacation days used: ",
+    "listOfVacationDays": "Marked vacation days:",
+    "noVacationDays": "No marked vacation days",
     "workTime": "Work time",
     "filterStartingDate": "Start",
     "filterEndingDate": "End",
@@ -62,6 +68,7 @@
   "errorHandling": {
     "fetchDateDataFailed": "Fetching date data failed",
     "fetchTimeDataFailed": "Fetching time data failed",
+    "fetchVacationDataFailed": "Fetching vacation data failed",
     "fetchUserDataFailed": "Fetching user data failed",
     "syncTimeDataFailed": "Synchronizing time data failed",
     "title": "Error"

@@ -89,6 +89,22 @@ export interface WorkTimeDatas {
 }
 
 /**
+ * Type for single vacation day data
+ */
+export interface VacationDayData {
+  weekNumber: number;
+  day: Date;
+}
+
+/**
+ * Type for vacation week data
+ */
+export interface VacationWeekData {
+  weekNumber: number;
+  vacationDays: VacationDayData[]
+}
+
+/**
  * Type for custom pie label
  */
 export interface CustomPieLabel {

@@ -66,7 +66,10 @@ const useAppLayoutStyles = makeStyles(theme => ({
 
   title: {
     marginLeft: theme.spacing(2),
-    color: theme.palette.text.secondary
+    color: theme.palette.text.secondary,
+    [theme.breakpoints.down(520)]: {
+      display: "none"
+    }
   },
 
   logo: {

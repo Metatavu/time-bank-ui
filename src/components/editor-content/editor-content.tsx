@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, IconButton } from "@material-ui/core";
+import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, IconButton, List, ListItem } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { DatePickerView } from "@material-ui/pickers";
 import useEditorContentStyles from "styles/editor-content/editor-content";
@@ -9,7 +9,7 @@ import Api from "api/api";
 import strings from "localization/strings";
 import theme from "theme/theme";
 import TimeUtils from "utils/time-utils";
-import { FilterScopes, DateFormats, WorkTimeData, WorkTimeTotalData } from "types/index";
+import { FilterScopes, DateFormats, WorkTimeData, WorkTimeTotalData, VacationWeekData } from "types/index";
 import { Timespan } from "generated/client";
 import TotalChart from "components/generics/total-chart/total-chart";
 import OverviewChart from "components/generics/overview-chart/overview-chart";
@@ -18,7 +18,8 @@ import moment from "moment";
 import DateRangePicker from "components/generics/date-range-picker/date-range-picker";
 import { ErrorContext } from "components/error-handler/error-handler";
 import DeleteIcon from "@material-ui/icons/Delete";
-/* import { selectAuth } from "features/auth/auth-slice"; */
+import VacationDataUtils from "utils/vacation-data-utils";
+import { selectAuth } from "features/auth/auth-slice";
 
 /**
  * Component properties
@@ -35,7 +36,7 @@ const EditorContent: React.FC<Props> = () => {
   const classes = useEditorContentStyles();
 
   const { person, personTotalTime } = useAppSelector(selectPerson);
-  /*  const { accessToken } = useAppSelector(selectAuth); */
+  const { accessToken } = useAppSelector(selectAuth);
   const [ scope, setScope ] = React.useState<FilterScopes>(FilterScopes.WEEK);
   const [ dateFormat, setDateFormat ] = React.useState<string | undefined>("dd.MM.yyyy");
   const [ datePickerView, setDatePickerView ] = React.useState<DatePickerView>("date");
@@ -46,6 +47,9 @@ const EditorContent: React.FC<Props> = () => {
   const [ isLoading, setIsLoading ] = React.useState(false);
   const [ displayedTimeData, setDisplayedTimeData ] = React.useState<WorkTimeData[] | undefined>(undefined);
   const [ displayedTotal, setDisplayedTotal ] = React.useState<WorkTimeTotalData | undefined>(undefined);
+  const [ vacationDayList, setVacationDayList ] = React.useState<VacationWeekData[]>([]);
+  const currentVacationSeasonStart = `${new Date().getFullYear()}-04-01`;
+  const currentVacationSeasonEnd = `${new Date().getFullYear() + 1}-03-31`;
   const context = React.useContext(ErrorContext);
 
   /**
@@ -203,6 +207,26 @@ const EditorContent: React.FC<Props> = () => {
   };
 
   /**
+   * load vacation data
+   */
+  const loadVacationData = async () => {
+    if (!person) {
+      return;
+    }
+
+    try {
+      const vacationEntries = await Api.getDailyEntriesApi().listDailyEntries({
+        personId: person.id,
+        before: new Date(currentVacationSeasonEnd),
+        after: new Date(currentVacationSeasonStart)
+      });
+      setVacationDayList(VacationDataUtils.vacationDaysProcess(vacationEntries));
+    } catch (error) {
+      context.setError(strings.errorHandling.fetchVacationDataFailed, error);
+    }
+  };
+
+  /**
    * update and set the time data
    */
   const updateTimeData = async () => {
@@ -219,19 +243,19 @@ const EditorContent: React.FC<Props> = () => {
   };
 
   React.useEffect(() => {
-    /*  if (!accessToken) {
+    if (!accessToken) {
       return;
-    } */
+    }
 
     initializeData();
   }, []);
 
   React.useEffect(() => {
-  /*   if (!accessToken) {
+    if (!accessToken) {
       return;
-    } */
-
+    }
     updateTimeData();
+    loadVacationData();
   }, [person, scope, startWeek, endWeek, selectedStartDate, selectedEndDate]);
 
   /**
@@ -535,12 +559,109 @@ const EditorContent: React.FC<Props> = () => {
   };
 
   /**
+  * Renders vacation days subtitle text
+  * 
+  * @param name name of subtitle text
+  * @param value value of subtitle text
+  * @param unspent if it's displaying unspent vacation days
+  * @param positiveValue if amount of unused vacation days is positive 
+  */
+  const renderVacationDaysSubtitleText = (name: string, value: number, unspent: boolean, positiveValue?: boolean) => {
+    const valueColor = positiveValue ? theme.palette.success.main : theme.palette.error.main;
+    const valueText = value;
+
+    return (
+      <>
+        <Typography
+          variant="h4"
+          style={{ marginLeft: theme.spacing(2) }}
+        >
+          { name }
+        </Typography>
+        <Typography
+          variant="h3"
+          style={{
+            color: unspent ? valueColor : undefined,
+            marginLeft: theme.spacing(1),
+            fontStyle: "italic"
+          }}
+        >
+          { Math.abs(valueText) }
+        </Typography>
+      </>
+    );
+  };
+
+  /**
+  * Renders vacation days summary
+  */
+  const renderVacationDaysSummary = () => (
+    <>
+      <Typography variant="h2">
+        { strings.editorContent.vacationDays }
+      </Typography>
+      <Box className={ classes.vacationDaysSubtitle }>
+        { renderVacationDaysSubtitleText(`${strings.editorContent.spentVacationDays}`, person!.spentVacations, false) }
+        { renderVacationDaysSubtitleText(`${person!.unspentVacations >= 0 ? strings.editorContent.unspentVacationDays : strings.editorContent.extraVacationDays}`,
+          person!.unspentVacations, true, person!.unspentVacations >= 0) }
+      </Box>
+    </>
+  );
+
+  /**
+   * Renders vacation days list per week
+   */
+  const renderVacationDaysList = () => (
+    vacationDayList?.map((entry: VacationWeekData) => {
+      return (
+        <List className={classes.vacationList}>
+          <Typography style={{ fontSize: "1.2em" }}>{ strings.editorContent.week + entry.weekNumber }</Typography>
+          {entry.vacationDays.map(oneDay => {
+            return (
+              <ListItem>{oneDay.day.toLocaleDateString("fi-FI")}</ListItem>
+            );
+          })}
+        </List>
+      );
+    })
+  );
+  
+  /**
+  * Render vacation days component 
+  */
+  const renderVacationDays = () => {
+    if (!person || !personTotalTime) {
+      return null;
+    }
+    return (
+      <Accordion className={ classes.vacationDaysAccordion }>
+        <AccordionSummary
+          expandIcon={ <ExpandMoreIcon/> }
+          aria-controls="panel1a-content"
+          className={ classes.vacationDaysSummary }
+        >
+          { renderVacationDaysSummary() }
+        </AccordionSummary>
+        <AccordionDetails className={ classes.vacationContent }>
+          <Typography variant="h4">
+            { strings.editorContent.listOfVacationDays }
+          </Typography>
+          { vacationDayList.length === 0
+            ? <Typography variant="h4">{ strings.editorContent.noVacationDays }</Typography>
+            : <Box>{ renderVacationDaysList() }</Box>
+          }
+        </AccordionDetails>
+      </Accordion>
+    );
+  };
+  /**
    * Component render
    */
   return (
     <>
       { renderFilter() }
       { renderCharts() }
+      { renderVacationDays() }
     </>
   );
 };

@@ -262,7 +262,7 @@ const ManagementScreen: React.FC = () => {
             <Pie
               cx="50%"
               cy="50%"
-              dataKey="total"
+              dataKey="balance"
               data={ workTimeData }
               label={ props => TimeUtils.convertToMinutesAndHours(props.value) }
             >

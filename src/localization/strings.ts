@@ -57,6 +57,12 @@ export interface IStrings extends LocalizedStringsMethods {
     noTimeEntries: string;
     overview: string;
     balance: string;
+    vacationDays: string;
+    spentVacationDays: string;
+    unspentVacationDays: string;
+    extraVacationDays: string;
+    listOfVacationDays: string;
+    noVacationDays: string;
     workTime: string;
     filterStartingDate: string;
     filterEndingDate: string;
@@ -88,6 +94,7 @@ export interface IStrings extends LocalizedStringsMethods {
   errorHandling: {
     fetchDateDataFailed: string;
     fetchTimeDataFailed: string;
+    fetchVacationDataFailed: string;
     fetchUserDataFailed: string;
     syncTimeDataFailed: string;
     title: string;

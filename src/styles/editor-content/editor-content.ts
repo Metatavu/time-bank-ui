@@ -67,6 +67,43 @@ const useEditorContentStyles = makeStyles(theme => ({
     marginLeft: "auto"
   },
 
+  vacationDaysSubtitle: {
+    display: "flex",
+    height: "100%",
+    alignItems: "center",
+    marginLeft: "auto"
+  },
+
+  vacationDaysAccordion: {
+    marginTop: theme.spacing(2),
+    borderRadius: "10px !important",
+    boxShadow: "0px 3px 3px -2px rgb(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0,0,0,0.14), 0px 1px 8px 0px rgb(0,0,0,0.12)"
+  },
+
+  vacationDaysSummary: {
+    display: "flex",
+    alignItems: "center",
+    padding: theme.spacing(4),
+    "&.Mui-expanded": {
+      borderBottom: "1px solid rgba(0, 0, 0, 0.2)"
+    }
+  },
+
+  vacationContent: {
+    height: "100%",
+    display: "flex",
+    alignItems: "center",
+    padding: theme.spacing(2)
+  },
+
+  vacationList: {
+    columnCount: 1,
+    columnFill: "auto",
+    height: 250,
+    marginLeft: theme.spacing(2),
+    display: "inline-block"
+  },
+
   overViewChartContainer: {
     width: "100%",
     paddingBottom: theme.spacing(2),
