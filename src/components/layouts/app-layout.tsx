@@ -13,7 +13,7 @@ import AuthUtils from "utils/auth";
 import Api from "api/api";
 import { selectPerson, setPerson } from "features/person/person-slice";
 import { Person } from "generated/client";
-import { SyncContext } from "components/sync-handler/sync-handler";
+import { SyncOrUpdateContext } from "components/sync-or-update-handler/sync-or-update-handler";
 import { ErrorContext } from "components/error-handler/error-handler";
 import GenericDialog from "components/generics/generic-dialog/generic-dialog";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -41,7 +41,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
   const { locale } = useAppSelector(selectLocale);
   const [ syncingData, setSyncingData ] = React.useState(false);
   const errorContext = React.useContext(ErrorContext);
-  const syncContext = React.useContext(SyncContext);
+  const syncOrUpdateContext = React.useContext(SyncOrUpdateContext);
   const [syncSelection, setSyncSelection] = React.useState(false);
   const [ selectedStartDate, setSelectedStartDate ] = useState<Date | null>(null);
 
@@ -55,7 +55,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
       await Api.getSynchronizeApi().synchronizeTimeEntries({
         after: selectedStartDate || undefined
       });
-      syncContext.setSynched(strings.syncHandling.syncTimeDataSuccess);
+      syncOrUpdateContext.setSyncOrUpdate(strings.syncHandling.syncTimeDataSuccess);
     } catch (error) {
       errorContext.setError(strings.errorHandling.syncTimeDataFailed, error);
     }

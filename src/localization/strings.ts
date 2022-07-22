@@ -89,6 +89,18 @@ export interface IStrings extends LocalizedStringsMethods {
   };
 
   /**
+   * Translations related to billable hour update handling
+   */
+  billableHoursHandling: {
+    title: string;
+    updateBillableHours: string;
+    billingRate: string;
+    billingPercentageError: string;
+    updateButton: string;
+    updateBillableHoursSuccess: string;
+  };
+
+  /**
    * Translations related to error handling
    */
   errorHandling: {
@@ -97,6 +109,7 @@ export interface IStrings extends LocalizedStringsMethods {
     fetchVacationDataFailed: string;
     fetchUserDataFailed: string;
     syncTimeDataFailed: string;
+    updateBillingPercentageFailed: string;
     title: string;
   }
 
@@ -127,7 +140,7 @@ export interface IStrings extends LocalizedStringsMethods {
   thursday: string;
   friday: string;
   saturday: string;
-
+  billableHours: string;
 }
 
 const strings: IStrings = new LocalizedStrings({ en: en, fi: fi });

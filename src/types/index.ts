@@ -130,8 +130,7 @@ export interface ErrorContextType {
 /**
  * Interface for synch context type
  */
-
-export interface SyncContextType {
-  sync?: string;
-  setSynched: (message: string) => void;
+export interface SyncOrUpdateContextType {
+  syncOrUpdate?: string;
+  setSyncOrUpdate: (message: string) => void;
 }

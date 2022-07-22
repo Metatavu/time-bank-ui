@@ -99,8 +99,10 @@ const useEditorContentStyles = makeStyles(theme => ({
   vacationList: {
     columnCount: 1,
     columnFill: "auto",
+    border: "1px solid #000",
     height: 250,
     marginLeft: theme.spacing(2),
+    padding: theme.spacing(1),
     display: "inline-block"
   },
 

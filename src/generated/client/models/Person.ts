@@ -115,6 +115,12 @@ export interface Person {
      * @memberof Person
      */
     spentVacations: number;
+    /**
+     * Persons minimum billable rate
+     * @type {number}
+     * @memberof Person
+     */
+    minimumBillableRate: number;
 }
 
 export function PersonFromJSON(json: any): Person {
@@ -143,6 +149,7 @@ export function PersonFromJSONTyped(json: any, ignoreDiscriminator: boolean): Pe
         'startDate': !exists(json, 'startDate') ? undefined : json['startDate'],
         'unspentVacations': json['unspentVacations'],
         'spentVacations': json['spentVacations'],
+        'minimumBillableRate': json['minimumBillableRate'],
     };
 }
 
@@ -171,6 +178,7 @@ export function PersonToJSON(value?: Person | null): any {
         'startDate': value.startDate,
         'unspentVacations': value.unspentVacations,
         'spentVacations': value.spentVacations,
+        'minimumBillableRate': value.minimumBillableRate,
     };
 }
 

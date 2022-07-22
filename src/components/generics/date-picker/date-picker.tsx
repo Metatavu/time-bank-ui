@@ -19,7 +19,7 @@ interface Props {
 }
 
 /**
- * Overview chart component
+ * Generic date picker component
  */
 const GenericDatePicker: React.FC<Props> = ({
   dateFormat,

@@ -35,6 +35,11 @@ export interface ListPersonsRequest {
     active?: boolean;
 }
 
+export interface UpdatePersonRequest {
+    person: Person;
+    personId: number;
+}
+
 /**
  * 
  */
@@ -121,6 +126,53 @@ export class PersonsApi extends runtime.BaseAPI {
      */
     async listPersons(requestParameters: ListPersonsRequest): Promise<Array<Person>> {
         const response = await this.listPersonsRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * Updates Person attributes in Keycloak.
+     * Updates Person attributes.
+     */
+    async updatePersonRaw(requestParameters: UpdatePersonRequest): Promise<runtime.ApiResponse<Person>> {
+        if (requestParameters.person === null || requestParameters.person === undefined) {
+            throw new runtime.RequiredError('person','Required parameter requestParameters.person was null or undefined when calling updatePerson.');
+        }
+
+        if (requestParameters.personId === null || requestParameters.personId === undefined) {
+            throw new runtime.RequiredError('personId','Required parameter requestParameters.personId was null or undefined when calling updatePerson.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = typeof token === 'function' ? token("bearerAuth", []) : token;
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/v1/persons/{personId}`.replace(`{${"personId"}}`, encodeURIComponent(String(requestParameters.personId))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PersonToJSON(requestParameters.person),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PersonFromJSON(jsonValue));
+    }
+
+    /**
+     * Updates Person attributes in Keycloak.
+     * Updates Person attributes.
+     */
+    async updatePerson(requestParameters: UpdatePersonRequest): Promise<Person> {
+        const response = await this.updatePersonRaw(requestParameters);
         return await response.value();
     }
 

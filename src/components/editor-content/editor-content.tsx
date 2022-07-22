@@ -245,7 +245,7 @@ const EditorContent: React.FC<Props> = () => {
   React.useEffect(() => {
     if (!accessToken) {
       return;
-    }
+    } 
 
     initializeData();
   }, []);

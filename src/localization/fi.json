@@ -64,6 +64,15 @@
     "searchPlaceholder": "Hae käyttäjää..",
     "noUser": "Ei näytettävää käyttäjää."
   },
+
+  "billableHoursHandling": {
+    "title": "Päivitä henkilön min. laskutusastetta",
+    "updateBillableHours": "Syötä uusi laskutusaste:",
+    "billingRate": "Laskutusaste",
+    "billingPercentageError": "Laskutusaste oltava 0-100%",
+    "updateButton": "Päivitä",
+    "updateBillableHoursSuccess": "Laskutusasteen päivitys onnistui"
+  },
   
   "errorHandling": {
     "fetchDateDataFailed": "Tietojen haku päivämäärän perusteella epäonnistui",
@@ -71,6 +80,7 @@
     "fetchUserDataFailed": "Käyttäjätietojen haku epäonnistui",
     "fetchVacationDataFailed": "Lomatietojen haku epäonnistui",
     "syncTimeDataFailed": "Aikatietojen synkronointi epäonnistui",
+    "updateBillingPercentageFailed": "Laskutusasteen päivitys epäonnistui",
     "title": "Error"
   },
 
@@ -96,6 +106,7 @@
   "wednesday": "Keskiviikko",
   "thursday": "Torstai",
   "friday": "Perjantai",
-  "saturday": "Lauantai"
+  "saturday": "Lauantai",
+  "billableHours": "Minimi laskutusaste"
 
 }

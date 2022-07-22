@@ -7,19 +7,19 @@ import App from "./components/App";
 import reportWebVitals from "./reportWebVitals";
 import theme from "theme/theme";
 import ErrorHandler from "components/error-handler/error-handler";
-import SyncHandler from "components/sync-handler/sync-handler";
+import SyncOrUpdateHandler from "components/sync-or-update-handler/sync-or-update-handler";
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={ store }>
       <ThemeProvider theme={ responsiveFontSizes(theme) }>
         <CssBaseline/>
-        <SyncHandler>
+        <SyncOrUpdateHandler>
           <ErrorHandler>
 
             <App/>
           </ErrorHandler>
-        </SyncHandler>
+        </SyncOrUpdateHandler>
       </ThemeProvider>
     </Provider>
   </React.StrictMode>,
