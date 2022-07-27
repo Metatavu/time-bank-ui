@@ -78,9 +78,9 @@ const DrawerContent: React.FC<Props> = () => {
   };
 
   React.useEffect(() => {
-  /*   if (!accessToken) {
+    if (!accessToken) {
       return;
-    } */
+    }
 
     fetchPersonData();
   }, []);
