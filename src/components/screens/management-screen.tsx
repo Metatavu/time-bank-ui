@@ -123,7 +123,7 @@ const ManagementScreen: React.FC = () => {
       };
 
       try {
-        await Api.getPersonsApi().updatePerson({
+        await Api.getPersonsApi(accessToken?.access_token).updatePerson({
           personId: person.id,
           person: updatedPerson
         });
