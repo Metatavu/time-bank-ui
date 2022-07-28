@@ -1,4 +1,3 @@
 [submodule "time-bank-api-spec"]
 	path = time-bank-api-spec
 	url = git@github.com:Metatavu/time-bank-api-spec.git
-	branch = feature-2-rebuild

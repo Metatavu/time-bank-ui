@@ -77,7 +77,7 @@ const EditorContent: React.FC<Props> = () => {
     }
 
     try {
-      const dailyEntries = await Api.getDailyEntriesApi().listDailyEntries({
+      const dailyEntries = await Api.getDailyEntriesApi(accessToken?.access_token).listDailyEntries({
         personId: person.id,
         before: selectedEndDate || undefined,
         after: selectedStartDate
@@ -103,7 +103,7 @@ const EditorContent: React.FC<Props> = () => {
     }
 
     try {
-      const weekEntries = await Api.getPersonsApi().listPersonTotalTime({
+      const weekEntries = await Api.getPersonsApi(accessToken?.access_token).listPersonTotalTime({
         personId: person.id,
         timespan: Timespan.WEEK
       });
@@ -141,7 +141,7 @@ const EditorContent: React.FC<Props> = () => {
     }
 
     try {
-      const monthEntries = await Api.getPersonsApi().listPersonTotalTime({
+      const monthEntries = await Api.getPersonsApi(accessToken?.access_token).listPersonTotalTime({
         personId: person.id,
         timespan: Timespan.MONTH
       });
@@ -178,7 +178,7 @@ const EditorContent: React.FC<Props> = () => {
     }
 
     try {
-      const yearEntries = await Api.getPersonsApi().listPersonTotalTime({
+      const yearEntries = await Api.getPersonsApi(accessToken?.access_token).listPersonTotalTime({
         personId: person.id,
         timespan: Timespan.YEAR
       });
@@ -215,7 +215,7 @@ const EditorContent: React.FC<Props> = () => {
     }
 
     try {
-      const vacationEntries = await Api.getDailyEntriesApi().listDailyEntries({
+      const vacationEntries = await Api.getDailyEntriesApi(accessToken?.access_token).listDailyEntries({
         personId: person.id,
         before: new Date(currentVacationSeasonEnd),
         after: new Date(currentVacationSeasonStart)
@@ -253,6 +253,7 @@ const EditorContent: React.FC<Props> = () => {
     if (!accessToken) {
       return;
     }
+    
     updateTimeData();
     loadVacationData();
   }, [person, scope, startWeek, endWeek, selectedStartDate, selectedEndDate]);

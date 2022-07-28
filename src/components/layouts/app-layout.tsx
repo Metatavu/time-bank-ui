@@ -52,9 +52,10 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
     setSyncingData(true);
     setSyncSelection(false);
     try {
-      await Api.getSynchronizeApi().synchronizeTimeEntries({
+      await Api.getSynchronizeApi(accessToken?.access_token).synchronizeTimeEntries({
         after: selectedStartDate || undefined
       });
+      
       syncOrUpdateContext.setSyncOrUpdate(strings.syncHandling.syncTimeDataSuccess);
     } catch (error) {
       errorContext.setError(strings.errorHandling.syncTimeDataFailed, error);
