@@ -8,39 +8,44 @@ export default class Api {
   /**
    * Gets api configuration
    *
+   * @param token accessToken
    * @returns new configuration
    */
-  private static getConfiguration() {
+  private static getConfiguration(token: string | undefined) {
     return new Configuration({
-      basePath: process.env.REACT_APP_API_BASE_URL
+      basePath: process.env.REACT_APP_API_BASE_URL,
+      accessToken: token
     });
   }
 
   /**
-   * Gets initialized Knots API
+   * Gets initialized DailyEntries API
    * 
-   * @returns initialized Knots API
+   * @param token accessToken
+   * @returns initialized DailyEntries API
    */
-  public static getDailyEntriesApi() {
-    return new DailyEntriesApi(Api.getConfiguration());
+  public static getDailyEntriesApi(token: string | undefined) {
+    return new DailyEntriesApi(Api.getConfiguration(token));
   }
 
   /**
-   * Gets initialized Knots API
+   * Gets initialized Persons API
    * 
-   * @returns initialized Knots API
+   * @param token accessToken
+   * @returns initialized Persons API
    */
-  public static getPersonsApi() {
-    return new PersonsApi(Api.getConfiguration());
+  public static getPersonsApi(token: string | undefined) {
+    return new PersonsApi(Api.getConfiguration(token));
   }
 
   /**
-   * Gets initialized Knots API
+   * Gets initialized Synchronize API
    * 
-   * @returns initialized Knots API
+   * @param token accessToken
+   * @returns initialized Synchronize API
    */
-  public static getSynchronizeApi() {
-    return new SynchronizeApi(Api.getConfiguration());
+  public static getSynchronizeApi(token: string | undefined) {
+    return new SynchronizeApi(Api.getConfiguration(token));
   }
 
 }

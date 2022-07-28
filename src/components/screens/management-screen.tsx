@@ -47,9 +47,9 @@ const ManagementScreen: React.FC = () => {
     let totalTime: any[] = [];
 
     try {
-      totalTime = await Api.getPersonsApi().listPersonTotalTime({
+      totalTime = await Api.getPersonsApi(accessToken?.access_token).listPersonTotalTime({
         personId: person.person.id,
-        timespan: Timespan.ALLTIME
+        timespan: Timespan.ALL_TIME
       });
     } catch (error) {
       context.setError(strings.errorHandling.fetchTimeDataFailed, error);
@@ -68,7 +68,7 @@ const ManagementScreen: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const persons = await Api.getPersonsApi().listPersons({
+      const persons = await Api.getPersonsApi(accessToken?.access_token).listPersons({
         active: true
       });
       const personTotalsTimeList: PersonWithTotalTime[] = persons.map(_person => ({ person: _person }));
