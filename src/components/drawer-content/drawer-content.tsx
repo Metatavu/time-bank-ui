@@ -48,7 +48,7 @@ const DrawerContent: React.FC<Props> = () => {
    */
   const fetchPersonData = async () => {
     try {
-      const fetchedPersons = await Api.getPersonsApi().listPersons({
+      const fetchedPersons = await Api.getPersonsApi(accessToken?.access_token).listPersons({
         active: true
       });
       setPersons(fetchedPersons);
@@ -63,10 +63,10 @@ const DrawerContent: React.FC<Props> = () => {
   const fetchWorkTimeData = async () => {
     if (person && person.id) {
       try {
-        const fetchedPersonTotalTime = await Api.getPersonsApi()
+        const fetchedPersonTotalTime = await Api.getPersonsApi(accessToken?.access_token)
           .listPersonTotalTime({
             personId: person.id,
-            timespan: Timespan.ALLTIME
+            timespan: Timespan.ALL_TIME
           });
         dispatch(setPersonTotalTime(fetchedPersonTotalTime[0]));
         return;
