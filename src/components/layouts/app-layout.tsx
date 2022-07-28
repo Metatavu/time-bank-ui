@@ -34,6 +34,7 @@ interface Props {
  * @param props component properties
  */
 const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children, managementScreen }) => {
+  const yesterday = new Date().setDate(new Date().getDate() - 1);
   const classes = useAppLayoutStyles();
   const dispatch = useAppDispatch();
   const { person } = useAppSelector(selectPerson);
@@ -43,7 +44,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
   const errorContext = React.useContext(ErrorContext);
   const syncOrUpdateContext = React.useContext(SyncOrUpdateContext);
   const [syncSelection, setSyncSelection] = React.useState(false);
-  const [ selectedStartDate, setSelectedStartDate ] = useState<Date | null>(null);
+  const [ selectedStartDate, setSelectedStartDate ] = useState<Date | null>(new Date(yesterday));
 
   /**
    * Event handler for sync button click
@@ -72,6 +73,10 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
    * Handler for sync-date selection dialog
    */
   const handleClickOpen = () => {
+    if (!selectedStartDate) {
+      setSelectedStartDate(new Date(yesterday));
+    }
+    
     setSyncSelection(true);
   };
 
@@ -125,6 +130,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
       >
         <Box className={ classes.datePickers }>
           <GenericDatePicker
+            dateFormat="dd.MM.yyyy"
             selectedStartDate={ selectedStartDate }
             onStartDateChange={ setSelectedStartDate }
           />
@@ -141,10 +147,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
           color="secondary"
           variant="contained"
         >
-          { selectedStartDate !== null ? (
-            strings.syncHandling.syncStartDate + selectedStartDate.toLocaleDateString("fi-FI")) : (
-            strings.syncHandling.syncAll
-          ) }
+          { strings.syncHandling.sync }
         </Button>
       </GenericDialog>
     );

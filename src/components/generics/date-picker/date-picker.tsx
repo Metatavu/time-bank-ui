@@ -14,7 +14,7 @@ import useDatePickerStyles from "styles/generics/date-picker/date-picker";
  */
 interface Props {
   dateFormat?: string;
-  selectedStartDate: (Date | null);
+  selectedStartDate: Date | null;
   onStartDateChange: (date: Date | null) => void;
 }
 
@@ -49,11 +49,13 @@ const GenericDatePicker: React.FC<Props> = ({
     return (
       <MuiPickersUtilsProvider locale={ pickerLocale } utils={ DateFnsUtils } >
         <KeyboardDatePicker
+          disableFuture
           inputVariant="standard"
           variant="inline"
           format={ dateFormat }
           maxDate={ todayDate }
           label={ syncStart }
+          defaultValue={ selectedStartDate }
           value={ selectedStartDate }
           onChange={ onStartDateChange }
           className={ classes.datePicker }

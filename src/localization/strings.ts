@@ -119,10 +119,9 @@ export interface IStrings extends LocalizedStringsMethods {
 
   syncHandling: {
     syncTimeDataSuccess: string;
-    syncAll: string;
+    sync: string;
     title: string;
     syncStart: string;
-    syncStartDate: string;
   }
 
   startDate: string;

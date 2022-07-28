@@ -13,16 +13,16 @@ export const SyncOrUpdateContext = React.createContext<SyncOrUpdateContextType>(
 });
 
 /**
- * Provider for synch and update context
+ * Provider for sync and update context
  * 
  * @param children children of the component
- * @returns SynchOrUpdateProvider component
+ * @returns SyncOrUpdateProvider component
  */
 const SyncOrUpdateHandler: React.FC = ({ children }) => {
   const [ syncOrUpdate, setSyncOrUpdate ] = useState<string>();
 
   /**
-   * Handles synch message 
+   * Handles sync message 
    *
    * @param message message on successful synchronization
    */
@@ -37,7 +37,7 @@ const SyncOrUpdateHandler: React.FC = ({ children }) => {
   };
 
   /**
-   * Renders synch snackbar
+   * Renders sync snackbar
    */
   const renderSyncSnackbar = () => {
     return (

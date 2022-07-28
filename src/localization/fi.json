@@ -85,10 +85,9 @@
   },
 
   "syncHandling": {
-    "syncTimeDataSuccess": "Aikatietojen synkronointi onnistui",
-    "syncAll": "Synkronoi kaikki aikakirjaukset",
+    "syncTimeDataSuccess": "Aikakirjauksien synkronointi onnistui",
+    "sync": "Synkronoi aikakirjaukset",
     "syncStart": "Synkronoi valitusta päivästä",
-    "syncStartDate": "Aloita synkronointi päivästä: ",
     "title": "Synkronointi"
   },
 

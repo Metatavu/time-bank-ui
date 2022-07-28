@@ -4,7 +4,7 @@
     "logo": "Site logo",
     "managementLink": "Management",
     "logout": "Log out",
-    "syncData": "Syncronizing",
+    "syncData": "Synchronization",
     "syncDataLoading": "Synchronizing data, please be patient."
   },
   
@@ -85,11 +85,10 @@
   },
 
   "syncHandling": {
-    "syncTimeDataSuccess": "Timedata was successfully synchronized",
-    "syncAll": "Synchronize all time data",
+    "syncTimeDataSuccess": "Time entries were successfully synchronized",
+    "sync": "Synchronize time entries",
     "syncStart": "Synchronize from given date",
-    "syncStartDate": "Start syncing from: ",
-    "title": "Syncronizing"
+    "title": "Synchronization"
   },
 
   "startDate": "Start Date",
