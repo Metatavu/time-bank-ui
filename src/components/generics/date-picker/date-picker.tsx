@@ -49,7 +49,9 @@ const GenericDatePicker: React.FC<Props> = ({
     return (
       <MuiPickersUtilsProvider locale={ pickerLocale } utils={ DateFnsUtils } >
         <KeyboardDatePicker
+          autoOk
           disableFuture
+          minDate="2021-07-31"
           inputVariant="standard"
           variant="inline"
           format={ dateFormat }

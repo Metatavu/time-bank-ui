@@ -76,7 +76,10 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
         >
           { selectedData.name }
         </Typography>
-        { selectedData.project !== undefined && renderCustomizedTooltipRow(strings.project, selectedData.project as number, theme.palette.success.main) }
+        {/* eslint-disable */}
+        { selectedData.billableProject !== undefined && renderCustomizedTooltipRow(strings.billableProject, selectedData.billableProject as number, theme.palette.success.main) }
+        { selectedData.nonBillableProject !== undefined && renderCustomizedTooltipRow(strings.nonBillableProject, selectedData.nonBillableProject as number, theme.palette.success.main) }
+        {/* eslint-enable */}
         { selectedData.internal !== undefined && renderCustomizedTooltipRow(strings.internal, selectedData.internal as number, theme.palette.warning.main) }
         { selectedData.expected !== undefined && renderCustomizedTooltipRow(strings.expected, selectedData.expected as number, theme.palette.info.main) }
       </Box>
@@ -90,7 +93,7 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
     const preprocessedWorkTimeData = [
       {
         name: strings.logged,
-        project: displayedData[0].project,
+        project: displayedData[0].billableProject,
         internal: displayedData[0].internal
       },
       {
@@ -114,7 +117,8 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
           <YAxis type="category" dataKey="name"/>
           <Tooltip content={ renderCustomizedTooltip }/>
           <Legend wrapperStyle={{ position: "relative" }}/>
-          <Bar dataKey="project" name={ strings.project } barSize={ 60 } stackId="a" fill={ theme.palette.success.main }/>
+          <Bar dataKey="project" name={ strings.billableProject } barSize={ 60 } stackId="a" fill={ theme.palette.success.main }/>
+          <Bar dataKey="nonBillableProject" name={ strings.nonBillableProject } barSize={ 60 } stackId="a" fill={ theme.palette.success.light }/>
           <Bar dataKey="internal" name={ strings.internal } barSize={ 60 } stackId="a" fill={ theme.palette.warning.main }/>
           <Bar dataKey="expected" name={ strings.expected } barSize={ 60 } stackId="a" fill={ theme.palette.info.main }/>
         </BarChart>
@@ -142,7 +146,8 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
           <YAxis width={ 100 } tickFormatter={ value => TimeUtils.convertToMinutesAndHours(value as number) }/>
           <Tooltip content={ renderCustomizedTooltip }/>
           <Legend wrapperStyle={{ position: "relative" }}/>
-          <Bar dataKey="project" name={ strings.project } stackId="a" fill={ theme.palette.success.main }/>
+          <Bar dataKey="billableProject" name={ strings.billableProject } stackId="a" fill={ theme.palette.success.main }/>
+          <Bar dataKey="nonBillableProject" name={ strings.nonBillableProject } stackId="a" fill={ theme.palette.success.light }/>
           <Bar dataKey="internal" name={ strings.internal } stackId="a" fill={ theme.palette.warning.main }/>
           <Bar dataKey="expected" name={ strings.expected } fill={ theme.palette.info.main }/>
         </BarChart>

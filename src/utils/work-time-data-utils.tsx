@@ -27,7 +27,8 @@ export default class WorkTimeDataUtils {
         workTimeData.push({
           name: moment(entry.date).format("YYYY-MM-DD"),
           expected: entry.expected,
-          project: entry.projectTime,
+          billableProject: entry.billableProjectTime,
+          nonBillableProject: entry.nonBillableProjectTime,
           internal: entry.internalTime
         });
         workTimeTotalData.balance += entry.balance;
@@ -60,7 +61,8 @@ export default class WorkTimeDataUtils {
         workTimeData.push({
           name: WorkTimeDataUtils.getTimeDataName(entry, scope),
           expected: entry.expected,
-          project: entry.projectTime,
+          billableProject: entry.billableProjectTime,
+          nonBillableProject: entry.nonBillableProjectTime,
           internal: entry.internalTime
         });
         workTimeTotalData.balance += entry.balance;

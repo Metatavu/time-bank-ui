@@ -53,7 +53,8 @@ export enum DateFormats {
  * Enum for work time category
  */
 export enum WorkTimeCategory {
-  PROJECT = "Project",
+  BILLABLE_PROJECT = "Billable Project",
+  NON_BILLABLE_PROJECT = "Non Billable Project",
   INTERNAL = "Internal",
   EXPECTED = "Expected",
   BALANCE = "Balance",
@@ -76,7 +77,8 @@ export interface WorkTimeTotalData {
 export interface WorkTimeData {
   name: string;
   expected: number;
-  project: number;
+  billableProject: number;
+  nonBillableProject: number;
   internal: number;
 }
 

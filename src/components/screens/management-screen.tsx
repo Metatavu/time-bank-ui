@@ -255,7 +255,8 @@ const ManagementScreen: React.FC = () => {
     }
 
     const sectionName = {
-      [WorkTimeCategory.PROJECT]: strings.project,
+      [WorkTimeCategory.BILLABLE_PROJECT]: strings.billableProject,
+      [WorkTimeCategory.NON_BILLABLE_PROJECT]: strings.nonBillableProject,
       [WorkTimeCategory.INTERNAL]: strings.internal
     }[selectedData.name];
 
@@ -332,7 +333,8 @@ const ManagementScreen: React.FC = () => {
     const { person, personTotalTime } = selectedPersonWithTotalTime;
 
     const workTimeData: WorkTimeTotalData[] = [
-      { name: WorkTimeCategory.PROJECT, balance: personTotalTime.projectTime },
+      { name: WorkTimeCategory.BILLABLE_PROJECT, balance: personTotalTime.billableProjectTime },
+      { name: WorkTimeCategory.NON_BILLABLE_PROJECT, balance: personTotalTime.nonBillableProjectTime },
       { name: WorkTimeCategory.INTERNAL, balance: personTotalTime.internalTime }
     ];
 

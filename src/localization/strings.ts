@@ -130,7 +130,8 @@ export interface IStrings extends LocalizedStringsMethods {
   expected: string;
   initialTime: string;
   balance: string;
-  project: string;
+  billableProject: string;
+  nonBillableProject: string;
   internal: string;
   sunday: string;
   monday: string;
