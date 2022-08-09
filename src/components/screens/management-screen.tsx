@@ -2,7 +2,7 @@ import React from "react";
 import AppLayout from "../layouts/app-layout";
 import useManagementScreenStyles from "styles/screens/management-screen";
 import { Toolbar, Box, CircularProgress, Paper, Typography, Divider, Button, TextField, Tooltip, Grid, Card } from "@material-ui/core";
-import { PieChart, Pie, Cell, ResponsiveContainer, TooltipProps, Tooltip as RechartTooltip } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, TooltipProps, Tooltip as RechartTooltip, Legend } from "recharts";
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 import { useAppDispatch, useAppSelector } from "app/hooks";
 import Api from "api/api";
@@ -323,7 +323,7 @@ const ManagementScreen: React.FC = () => {
   /**
    * Renders piechart
    */
-  const renderPieChart = (personWithTotalTime: PersonWithTotalTime) => {
+  const renderPieChart = (personWithTotalTime: PersonWithTotalTime, legend: boolean) => {
     const { person, personTotalTime } = personWithTotalTime;
 
     if (!person || !personTotalTime) {
@@ -352,6 +352,7 @@ const ManagementScreen: React.FC = () => {
               <Cell fill={ COLORS[index % COLORS.length] }/>
             )) }
           </Pie>
+          { legend ? <Legend wrapperStyle={{ position: "relative" }}/> : null }
           <RechartTooltip content={ renderCustomizedTooltip }/>
         </PieChart>
       </ResponsiveContainer>
@@ -387,7 +388,7 @@ const ManagementScreen: React.FC = () => {
           { renderExpectedWorkRow(`${strings.sunday}:`, TimeUtils.convertToMinutesAndHours(person.sunday)) }
           { renderExpectedBillableHours(`${strings.billableHours}:`, person.minimumBillableRate.toString()) }
         </Box>
-        { renderPieChart(selectedPersonWithTotalTime) }
+        { renderPieChart(selectedPersonWithTotalTime, true) }
         <Box className={ classes.personRedirect }>
           <Divider/>
           <Box className={ classes.personRedirectBox }>
@@ -445,7 +446,7 @@ const ManagementScreen: React.FC = () => {
             >
               { `${moment(person.startDate).format("DD.MM.YYYY")} -` }
             </Typography>
-            { renderPieChart(personsTotalTimeEntry) }
+            { renderPieChart(personsTotalTimeEntry, false) }
           </Box>
           <Box className={ classes.personEntrySubtitle } >
             <Tooltip
