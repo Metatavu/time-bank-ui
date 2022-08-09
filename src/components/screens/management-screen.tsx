@@ -1,7 +1,7 @@
 import React from "react";
 import AppLayout from "../layouts/app-layout";
 import useManagementScreenStyles from "styles/screens/management-screen";
-import { Toolbar, Box, CircularProgress, Paper, Typography, List, ListItem, Divider, Button, TextField, Tooltip } from "@material-ui/core";
+import { Toolbar, Box, CircularProgress, Paper, Typography, Divider, Button, TextField, Tooltip, Grid, Card } from "@material-ui/core";
 import { PieChart, Pie, Cell, ResponsiveContainer, TooltipProps, Tooltip as RechartTooltip } from "recharts";
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 import { useAppDispatch, useAppSelector } from "app/hooks";
@@ -24,6 +24,7 @@ import { Create } from "@material-ui/icons";
 import GenericDialog from "components/generics/generic-dialog/generic-dialog";
 import { SyncOrUpdateContext } from "components/sync-or-update-handler/sync-or-update-handler";
 import AuthUtils from "utils/auth";
+import CloseIcon from "@material-ui/icons/Close";
 
 /**
  * Management screen screen component
@@ -102,33 +103,23 @@ const ManagementScreen: React.FC = () => {
     if (newBillablePercentage >= 0 && newBillablePercentage <= 100) {
       const { person } = selectedPersonWithTotalTime;
       setBillableHoursUpdate(false);
-      const updatedPerson : Person = {
-        id: person.id,
-        firstName: person.firstName,
-        lastName: person.lastName,
-        email: person.email,
-        monday: person.monday,
-        tuesday: person.tuesday,
-        wednesday: person.wednesday,
-        thursday: person.thursday,
-        friday: person.friday,
-        saturday: person.saturday,
-        sunday: person.sunday,
-        active: person.active,
-        unspentVacations: person.unspentVacations,
-        spentVacations: person.spentVacations,
-        minimumBillableRate: newBillablePercentage,
-        language: person.language,
-        startDate: person.startDate
-      };
 
       try {
-        await Api.getPersonsApi(accessToken?.access_token).updatePerson({
-          personId: person.id,
-          person: updatedPerson
-        });
+        const updatedPerson: PersonWithTotalTime = {
+          person: await Api.getPersonsApi(accessToken?.access_token).updatePerson({
+            personId: person.id,
+            person: { ...person, minimumBillableRate: newBillablePercentage }
+          }),
+          personTotalTime: selectedPersonWithTotalTime.personTotalTime
+        };
         syncOrUpdateContext.setSyncOrUpdate(strings.billableHoursHandling.updateBillableHoursSuccess);
-        fetchData();
+        const personIndex = personsTotalTime.findIndex(_person => _person.person.id === person.id);
+
+        setPersonsTotalTime([
+          ...personsTotalTime,
+          personsTotalTime[personIndex] = updatedPerson
+        ]);
+        setSelectedPersonWithTotalTime(updatedPerson);
       } catch (error) {
         context.setError(strings.errorHandling.updateBillingPercentageFailed, error);
       }
@@ -186,6 +177,13 @@ const ManagementScreen: React.FC = () => {
     const newValue = event.target.value;
     const newValueNumber = Number(newValue);
     setNewBillablePercentage(newValueNumber);
+  };
+
+  /**
+   * Person detail close icon click handler
+   */
+  const handlePersonCloseClick = () => {
+    setSelectedPersonWithTotalTime(undefined);
   };
 
   /**
@@ -312,15 +310,53 @@ const ManagementScreen: React.FC = () => {
         style={{ color: color }}
         className={ classes.billableHours }
       >
+        <Button
+          onClick={ handleClickOpen }
+        >
+          <Create color="primary"/>
+        </Button>
         { `${value} %` }
       </Typography>
-      <Button
-        onClick={ handleClickOpen }
-      >
-        <Create color="primary"/>
-      </Button>
     </Box>
   );
+
+  /**
+   * Renders piechart
+   */
+  const renderPieChart = (personWithTotalTime: PersonWithTotalTime) => {
+    const { person, personTotalTime } = personWithTotalTime;
+
+    if (!person || !personTotalTime) {
+      return null;
+    }
+
+    const workTimeData: WorkTimeTotalData[] = [
+      { name: WorkTimeCategory.BILLABLE_PROJECT, balance: personTotalTime.billableProjectTime },
+      { name: WorkTimeCategory.NON_BILLABLE_PROJECT, balance: personTotalTime.nonBillableProjectTime },
+      { name: WorkTimeCategory.INTERNAL, balance: personTotalTime.internalTime }
+    ];
+
+    const COLORS = [ theme.palette.success.main, theme.palette.warning.main ];
+
+    return (
+      <ResponsiveContainer className={ classes.pieChartContainer }>
+        <PieChart>
+          <Pie
+            cx="50%"
+            cy="50%"
+            dataKey="balance"
+            data={ workTimeData }
+            label={ props => TimeUtils.convertToMinutesAndHours(props.value) }
+          >
+            { workTimeData.map((entry, index) => (
+              <Cell fill={ COLORS[index % COLORS.length] }/>
+            )) }
+          </Pie>
+          <RechartTooltip content={ renderCustomizedTooltip }/>
+        </PieChart>
+      </ResponsiveContainer>
+    );
+  };
 
   /**
    * Renders the person detail 
@@ -330,15 +366,7 @@ const ManagementScreen: React.FC = () => {
       return null;
     }
 
-    const { person, personTotalTime } = selectedPersonWithTotalTime;
-
-    const workTimeData: WorkTimeTotalData[] = [
-      { name: WorkTimeCategory.BILLABLE_PROJECT, balance: personTotalTime.billableProjectTime },
-      { name: WorkTimeCategory.NON_BILLABLE_PROJECT, balance: personTotalTime.nonBillableProjectTime },
-      { name: WorkTimeCategory.INTERNAL, balance: personTotalTime.internalTime }
-    ];
-
-    const COLORS = [ theme.palette.success.main, theme.palette.warning.main ];
+    const { person } = selectedPersonWithTotalTime;
 
     return (
       <Paper className={ classes.redirectPersonDetailPaper }>
@@ -359,33 +387,26 @@ const ManagementScreen: React.FC = () => {
           { renderExpectedWorkRow(`${strings.sunday}:`, TimeUtils.convertToMinutesAndHours(person.sunday)) }
           { renderExpectedBillableHours(`${strings.billableHours}:`, person.minimumBillableRate.toString()) }
         </Box>
-        <ResponsiveContainer className={ classes.pieChartContainer }>
-          <PieChart>
-            <Pie
-              cx="50%"
-              cy="50%"
-              dataKey="balance"
-              data={ workTimeData }
-              label={ props => TimeUtils.convertToMinutesAndHours(props.value) }
-            >
-              { workTimeData.map((entry, index) => (
-                <Cell fill={ COLORS[index % COLORS.length] }/>
-              )) }
-            </Pie>
-            <RechartTooltip content={ renderCustomizedTooltip }/>
-          </PieChart>
-        </ResponsiveContainer>
+        { renderPieChart(selectedPersonWithTotalTime) }
         <Box className={ classes.personRedirect }>
           <Divider/>
-          <Button
-            onClick={ () => handlePersonRedirectClick(person) }
-            className={ classes.personRedirectButton }
-          >
-            <Typography style={{ fontWeight: 600 }}>
-              { strings.managementScreen.seeMore }
-            </Typography>
-            <KeyboardArrowRightIcon/>
-          </Button>
+          <Box className={ classes.personRedirectBox }>
+            <Button
+              onClick={ () => handlePersonCloseClick() }
+              className={ classes.personCloseButton }
+            >
+              <CloseIcon/>
+            </Button>
+            <Button
+              onClick={ () => handlePersonRedirectClick(person) }
+              className={ classes.personRedirectButton }
+            >
+              <Typography style={{ fontWeight: 600 }}>
+                { strings.managementScreen.seeMore }
+              </Typography>
+              <KeyboardArrowRightIcon/>
+            </Button>
+          </Box>
         </Box>
       </Paper>
     );
@@ -407,15 +428,13 @@ const ManagementScreen: React.FC = () => {
     const loggedTime = TimeUtils.convertToHours(personTotalTime.logged);
 
     return (
-      <ListItem
-        button
-        disableRipple
-        disableTouchRipple
-        selected={ selectedPersonWithTotalTime?.person.id === person.id }
+      <Grid
+        item
+        lg={3}
         onClick={ handleListItemClick(personsTotalTimeEntry) }
         className={ classes.personListEntry }
       >
-        <Paper className={ classes.personEntry }>
+        <Card className={ classes.personEntry }>
           <Box className={ classes.userInfoContainer }>
             <Typography variant="h2">
               { `${person.firstName} ${person.lastName}` }
@@ -424,8 +443,9 @@ const ManagementScreen: React.FC = () => {
               variant="h4"
               className={ classes.personEntryDate }
             >
-              { `${moment(person.startDate).format("DD.MM.YYYY")}-` }
+              { `${moment(person.startDate).format("DD.MM.YYYY")} -` }
             </Typography>
+            { renderPieChart(personsTotalTimeEntry) }
           </Box>
           <Box className={ classes.personEntrySubtitle } >
             <Tooltip
@@ -441,8 +461,8 @@ const ManagementScreen: React.FC = () => {
               </Typography>
             </Tooltip>
           </Box>
-        </Paper>
-      </ListItem>
+        </Card>
+      </Grid>
     );
   };
 
@@ -468,13 +488,7 @@ const ManagementScreen: React.FC = () => {
         <Box className={classes.updateBillableHoursContent}>
           <Box>
             <Typography variant="h5">
-              { `${person.firstName} ${person.lastName} ${person.id}` }
-            </Typography>
-            <Typography variant="h6" style={{ color: "rgba(0, 0, 0, 0.6)" }}>
-              { person.email }
-            </Typography>
-            <Typography>
-              {`${strings.billableHours}: ${person.minimumBillableRate} %`}
+              { `${person.firstName} ${person.lastName}` }
             </Typography>
           </Box>
           <Box
@@ -493,7 +507,7 @@ const ManagementScreen: React.FC = () => {
               }}
               label={strings.billableHoursHandling.billingRate}
               type="number"
-              defaultValue={newBillablePercentage}
+              defaultValue={person.minimumBillableRate}
               onChange={handleChange}
             />
           </Box>
@@ -513,9 +527,9 @@ const ManagementScreen: React.FC = () => {
    * Renders bottom padding 
    */
   const renderBottomPadding = () => (
-    <ListItem>
+    <Grid item>
       <Box style={{ height: theme.spacing(14) }}/>
-    </ListItem>
+    </Grid>
   );
 
   /**
@@ -524,19 +538,28 @@ const ManagementScreen: React.FC = () => {
   const renderTimeList = () => {
     if (displayedPersonsTotalTime.length === 0) {
       return (
-        <List className={ classes.timeListContainer }>
-          <Typography variant="h4">
-            { strings.managementScreen.noUser }
-          </Typography>
-        </List>
+        <Grid container className={ classes.timeListContainer }>
+          <Grid
+            item
+            sm={12}
+          >
+            <Typography variant="h4">
+              { strings.managementScreen.noUser }
+            </Typography>
+          </Grid>
+        </Grid>
       );
     }
 
     return (
-      <List className={ classes.timeListContainer }>
+      <Grid
+        container
+        className={ classes.timeListContainer }
+        spacing={2}
+      >
         { displayedPersonsTotalTime.map(renderPersonEntry) }
         { renderBottomPadding() }
-      </List>
+      </Grid>
     );
   };
 
@@ -557,10 +580,10 @@ const ManagementScreen: React.FC = () => {
     <AppLayout managementScreen>
       <Toolbar/>
       <Box className={ classes.root }>
+        { renderSearch() }
         <Box className={ classes.mainContent }>
           { renderTimeList() }
         </Box>
-        { renderSearch() }
         { renderRedirect() }
         { renderPersonDetail() }
         { renderBillableHoursUpdateDialog() }

@@ -66,7 +66,7 @@
   },
 
   "billableHoursHandling": {
-    "title": "Update persons min. billing rate",
+    "title": "Update minimum billable rate",
     "updateBillableHours": "Enter new billing rate:",
     "billingRate": "Billing rate",
     "billingPercentageError": "Billing rate percentage have to be 0-100%",

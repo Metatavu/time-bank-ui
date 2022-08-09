@@ -5,7 +5,9 @@ const useManagementScreenStyles = makeStyles(theme => ({
 
   root: {
     height: "calc(100vh - 64px)",
-    width: "100%",
+    width: "calc(100vw - 400px)",
+    margin: "auto",
+    paddingTop: theme.spacing(3),
     position: "relative"
   },
 
@@ -20,11 +22,7 @@ const useManagementScreenStyles = makeStyles(theme => ({
   },
 
   searchContainer: {
-    width: `calc((55vw - 2 * ${theme.spacing(8)}px) / 2)`,
-    position: "absolute",
-    top: theme.spacing(8),
-    left: theme.spacing(8),
-    padding: `0px ${theme.spacing(1)}px`
+    width: "100%"
   },
 
   searchIcon: {
@@ -49,6 +47,7 @@ const useManagementScreenStyles = makeStyles(theme => ({
   },
 
   pieChartContainer: {
+    marginTop: theme.spacing(3),
     height: "150px !important",
     "& .recharts-wrapper .recharts-surface": {
       overflow: "visible"
@@ -58,8 +57,8 @@ const useManagementScreenStyles = makeStyles(theme => ({
   redirectPersonDetailPaper: {
     width: `calc((55vw - 2 * ${theme.spacing(8)}px) / 2)`,
     position: "absolute",
-    top: theme.spacing(8),
-    right: theme.spacing(8),
+    top: theme.spacing(14),
+    right: theme.spacing(6),
     padding: `${theme.spacing(4)}px ${theme.spacing(6)}px ${theme.spacing(8)}px`,
     borderRadius: "10px !important",
     boxShadow: "0px 3px 3px -2px rgb(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0,0,0,0.14), 0px 1px 8px 0px rgb(0,0,0,0.12)",
@@ -90,10 +89,10 @@ const useManagementScreenStyles = makeStyles(theme => ({
   },
 
   billableHours: {
-    fontSize: 16,
+    fontSize: 14,
     fontStyle: "italic",
     [theme.breakpoints.down("sm")]: {
-      fontSize: 14
+      fontSize: 16
     }
   },
 
@@ -112,10 +111,8 @@ const useManagementScreenStyles = makeStyles(theme => ({
   },
 
   timeListContainer: {
-    width: "45%",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center"
+    width: "100%",
+    minHeight: "100%"
   },
 
   personEntrySubtitle: {
@@ -132,17 +129,29 @@ const useManagementScreenStyles = makeStyles(theme => ({
     flexDirection: "column"
   },
 
+  personRedirectBox: {
+    display: "flex",
+    flexDirection: "row"
+  },
+
   personRedirectButton: {
     height: "100%",
-    width: "100%",
-    padding: theme.spacing(2),
-    display: "flex",
+    width: "75%",
     justifyContent: "flex-end",
+    padding: theme.spacing(2),
+    borderRadius: "0px 0px 10px 10px"
+  },
+
+  personCloseButton: {
+    height: "100%",
+    width: "25%",
+    justifyContent: "flex-start",
+    padding: theme.spacing(2),
     borderRadius: "0px 0px 10px 10px"
   },
 
   personListEntry: {
-    width: "100%",
+    width: "30%",
     backgroundColor: "transparent !important",
     "&.Mui-selected .MuiPaper-root": {
       border: `3px solid ${fade(theme.palette.secondary.main, 0.8)}`
@@ -154,35 +163,40 @@ const useManagementScreenStyles = makeStyles(theme => ({
     borderRadius: "10px !important",
     boxShadow: "0px 3px 3px -2px rgb(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0,0,0,0.14), 0px 1px 8px 0px rgb(0,0,0,0.12)",
     marginBottom: theme.spacing(1),
-    height: 72,
+    height: "326px",
     display: "flex",
+    flexDirection: "column",
     alignItems: "center",
     justifyContent: "space-between",
     paddingLeft: theme.spacing(3),
-    paddingRight: theme.spacing(1)
+    paddingRight: theme.spacing(3),
+    paddingTop: theme.spacing(6)
   },
 
   personEntryDate: {
     fontSize: 18,
-    fontStyle: "normal"
+    fontStyle: "normal",
+    padding: "0 !important"
   },
 
   personEntryTime: {
     fontSize: 24,
     marginLeft: theme.spacing(1),
-    fontWeight: 600
+    fontWeight: 600,
+    justifyContent: "flex-end"
   },
 
   userInfoContainer: {
     display: "flex",
+    flexDirection: "column",
     alignItems: "center"
   },
 
   editorContainer: {
     height: "100%",
-    width: "calc(100vw - 400px)",
+    width: "calc(100vw)",
     padding: theme.spacing(4),
-    scrollbarWidth: "auto"
+    overflow: "hidden"
   }
 
 }), {
