@@ -1,8 +1,8 @@
-import { createTheme } from "@material-ui/core/styles";
+import { createTheme, adaptV4Theme } from "@mui/material/styles";
 
 const { breakpoints } = createTheme();
 
-export default createTheme({
+export default createTheme(adaptV4Theme({
 
   palette: {
     primary: {
@@ -149,4 +149,4 @@ export default createTheme({
       }
     }
   }
-});
+}));

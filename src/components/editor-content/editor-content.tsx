@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, IconButton, List, ListItem } from "@material-ui/core";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { DatePickerView } from "@material-ui/pickers";
+import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, IconButton, List, ListItem } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { CalendarPickerView } from "@mui/x-date-pickers";
+// import { DatePickerView } from "@material-ui/pickers";
 import useEditorContentStyles from "styles/editor-content/editor-content";
 import { useAppSelector } from "app/hooks";
 import { selectPerson } from "features/person/person-slice";
@@ -17,7 +18,7 @@ import WorkTimeDataUtils from "utils/work-time-data-utils";
 import moment from "moment";
 import DateRangePicker from "components/generics/date-range-picker/date-range-picker";
 import { ErrorContext } from "components/error-handler/error-handler";
-import DeleteIcon from "@material-ui/icons/Delete";
+import DeleteIcon from "@mui/icons-material/Delete";
 import VacationDataUtils from "utils/vacation-data-utils";
 import { selectAuth } from "features/auth/auth-slice";
 
@@ -39,7 +40,7 @@ const EditorContent: React.FC<Props> = () => {
   const { accessToken } = useAppSelector(selectAuth);
   const [ scope, setScope ] = React.useState<FilterScopes>(FilterScopes.WEEK);
   const [ dateFormat, setDateFormat ] = React.useState<string | undefined>("dd.MM.yyyy");
-  const [ datePickerView, setDatePickerView ] = React.useState<DatePickerView>("date");
+  const [ datePickerView, setDatePickerView ] = React.useState<CalendarPickerView>("day");
   const [ selectedStartDate, setSelectedStartDate ] = useState<Date>(new Date());
   const [ selectedEndDate, setSelectedEndDate ] = useState<Date | null>(null);
   const [ startWeek, setStartWeek ] = React.useState<number | null>(null);
@@ -311,7 +312,7 @@ const EditorContent: React.FC<Props> = () => {
     const selectedFilterScope = event.target.value as FilterScopes;
 
     setScope(selectedFilterScope);
-    setDatePickerView(selectedFilterScope as DatePickerView);
+    setDatePickerView(selectedFilterScope as CalendarPickerView);
     setDateFormat({
       [FilterScopes.DATE]: DateFormats.DATE,
       [FilterScopes.WEEK]: DateFormats.DATE,
@@ -336,7 +337,7 @@ const EditorContent: React.FC<Props> = () => {
    * 
    * @param name name of the subtitle text
    * @param value value of the subtitle text
-   * @param total if it's displaying the total value
+   * @param total if it"s displaying the total value
    * @param positiveTotal if the total is positive
    */
   const renderFilterSubtitleText = (name: string, value: number, total: boolean, positiveTotal?: boolean) => {
@@ -434,6 +435,7 @@ const EditorContent: React.FC<Props> = () => {
         onClick={ handleStartDateOnlyClick }
         aria-label="delete"
         className={ classes.deleteButton }
+        size="large"
       >
         <DeleteIcon fontSize="medium"/>
       </IconButton>
@@ -563,7 +565,7 @@ const EditorContent: React.FC<Props> = () => {
   * 
   * @param name name of subtitle text
   * @param value value of subtitle text
-  * @param unspent if it's displaying unspent vacation days
+  * @param unspent if it"s displaying unspent vacation days
   * @param positiveValue if amount of unused vacation days is positive 
   */
   const renderVacationDaysSubtitleText = (name: string, value: number, unspent: boolean, positiveValue?: boolean) => {

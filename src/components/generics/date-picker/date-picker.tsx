@@ -1,7 +1,7 @@
 import React from "react";
-import DateFnsUtils from "@date-io/date-fns";
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
-import { Box } from "@material-ui/core";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { Box } from "@mui/material";
 import strings from "localization/strings";
 import fiLocale from "date-fns/locale/fi";
 import enLocale from "date-fns/locale/en-US";
@@ -47,8 +47,8 @@ const GenericDatePicker: React.FC<Props> = ({
     const { syncStart } = strings.syncHandling;
 
     return (
-      <MuiPickersUtilsProvider locale={ pickerLocale } utils={ DateFnsUtils } >
-        <KeyboardDatePicker
+      <LocalizationProvider dateAdapter={ AdapterDateFns } adapterLocale={ pickerLocale } >
+        <DatePicker
           autoOk
           disableFuture
           minDate="2021-07-31"
@@ -63,7 +63,7 @@ const GenericDatePicker: React.FC<Props> = ({
           className={ classes.datePicker }
           KeyboardButtonProps={{ "aria-label": `${syncStart}` }}
         />
-      </MuiPickersUtilsProvider>
+      </LocalizationProvider>
     );
   };
   

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { AppBar, Box, Drawer, Toolbar, Typography, Select, MenuItem, Button, Dialog, CircularProgress, IconButton } from "@material-ui/core";
+import { AppBar, Box, Drawer, Toolbar, Typography, Select, MenuItem, Button, Dialog, CircularProgress, IconButton } from "@mui/material";
 import useAppLayoutStyles from "styles/layouts/app-layout";
 import siteLogo from "../../gfx/Metatavu-icon.svg";
 import strings from "localization/strings";
@@ -16,7 +16,7 @@ import { Person } from "generated/client";
 import { SyncOrUpdateContext } from "components/sync-or-update-handler/sync-or-update-handler";
 import { ErrorContext } from "components/error-handler/error-handler";
 import GenericDialog from "components/generics/generic-dialog/generic-dialog";
-import DeleteIcon from "@material-ui/icons/Delete";
+import DeleteIcon from "@mui/icons-material/Delete";
 import GenericDatePicker from "components/generics/date-picker/date-picker";
 
 /**
@@ -138,6 +138,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
             onClick={ resetSyncDate }
             aria-label="delete"
             className={ classes.deleteButton }
+            size="large"
           >
             <DeleteIcon fontSize="medium"/>
           </IconButton>

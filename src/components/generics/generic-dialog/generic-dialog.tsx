@@ -1,7 +1,7 @@
 import * as React from "react";
 
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, IconButton } from "@material-ui/core";
-import CloseIcon from "@material-ui/icons/Close";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
 /**
  * Interface representing component properties
@@ -66,10 +66,7 @@ const GenericDialog: React.FC<Props> = ({
       fullScreen={ fullScreen }
       fullWidth={ fullWidth }
     >
-      <DialogTitle
-        disableTypography
-        id="alert-dialog-title"
-      >
+      <DialogTitle id="alert-dialog-title">
         { title }
         <IconButton
           size="small"

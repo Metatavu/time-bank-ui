@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, Box, Typography } from "@material-ui/core";
+import { Avatar, Box, Typography } from "@mui/material";
 import useUserInfoStyles from "styles/generics/user-info/user-info";
 import { Person } from "generated/client";
 

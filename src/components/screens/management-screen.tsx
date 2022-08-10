@@ -1,7 +1,7 @@
 import React from "react";
 import AppLayout from "../layouts/app-layout";
 import useManagementScreenStyles from "styles/screens/management-screen";
-import { Toolbar, Box, CircularProgress, Paper, Typography, Divider, Button, TextField, Tooltip, Grid, Card } from "@material-ui/core";
+import { Toolbar, Box, CircularProgress, Paper, Typography, Divider, Button, TextField, Tooltip, Grid, Card } from "@mui/material";
 import { PieChart, Pie, Cell, ResponsiveContainer, TooltipProps, Tooltip as RechartTooltip, Legend } from "recharts";
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 import { useAppDispatch, useAppSelector } from "app/hooks";
@@ -10,21 +10,21 @@ import { Person, Timespan } from "generated/client";
 import { ErrorContext } from "components/error-handler/error-handler";
 import { PersonWithTotalTime, WorkTimeCategory, WorkTimeTotalData } from "types";
 import strings from "localization/strings";
-import SubdirectoryArrowLeftIcon from "@material-ui/icons/SubdirectoryArrowLeft";
+import SubdirectoryArrowLeftIcon from "@mui/icons-material/SubdirectoryArrowLeft";
 import { useHistory, Link } from "react-router-dom";
 import TimeUtils from "utils/time-utils";
 import theme from "theme/theme";
-import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { setPerson } from "features/person/person-slice";
 import UserInfo from "components/generics/user-info/user-info";
-import SearchIcon from "@material-ui/icons/Search";
+import SearchIcon from "@mui/icons-material/Search";
 import { selectAuth } from "features/auth/auth-slice";
 import moment from "moment";
-import { Create } from "@material-ui/icons";
+import { Create } from "@mui/icons-material";
 import GenericDialog from "components/generics/generic-dialog/generic-dialog";
 import { SyncOrUpdateContext } from "components/sync-or-update-handler/sync-or-update-handler";
 import AuthUtils from "utils/auth";
-import CloseIcon from "@material-ui/icons/Close";
+import CloseIcon from "@mui/icons-material/Close";
 
 /**
  * Management screen screen component

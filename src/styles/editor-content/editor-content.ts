@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core";
+import makeStyles from "@mui/styles/makeStyles";
 
 const useEditorContentStyles = makeStyles(theme => ({
 
@@ -8,7 +8,7 @@ const useEditorContentStyles = makeStyles(theme => ({
     height: 72,
     display: "flex",
     alignItems: "center",
-    padding: `0px ${theme.spacing(3)}px`,
+    padding: `0px ${theme.spacing(3)}`,
     [theme.breakpoints.down(1921)]: {
       "& .MuiTypography-root": {
         fontSize: "0.9rem"

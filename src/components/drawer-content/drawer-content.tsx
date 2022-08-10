@@ -1,7 +1,7 @@
 import React from "react";
-import { Accordion, AccordionDetails, AccordionSummary, Box, TextField, Typography } from "@material-ui/core";
+import { Accordion, AccordionDetails, AccordionSummary, Box, TextField, Typography } from "@mui/material";
 import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer, TooltipProps } from "recharts";
-import Autocomplete from "@material-ui/lab/Autocomplete";
+import Autocomplete from "@mui/material/Autocomplete";
 import UserInfo from "components/generics/user-info/user-info";
 import useDrawerContentStyles from "styles/drawer-content/drawer-content";
 import strings from "localization/strings";
@@ -9,7 +9,7 @@ import { Person, Timespan } from "generated/client";
 import Api from "api/api";
 import { selectPerson, setPerson, setPersonTotalTime } from "features/person/person-slice";
 import { useAppDispatch, useAppSelector } from "app/hooks";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import TimeUtils from "utils/time-utils";
 import theme from "theme/theme";
 import { CustomPieLabel, WorkTimeCategory, WorkTimeTotalData } from "types/index";
@@ -116,6 +116,7 @@ const DrawerContent: React.FC<Props> = () => {
    * 
    * @param personOptions person option to be rendered
    */
+  /* eslint-disable */
   const renderOptions = (personOptions: Person) => {
     return (
       <Box p={ 0.5 }>
@@ -128,6 +129,7 @@ const DrawerContent: React.FC<Props> = () => {
       </Box>
     );
   };
+  /* eslint-enable */
 
   /**
    * Renders the search box
@@ -141,8 +143,8 @@ const DrawerContent: React.FC<Props> = () => {
             freeSolo
             options={ persons }
             inputValue={ searchInput }
-            getOptionLabel={ personLabel => `${personLabel.firstName} ${personLabel.lastName}` }
-            renderOption={ renderOptions }
+            // getOptionLabel={ (personLabel: Person) => `${personLabel.firstName} ${personLabel.lastName}` }
+            // renderOption={ renderOptions }
             onChange={ (event, newValue) => onSearchBoxChange(newValue as Person) }
             onInputChange={ (event, newInputValue) => onSearchBoxInputChange(newInputValue) }
             renderInput={ params => (

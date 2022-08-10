@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core";
+import makeStyles from "@mui/styles/makeStyles";
 
 const useTotalChartStyles = makeStyles(theme => ({
 
@@ -13,7 +13,7 @@ const useTotalChartStyles = makeStyles(theme => ({
     "& .recharts-wrapper .recharts-surface": {
       overflow: "overlay"
     },
-    marginTop: `${theme.spacing(2)}px !important`
+    marginTop: `${theme.spacing(2)} !important`
   },
 
   customTooltipContainer: {

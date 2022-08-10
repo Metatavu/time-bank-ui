@@ -1,7 +1,6 @@
 import * as React from "react";
 
-import { Snackbar } from "@material-ui/core";
-import { Alert, Color } from "@material-ui/lab";
+import { Alert, Color, Snackbar } from "@mui/material";
 
 /**
  * Interface representing component properties

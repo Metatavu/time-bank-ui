@@ -1,5 +1,5 @@
-import { makeStyles } from "@material-ui/core";
-import { fade } from "@material-ui/core/styles/colorManipulator";
+import makeStyles from "@mui/styles/makeStyles";
+import { alpha } from "@mui/material/styles";
 
 const useManagementScreenStyles = makeStyles(theme => ({
 
@@ -55,11 +55,11 @@ const useManagementScreenStyles = makeStyles(theme => ({
   },
 
   redirectPersonDetailPaper: {
-    width: `calc((55vw - 2 * ${theme.spacing(8)}px) / 2)`,
+    width: `calc((55vw - 2 * ${theme.spacing(8)}) / 2)`,
     position: "absolute",
     top: theme.spacing(14),
     right: theme.spacing(6),
-    padding: `${theme.spacing(4)}px ${theme.spacing(6)}px ${theme.spacing(8)}px`,
+    padding: `${theme.spacing(4)} ${theme.spacing(6)} ${theme.spacing(8)}`,
     borderRadius: "10px !important",
     boxShadow: "0px 3px 3px -2px rgb(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0,0,0,0.14), 0px 1px 8px 0px rgb(0,0,0,0.12)",
     display: "flex",
@@ -75,7 +75,7 @@ const useManagementScreenStyles = makeStyles(theme => ({
   expectedWorkNames: {
     fontSize: 14,
     fontWeight: 600,
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("md")]: {
       fontSize: 16
     }
   },
@@ -83,7 +83,7 @@ const useManagementScreenStyles = makeStyles(theme => ({
   expectedWorkValues: {
     fontSize: 14,
     fontStyle: "italic",
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("md")]: {
       fontSize: 16
     }
   },
@@ -91,7 +91,7 @@ const useManagementScreenStyles = makeStyles(theme => ({
   billableHours: {
     fontSize: 14,
     fontStyle: "italic",
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("md")]: {
       fontSize: 16
     }
   },
@@ -105,7 +105,7 @@ const useManagementScreenStyles = makeStyles(theme => ({
     position: "absolute",
     bottom: theme.spacing(8),
     left: theme.spacing(8),
-    padding: `${theme.spacing(1)}px ${theme.spacing(1.3)}px`,
+    padding: `${theme.spacing(1)} ${theme.spacing(1.3)}`,
     borderRadius: "10px !important",
     boxShadow: "0px 3px 3px -2px rgb(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0,0,0,0.14), 0px 1px 8px 0px rgb(0,0,0,0.12)"
   },
@@ -154,7 +154,7 @@ const useManagementScreenStyles = makeStyles(theme => ({
     width: "30%",
     backgroundColor: "transparent !important",
     "&.Mui-selected .MuiPaper-root": {
-      border: `3px solid ${fade(theme.palette.secondary.main, 0.8)}`
+      border: `3px solid ${alpha(theme.palette.secondary.main, 0.8)}`
     }
   },
 

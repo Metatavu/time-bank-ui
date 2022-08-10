@@ -5,7 +5,7 @@ import useOverviewChartStyles from "styles/generics/overview-chart/overview-char
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, TooltipProps } from "recharts";
 import { WorkTimeData } from "types";
 import theme from "theme/theme";
-import { Box, CircularProgress, Typography } from "@material-ui/core";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import TimeUtils from "utils/time-utils";
 import strings from "localization/strings";
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";

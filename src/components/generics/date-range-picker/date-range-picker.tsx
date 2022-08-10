@@ -1,8 +1,9 @@
 import React from "react";
-import DateFnsUtils from "@date-io/date-fns";
-import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePickerView } from "@material-ui/pickers";
+// import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePickerView } from "@material-ui/pickers";
+import { LocalizationProvider, DatePicker, CalendarPickerView } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { FilterScopes } from "types";
-import { Box, TextField, MenuItem } from "@material-ui/core";
+import { Box, TextField, MenuItem } from "@mui/material";
 import TimeUtils from "utils/time-utils";
 import strings from "localization/strings";
 import useDateRangePickerStyles from "styles/generics/date-range-picker/date-range-picker";
@@ -22,7 +23,7 @@ interface Props {
   selectedEndDate: Date | null;
   startWeek?: number | null;
   endWeek?: number | null;
-  datePickerView: DatePickerView;
+  datePickerView: CalendarPickerView;
   onStartDateChange: (date: Date | null) => void;
   onEndDateChange: (date: Date | null) => void;
   onStartWeekChange: (weekNumber: number) => void;
@@ -159,8 +160,8 @@ const DateRangePicker: React.FC<Props> = ({
     const { filterStartingDate } = strings.editorContent;
 
     return (
-      <MuiPickersUtilsProvider locale={ pickerLocale } utils={ DateFnsUtils } >
-        <KeyboardDatePicker
+      <LocalizationProvider dateAdapter={ AdapterDateFns } adapterLocale={ pickerLocale } >
+        <DatePicker
           inputVariant="standard"
           variant="inline"
           views={[ datePickerView ]}
@@ -172,7 +173,7 @@ const DateRangePicker: React.FC<Props> = ({
           className={ classes.datePicker }
           KeyboardButtonProps={{ "aria-label": `${filterStartingDate}` }}
         />
-      </MuiPickersUtilsProvider>
+      </LocalizationProvider>
     );
   };
   
@@ -181,8 +182,8 @@ const DateRangePicker: React.FC<Props> = ({
    */
   const renderStartYearPickerAndWeekSelector = () => (
     <>
-      <MuiPickersUtilsProvider locale={ pickerLocale } utils={ DateFnsUtils } >
-        <KeyboardDatePicker
+      <LocalizationProvider dateAdapter={ AdapterDateFns } adapterLocale={ pickerLocale } >
+        <DatePicker
           views={[ FilterScopes.YEAR ]}
           variant="inline"
           inputVariant="standard"
@@ -194,7 +195,7 @@ const DateRangePicker: React.FC<Props> = ({
           className={ classes.yearPicker }
           KeyboardButtonProps={{ "aria-label": `${strings.editorContent.filterStartingDate}` }}
         />
-      </MuiPickersUtilsProvider>
+      </LocalizationProvider>
       <TextField
         select
         variant="standard"
@@ -212,8 +213,8 @@ const DateRangePicker: React.FC<Props> = ({
    * Renders end date picker
    */
   const renderEndDate = () => (
-    <MuiPickersUtilsProvider locale={ pickerLocale } utils={ DateFnsUtils }>
-      <KeyboardDatePicker
+    <LocalizationProvider dateAdapter={ AdapterDateFns } adapterLocale={ pickerLocale } >
+      <DatePicker
         inputVariant="standard"
         variant="inline"
         format={ dateFormat }
@@ -226,7 +227,7 @@ const DateRangePicker: React.FC<Props> = ({
         className={ classes.datePicker }
         KeyboardButtonProps={{ "aria-label": `${strings.editorContent.filterEndingDate}` }}
       />
-    </MuiPickersUtilsProvider>
+    </LocalizationProvider>
   );
 
   /**
@@ -234,8 +235,8 @@ const DateRangePicker: React.FC<Props> = ({
    */
   const renderEndYearPickerAndWeekSelector = () => (
     <>
-      <MuiPickersUtilsProvider locale={ pickerLocale } utils={ DateFnsUtils } >
-        <KeyboardDatePicker
+      <LocalizationProvider dateAdapter={ AdapterDateFns } adapterLocale={ pickerLocale } >
+        <DatePicker
           inputVariant="standard"
           variant="inline"
           views={[ FilterScopes.YEAR ]}
@@ -248,7 +249,7 @@ const DateRangePicker: React.FC<Props> = ({
           className={ classes.yearPicker }
           KeyboardButtonProps={{ "aria-label": `${strings.editorContent.filterStartingDate}` }}
         />
-      </MuiPickersUtilsProvider>
+      </LocalizationProvider>
       <TextField
         // TODO label when start only
         select

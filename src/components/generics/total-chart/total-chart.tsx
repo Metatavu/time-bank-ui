@@ -5,7 +5,7 @@ import useTotalChartStyles from "styles/generics/total-chart/total-chart";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ReferenceLine, ResponsiveContainer, TooltipProps } from "recharts";
 import { WorkTimeTotalData } from "types";
 import theme from "theme/theme";
-import { CircularProgress, Box, Typography } from "@material-ui/core";
+import { CircularProgress, Box, Typography } from "@mui/material";
 import TimeUtils from "utils/time-utils";
 import strings from "localization/strings";
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";

@@ -1,11 +1,11 @@
-import { makeStyles } from "@material-ui/core";
+import makeStyles from "@mui/styles/makeStyles";
 
 const useDrawerContentStyles = makeStyles(theme => ({
 
   userInfoContainer: {
     marginTop: theme.spacing(4),
     marginBottom: theme.spacing(1),
-    padding: `0px ${theme.spacing(2)}px`
+    padding: `0px ${theme.spacing(2)}`
   },
 
   searchBoxContainer: {
@@ -23,7 +23,7 @@ const useDrawerContentStyles = makeStyles(theme => ({
 
   endAdornment: {
     top: "9px !important",
-    paddingRight: `${theme.spacing(1)}px !important`
+    paddingRight: `${theme.spacing(1)} !important`
   },
 
   searchBox: {
@@ -38,7 +38,7 @@ const useDrawerContentStyles = makeStyles(theme => ({
     borderTopLeftRadius: "30px !important",
     borderBottomRightRadius: "30px !important",
     borderStyle: "solid",
-    marginTop: `${theme.spacing(2)}px !important`,
+    marginTop: `${theme.spacing(2)} !important`,
     padding: theme.spacing(2)
   },
 
@@ -55,7 +55,7 @@ const useDrawerContentStyles = makeStyles(theme => ({
   accordionRowNames: {
     fontSize: 14,
     fontWeight: 600,
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("md")]: {
       fontSize: 16
     }
   },
@@ -63,7 +63,7 @@ const useDrawerContentStyles = makeStyles(theme => ({
   accordionRowValues: {
     fontSize: 14,
     fontStyle: "italic",
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("md")]: {
       fontSize: 16
     }
   },
@@ -80,7 +80,7 @@ const useDrawerContentStyles = makeStyles(theme => ({
   },
 
   input: {
-    paddingLeft: `${theme.spacing(2)}px !important`
+    paddingLeft: `${theme.spacing(2)} !important`
   },
 
   pieChartContainer: {
@@ -88,7 +88,7 @@ const useDrawerContentStyles = makeStyles(theme => ({
     "& .recharts-wrapper .recharts-surface": {
       overflow: "visible"
     },
-    marginTop: `${theme.spacing(1)}px !important`
+    marginTop: `${theme.spacing(1)} !important`
   },
 
   userDetailEntry: {

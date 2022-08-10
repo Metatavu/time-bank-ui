@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core";
+import makeStyles from "@mui/styles/makeStyles";
 
 const useOverviewChartStyles = makeStyles(theme => ({
 
@@ -7,7 +7,7 @@ const useOverviewChartStyles = makeStyles(theme => ({
       overflow: "overlay"
     },
     height: "20vh !important",
-    marginTop: `${theme.spacing(2)}px !important`
+    marginTop: `${theme.spacing(2)} !important`
   },
 
   verticalChartContainer: {
@@ -15,7 +15,7 @@ const useOverviewChartStyles = makeStyles(theme => ({
       overflow: "overlay"
     },
     height: "30vh !important",
-    marginTop: `${theme.spacing(2)}px !important`
+    marginTop: `${theme.spacing(2)} !important`
   },
 
   customTooltipContainer: {
