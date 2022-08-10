@@ -96,7 +96,6 @@ export interface IStrings extends LocalizedStringsMethods {
   /**
    * Translations related to sync handling
    */
-
   syncHandling: {
     syncTimeDataSuccess: string;
     title: string;

@@ -1,25 +1,25 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import GenericSnackbar from "components/generics/generic-snackbar/generic-snackbar";
-import * as React from "react";
+import React, { FC } from "react";
 import { useCallback, useState } from "react";
 import { SyncContextType } from "../../types";
 
 /**
- * Synch context initialization
+ * Sync context initialization
  */
 export const SyncContext = React.createContext<SyncContextType>({
-  setSynched: (message: string) => {}
+  setSynced: (message: string) => {}
 });
 
 /**
  * Provider for synch context
  * 
  * @param children children of the component
- * @returns SynchProvider component
+ * @returns SyncProvider component
  */
-const SyncHandler: React.FC = ({ children }) => {
-  const [ synched, setSynched ] = useState<string>();
+const SyncHandler: FC = ({ children }) => {
+  const [ synched, setSynced ] = useState<string>();
 
   /**
    * Handles synch message 
@@ -28,12 +28,12 @@ const SyncHandler: React.FC = ({ children }) => {
    */
   const handleSync = async (message: string): Promise<void> => {
     if (message) {
-      setSynched(message);
+      setSynced(message);
     }
   };
 
   const contextValue = {
-    setSynched: useCallback(message => handleSync(message), [])
+    setSynced: useCallback(message => handleSync(message), [])
   };
 
   /**
@@ -43,7 +43,7 @@ const SyncHandler: React.FC = ({ children }) => {
     return (
       <GenericSnackbar
         open={ synched !== undefined }
-        onClose={ () => setSynched(undefined) }
+        onClose={ () => setSynced(undefined) }
         autoHideDuration={10000}
         severity="success"
         message={synched}

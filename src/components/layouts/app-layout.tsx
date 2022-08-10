@@ -45,7 +45,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
    */
   const handleSyncButtonClick = async () => {
     setSyncingData(true);
-   
+
     try {
       await Api.getSynchronizeApi(accessToken?.access_token).synchronizeTimeEntries({});
       syncContext.setSynched(strings.syncHandling.syncTimeDataSuccess);
