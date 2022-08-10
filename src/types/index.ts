@@ -114,8 +114,7 @@ export interface ErrorContextType {
 /**
  * Interface for synch context type
  */
-
 export interface SyncContextType {
   sync?: string;
-  setSynched: (message: string) => void;
+  setSynced: (message: string) => void;
 }
