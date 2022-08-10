@@ -48,7 +48,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
 
     try {
       await Api.getSynchronizeApi(accessToken?.access_token).synchronizeTimeEntries({});
-      syncContext.setSynched(strings.syncHandling.syncTimeDataSuccess);
+      syncContext.setSynced(strings.syncHandling.syncTimeDataSuccess);
     } catch (error) {
       errorContext.setError(strings.errorHandling.syncTimeDataFailed, error);
     }

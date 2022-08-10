@@ -16,7 +16,7 @@ ReactDOM.render(
         <CssBaseline/>
         <ErrorHandler>
           <SyncHandler>
-              <App/>     
+            <App/>
           </SyncHandler>
         </ErrorHandler>
       </ThemeProvider>

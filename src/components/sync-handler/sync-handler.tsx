@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import GenericSnackbar from "components/generics/generic-snackbar/generic-snackbar";
-import React, { FC } from "react";
-import { useCallback, useState } from "react";
+import React, { FC, useCallback, useState } from "react";
 import { SyncContextType } from "../../types";
 
 /**
