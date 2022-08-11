@@ -14,12 +14,11 @@ ReactDOM.render(
     <Provider store={ store }>
       <ThemeProvider theme={ responsiveFontSizes(theme) }>
         <CssBaseline/>
-        <SyncOrUpdateHandler>
-          <ErrorHandler>
-
+        <ErrorHandler>
+          <SyncOrUpdateHandler>
             <App/>
-          </ErrorHandler>
-        </SyncOrUpdateHandler>
+          </SyncOrUpdateHandler>
+        </ErrorHandler>
       </ThemeProvider>
     </Provider>
   </React.StrictMode>,
