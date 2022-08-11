@@ -117,7 +117,7 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
           <YAxis type="category" dataKey="name"/>
           <Tooltip content={ renderCustomizedTooltip }/>
           <Legend wrapperStyle={{ position: "relative" }}/>
-          <Bar dataKey="project" name={ strings.billableProject } barSize={ 60 } stackId="a" fill={ theme.palette.success.main }/>
+          <Bar dataKey="project" name={ strings.billableProject } barSize={ 60 } stackId="a" fill={ theme.palette.success.dark }/>
           <Bar dataKey="nonBillableProject" name={ strings.nonBillableProject } barSize={ 60 } stackId="a" fill={ theme.palette.success.light }/>
           <Bar dataKey="internal" name={ strings.internal } barSize={ 60 } stackId="a" fill={ theme.palette.warning.main }/>
           <Bar dataKey="expected" name={ strings.expected } barSize={ 60 } stackId="a" fill={ theme.palette.info.main }/>
@@ -146,7 +146,7 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
           <YAxis width={ 100 } tickFormatter={ value => TimeUtils.convertToMinutesAndHours(value as number) }/>
           <Tooltip content={ renderCustomizedTooltip }/>
           <Legend wrapperStyle={{ position: "relative" }}/>
-          <Bar dataKey="billableProject" name={ strings.billableProject } stackId="a" fill={ theme.palette.success.main }/>
+          <Bar dataKey="billableProject" name={ strings.billableProject } stackId="a" fill={ theme.palette.success.dark }/>
           <Bar dataKey="nonBillableProject" name={ strings.nonBillableProject } stackId="a" fill={ theme.palette.success.light }/>
           <Bar dataKey="internal" name={ strings.internal } stackId="a" fill={ theme.palette.warning.main }/>
           <Bar dataKey="expected" name={ strings.expected } fill={ theme.palette.info.main }/>

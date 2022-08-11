@@ -302,13 +302,14 @@ const ManagementScreen: React.FC = () => {
         style={{ color: color }}
         className={ classes.billableHours }
       >
+        <Button
+          onClick={ handleClickOpen }
+        >
+          <Create color="primary"/>
+        </Button>
         { `${value} %` }
       </Typography>
-      <Button
-        onClick={ handleClickOpen }
-      >
-        <Create color="primary"/>
-      </Button>
+
     </Box>
   );
 
@@ -328,7 +329,7 @@ const ManagementScreen: React.FC = () => {
       { name: WorkTimeCategory.INTERNAL, balance: personTotalTime.internalTime }
     ];
 
-    const COLORS = [ theme.palette.success.main, theme.palette.warning.main ];
+    const COLORS = [ theme.palette.success.dark, theme.palette.success.light, theme.palette.warning.main ];
 
     return (
       <Paper className={ classes.redirectPersonDetailPaper }>
@@ -458,13 +459,10 @@ const ManagementScreen: React.FC = () => {
         <Box className={classes.updateBillableHoursContent}>
           <Box>
             <Typography variant="h5">
-              { `${person.firstName} ${person.lastName} ${person.id}` }
+              { `${person.firstName} ${person.lastName}` }
             </Typography>
             <Typography variant="h6" style={{ color: "rgba(0, 0, 0, 0.6)" }}>
               { person.email }
-            </Typography>
-            <Typography>
-              {`${strings.billableHours}: ${person.minimumBillableRate} %`}
             </Typography>
           </Box>
           <Box
@@ -483,18 +481,18 @@ const ManagementScreen: React.FC = () => {
               }}
               label={strings.billableHoursHandling.billingRate}
               type="number"
-              defaultValue={newBillablePercentage}
+              defaultValue={selectedPersonWithTotalTime.person.minimumBillableRate}
               onChange={handleChange}
             />
           </Box>
+          <Button
+            onClick={ handleBillingRateUpdateClick }
+            color="secondary"
+            variant="contained"
+          >
+            {strings.billableHoursHandling.updateButton}
+          </Button>
         </Box>
-        <Button
-          onClick={ handleBillingRateUpdateClick }
-          color="secondary"
-          variant="contained"
-        >
-          {strings.billableHoursHandling.updateButton}
-        </Button>
       </GenericDialog>
     );
   };

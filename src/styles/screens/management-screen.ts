@@ -99,7 +99,8 @@ const useManagementScreenStyles = makeStyles(theme => ({
 
   updateBillableHoursContent: {
     margin: theme.spacing(1),
-    alignItems: "center"
+    alignItems: "center",
+    textAlign: "center"
   },
 
   redirectLinkPaper: {
