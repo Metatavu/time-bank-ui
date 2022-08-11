@@ -44,7 +44,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
   const errorContext = React.useContext(ErrorContext);
   const syncOrUpdateContext = React.useContext(SyncOrUpdateContext);
   const [syncSelection, setSyncSelection] = React.useState(false);
-  const [ selectedStartDate, setSelectedStartDate ] = useState<Date | null>(new Date(yesterday));
+  const [ selectedStartDate, setSelectedStartDate ] = useState<unknown>(new Date(yesterday));
 
   /**
    * Event handler for sync button click
@@ -54,7 +54,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
     setSyncSelection(false);
     try {
       await Api.getSynchronizeApi(accessToken?.access_token).synchronizeTimeEntries({
-        after: selectedStartDate || undefined
+        after: selectedStartDate as Date || undefined
       });
       
       syncOrUpdateContext.setSyncOrUpdate(strings.syncHandling.syncTimeDataSuccess);

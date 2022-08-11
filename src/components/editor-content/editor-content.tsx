@@ -39,10 +39,10 @@ const EditorContent: React.FC<Props> = () => {
   const { person, personTotalTime } = useAppSelector(selectPerson);
   const { accessToken } = useAppSelector(selectAuth);
   const [ scope, setScope ] = React.useState<FilterScopes>(FilterScopes.WEEK);
-  const [ dateFormat, setDateFormat ] = React.useState<string | undefined>("dd.MM.yyyy");
+  const [ dateFormat, setDateFormat ] = React.useState<string | undefined>("yyyy.MM.dd");
   const [ datePickerView, setDatePickerView ] = React.useState<CalendarPickerView>("day");
-  const [ selectedStartDate, setSelectedStartDate ] = useState<Date>(new Date());
-  const [ selectedEndDate, setSelectedEndDate ] = useState<Date | null>(null);
+  const [ selectedStartDate, setSelectedStartDate ] = useState<unknown>(new Date());
+  const [ selectedEndDate, setSelectedEndDate ] = useState<unknown>(null);
   const [ startWeek, setStartWeek ] = React.useState<number | null>(null);
   const [ endWeek, setEndWeek ] = React.useState<number | null>(null);
   const [ isLoading, setIsLoading ] = React.useState(false);
@@ -80,8 +80,8 @@ const EditorContent: React.FC<Props> = () => {
     try {
       const dailyEntries = await Api.getDailyEntriesApi(accessToken?.access_token).listDailyEntries({
         personId: person.id,
-        before: selectedEndDate || undefined,
-        after: selectedStartDate
+        before: selectedEndDate as Date || undefined,
+        after: selectedStartDate as Date
       });
 
       dailyEntries.sort((date1, date2) => moment(date1.date).diff(date2.date));
@@ -109,9 +109,9 @@ const EditorContent: React.FC<Props> = () => {
         timespan: Timespan.WEEK
       });
 
-      const startMoment = moment().year(selectedStartDate.getFullYear()).week(startWeek);
+      const startMoment = moment().year((selectedStartDate as Date).getFullYear()).week(startWeek);
       const endMoment = startMoment.clone();
-      selectedEndDate && endMoment.year(selectedEndDate.getFullYear());
+      selectedEndDate && endMoment.year((selectedEndDate as Date).getFullYear());
       endWeek && endMoment.week(endWeek);
 
       const filteredWeekEntries = weekEntries.filter(
@@ -147,9 +147,9 @@ const EditorContent: React.FC<Props> = () => {
         timespan: Timespan.MONTH
       });
 
-      const startMoment = moment().year(selectedStartDate.getFullYear()).month(selectedStartDate.getMonth());
+      const startMoment = moment().year((selectedStartDate as Date).getFullYear()).month((selectedStartDate as Date).getMonth());
       const endMoment = startMoment.clone();
-      selectedEndDate && endMoment.year(selectedEndDate.getFullYear()).month(selectedEndDate.getMonth());
+      selectedEndDate && endMoment.year((selectedEndDate as Date).getFullYear()).month((selectedEndDate as Date).getMonth());
 
       const filteredMonthEntries = monthEntries.filter(
         entry => TimeUtils.DateInRange(
@@ -184,9 +184,9 @@ const EditorContent: React.FC<Props> = () => {
         timespan: Timespan.YEAR
       });
 
-      const startMoment = moment().year(selectedStartDate.getFullYear());
+      const startMoment = moment().year((selectedStartDate as Date).getFullYear());
       const endMoment = startMoment.clone();
-      selectedEndDate && endMoment.year(selectedEndDate.getFullYear());
+      selectedEndDate && endMoment.year((selectedEndDate as Date).getFullYear());
 
       const filteredYearEntries = yearEntries.filter(
         entry => TimeUtils.DateInRange(
@@ -264,7 +264,7 @@ const EditorContent: React.FC<Props> = () => {
    *
    * @param date selected date
    */
-  const handleStartDateChange = (date: Date | null) => {
+  const handleStartDateChange = (date: unknown) => {
     date && setSelectedStartDate(date);
   };
 
@@ -273,7 +273,7 @@ const EditorContent: React.FC<Props> = () => {
    *
    * @param date selected date
    */
-  const handleEndDateChange = (date: Date | null) => {
+  const handleEndDateChange = (date: unknown) => {
     date && setSelectedEndDate(date);
   };
   

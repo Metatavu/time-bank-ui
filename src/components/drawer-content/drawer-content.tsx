@@ -143,7 +143,7 @@ const DrawerContent: React.FC<Props> = () => {
             freeSolo
             options={ persons }
             inputValue={ searchInput }
-            // getOptionLabel={ (personLabel: Person) => `${personLabel.firstName} ${personLabel.lastName}` }
+            getOptionLabel={ personLabel => `${(personLabel as Person).firstName} ${(personLabel as Person).lastName}` }
             // renderOption={ renderOptions }
             onChange={ (event, newValue) => onSearchBoxChange(newValue as Person) }
             onInputChange={ (event, newInputValue) => onSearchBoxInputChange(newInputValue) }

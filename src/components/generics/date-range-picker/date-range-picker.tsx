@@ -19,13 +19,13 @@ import moment from "moment";
 interface Props {
   scope: FilterScopes;
   dateFormat?: string;
-  selectedStartDate: Date;
-  selectedEndDate: Date | null;
+  selectedStartDate: unknown;
+  selectedEndDate: unknown;
   startWeek?: number | null;
   endWeek?: number | null;
   datePickerView: CalendarPickerView;
-  onStartDateChange: (date: Date | null) => void;
-  onEndDateChange: (date: Date | null) => void;
+  onStartDateChange: (value: unknown) => void;
+  onEndDateChange: (value: unknown) => void;
   onStartWeekChange: (weekNumber: number) => void;
   onEndWeekChange: (weekNumber: number) => void;
 }
@@ -90,14 +90,14 @@ const DateRangePicker: React.FC<Props> = ({
    * Get max start week
    */
   const getMaxStartWeek = () => {
-    return todayDate.getFullYear() === selectedStartDate.getFullYear() ? currentWeekNumber : moment(selectedStartDate).weeksInYear();
+    return todayDate.getFullYear() === (selectedStartDate as Date).getFullYear() ? currentWeekNumber : moment((selectedStartDate as Date)).weeksInYear();
   };
 
   /**
    * Get max end week
    */
   const getMaxEndWeek = () => {
-    return todayDate.getFullYear() === selectedEndDate?.getFullYear() ? currentWeekNumber : moment(selectedEndDate).weeksInYear();
+    return todayDate.getFullYear() === (selectedEndDate as Date)?.getFullYear() ? currentWeekNumber : moment((selectedEndDate as Date)).weeksInYear();
   };
 
   /**
@@ -130,7 +130,7 @@ const DateRangePicker: React.FC<Props> = ({
 
     const weekOpts = [];
 
-    if (selectedStartDate?.getFullYear() === selectedEndDate.getFullYear() && !!startWeek) {
+    if ((selectedStartDate as Date)?.getFullYear() === (selectedEndDate as Date).getFullYear() && !!startWeek) {
       for (let week = startWeek; week <= getMaxEndWeek(); week++) {
         weekOpts.push((
           <MenuItem value={ week }>
@@ -162,16 +162,15 @@ const DateRangePicker: React.FC<Props> = ({
     return (
       <LocalizationProvider dateAdapter={ AdapterDateFns } adapterLocale={ pickerLocale } >
         <DatePicker
-          inputVariant="standard"
-          variant="inline"
           views={[ datePickerView ]}
-          format={ dateFormat }
+          inputFormat={ dateFormat }
+          minDate={ new Date(2021, 7, 31) }
           maxDate={ todayDate }
           label={ filterStartingDate }
-          value={ selectedStartDate }
+          value={ new Date() }
           onChange={ onStartDateChange }
           className={ classes.datePicker }
-          KeyboardButtonProps={{ "aria-label": `${filterStartingDate}` }}
+          renderInput={ params => <TextField {...params}/>}
         />
       </LocalizationProvider>
     );
@@ -185,15 +184,13 @@ const DateRangePicker: React.FC<Props> = ({
       <LocalizationProvider dateAdapter={ AdapterDateFns } adapterLocale={ pickerLocale } >
         <DatePicker
           views={[ FilterScopes.YEAR ]}
-          variant="inline"
-          inputVariant="standard"
-          format="yyyy"
+          inputFormat="yyyy"
           maxDate={ todayDate }
           label={ strings.editorContent.selectYearStart }
           value={ selectedStartDate }
           onChange={ onStartDateChange }
           className={ classes.yearPicker }
-          KeyboardButtonProps={{ "aria-label": `${strings.editorContent.filterStartingDate}` }}
+          renderInput={ params => <TextField {...params}/>}
         />
       </LocalizationProvider>
       <TextField
@@ -215,9 +212,7 @@ const DateRangePicker: React.FC<Props> = ({
   const renderEndDate = () => (
     <LocalizationProvider dateAdapter={ AdapterDateFns } adapterLocale={ pickerLocale } >
       <DatePicker
-        inputVariant="standard"
-        variant="inline"
-        format={ dateFormat }
+        inputFormat={ dateFormat }
         views={ [ datePickerView ] }
         minDate={ selectedStartDate }
         maxDate={ todayDate }
@@ -225,7 +220,7 @@ const DateRangePicker: React.FC<Props> = ({
         value={ selectedEndDate }
         onChange={ onEndDateChange }
         className={ classes.datePicker }
-        KeyboardButtonProps={{ "aria-label": `${strings.editorContent.filterEndingDate}` }}
+        renderInput={ params => <TextField {...params}/>}
       />
     </LocalizationProvider>
   );
@@ -237,17 +232,15 @@ const DateRangePicker: React.FC<Props> = ({
     <>
       <LocalizationProvider dateAdapter={ AdapterDateFns } adapterLocale={ pickerLocale } >
         <DatePicker
-          inputVariant="standard"
-          variant="inline"
           views={[ FilterScopes.YEAR ]}
-          format="yyyy"
+          inputFormat="yyyy"
           minDate={ selectedStartDate }
           maxDate={ todayDate }
           label={ strings.editorContent.selectYearEnd }
           value={ selectedEndDate }
           onChange={ onEndDateChange }
           className={ classes.yearPicker }
-          KeyboardButtonProps={{ "aria-label": `${strings.editorContent.filterStartingDate}` }}
+          renderInput={ params => <TextField {...params}/>}
         />
       </LocalizationProvider>
       <TextField

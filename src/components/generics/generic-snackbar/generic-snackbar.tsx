@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Alert, Color, Snackbar } from "@mui/material";
+import { Alert, AlertColor, Snackbar } from "@mui/material";
 
 /**
  * Interface representing component properties
@@ -9,7 +9,7 @@ interface Props {
   open: boolean;
   autoHideDuration: number;
   onClose: () => void;
-  severity: Color;
+  severity: AlertColor;
   message?: string;
 }
 

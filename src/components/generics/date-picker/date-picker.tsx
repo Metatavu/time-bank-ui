@@ -1,7 +1,7 @@
 import React from "react";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { Box } from "@mui/material";
+import { Box, TextField } from "@mui/material";
 import strings from "localization/strings";
 import fiLocale from "date-fns/locale/fi";
 import enLocale from "date-fns/locale/en-US";
@@ -14,8 +14,8 @@ import useDatePickerStyles from "styles/generics/date-picker/date-picker";
  */
 interface Props {
   dateFormat?: string;
-  selectedStartDate: Date | null;
-  onStartDateChange: (date: Date | null) => void;
+  selectedStartDate: unknown;
+  onStartDateChange: (value: unknown) => void;
 }
 
 /**
@@ -49,19 +49,15 @@ const GenericDatePicker: React.FC<Props> = ({
     return (
       <LocalizationProvider dateAdapter={ AdapterDateFns } adapterLocale={ pickerLocale } >
         <DatePicker
-          autoOk
           disableFuture
-          minDate="2021-07-31"
-          inputVariant="standard"
-          variant="inline"
-          format={ dateFormat }
+          minDate={new Date(2021, 7, 31)}
+          inputFormat={ dateFormat }
           maxDate={ todayDate }
           label={ syncStart }
-          defaultValue={ selectedStartDate }
           value={ selectedStartDate }
           onChange={ onStartDateChange }
           className={ classes.datePicker }
-          KeyboardButtonProps={{ "aria-label": `${syncStart}` }}
+          renderInput={ params => <TextField {...params}/>}
         />
       </LocalizationProvider>
     );
