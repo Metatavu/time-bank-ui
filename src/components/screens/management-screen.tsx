@@ -102,33 +102,23 @@ const ManagementScreen: React.FC = () => {
     if (newBillablePercentage >= 0 && newBillablePercentage <= 100) {
       const { person } = selectedPersonWithTotalTime;
       setBillableHoursUpdate(false);
-      const updatedPerson : Person = {
-        id: person.id,
-        firstName: person.firstName,
-        lastName: person.lastName,
-        email: person.email,
-        monday: person.monday,
-        tuesday: person.tuesday,
-        wednesday: person.wednesday,
-        thursday: person.thursday,
-        friday: person.friday,
-        saturday: person.saturday,
-        sunday: person.sunday,
-        active: person.active,
-        unspentVacations: person.unspentVacations,
-        spentVacations: person.spentVacations,
-        minimumBillableRate: newBillablePercentage,
-        language: person.language,
-        startDate: person.startDate
-      };
 
       try {
-        await Api.getPersonsApi(accessToken?.access_token).updatePerson({
-          personId: person.id,
-          person: updatedPerson
-        });
+        const updatedPerson: PersonWithTotalTime = {
+          person: await Api.getPersonsApi(accessToken?.access_token).updatePerson({
+            personId: person.id,
+            person: { ...person, minimumBillableRate: newBillablePercentage }
+          }),
+          personTotalTime: selectedPersonWithTotalTime.personTotalTime
+        };
         syncOrUpdateContext.setSyncOrUpdate(strings.billableHoursHandling.updateBillableHoursSuccess);
-        fetchData();
+        const personIndex = personsTotalTime.findIndex(_person => _person.person.id === person.id);
+
+        setPersonsTotalTime([
+          ...personsTotalTime,
+          personsTotalTime[personIndex] = updatedPerson
+        ]);
+        setSelectedPersonWithTotalTime(updatedPerson);
       } catch (error) {
         context.setError(strings.errorHandling.updateBillingPercentageFailed, error);
       }
