@@ -10,7 +10,7 @@ import strings from "localization/strings";
 import theme from "theme/theme";
 import TimeUtils from "utils/time-utils";
 import { FilterScopes, DateFormats, WorkTimeData, WorkTimeTotalData } from "types/index";
-import { TimebankControllerGetTotalRetentionEnum } from "generated/client";
+import { Timespan } from "generated/client";
 import TotalChart from "components/generics/total-chart/total-chart";
 import OverviewChart from "components/generics/overview-chart/overview-chart";
 import WorkTimeDataUtils from "utils/work-time-data-utils";
@@ -65,7 +65,7 @@ const EditorContent: React.FC<Props> = () => {
   };
 
   /**
-   * Load the date data
+   * Load the daily data
    */
   const loadDateData = async () => {
     if (!person || !selectedStartDate) {
@@ -73,17 +73,15 @@ const EditorContent: React.FC<Props> = () => {
     }
 
     try {
-      const dateEntries = await Api.getTimeBankApi().timebankControllerGetEntries({
-        personId: person.id.toString(),
-        after: TimeUtils.standardizedDateString(selectedStartDate),
-        before: selectedEndDate ?
-          TimeUtils.standardizedDateString(selectedEndDate) :
-          TimeUtils.standardizedDateString(selectedStartDate)
+      const dailyEntries = await Api.getDailyEntriesApi(accessToken?.access_token).listDailyEntries({
+        personId: person.id,
+        before: selectedEndDate || undefined,
+        after: selectedStartDate
       });
 
-      dateEntries.sort((date1, date2) => moment(date1.date).diff(date2.date));
+      dailyEntries.sort((date1, date2) => moment(date1.date).diff(date2.date));
 
-      const { workTimeData, workTimeTotalData } = WorkTimeDataUtils.dateEntriesPreprocess(dateEntries);
+      const { workTimeData, workTimeTotalData } = WorkTimeDataUtils.dateEntriesPreprocess(dailyEntries);
   
       setDisplayedTimeData(workTimeData);
       setDisplayedTotal(workTimeTotalData);
@@ -101,9 +99,9 @@ const EditorContent: React.FC<Props> = () => {
     }
 
     try {
-      const weekEntries = await Api.getTimeBankApi().timebankControllerGetTotal({
-        personId: person.id.toString(),
-        retention: TimebankControllerGetTotalRetentionEnum.WEEK
+      const weekEntries = await Api.getPersonsApi(accessToken?.access_token).listPersonTotalTime({
+        personId: person.id,
+        timespan: Timespan.WEEK
       });
 
       const startMoment = moment().year(selectedStartDate.getFullYear()).week(startWeek);
@@ -139,9 +137,9 @@ const EditorContent: React.FC<Props> = () => {
     }
 
     try {
-      const monthEntries = await Api.getTimeBankApi().timebankControllerGetTotal({
-        personId: person.id.toString(),
-        retention: TimebankControllerGetTotalRetentionEnum.MONTH
+      const monthEntries = await Api.getPersonsApi(accessToken?.access_token).listPersonTotalTime({
+        personId: person.id,
+        timespan: Timespan.MONTH
       });
 
       const startMoment = moment().year(selectedStartDate.getFullYear()).month(selectedStartDate.getMonth());
@@ -176,9 +174,9 @@ const EditorContent: React.FC<Props> = () => {
     }
 
     try {
-      const yearEntries = await Api.getTimeBankApi().timebankControllerGetTotal({
-        personId: person.id.toString(),
-        retention: TimebankControllerGetTotalRetentionEnum.YEAR
+      const yearEntries = await Api.getPersonsApi(accessToken?.access_token).listPersonTotalTime({
+        personId: person.id,
+        timespan: Timespan.YEAR
       });
 
       const startMoment = moment().year(selectedStartDate.getFullYear());
@@ -382,7 +380,7 @@ const EditorContent: React.FC<Props> = () => {
       <Box className={ classes.filterSubtitle } >
         { renderFilterSubtitleText(`${strings.logged}:`, displayedTotal!.logged || 0, false) }
         { renderFilterSubtitleText(`${strings.expected}:`, displayedTotal!.expected || 0, false) }
-        { renderFilterSubtitleText(`${strings.total}:`, displayedTotal!.total, true, displayedTotal!.total >= 0) }
+        { renderFilterSubtitleText(`${strings.balance}:`, displayedTotal!.balance, true, displayedTotal!.balance >= 0) }
       </Box>
     </>
   );
@@ -498,7 +496,7 @@ const EditorContent: React.FC<Props> = () => {
     return (
       <Box>
         <Typography variant="h2">
-          { strings.editorContent.total }
+          { strings.editorContent.balance }
         </Typography>
         <Box className={ classes.totalChartContainer }>
           <TotalChart

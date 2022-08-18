@@ -39,10 +39,8 @@ export interface IStrings extends LocalizedStringsMethods {
   drawerContent: {
     userInfo: {
       id: string;
-      userType: string;
       language: string;
-      createdAt: string;
-      updatedAt: string;
+      startDate: string;
     },
     noUser: string;
     statistics: string;
@@ -58,7 +56,7 @@ export interface IStrings extends LocalizedStringsMethods {
     userNotSelected: string;
     noTimeEntries: string;
     overview: string;
-    total: string;
+    balance: string;
     workTime: string;
     filterStartingDate: string;
     filterEndingDate: string;
@@ -95,12 +93,20 @@ export interface IStrings extends LocalizedStringsMethods {
     title: string;
   }
 
+  /**
+   * Translations related to sync handling
+   */
+  syncHandling: {
+    syncTimeDataSuccess: string;
+    title: string;
+  }
+
   startDate: string;
   week: string;
   logged: string;
   expected: string;
   initialTime: string;
-  total: string;
+  balance: string;
   project: string;
   internal: string;
   sunday: string;

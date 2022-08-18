@@ -1,4 +1,4 @@
-import { TimeEntry, TimeEntryTotalDto } from "generated/client";
+import { PersonTotalTime, DailyEntry } from "generated/client";
 import moment from "moment";
 import { FilterScopes, WorkTimeCategory, WorkTimeData, WorkTimeDatas, WorkTimeTotalData } from "types";
 
@@ -10,14 +10,14 @@ export default class WorkTimeDataUtils {
   /**
    * Preprocess the date entries for graphs
    * 
-   * @param dateEntries sorted date entries from api request 
+   * @param dateEntries sorted daily entries from api request 
    * @return processed work time data, work time total data
    */
-  public static dateEntriesPreprocess = (dateEntries: TimeEntry[]): WorkTimeDatas => {
+  public static dateEntriesPreprocess = (dateEntries: DailyEntry[]): WorkTimeDatas => {
     const workTimeData: WorkTimeData[] = [];
     const workTimeTotalData: WorkTimeTotalData = {
-      name: WorkTimeCategory.TOTAL,
-      total: 0,
+      name: WorkTimeCategory.BALANCE,
+      balance: 0,
       logged: 0,
       expected: 0
     };
@@ -30,7 +30,7 @@ export default class WorkTimeDataUtils {
           project: entry.projectTime,
           internal: entry.internalTime
         });
-        workTimeTotalData.total += entry.total;
+        workTimeTotalData.balance += entry.balance;
         workTimeTotalData.logged! += entry.logged;
         workTimeTotalData.expected! += entry.expected;
       }
@@ -46,11 +46,11 @@ export default class WorkTimeDataUtils {
    * @param scope filter scope
    * @return processed work time data, work time total data
    */
-  public static weeksYearsAndMonthsPreprocess = (weekEntries: TimeEntryTotalDto[], scope: FilterScopes): WorkTimeDatas => {
+  public static weeksYearsAndMonthsPreprocess = (weekEntries: PersonTotalTime[], scope: FilterScopes): WorkTimeDatas => {
     const workTimeData: WorkTimeData[] = [];
     const workTimeTotalData: WorkTimeTotalData = {
-      name: WorkTimeCategory.TOTAL,
-      total: 0,
+      name: WorkTimeCategory.BALANCE,
+      balance: 0,
       logged: 0,
       expected: 0
     };
@@ -63,7 +63,7 @@ export default class WorkTimeDataUtils {
           project: entry.projectTime,
           internal: entry.internalTime
         });
-        workTimeTotalData.total += entry.total;
+        workTimeTotalData.balance += entry.balance;
         workTimeTotalData.logged! += entry.logged;
         workTimeTotalData.expected! += entry.expected;
       }
@@ -79,16 +79,21 @@ export default class WorkTimeDataUtils {
    * @param scope filter scope
    * @returns time data name
    */
-  private static getTimeDataName = (entry: TimeEntryTotalDto, scope: FilterScopes): string => {
-    if (!entry.id) {
+  private static getTimeDataName = (entry: PersonTotalTime, scope: FilterScopes): string => {
+    const timePeriod = entry.timePeriod || "";
+    const getTimeData = timePeriod.split(",");
+    const year = Number(getTimeData[0]);
+    const month = Number(getTimeData[1]);
+    const week = Number(getTimeData[2]);
+    if (!entry.personId) {
       return "";
     }
 
     return {
       [FilterScopes.DATE]: "",
-      [FilterScopes.WEEK]: `${entry.id?.year!}/${entry.id?.week!}`,
-      [FilterScopes.MONTH]: `${entry.id?.year!}-${entry.id?.month!}`,
-      [FilterScopes.YEAR]: `${entry.id?.year!}`
+      [FilterScopes.WEEK]: `${year!}/${week!}`,
+      [FilterScopes.MONTH]: `${year!}-${month!}`,
+      [FilterScopes.YEAR]: `${year!}`
     }[scope];
   };
 

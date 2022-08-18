@@ -22,10 +22,8 @@
   "drawerContent": {
     "userInfo": {
       "id": "id",
-      "userType": "User type:",
-      "language": "Language:",
-      "createdAt": "Created at:",
-      "updatedAt": "Updated at:"
+      "language": "Language",
+      "startDate":"Start Date"
     },
     "noUser": "No user selected",
     "statistics": "Statistics",
@@ -38,7 +36,7 @@
     "userNotSelected": "Please select a user first.",
     "noTimeEntries": "No time entries found for this user.",
     "overview": "Overview",
-    "total": "Total balance",
+    "balance": "Total balance",
     "workTime": "Work time",
     "filterStartingDate": "Start",
     "filterEndingDate": "End",
@@ -65,15 +63,20 @@
     "fetchDateDataFailed": "Fetching date data failed",
     "fetchTimeDataFailed": "Fetching time data failed",
     "fetchUserDataFailed": "Fetching user data failed",
-    "syncTimeDataFailed": "Synchronizing time data failed",
+    "syncTimeDataFailed": "Synchronizing time data failed or there is no time data to synchronize",
     "title": "Error"
+  },
+
+  "syncHandling": {
+    "syncTimeDataSuccess": "Timedata was successfully synchronized",
+    "title": "Synchronizing"
   },
 
   "startDate": "Start Date",
   "week": "Week",
   "logged": "Logged",
   "expected": "Expected",
-  "total": "Balance",
+  "balance": "Balance",
   "initialTime": "Initial time",
   "project": "Project",
   "internal": "Internal",

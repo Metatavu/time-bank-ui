@@ -1,4 +1,4 @@
-import { PersonDto, TimeEntryTotalDto } from "generated/client";
+import { Person, PersonTotalTime } from "generated/client";
 
 /**
  * Access token
@@ -56,7 +56,7 @@ export enum WorkTimeCategory {
   PROJECT = "Project",
   INTERNAL = "Internal",
   EXPECTED = "Expected",
-  TOTAL = "Total",
+  BALANCE = "Balance",
   LOGGED = "Logged"
 }
 
@@ -65,7 +65,7 @@ export enum WorkTimeCategory {
  */
 export interface WorkTimeTotalData {
   name: WorkTimeCategory;
-  total: number;
+  balance: number;
   logged?: number;
   expected?: number;
 }
@@ -99,8 +99,8 @@ export interface CustomPieLabel {
  * Interface for person with total time
  */
 export interface PersonWithTotalTime {
-  person: PersonDto;
-  timeEntryTotal?: TimeEntryTotalDto;
+  person: Person;
+  personTotalTime?: PersonTotalTime;
 }
 
 /**
@@ -109,4 +109,12 @@ export interface PersonWithTotalTime {
 export interface ErrorContextType {
   error?: string;
   setError: (message: string, error?: any) => void;
+}
+
+/**
+ * Interface for synch context type
+ */
+export interface SyncContextType {
+  sync?: string;
+  setSynced: (message: string) => void;
 }

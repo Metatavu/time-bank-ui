@@ -1,4 +1,4 @@
-import { TimeEntryTotalDto } from "generated/client/models";
+import { PersonTotalTime } from "generated/client/models";
 import moment from "moment";
 import { WorkTimeData } from "types";
 
@@ -66,7 +66,7 @@ export default class TimeUtils {
    * @param entry2 second entry
    * @return positive integer if entry1 is greater than entry2, negative integer if otherwise, 0 if equal
    */
-  public static sortEntriesByWeek = (entry1: TimeEntryTotalDto, entry2: TimeEntryTotalDto): number => {
+  public static sortEntriesByWeek = (entry1: PersonTotalTime, entry2: PersonTotalTime): number => {
     const date1 = TimeUtils.getWeekFromEntry(entry1);
     const date2 = TimeUtils.getWeekFromEntry(entry2);
     return date1.diff(date2);
@@ -79,7 +79,7 @@ export default class TimeUtils {
    * @param entry2 second entry
    * @return positive integer if entry1 is greater than entry2, negative integer if otherwise, 0 if equal
    */
-  public static sortEntriesByMonth = (entry1: TimeEntryTotalDto, entry2: TimeEntryTotalDto): number => {
+  public static sortEntriesByMonth = (entry1: PersonTotalTime, entry2: PersonTotalTime): number => {
     const date1 = TimeUtils.getMonthFromEntry(entry1);
     const date2 = TimeUtils.getMonthFromEntry(entry2);
     return date1.diff(date2);
@@ -92,7 +92,7 @@ export default class TimeUtils {
    * @param entry2 second entry
    * @return positive integer if entry1 is greater than entry2, negative integer if otherwise, 0 if equal
    */
-  public static sortEntriesByYear = (entry1: TimeEntryTotalDto, entry2: TimeEntryTotalDto): number => {
+  public static sortEntriesByYear = (entry1: PersonTotalTime, entry2: PersonTotalTime): number => {
     const date1 = TimeUtils.getYearFromEntry(entry1);
     const date2 = TimeUtils.getYearFromEntry(entry2);
     return date1.diff(date2);
@@ -110,43 +110,56 @@ export default class TimeUtils {
   /**
    * Gets moment instance from entry (precision 1 month)
    *
-   * @param entry TimeEntryTotalDto entry
+   * @param entry PersonTotalTime entry
    * @returns moment instance from given entry
    */
-  public static getWeekFromEntry = (entry: TimeEntryTotalDto) => {
-    if (entry.id?.year === undefined || entry.id?.week === undefined) {
+  public static getWeekFromEntry = (entry: PersonTotalTime) => {
+    const timePeriod = entry.timePeriod || "";
+    const getTimeData = timePeriod.split(",");
+    const year = Number(getTimeData[0]);
+    const week = Number(getTimeData[2]);
+    
+    if (year === undefined || week === undefined) {
       throw new Error("Malformed data!");
     }
 
-    return moment().year(entry.id.year).week(entry.id.week);
+    return moment().year(year).week(week);
   };
 
   /**
    * Gets moment instance from entry (precision 1 month)
    *
-   * @param entry TimeEntryTotalDto entry
+   * @param entry PersonTotalTime entry
    * @returns moment instance from given entry
    */
-  public static getMonthFromEntry = (entry: TimeEntryTotalDto) => {
-    if (entry.id?.year === undefined || entry.id?.month === undefined) {
+  public static getMonthFromEntry = (entry: PersonTotalTime) => {
+    const timePeriod = entry.timePeriod || "";
+    const getTimeData = timePeriod.split(",");
+    const year = Number(getTimeData[0]);
+    const month = Number(getTimeData[1]);
+
+    if (year === undefined || month === undefined) {
       throw new Error("Malformed data!");
     }
 
-    return moment().year(entry.id.year).month(entry.id.month - 1);
+    return moment().year(year).month(month - 1);
   };
 
   /**
    * Gets moment instance from year
    *
-   * @param entry TimeEntryTotalDto entry
+   * @param entry PersonTotalTime entry
    * @returns moment instance from given parameters
    */
-  public static getYearFromEntry = (entry: TimeEntryTotalDto) => {
-    if (entry.id?.year === undefined) {
+  public static getYearFromEntry = (entry: PersonTotalTime) => {
+    const timePeriod = entry.timePeriod || "";
+    const getTimeData = timePeriod.split(",");
+    const year = Number(getTimeData[0]);
+    if (year === undefined) {
       throw new Error("Malformed data!");
     }
 
-    return moment().year(entry.id?.year);
+    return moment().year(year);
   };
 
   /**

@@ -12,7 +12,8 @@ import theme from "theme/theme";
 import AuthUtils from "utils/auth";
 import Api from "api/api";
 import { selectPerson, setPerson } from "features/person/person-slice";
-import { PersonDto } from "generated/client";
+import { Person } from "generated/client";
+import { SyncContext } from "components/sync-handler/sync-handler";
 import { ErrorContext } from "components/error-handler/error-handler";
 
 /**
@@ -36,7 +37,8 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
   const { accessToken } = useAppSelector(selectAuth);
   const { locale } = useAppSelector(selectLocale);
   const [ syncingData, setSyncingData ] = React.useState(false);
-  const context = React.useContext(ErrorContext);
+  const errorContext = React.useContext(ErrorContext);
+  const syncContext = React.useContext(SyncContext);
 
   /**
    * Event handler for sync button click
@@ -45,17 +47,16 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
     setSyncingData(true);
 
     try {
-      await Api.getTimeBankApi().timebankControllerSyncWorkTime({});
+      await Api.getSynchronizeApi(accessToken?.access_token).synchronizeTimeEntries({});
+      syncContext.setSynced(strings.syncHandling.syncTimeDataSuccess);
     } catch (error) {
-      context.setError(strings.errorHandling.syncTimeDataFailed, error);
+      errorContext.setError(strings.errorHandling.syncTimeDataFailed, error);
     }
-
     if (person) {
-      const personCloned = { ...person } as PersonDto;
+      const personCloned = { ...person } as Person;
       dispatch(setPerson(undefined));
       dispatch(setPerson(personCloned));
     }
-
     setSyncingData(false);
   };
 
@@ -100,7 +101,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
   };
 
   /**
-   * Renders logout
+   * Renders sync button
    */
   const renderSyncButton = () => (
     <Button
