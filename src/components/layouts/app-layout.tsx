@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { AppBar, Box, Drawer, Toolbar, Typography, Select, MenuItem, Button, Dialog, CircularProgress, IconButton } from "@material-ui/core";
 import useAppLayoutStyles from "styles/layouts/app-layout";
@@ -18,6 +18,7 @@ import { ErrorContext } from "components/error-handler/error-handler";
 import GenericDialog from "components/generics/generic-dialog/generic-dialog";
 import DeleteIcon from "@material-ui/icons/Delete";
 import GenericDatePicker from "components/generics/date-picker/date-picker";
+import moment from "moment";
 
 /**
  * Component properties
@@ -34,7 +35,7 @@ interface Props {
  * @param props component properties
  */
 const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children, managementScreen }) => {
-  const yesterday = new Date().setDate(new Date().getDate() - 1);
+  const yesterday = moment(new Date()).subtract(1, "days").toDate();
   const classes = useAppLayoutStyles();
   const dispatch = useAppDispatch();
   const { person } = useAppSelector(selectPerson);
@@ -43,8 +44,8 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
   const [ syncingData, setSyncingData ] = React.useState(false);
   const errorContext = React.useContext(ErrorContext);
   const syncOrUpdateContext = React.useContext(SyncOrUpdateContext);
-  const [syncSelection, setSyncSelection] = React.useState(false);
-  const [ selectedStartDate, setSelectedStartDate ] = useState<Date | null>(new Date(yesterday));
+  const [ syncSelection, setSyncSelection ] = React.useState(false);
+  const [ selectedStartDate, setSelectedStartDate ] = useState<Date | null>(yesterday);
 
   /**
    * Event handler for sync button click
@@ -73,10 +74,6 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
    * Handler for sync-date selection dialog
    */
   const handleClickOpen = () => {
-    if (!selectedStartDate) {
-      setSelectedStartDate(new Date(yesterday));
-    }
-    
     setSyncSelection(true);
   };
 
@@ -115,6 +112,12 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
     );
   };
 
+  useEffect(() => {
+    if (!selectedStartDate) {
+      setSelectedStartDate(yesterday);
+    }
+  }, [syncSelection]);
+  
   /**
    * Renders sync selection dialog
    */

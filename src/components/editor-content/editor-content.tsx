@@ -611,8 +611,12 @@ const EditorContent: React.FC<Props> = () => {
   /**
    * Renders vacation days list per week
    */
-  const renderVacationDaysList = () => (
-    vacationDayList?.map((entry: VacationWeekData) => {
+  const renderVacationDaysList = () => {
+    if (!vacationDayList) {
+      return null;
+    }
+    
+    return vacationDayList?.map((entry: VacationWeekData) => {
       return (
         <List className={classes.vacationList}>
           <Typography style={{ fontSize: "1.2em" }}>{ strings.editorContent.week + entry.weekNumber }</Typography>
@@ -623,8 +627,8 @@ const EditorContent: React.FC<Props> = () => {
           })}
         </List>
       );
-    })
-  );
+    });
+  };
   
   /**
   * Render vacation days component 

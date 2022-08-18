@@ -38,9 +38,9 @@ const ManagementScreen: React.FC = () => {
   const [ displayedPersonsTotalTime, setDisplayedPersonsTotalTime ] = React.useState<PersonWithTotalTime[]>([]);
   const [ selectedPersonWithTotalTime, setSelectedPersonWithTotalTime ] = React.useState<PersonWithTotalTime | undefined>(undefined);
   const [ searchInput, setSearchInput ] = React.useState("");
-  const [billableHoursUpdate, setBillableHoursUpdate] = React.useState(false);
-  const [errorState, setErrorState] = React.useState(false);
-  const [newBillablePercentage, setNewBillablePercentage] = React.useState<number>(0);
+  const [ billableHoursUpdate, setBillableHoursUpdate ] = React.useState(false);
+  const [ errorState, setErrorState ] = React.useState(false);
+  const [ newBillablePercentage, setNewBillablePercentage ] = React.useState<number>(0);
   const context = React.useContext(ErrorContext);
   const syncOrUpdateContext = React.useContext(SyncOrUpdateContext);
   const history = useHistory();

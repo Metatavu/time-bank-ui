@@ -10,39 +10,33 @@ export default class VacationDataUtils {
   /**
    * Preprocess list for vacation days and weeks
    * 
-   * @param dateEntries daily entries from api request
+   * @param dailyEntry daily entries from api request
    * @return weeks and days of vacation 
    */
-  public static vacationDaysProcess = (dateEntries: DailyEntry[]): VacationWeekData[] => {
-    const vacationDays: VacationDayData[] = [];
+  public static vacationDaysProcess = (dailyEntries: DailyEntry[]): VacationWeekData[] => {
+    const vacationDays: VacationDayData[] = dailyEntries
+      .filter(dailyEntry => dailyEntry.isVacation)
+      .map(dailyEntry => {
+        return {
+          weekNumber: getISOWeek(new Date(dailyEntry.date)),
+          day: dailyEntry.date
+        };
+      }).reverse();
+
     const vacationWeeks: VacationWeekData[] = [];
 
-    dateEntries.forEach(
-      entry => {
-        if (entry.isVacation) {
-          const weekNumber = getISOWeek(new Date(entry.date));
-          vacationDays.push({
-            weekNumber: weekNumber,
-            day: entry.date
-          });
-        }
-      }
-    );
-    vacationDays.reverse();
-    for (let index = 0; index < vacationDays.length; index++) {
-      let oneWeek: VacationDayData[] = [];
-      oneWeek = vacationDays.filter(entry => entry.weekNumber === vacationDays[index].weekNumber);
-
-      const idx = vacationWeeks.findIndex(object => object.weekNumber === oneWeek[0].weekNumber);
-
-      if (idx === -1) {
+    vacationDays.forEach((day: VacationDayData) => {
+      const indexOfWeek = vacationWeeks.findIndex(x => x.weekNumber === day.weekNumber);
+      if (indexOfWeek < 0) {
         vacationWeeks.push({
-          weekNumber: oneWeek[0].weekNumber,
-          vacationDays: oneWeek
+          weekNumber: day.weekNumber,
+          vacationDays: [day]
         });
+      } else {
+        vacationWeeks[indexOfWeek].vacationDays.push(day);
       }
-    }
+    });
     return vacationWeeks;
   };
-
+  
 }
