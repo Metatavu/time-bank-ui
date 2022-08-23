@@ -30,7 +30,6 @@ const GenericDatePicker: React.FC<Props> = ({
 
   const { locale } = useAppSelector(selectLocale);
 
-  const todayDate = new Date();
   const [ pickerLocale, setPickerLocale ] = React.useState(enLocale);
 
   /**
@@ -55,7 +54,7 @@ const GenericDatePicker: React.FC<Props> = ({
           inputVariant="standard"
           variant="inline"
           format={ dateFormat }
-          maxDate={ todayDate }
+          maxDate={ new Date() }
           label={ syncStart }
           defaultValue={ selectedStartDate }
           value={ selectedStartDate }

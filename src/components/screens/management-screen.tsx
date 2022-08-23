@@ -95,7 +95,7 @@ const ManagementScreen: React.FC = () => {
    * Event handler for billing rate update button click
    */
   const handleBillingRateUpdateClick = async () => {
-    if (!selectedPersonWithTotalTime || !selectedPersonWithTotalTime.personTotalTime) {
+    if (!selectedPersonWithTotalTime?.personTotalTime) {
       return null;
     }
 
@@ -112,7 +112,7 @@ const ManagementScreen: React.FC = () => {
           personTotalTime: selectedPersonWithTotalTime.personTotalTime
         };
         syncOrUpdateContext.setSyncOrUpdate(strings.billableHoursHandling.updateBillableHoursSuccess);
-        const personIndex = personsTotalTime.findIndex(_person => _person.person.id === person.id);
+        const personIndex = personsTotalTime.findIndex(personWithTotalTime => personWithTotalTime.person.id === person.id);
 
         setPersonsTotalTime([
           ...personsTotalTime,
@@ -162,21 +162,10 @@ const ManagementScreen: React.FC = () => {
   };
 
   /**
-   * Handler for billable hours update dialog
-   */
-  const handleClickOpen = () => {
-    setBillableHoursUpdate(true);
-  };
-
-  /**
    * Handler for new billable percentage
    * 
    */
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = event.target.value;
-    const newValueNumber = Number(newValue);
-    setNewBillablePercentage(newValueNumber);
-  };
+  const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => setNewBillablePercentage(Number(target.value));
 
   /**
    * search input change handler
@@ -303,13 +292,12 @@ const ManagementScreen: React.FC = () => {
         className={ classes.billableHours }
       >
         <Button
-          onClick={ handleClickOpen }
+          onClick={ () => setBillableHoursUpdate(true) }
         >
           <Create color="primary"/>
         </Button>
         { `${value} %` }
       </Typography>
-
     </Box>
   );
 
@@ -445,7 +433,7 @@ const ManagementScreen: React.FC = () => {
       return null;
     }
 
-    const { person } = selectedPersonWithTotalTime;
+    const { firstName, lastName, email } = selectedPersonWithTotalTime.person;
     
     return (
       <GenericDialog
@@ -456,13 +444,13 @@ const ManagementScreen: React.FC = () => {
         onCancel={ () => setBillableHoursUpdate(false) }
         onConfirm={ () => setBillableHoursUpdate(false) }
       >
-        <Box className={classes.updateBillableHoursContent}>
+        <Box className={ classes.updateBillableHoursContent }>
           <Box>
             <Typography variant="h5">
-              { `${person.firstName} ${person.lastName}` }
+              { `${firstName} ${lastName}` }
             </Typography>
             <Typography variant="h6" style={{ color: "rgba(0, 0, 0, 0.6)" }}>
-              { person.email }
+              { email }
             </Typography>
           </Box>
           <Box
@@ -471,18 +459,18 @@ const ManagementScreen: React.FC = () => {
             }}
           >
             <Typography>
-              {strings.billableHoursHandling.updateBillableHours}
+              { strings.billableHoursHandling.updateBillableHours }
             </Typography>
             <TextField
-              helperText={strings.billableHoursHandling.billingPercentageError}
-              error={errorState}
+              helperText={ strings.billableHoursHandling.billingPercentageError }
+              error={ errorState }
               style={{
                 marginTop: theme.spacing(1)
               }}
-              label={strings.billableHoursHandling.billingRate}
+              label={ strings.billableHoursHandling.billingRate }
               type="number"
-              defaultValue={selectedPersonWithTotalTime.person.minimumBillableRate}
-              onChange={handleChange}
+              defaultValue={ selectedPersonWithTotalTime.person.minimumBillableRate }
+              onChange={ handleChange }
             />
           </Box>
           <Button
@@ -490,7 +478,7 @@ const ManagementScreen: React.FC = () => {
             color="secondary"
             variant="contained"
           >
-            {strings.billableHoursHandling.updateButton}
+            { strings.billableHoursHandling.updateButton }
           </Button>
         </Box>
       </GenericDialog>

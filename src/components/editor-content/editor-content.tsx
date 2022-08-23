@@ -18,7 +18,7 @@ import moment from "moment";
 import DateRangePicker from "components/generics/date-range-picker/date-range-picker";
 import { ErrorContext } from "components/error-handler/error-handler";
 import DeleteIcon from "@material-ui/icons/Delete";
-import VacationDataUtils from "utils/vacation-data-utils";
+import vacationDaysProcess from "utils/vacation-data-utils";
 import { selectAuth } from "features/auth/auth-slice";
 
 /**
@@ -220,7 +220,7 @@ const EditorContent: React.FC<Props> = () => {
         before: new Date(currentVacationSeasonEnd),
         after: new Date(currentVacationSeasonStart)
       });
-      setVacationDayList(VacationDataUtils.vacationDaysProcess(vacationEntries));
+      setVacationDayList(vacationDaysProcess(vacationEntries));
     } catch (error) {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
     }
@@ -253,7 +253,7 @@ const EditorContent: React.FC<Props> = () => {
     if (!accessToken) {
       return;
     }
-    
+
     updateTimeData();
     loadVacationData();
   }, [person, scope, startWeek, endWeek, selectedStartDate, selectedEndDate]);
@@ -568,7 +568,6 @@ const EditorContent: React.FC<Props> = () => {
   */
   const renderVacationDaysSubtitleText = (name: string, value: number, unspent: boolean, positiveValue?: boolean) => {
     const valueColor = positiveValue ? theme.palette.success.main : theme.palette.error.main;
-    const valueText = value;
 
     return (
       <>
@@ -586,7 +585,7 @@ const EditorContent: React.FC<Props> = () => {
             fontStyle: "italic"
           }}
         >
-          { Math.abs(valueText) }
+          { Math.abs(value) }
         </Typography>
       </>
     );
@@ -595,18 +594,27 @@ const EditorContent: React.FC<Props> = () => {
   /**
   * Renders vacation days summary
   */
-  const renderVacationDaysSummary = () => (
-    <>
-      <Typography variant="h2">
-        { strings.editorContent.vacationDays }
-      </Typography>
-      <Box className={ classes.vacationDaysSubtitle }>
-        { renderVacationDaysSubtitleText(`${strings.editorContent.spentVacationDays}`, person!.spentVacations, false) }
-        { renderVacationDaysSubtitleText(`${person!.unspentVacations >= 0 ? strings.editorContent.unspentVacationDays : strings.editorContent.extraVacationDays}`,
-          person!.unspentVacations, true, person!.unspentVacations >= 0) }
-      </Box>
-    </>
-  );
+  const renderVacationDaysSummary = () => {
+    if (!person) {
+      return null;
+    }
+
+    const { spentVacations, unspentVacations } = person;
+    const hasUnspentVacationDays = unspentVacations >= 0;
+    const unspentVacationDaysString = hasUnspentVacationDays ? strings.editorContent.unspentVacationDays : strings.editorContent.extraVacationDays;
+
+    return (
+      <>
+        <Typography variant="h2">
+          { strings.editorContent.vacationDays }
+        </Typography>
+        <Box className={ classes.vacationDaysSubtitle }>
+          { renderVacationDaysSubtitleText(strings.editorContent.spentVacationDays, spentVacations, false) }
+          { renderVacationDaysSubtitleText(unspentVacationDaysString, unspentVacations, true, hasUnspentVacationDays) }
+        </Box>
+      </>
+    );
+  };
 
   /**
    * Renders vacation days list per week
@@ -620,11 +628,11 @@ const EditorContent: React.FC<Props> = () => {
       return (
         <List className={classes.vacationList}>
           <Typography style={{ fontSize: "1.2em" }}>{ strings.editorContent.week + entry.weekNumber }</Typography>
-          {entry.vacationDays.map(oneDay => {
-            return (
-              <ListItem>{oneDay.day.toLocaleDateString("fi-FI")}</ListItem>
-            );
-          })}
+          { entry.vacationDays.map(oneDay =>
+            <ListItem>
+              {oneDay.day.toLocaleDateString("fi-FI")}
+            </ListItem>)
+          }
         </List>
       );
     });
@@ -637,6 +645,7 @@ const EditorContent: React.FC<Props> = () => {
     if (!person || !personTotalTime) {
       return null;
     }
+
     return (
       <Accordion className={ classes.vacationDaysAccordion }>
         <AccordionSummary

@@ -64,7 +64,7 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
       return null;
     }
 
-    const selectedData = payload[0].payload;
+    const { billableProject, nonBillableProject, internal, expected, name } = payload[0].payload;
 
     return (
       <Box className={ classes.customTooltipContainer }>
@@ -74,14 +74,12 @@ const OverviewChart: React.FC<Props> = ({ displayedData, isLoading }) => {
             padding: theme.spacing(1)
           }}
         >
-          { selectedData.name }
+          { name }
         </Typography>
-        {/* eslint-disable */}
-        { selectedData.billableProject !== undefined && renderCustomizedTooltipRow(strings.billableProject, selectedData.billableProject as number, theme.palette.success.main) }
-        { selectedData.nonBillableProject !== undefined && renderCustomizedTooltipRow(strings.nonBillableProject, selectedData.nonBillableProject as number, theme.palette.success.main) }
-        {/* eslint-enable */}
-        { selectedData.internal !== undefined && renderCustomizedTooltipRow(strings.internal, selectedData.internal as number, theme.palette.warning.main) }
-        { selectedData.expected !== undefined && renderCustomizedTooltipRow(strings.expected, selectedData.expected as number, theme.palette.info.main) }
+        { billableProject !== undefined && renderCustomizedTooltipRow(strings.billableProject, billableProject as number, theme.palette.success.main) }
+        { nonBillableProject !== undefined && renderCustomizedTooltipRow(strings.nonBillableProject, nonBillableProject as number, theme.palette.success.main) }
+        { internal !== undefined && renderCustomizedTooltipRow(strings.internal, internal as number, theme.palette.warning.main) }
+        { expected !== undefined && renderCustomizedTooltipRow(strings.expected, expected as number, theme.palette.info.main) }
       </Box>
     );
   };
