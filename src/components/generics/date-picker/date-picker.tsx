@@ -70,11 +70,9 @@ const GenericDatePicker: React.FC<Props> = ({
    * Component render
    */
   return (
-    <>
-      <Box display="flex" alignItems="center">
-        { renderStartDatePicker() }
-      </Box>
-    </>
+    <Box display="flex" alignItems="center">
+      { renderStartDatePicker() }
+    </Box>
   );
 };
 

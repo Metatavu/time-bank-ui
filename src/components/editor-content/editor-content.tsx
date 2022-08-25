@@ -624,18 +624,15 @@ const EditorContent: React.FC<Props> = () => {
       return null;
     }
     
-    return vacationDayList?.map((entry: VacationWeekData) => {
-      return (
-        <List className={classes.vacationList}>
-          <Typography style={{ fontSize: "1.2em" }}>{ strings.editorContent.week + entry.weekNumber }</Typography>
-          { entry.vacationDays.map(oneDay =>
-            <ListItem>
-              {oneDay.day.toLocaleDateString("fi-FI")}
-            </ListItem>)
-          }
-        </List>
-      );
-    });
+    return vacationDayList.map((entry: VacationWeekData) =>
+      <List className={ classes.vacationList }>
+        <Typography style={{ fontSize: "1.2em" }}>{ strings.editorContent.week + entry.weekNumber }</Typography>
+        { entry.vacationDays.map(oneDay =>
+          <ListItem>
+            { oneDay.day.toLocaleDateString("fi-FI") }
+          </ListItem>)
+        }
+      </List>);
   };
   
   /**
