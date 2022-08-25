@@ -86,6 +86,7 @@ export interface IStrings extends LocalizedStringsMethods {
     seeMore: string;
     searchPlaceholder: string;
     noUser: string;
+    fetchingPersons: string;
   };
 
   /**

@@ -62,7 +62,8 @@
   "managementScreen": {
     "seeMore": "see More",
     "searchPlaceholder": "Search user..",
-    "noUser": "No user to display."
+    "noUser": "No user to display.",
+    "fetchingPersons": "Haetaan user details..."
   },
 
   "billableHoursHandling": {

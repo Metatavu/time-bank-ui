@@ -175,13 +175,6 @@ const ManagementScreen: React.FC = () => {
   };
 
   /**
-   * Person detail close icon click handler
-   */
-  const handlePersonCloseClick = () => {
-    setSelectedPersonWithTotalTime(undefined);
-  };
-
-  /**
    * search input change handler
    * 
    * @param event input change event
@@ -331,77 +324,7 @@ const ManagementScreen: React.FC = () => {
       { name: WorkTimeCategory.INTERNAL, balance: personTotalTime.internalTime }
     ];
 
-    const COLORS = [ theme.palette.success.main, theme.palette.warning.main ];
-
-    return (
-      <ResponsiveContainer className={ classes.pieChartContainer }>
-        <PieChart>
-          <Pie
-            cx="50%"
-            cy="50%"
-            dataKey="balance"
-            data={ workTimeData }
-            label={ props => TimeUtils.convertToMinutesAndHours(props.value) }
-          >
-            { workTimeData.map((entry, index) => (
-              <Cell fill={ COLORS[index % COLORS.length] }/>
-            )) }
-          </Pie>
-          { legend ? <Legend wrapperStyle={{ position: "relative" }}/> : null }
-          <RechartTooltip content={ renderCustomizedTooltip }/>
-        </PieChart>
-      </ResponsiveContainer>
-    );
-  };
-
-  /**
-   * Renders piechart
-   */
-  const renderPieChart = (personWithTotalTime: PersonWithTotalTime, legend: boolean) => {
-    const { person, personTotalTime } = personWithTotalTime;
-
-    if (!person || !personTotalTime) {
-      return null;
-    }
-
-    const workTimeData: WorkTimeTotalData[] = [
-      { name: WorkTimeCategory.BILLABLE_PROJECT, balance: personTotalTime.billableProjectTime },
-      { name: WorkTimeCategory.NON_BILLABLE_PROJECT, balance: personTotalTime.nonBillableProjectTime },
-      { name: WorkTimeCategory.INTERNAL, balance: personTotalTime.internalTime }
-    ];
-
     const COLORS = [ theme.palette.success.dark, theme.palette.success.light, theme.palette.warning.main ];
-
-    return (
-      <ResponsiveContainer className={ classes.pieChartContainer }>
-        <PieChart>
-          <Pie
-            cx="50%"
-            cy="50%"
-            dataKey="balance"
-            data={ workTimeData }
-            label={ props => TimeUtils.convertToMinutesAndHours(props.value) }
-          >
-            { workTimeData.map((entry, index) => (
-              <Cell fill={ COLORS[index % COLORS.length] }/>
-            )) }
-          </Pie>
-          { legend ? <Legend wrapperStyle={{ position: "relative" }}/> : null }
-          <RechartTooltip content={ renderCustomizedTooltip }/>
-        </PieChart>
-      </ResponsiveContainer>
-    );
-  };
-
-  /**
-   * Renders the person detail 
-   */
-  const renderPersonDetail = () => {
-    if (!selectedPersonWithTotalTime || !selectedPersonWithTotalTime.personTotalTime) {
-      return null;
-    }
-
-    const { person } = selectedPersonWithTotalTime;
 
     return (
       <ResponsiveContainer className={ classes.pieChartContainer }>
@@ -500,7 +423,11 @@ const ManagementScreen: React.FC = () => {
         onClick={ handleListItemClick(personsTotalTimeEntry) }
         className={ classes.personListEntry }
       >
-        <Card className={ classes.personEntry }>
+        <Card
+          className={ classes.personEntry }
+          onDoubleClick={ () => handlePersonRedirectClick(person) }
+          key={ person.id }
+        >
           <Box className={ classes.userInfoContainer }>
             <Typography variant="h2">
               { `${person.firstName} ${person.lastName}` }
@@ -637,6 +564,9 @@ const ManagementScreen: React.FC = () => {
       <AppLayout managementScreen>
         <Box className={ classes.loadingContainer }>
           <CircularProgress/>
+          <Typography>
+            { strings.managementScreen.fetchingPersons }
+          </Typography>
         </Box>
       </AppLayout>
     );

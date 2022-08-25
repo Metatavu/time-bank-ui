@@ -43,7 +43,8 @@ const useManagementScreenStyles = makeStyles(theme => ({
     width: "100%",
     display: "flex",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    flexDirection: "column"
   },
 
   pieChartContainer: {
@@ -56,6 +57,7 @@ const useManagementScreenStyles = makeStyles(theme => ({
 
   redirectPersonDetailPaper: {
     width: `calc((55vw - 2 * ${theme.spacing(8)}px) / 2)`,
+    height: "600px",
     position: "absolute",
     top: theme.spacing(14),
     right: theme.spacing(6),
