@@ -24,15 +24,18 @@ export default class WorkTimeDataUtils {
 
     dateEntries.forEach(
       entry => {
+        const { date, expected, billableProjectTime, nonBillableProjectTime, internalTime, balance, logged } = entry;
+
         workTimeData.push({
-          name: moment(entry.date).format("YYYY-MM-DD"),
-          expected: entry.expected,
-          project: entry.projectTime,
-          internal: entry.internalTime
+          name: moment(date).format("YYYY-MM-DD"),
+          expected: expected,
+          billableProject: billableProjectTime,
+          nonBillableProject: nonBillableProjectTime,
+          internal: internalTime
         });
-        workTimeTotalData.balance += entry.balance;
-        workTimeTotalData.logged! += entry.logged;
-        workTimeTotalData.expected! += entry.expected;
+        workTimeTotalData.balance += balance;
+        workTimeTotalData.logged! += logged;
+        workTimeTotalData.expected! += expected;
       }
     );
 
@@ -57,15 +60,18 @@ export default class WorkTimeDataUtils {
 
     weekEntries.forEach(
       entry => {
+        const { expected, billableProjectTime, nonBillableProjectTime, internalTime, balance, logged } = entry;
+
         workTimeData.push({
           name: WorkTimeDataUtils.getTimeDataName(entry, scope),
-          expected: entry.expected,
-          project: entry.projectTime,
-          internal: entry.internalTime
+          expected: expected,
+          billableProject: billableProjectTime,
+          nonBillableProject: nonBillableProjectTime,
+          internal: internalTime
         });
-        workTimeTotalData.balance += entry.balance;
-        workTimeTotalData.logged! += entry.logged;
-        workTimeTotalData.expected! += entry.expected;
+        workTimeTotalData.balance += balance;
+        workTimeTotalData.logged! += logged;
+        workTimeTotalData.expected! += expected;
       }
     );
 

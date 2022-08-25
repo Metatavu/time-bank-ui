@@ -57,6 +57,12 @@ export interface IStrings extends LocalizedStringsMethods {
     noTimeEntries: string;
     overview: string;
     balance: string;
+    vacationDays: string;
+    spentVacationDays: string;
+    unspentVacationDays: string;
+    extraVacationDays: string;
+    listOfVacationDays: string;
+    noVacationDays: string;
     workTime: string;
     filterStartingDate: string;
     filterEndingDate: string;
@@ -83,13 +89,27 @@ export interface IStrings extends LocalizedStringsMethods {
   };
 
   /**
+   * Translations related to billable hour update handling
+   */
+  billableHoursHandling: {
+    title: string;
+    updateBillableHours: string;
+    billingRate: string;
+    billingPercentageError: string;
+    updateButton: string;
+    updateBillableHoursSuccess: string;
+  };
+
+  /**
    * Translations related to error handling
    */
   errorHandling: {
     fetchDateDataFailed: string;
     fetchTimeDataFailed: string;
+    fetchVacationDataFailed: string;
     fetchUserDataFailed: string;
     syncTimeDataFailed: string;
+    updateBillingPercentageFailed: string;
     title: string;
   }
 
@@ -98,7 +118,9 @@ export interface IStrings extends LocalizedStringsMethods {
    */
   syncHandling: {
     syncTimeDataSuccess: string;
+    sync: string;
     title: string;
+    syncStart: string;
   }
 
   startDate: string;
@@ -107,7 +129,8 @@ export interface IStrings extends LocalizedStringsMethods {
   expected: string;
   initialTime: string;
   balance: string;
-  project: string;
+  billableProject: string;
+  nonBillableProject: string;
   internal: string;
   sunday: string;
   monday: string;
@@ -116,7 +139,7 @@ export interface IStrings extends LocalizedStringsMethods {
   thursday: string;
   friday: string;
   saturday: string;
-
+  billableHours: string;
 }
 
 const strings: IStrings = new LocalizedStrings({ en: en, fi: fi });

@@ -53,7 +53,8 @@ export enum DateFormats {
  * Enum for work time category
  */
 export enum WorkTimeCategory {
-  PROJECT = "Project",
+  BILLABLE_PROJECT = "Billable Project",
+  NON_BILLABLE_PROJECT = "Non Billable Project",
   INTERNAL = "Internal",
   EXPECTED = "Expected",
   BALANCE = "Balance",
@@ -76,7 +77,8 @@ export interface WorkTimeTotalData {
 export interface WorkTimeData {
   name: string;
   expected: number;
-  project: number;
+  billableProject: number;
+  nonBillableProject: number;
   internal: number;
 }
 
@@ -86,6 +88,22 @@ export interface WorkTimeData {
 export interface WorkTimeDatas {
   workTimeData: WorkTimeData[];
   workTimeTotalData: WorkTimeTotalData;
+}
+
+/**
+ * Type for single vacation day data
+ */
+export interface VacationDayData {
+  weekNumber: number;
+  day: Date;
+}
+
+/**
+ * Type for vacation week data
+ */
+export interface VacationWeekData {
+  weekNumber: number;
+  vacationDays: VacationDayData[];
 }
 
 /**
@@ -114,7 +132,7 @@ export interface ErrorContextType {
 /**
  * Interface for synch context type
  */
-export interface SyncContextType {
-  sync?: string;
-  setSynced: (message: string) => void;
+export interface SyncOrUpdateContextType {
+  syncOrUpdate?: string;
+  setSyncOrUpdate: (message: string) => void;
 }

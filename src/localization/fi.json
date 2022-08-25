@@ -4,7 +4,7 @@
     "logo": "Sivun logo",
     "managementLink": "Hallinta",
     "logout": "Kirjaudu ulos",
-    "syncData": "Synkronoi",
+    "syncData": "Synkronointi",
     "syncDataLoading": "Tietoja synkronoidaan, odota hetki."
   },
 
@@ -37,10 +37,16 @@
     "noTimeEntries": "Valitulle käyttäjälle ei löytynyt kirjattua aikaa",
     "overview": "Yleisnäkymä",
     "balance": "Kokonaissaldo",
+    "vacationDays": "Nykyisen lomakauden lomapäivät",
+    "spentVacationDays": "Käytetyt lomapäivät: ",
+    "unspentVacationDays": "Käyttämättömät lomapäivät: ",
+    "extraVacationDays": "Ylimääräisiä lomapäiviä käytetty: ",
+    "listOfVacationDays": "Merkatut lomapäivät:",
+    "noVacationDays": "Ei merkattuja lomapäiviä",
     "workTime": "Työaika",
     "filterStartingDate": "Alku",
     "filterEndingDate": "Loppu",
-    "week": "Viikko",
+    "week": "Viikko ",
     "date": "Pvm",
     "month": "Kuukausi",
     "year": "Vuosi",
@@ -58,17 +64,30 @@
     "searchPlaceholder": "Hae käyttäjää..",
     "noUser": "Ei näytettävää käyttäjää."
   },
+
+  "billableHoursHandling": {
+    "title": "Päivitä henkilön min. laskutusastetta",
+    "updateBillableHours": "Syötä uusi laskutusaste:",
+    "billingRate": "Laskutusaste",
+    "billingPercentageError": "Laskutusaste oltava 0-100%",
+    "updateButton": "Päivitä",
+    "updateBillableHoursSuccess": "Laskutusasteen päivitys onnistui"
+  },
   
   "errorHandling": {
     "fetchDateDataFailed": "Tietojen haku päivämäärän perusteella epäonnistui",
     "fetchTimeDataFailed": "Aikatietojen haku epäonnistui",
     "fetchUserDataFailed": "Käyttäjätietojen haku epäonnistui",
-    "syncTimeDataFailed": "Aikatietojen synkronointi epäonnistui tai synkronoitavia aikatietoja ei ole",
+    "fetchVacationDataFailed": "Lomatietojen haku epäonnistui",
+    "syncTimeDataFailed": "Aikatietojen synkronointi epäonnistui",
+    "updateBillingPercentageFailed": "Laskutusasteen päivitys epäonnistui",
     "title": "Error"
   },
 
   "syncHandling": {
-    "syncTimeDataSuccess": "Aikatietojen synkronointi onnistui",
+    "syncTimeDataSuccess": "Aikakirjauksien synkronointi onnistui",
+    "sync": "Synkronoi aikakirjaukset",
+    "syncStart": "Synkronoi valitusta päivästä",
     "title": "Synkronointi"
   },
 
@@ -78,7 +97,8 @@
   "expected": "Odotettu",
   "balance": "Saldo",
   "initialTime": "Alkuperäinen aika",
-  "project": "Projekti",
+  "billableProject": "Projekti",
+  "nonBillableProject": "Sisäinen projekti",
   "internal": "Sisäinen",
   "sunday": "Sunnuntai",
   "monday": "Maanantai",
@@ -86,6 +106,7 @@
   "wednesday": "Keskiviikko",
   "thursday": "Torstai",
   "friday": "Perjantai",
-  "saturday": "Lauantai"
+  "saturday": "Lauantai",
+  "billableHours": "Minimi laskutusaste"
 
 }

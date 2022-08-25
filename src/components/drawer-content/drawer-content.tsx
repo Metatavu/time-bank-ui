@@ -215,7 +215,8 @@ const DrawerContent: React.FC<Props> = () => {
     }
 
     const sectionName = {
-      [WorkTimeCategory.PROJECT]: strings.project,
+      [WorkTimeCategory.BILLABLE_PROJECT]: strings.billableProject,
+      [WorkTimeCategory.NON_BILLABLE_PROJECT]: strings.nonBillableProject,
       [WorkTimeCategory.INTERNAL]: strings.internal
     }[selectedData.name];
 
@@ -248,11 +249,12 @@ const DrawerContent: React.FC<Props> = () => {
       theme.palette.success.main;
 
     const workTimeData: WorkTimeTotalData[] = [
-      { name: WorkTimeCategory.PROJECT, balance: personTotalTime.projectTime },
+      { name: WorkTimeCategory.BILLABLE_PROJECT, balance: personTotalTime.billableProjectTime },
+      { name: WorkTimeCategory.NON_BILLABLE_PROJECT, balance: personTotalTime.nonBillableProjectTime },
       { name: WorkTimeCategory.INTERNAL, balance: personTotalTime.internalTime }
     ];
 
-    const COLORS = [ theme.palette.success.main, theme.palette.warning.main ];
+    const COLORS = [ theme.palette.success.dark, theme.palette.success.light, theme.palette.warning.main ];
 
     return (
       <>
