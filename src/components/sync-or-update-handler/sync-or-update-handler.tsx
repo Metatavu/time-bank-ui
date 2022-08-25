@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import GenericSnackbar from "components/generics/generic-snackbar/generic-snackbar";
-import * as React from "react";
-import { useCallback, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { SyncOrUpdateContextType } from "../../types";
 
 /**
@@ -26,7 +25,7 @@ const SyncOrUpdateHandler: React.FC = ({ children }) => {
    *
    * @param message message on successful synchronization
    */
-  const handleSyncOrUpdate = async (message: string): Promise<void> => {
+  const handleSyncOrUpdate = (message: string) => {
     if (message) {
       setSyncOrUpdate(message);
     }

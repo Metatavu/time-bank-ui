@@ -88,7 +88,7 @@ const useDrawerContentStyles = makeStyles(theme => ({
     "& .recharts-wrapper .recharts-surface": {
       overflow: "visible"
     },
-    marginTop: `${theme.spacing(1)}px !important`
+    marginTop: `${theme.spacing(1)}px`
   },
 
   userDetailEntry: {

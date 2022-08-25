@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { AppBar, Box, Drawer, Toolbar, Typography, Select, MenuItem, Button, Dialog, CircularProgress, IconButton } from "@material-ui/core";
 import useAppLayoutStyles from "styles/layouts/app-layout";
@@ -18,6 +18,7 @@ import { ErrorContext } from "components/error-handler/error-handler";
 import GenericDialog from "components/generics/generic-dialog/generic-dialog";
 import DeleteIcon from "@material-ui/icons/Delete";
 import GenericDatePicker from "components/generics/date-picker/date-picker";
+import moment from "moment";
 
 /**
  * Component properties
@@ -34,7 +35,7 @@ interface Props {
  * @param props component properties
  */
 const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children, managementScreen }) => {
-  const yesterday = new Date().setDate(new Date().getDate() - 1);
+  const yesterday = moment(new Date()).subtract(1, "days").toDate();
   const classes = useAppLayoutStyles();
   const dispatch = useAppDispatch();
   const { person } = useAppSelector(selectPerson);
@@ -43,8 +44,8 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
   const [ syncingData, setSyncingData ] = React.useState(false);
   const errorContext = React.useContext(ErrorContext);
   const syncOrUpdateContext = React.useContext(SyncOrUpdateContext);
-  const [syncSelection, setSyncSelection] = React.useState(false);
-  const [ selectedStartDate, setSelectedStartDate ] = useState<Date | null>(new Date(yesterday));
+  const [ syncSelection, setSyncSelection ] = React.useState(false);
+  const [ selectedStartDate, setSelectedStartDate ] = useState<Date | null>(yesterday);
 
   /**
    * Event handler for sync button click
@@ -54,7 +55,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
     setSyncSelection(false);
     try {
       await Api.getSynchronizeApi(accessToken?.access_token).synchronizeTimeEntries({
-        after: selectedStartDate || undefined
+        after: selectedStartDate || new Date(2021, 7, 30)
       });
       
       syncOrUpdateContext.setSyncOrUpdate(strings.syncHandling.syncTimeDataSuccess);
@@ -67,24 +68,6 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
       dispatch(setPerson(personCloned));
     }
     setSyncingData(false);
-  };
-
-  /**
-   * Handler for sync-date selection dialog
-   */
-  const handleClickOpen = () => {
-    if (!selectedStartDate) {
-      setSelectedStartDate(new Date(yesterday));
-    }
-    
-    setSyncSelection(true);
-  };
-
-  /**
-  * Handler for sync start date
-  */
-  const resetSyncDate = () => {
-    setSelectedStartDate(null);
   };
 
   /**
@@ -115,43 +98,47 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
     );
   };
 
+  useEffect(() => {
+    if (!selectedStartDate) {
+      setSelectedStartDate(yesterday);
+    }
+  }, [syncSelection]);
+  
   /**
    * Renders sync selection dialog
    */
-  const renderSyncSelectionDialog = () => {
-    return (
-      <GenericDialog
-        title={ strings.syncHandling.title }
-        open={ syncSelection }
-        error={ false }
-        onClose={ () => setSyncSelection(false) }
-        onCancel={ () => setSyncSelection(false) }
-        onConfirm={ () => setSyncSelection(false) }
-      >
-        <Box className={ classes.datePickers }>
-          <GenericDatePicker
-            dateFormat="dd.MM.yyyy"
-            selectedStartDate={ selectedStartDate }
-            onStartDateChange={ setSelectedStartDate }
-          />
-          <IconButton
-            onClick={ resetSyncDate }
-            aria-label="delete"
-            className={ classes.deleteButton }
-          >
-            <DeleteIcon fontSize="medium"/>
-          </IconButton>
-        </Box>
-        <Button
-          onClick={ handleSyncButtonClick }
-          color="secondary"
-          variant="contained"
+  const renderSyncSelectionDialog = () => (
+    <GenericDialog
+      title={ strings.syncHandling.title }
+      open={ syncSelection }
+      error={ false }
+      onClose={ () => setSyncSelection(false) }
+      onCancel={ () => setSyncSelection(false) }
+      onConfirm={ () => setSyncSelection(false) }
+    >
+      <Box className={ classes.datePickers }>
+        <GenericDatePicker
+          dateFormat="dd.MM.yyyy"
+          selectedStartDate={ selectedStartDate }
+          onStartDateChange={ setSelectedStartDate }
+        />
+        <IconButton
+          onClick={ () => setSelectedStartDate(null) }
+          aria-label="delete"
+          className={ classes.deleteButton }
         >
-          { strings.syncHandling.sync }
-        </Button>
-      </GenericDialog>
-    );
-  };
+          <DeleteIcon fontSize="medium"/>
+        </IconButton>
+      </Box>
+      <Button
+        onClick={ handleSyncButtonClick }
+        color="secondary"
+        variant="contained"
+      >
+        { strings.syncHandling.sync }
+      </Button>
+    </GenericDialog>
+  );
 
   /**
    * Renders language selection options
@@ -173,7 +160,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
       disabled={ syncingData }
       color="secondary"
       variant="contained"
-      onClick={ handleClickOpen }
+      onClick={ () => setSyncSelection(true) }
     >
       <Typography className={ classes.syncDataText }>
         { strings.header.syncData }

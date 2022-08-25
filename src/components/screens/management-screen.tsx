@@ -39,9 +39,9 @@ const ManagementScreen: React.FC = () => {
   const [ displayedPersonsTotalTime, setDisplayedPersonsTotalTime ] = React.useState<PersonWithTotalTime[]>([]);
   const [ selectedPersonWithTotalTime, setSelectedPersonWithTotalTime ] = React.useState<PersonWithTotalTime | undefined>(undefined);
   const [ searchInput, setSearchInput ] = React.useState("");
-  const [billableHoursUpdate, setBillableHoursUpdate] = React.useState(false);
-  const [errorState, setErrorState] = React.useState(false);
-  const [newBillablePercentage, setNewBillablePercentage] = React.useState<number>(0);
+  const [ billableHoursUpdate, setBillableHoursUpdate ] = React.useState(false);
+  const [ errorState, setErrorState ] = React.useState(false);
+  const [ newBillablePercentage, setNewBillablePercentage ] = React.useState<number>(0);
   const context = React.useContext(ErrorContext);
   const syncOrUpdateContext = React.useContext(SyncOrUpdateContext);
   const history = useHistory();
@@ -96,7 +96,7 @@ const ManagementScreen: React.FC = () => {
    * Event handler for billing rate update button click
    */
   const handleBillingRateUpdateClick = async () => {
-    if (!selectedPersonWithTotalTime || !selectedPersonWithTotalTime.personTotalTime) {
+    if (!selectedPersonWithTotalTime?.personTotalTime) {
       return null;
     }
 
@@ -113,7 +113,7 @@ const ManagementScreen: React.FC = () => {
           personTotalTime: selectedPersonWithTotalTime.personTotalTime
         };
         syncOrUpdateContext.setSyncOrUpdate(strings.billableHoursHandling.updateBillableHoursSuccess);
-        const personIndex = personsTotalTime.findIndex(_person => _person.person.id === person.id);
+        const personIndex = personsTotalTime.findIndex(personWithTotalTime => personWithTotalTime.person.id === person.id);
 
         setPersonsTotalTime([
           ...personsTotalTime,
@@ -163,20 +163,15 @@ const ManagementScreen: React.FC = () => {
   };
 
   /**
-   * Handler for billable hours update dialog
+   * Person detail close icon click handler
    */
-  const handleClickOpen = () => {
-    setBillableHoursUpdate(true);
-  };
+  const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => setNewBillablePercentage(Number(target.value));
 
   /**
-   * Handler for new billable percentage
-   * 
+   * Person detail close icon click handler
    */
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = event.target.value;
-    const newValueNumber = Number(newValue);
-    setNewBillablePercentage(newValueNumber);
+  const handlePersonCloseClick = () => {
+    setSelectedPersonWithTotalTime(undefined);
   };
 
   /**
@@ -311,7 +306,7 @@ const ManagementScreen: React.FC = () => {
         className={ classes.billableHours }
       >
         <Button
-          onClick={ handleClickOpen }
+          onClick={ () => setBillableHoursUpdate(true) }
         >
           <Create color="primary"/>
         </Button>
@@ -337,6 +332,76 @@ const ManagementScreen: React.FC = () => {
     ];
 
     const COLORS = [ theme.palette.success.main, theme.palette.warning.main ];
+
+    return (
+      <ResponsiveContainer className={ classes.pieChartContainer }>
+        <PieChart>
+          <Pie
+            cx="50%"
+            cy="50%"
+            dataKey="balance"
+            data={ workTimeData }
+            label={ props => TimeUtils.convertToMinutesAndHours(props.value) }
+          >
+            { workTimeData.map((entry, index) => (
+              <Cell fill={ COLORS[index % COLORS.length] }/>
+            )) }
+          </Pie>
+          { legend ? <Legend wrapperStyle={{ position: "relative" }}/> : null }
+          <RechartTooltip content={ renderCustomizedTooltip }/>
+        </PieChart>
+      </ResponsiveContainer>
+    );
+  };
+
+  /**
+   * Renders piechart
+   */
+  const renderPieChart = (personWithTotalTime: PersonWithTotalTime, legend: boolean) => {
+    const { person, personTotalTime } = personWithTotalTime;
+
+    if (!person || !personTotalTime) {
+      return null;
+    }
+
+    const workTimeData: WorkTimeTotalData[] = [
+      { name: WorkTimeCategory.BILLABLE_PROJECT, balance: personTotalTime.billableProjectTime },
+      { name: WorkTimeCategory.NON_BILLABLE_PROJECT, balance: personTotalTime.nonBillableProjectTime },
+      { name: WorkTimeCategory.INTERNAL, balance: personTotalTime.internalTime }
+    ];
+
+    const COLORS = [ theme.palette.success.dark, theme.palette.success.light, theme.palette.warning.main ];
+
+    return (
+      <ResponsiveContainer className={ classes.pieChartContainer }>
+        <PieChart>
+          <Pie
+            cx="50%"
+            cy="50%"
+            dataKey="balance"
+            data={ workTimeData }
+            label={ props => TimeUtils.convertToMinutesAndHours(props.value) }
+          >
+            { workTimeData.map((entry, index) => (
+              <Cell fill={ COLORS[index % COLORS.length] }/>
+            )) }
+          </Pie>
+          { legend ? <Legend wrapperStyle={{ position: "relative" }}/> : null }
+          <RechartTooltip content={ renderCustomizedTooltip }/>
+        </PieChart>
+      </ResponsiveContainer>
+    );
+  };
+
+  /**
+   * Renders the person detail 
+   */
+  const renderPersonDetail = () => {
+    if (!selectedPersonWithTotalTime || !selectedPersonWithTotalTime.personTotalTime) {
+      return null;
+    }
+
+    const { person } = selectedPersonWithTotalTime;
 
     return (
       <ResponsiveContainer className={ classes.pieChartContainer }>
@@ -475,7 +540,7 @@ const ManagementScreen: React.FC = () => {
       return null;
     }
 
-    const { person } = selectedPersonWithTotalTime;
+    const { firstName, lastName, email } = selectedPersonWithTotalTime.person;
     
     return (
       <GenericDialog
@@ -486,10 +551,13 @@ const ManagementScreen: React.FC = () => {
         onCancel={ () => setBillableHoursUpdate(false) }
         onConfirm={ () => setBillableHoursUpdate(false) }
       >
-        <Box className={classes.updateBillableHoursContent}>
+        <Box className={ classes.updateBillableHoursContent }>
           <Box>
             <Typography variant="h5">
-              { `${person.firstName} ${person.lastName}` }
+              { `${firstName} ${lastName}` }
+            </Typography>
+            <Typography variant="h6" style={{ color: "rgba(0, 0, 0, 0.6)" }}>
+              { email }
             </Typography>
           </Box>
           <Box
@@ -498,28 +566,28 @@ const ManagementScreen: React.FC = () => {
             }}
           >
             <Typography>
-              {strings.billableHoursHandling.updateBillableHours}
+              { strings.billableHoursHandling.updateBillableHours }
             </Typography>
             <TextField
-              helperText={strings.billableHoursHandling.billingPercentageError}
-              error={errorState}
+              helperText={ strings.billableHoursHandling.billingPercentageError }
+              error={ errorState }
               style={{
                 marginTop: theme.spacing(1)
               }}
-              label={strings.billableHoursHandling.billingRate}
+              label={ strings.billableHoursHandling.billingRate }
               type="number"
-              defaultValue={person.minimumBillableRate}
-              onChange={handleChange}
+              defaultValue={ selectedPersonWithTotalTime.person.minimumBillableRate }
+              onChange={ handleChange }
             />
           </Box>
+          <Button
+            onClick={ handleBillingRateUpdateClick }
+            color="secondary"
+            variant="contained"
+          >
+            { strings.billableHoursHandling.updateButton }
+          </Button>
         </Box>
-        <Button
-          onClick={ handleBillingRateUpdateClick }
-          color="secondary"
-          variant="contained"
-        >
-          {strings.billableHoursHandling.updateButton}
-        </Button>
       </GenericDialog>
     );
   };

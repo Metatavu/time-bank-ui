@@ -254,7 +254,7 @@ const DrawerContent: React.FC<Props> = () => {
       { name: WorkTimeCategory.INTERNAL, balance: personTotalTime.internalTime }
     ];
 
-    const COLORS = [ theme.palette.success.main, theme.palette.success.light, theme.palette.warning.main ];
+    const COLORS = [ theme.palette.success.dark, theme.palette.success.light, theme.palette.warning.main ];
 
     return (
       <>
