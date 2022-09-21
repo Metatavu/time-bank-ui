@@ -4,7 +4,7 @@
     "logo": "Site logo",
     "managementLink": "Management",
     "logout": "Log out",
-    "syncData": "Synchronize",
+    "syncData": "Synchronization",
     "syncDataLoading": "Synchronizing data, please be patient."
   },
   
@@ -21,11 +21,9 @@
 
   "drawerContent": {
     "userInfo": {
-      "id": "id",
-      "userType": "User type:",
-      "language": "Language:",
-      "createdAt": "Created at:",
-      "updatedAt": "Updated at:"
+      "id": "Id",
+      "language": "Language",
+      "startDate":"Start Date"
     },
     "noUser": "No user selected",
     "statistics": "Statistics",
@@ -38,14 +36,20 @@
     "userNotSelected": "Please select a user first.",
     "noTimeEntries": "No time entries found for this user.",
     "overview": "Overview",
-    "total": "Total balance",
+    "balance": "Total balance",
+    "vacationDays": "Vacation days of current vacation accumulation season",
+    "spentVacationDays": "Used vacation days: ",
+    "unspentVacationDays": "Unused vacation days: ",
+    "extraVacationDays": "Extra vacation days used: ",
+    "listOfVacationDays": "Marked vacation days:",
+    "noVacationDays": "No marked vacation days",
     "workTime": "Work time",
     "filterStartingDate": "Start",
     "filterEndingDate": "End",
-    "week": "WEEK",
-    "date": "DATE",
-    "month": "MONTH",
-    "year": "YEAR",
+    "week": "Week ",
+    "date": "Date",
+    "month": "Month",
+    "year": "Year",
     "selectWeekEnd": "Week-end",
     "selectYearEnd": "Year-end",
     "selectYearStart": "Year-start",
@@ -60,22 +64,41 @@
     "searchPlaceholder": "Search user..",
     "noUser": "No user to display."
   },
+
+  "billableHoursHandling": {
+    "title": "Update persons min. billing rate",
+    "updateBillableHours": "Enter new billing rate:",
+    "billingRate": "Billing rate",
+    "billingPercentageError": "Billing rate percentage have to be 0-100%",
+    "updateButton": "Update",
+    "updateBillableHoursSuccess": "Billing rate successfully updated"
+  },
   
   "errorHandling": {
     "fetchDateDataFailed": "Fetching date data failed",
     "fetchTimeDataFailed": "Fetching time data failed",
+    "fetchVacationDataFailed": "Fetching vacation data failed",
     "fetchUserDataFailed": "Fetching user data failed",
     "syncTimeDataFailed": "Synchronizing time data failed",
+    "updateBillingPercentageFailed": "Updating billing rate failed",
     "title": "Error"
+  },
+
+  "syncHandling": {
+    "syncTimeDataSuccess": "Time entries were successfully synchronized",
+    "sync": "Synchronize time entries",
+    "syncStart": "Synchronize from given date",
+    "title": "Synchronization"
   },
 
   "startDate": "Start Date",
   "week": "Week",
   "logged": "Logged",
   "expected": "Expected",
-  "total": "Balance",
+  "balance": "Balance",
   "initialTime": "Initial time",
-  "project": "Project",
+  "billableProject": "Billable",
+  "nonBillableProject": "Non billable",
   "internal": "Internal",
   "sunday": "Sunday",
   "monday": "Monday",
@@ -83,6 +106,7 @@
   "wednesday": "Wednesday",
   "thursday": "Thursday",
   "friday": "Friday",
-  "saturday": "Saturday"
+  "saturday": "Saturday",
+  "billableHours": "Minimum billing rate"
 
 }

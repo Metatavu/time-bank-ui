@@ -1,4 +1,4 @@
-import { PersonDto, TimeEntryTotalDto } from "generated/client";
+import { Person, PersonTotalTime } from "generated/client";
 
 /**
  * Access token
@@ -53,10 +53,11 @@ export enum DateFormats {
  * Enum for work time category
  */
 export enum WorkTimeCategory {
-  PROJECT = "Project",
+  BILLABLE_PROJECT = "Billable Project",
+  NON_BILLABLE_PROJECT = "Non Billable Project",
   INTERNAL = "Internal",
   EXPECTED = "Expected",
-  TOTAL = "Total",
+  BALANCE = "Balance",
   LOGGED = "Logged"
 }
 
@@ -65,7 +66,7 @@ export enum WorkTimeCategory {
  */
 export interface WorkTimeTotalData {
   name: WorkTimeCategory;
-  total: number;
+  balance: number;
   logged?: number;
   expected?: number;
 }
@@ -76,7 +77,8 @@ export interface WorkTimeTotalData {
 export interface WorkTimeData {
   name: string;
   expected: number;
-  project: number;
+  billableProject: number;
+  nonBillableProject: number;
   internal: number;
 }
 
@@ -86,6 +88,22 @@ export interface WorkTimeData {
 export interface WorkTimeDatas {
   workTimeData: WorkTimeData[];
   workTimeTotalData: WorkTimeTotalData;
+}
+
+/**
+ * Type for single vacation day data
+ */
+export interface VacationDayData {
+  weekNumber: number;
+  day: Date;
+}
+
+/**
+ * Type for vacation week data
+ */
+export interface VacationWeekData {
+  weekNumber: number;
+  vacationDays: VacationDayData[];
 }
 
 /**
@@ -99,8 +117,8 @@ export interface CustomPieLabel {
  * Interface for person with total time
  */
 export interface PersonWithTotalTime {
-  person: PersonDto;
-  timeEntryTotal?: TimeEntryTotalDto;
+  person: Person;
+  personTotalTime?: PersonTotalTime;
 }
 
 /**
@@ -109,4 +127,12 @@ export interface PersonWithTotalTime {
 export interface ErrorContextType {
   error?: string;
   setError: (message: string, error?: any) => void;
+}
+
+/**
+ * Interface for synch context type
+ */
+export interface SyncOrUpdateContextType {
+  syncOrUpdate?: string;
+  setSyncOrUpdate: (message: string) => void;
 }

@@ -7,6 +7,7 @@ import App from "./components/App";
 import reportWebVitals from "./reportWebVitals";
 import theme from "theme/theme";
 import ErrorHandler from "components/error-handler/error-handler";
+import SyncOrUpdateHandler from "components/sync-or-update-handler/sync-or-update-handler";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -14,7 +15,9 @@ ReactDOM.render(
       <ThemeProvider theme={ responsiveFontSizes(theme) }>
         <CssBaseline/>
         <ErrorHandler>
-          <App/>
+          <SyncOrUpdateHandler>
+            <App/>
+          </SyncOrUpdateHandler>
         </ErrorHandler>
       </ThemeProvider>
     </Provider>

@@ -89,6 +89,20 @@ const useManagementScreenStyles = makeStyles(theme => ({
     }
   },
 
+  billableHours: {
+    fontSize: 16,
+    fontStyle: "italic",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 14
+    }
+  },
+
+  updateBillableHoursContent: {
+    margin: theme.spacing(1),
+    alignItems: "center",
+    textAlign: "center"
+  },
+
   redirectLinkPaper: {
     position: "absolute",
     bottom: theme.spacing(8),

@@ -66,7 +66,10 @@ const useAppLayoutStyles = makeStyles(theme => ({
 
   title: {
     marginLeft: theme.spacing(2),
-    color: theme.palette.text.secondary
+    color: theme.palette.text.secondary,
+    [theme.breakpoints.down(520)]: {
+      display: "none"
+    }
   },
 
   logo: {
@@ -136,6 +139,20 @@ const useAppLayoutStyles = makeStyles(theme => ({
 
   activeManagementLinkText: {
     color: "rgba(0, 0, 0) !important"
+  },
+
+  deleteButton: {
+    padding: "0px !important",
+    alignSelf: "flex-end",
+    color: "#F9473B",
+    marginLeft: theme.spacing(2)
+  },
+
+  datePickers: {
+    marginLeft: "auto",
+    marginBottom: theme.spacing(2),
+    display: "flex",
+    alignItems: "center"
   }
 
 }), {

@@ -6,7 +6,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, TooltipProps, Tooltip as Rech
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 import { useAppDispatch, useAppSelector } from "app/hooks";
 import Api from "api/api";
-import { PersonDto, TimebankControllerGetTotalRetentionEnum } from "generated/client";
+import { Person, Timespan } from "generated/client";
 import { ErrorContext } from "components/error-handler/error-handler";
 import { PersonWithTotalTime, WorkTimeCategory, WorkTimeTotalData } from "types";
 import strings from "localization/strings";
@@ -20,8 +20,10 @@ import UserInfo from "components/generics/user-info/user-info";
 import SearchIcon from "@material-ui/icons/Search";
 import { selectAuth } from "features/auth/auth-slice";
 import moment from "moment";
+import { Create } from "@material-ui/icons";
+import GenericDialog from "components/generics/generic-dialog/generic-dialog";
+import { SyncOrUpdateContext } from "components/sync-or-update-handler/sync-or-update-handler";
 import AuthUtils from "utils/auth";
-import PersonUtils from "utils/person-utils";
 
 /**
  * Management screen screen component
@@ -36,7 +38,11 @@ const ManagementScreen: React.FC = () => {
   const [ displayedPersonsTotalTime, setDisplayedPersonsTotalTime ] = React.useState<PersonWithTotalTime[]>([]);
   const [ selectedPersonWithTotalTime, setSelectedPersonWithTotalTime ] = React.useState<PersonWithTotalTime | undefined>(undefined);
   const [ searchInput, setSearchInput ] = React.useState("");
+  const [ billableHoursUpdate, setBillableHoursUpdate ] = React.useState(false);
+  const [ errorState, setErrorState ] = React.useState(false);
+  const [ newBillablePercentage, setNewBillablePercentage ] = React.useState<number>(0);
   const context = React.useContext(ErrorContext);
+  const syncOrUpdateContext = React.useContext(SyncOrUpdateContext);
   const history = useHistory();
 
   /**
@@ -48,9 +54,9 @@ const ManagementScreen: React.FC = () => {
     let totalTime: any[] = [];
 
     try {
-      totalTime = await Api.getTimeBankApi().timebankControllerGetTotal({
-        personId: person.person.id.toString(),
-        retention: TimebankControllerGetTotalRetentionEnum.ALLTIME
+      totalTime = await Api.getPersonsApi(accessToken?.access_token).listPersonTotalTime({
+        personId: person.person.id,
+        timespan: Timespan.ALL_TIME
       });
     } catch (error) {
       context.setError(strings.errorHandling.fetchTimeDataFailed, error);
@@ -58,7 +64,7 @@ const ManagementScreen: React.FC = () => {
 
     return {
       ...person,
-      timeEntryTotal: totalTime[0]
+      personTotalTime: totalTime[0]
     };
   };
 
@@ -69,9 +75,10 @@ const ManagementScreen: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const persons = await Api.getTimeBankApi().timebankControllerGetPersons();
-      const filteredPersons = PersonUtils.filterPerson(persons);
-      const personTotalsTimeList: PersonWithTotalTime[] = filteredPersons.map(_person => ({ person: _person }));
+      const persons = await Api.getPersonsApi(accessToken?.access_token).listPersons({
+        active: true
+      });
+      const personTotalsTimeList: PersonWithTotalTime[] = persons.map(_person => ({ person: _person }));
 
       const populatedPersonTotalsTimeList = await Promise.all(personTotalsTimeList.map(populatePersonTotalTimeData));
 
@@ -84,6 +91,46 @@ const ManagementScreen: React.FC = () => {
     setIsLoading(false);
   };
 
+  /**
+   * Event handler for billing rate update button click
+   */
+  const handleBillingRateUpdateClick = async () => {
+    if (!selectedPersonWithTotalTime?.personTotalTime) {
+      return null;
+    }
+
+    if (newBillablePercentage >= 0 && newBillablePercentage <= 100) {
+      const { person } = selectedPersonWithTotalTime;
+      setBillableHoursUpdate(false);
+
+      try {
+        const updatedPerson: PersonWithTotalTime = {
+          person: await Api.getPersonsApi(accessToken?.access_token).updatePerson({
+            personId: person.id,
+            person: { ...person, minimumBillableRate: newBillablePercentage }
+          }),
+          personTotalTime: selectedPersonWithTotalTime.personTotalTime
+        };
+        syncOrUpdateContext.setSyncOrUpdate(strings.billableHoursHandling.updateBillableHoursSuccess);
+        const personIndex = personsTotalTime.findIndex(personWithTotalTime => personWithTotalTime.person.id === person.id);
+
+        setPersonsTotalTime([
+          ...personsTotalTime,
+          personsTotalTime[personIndex] = updatedPerson
+        ]);
+        setSelectedPersonWithTotalTime(updatedPerson);
+      } catch (error) {
+        context.setError(strings.errorHandling.updateBillingPercentageFailed, error);
+      }
+    } else {
+      setErrorState(true);
+      const timer = setTimeout(() => {
+        setErrorState(false);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  };
+
   React.useEffect(() => {
     if (!accessToken) {
       return;
@@ -92,7 +139,6 @@ const ManagementScreen: React.FC = () => {
     if (!AuthUtils.isAdmin(accessToken)) {
       history.push("/");
     }
-
     fetchData();
   }, []);
 
@@ -101,7 +147,7 @@ const ManagementScreen: React.FC = () => {
    * 
    * @param person person data
    */
-  const handlePersonRedirectClick = (person: PersonDto) => {
+  const handlePersonRedirectClick = (person: Person) => {
     dispatch(setPerson(person));
     history.push("/");
   };
@@ -114,6 +160,12 @@ const ManagementScreen: React.FC = () => {
   const handleListItemClick = (personWithTotalTime: PersonWithTotalTime) => () => {
     setSelectedPersonWithTotalTime(personWithTotalTime);
   };
+
+  /**
+   * Handler for new billable percentage
+   * 
+   */
+  const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => setNewBillablePercentage(Number(target.value));
 
   /**
    * search input change handler
@@ -182,7 +234,8 @@ const ManagementScreen: React.FC = () => {
     }
 
     const sectionName = {
-      [WorkTimeCategory.PROJECT]: strings.project,
+      [WorkTimeCategory.BILLABLE_PROJECT]: strings.billableProject,
+      [WorkTimeCategory.NON_BILLABLE_PROJECT]: strings.nonBillableProject,
       [WorkTimeCategory.INTERNAL]: strings.internal
     }[selectedData.name];
 
@@ -223,21 +276,48 @@ const ManagementScreen: React.FC = () => {
   );
 
   /**
+  * Renders the minimum billable hours section
+  * 
+  * @param name name of the row
+  * @param value value of the row
+  * @param color color of the row value
+  */
+  const renderExpectedBillableHours = (name: string, value: string, color?: string) => (
+    <Box className={ classes.expectedWorkRow }>
+      <Typography className={ classes.expectedWorkNames }>
+        { name }
+      </Typography>
+      <Typography
+        style={{ color: color }}
+        className={ classes.billableHours }
+      >
+        <Button
+          onClick={ () => setBillableHoursUpdate(true) }
+        >
+          <Create color="primary"/>
+        </Button>
+        { `${value} %` }
+      </Typography>
+    </Box>
+  );
+
+  /**
    * Renders the person detail 
    */
   const renderPersonDetail = () => {
-    if (!selectedPersonWithTotalTime || !selectedPersonWithTotalTime.timeEntryTotal) {
+    if (!selectedPersonWithTotalTime || !selectedPersonWithTotalTime.personTotalTime) {
       return null;
     }
 
-    const { person, timeEntryTotal } = selectedPersonWithTotalTime;
+    const { person, personTotalTime } = selectedPersonWithTotalTime;
 
     const workTimeData: WorkTimeTotalData[] = [
-      { name: WorkTimeCategory.PROJECT, total: timeEntryTotal.projectTime },
-      { name: WorkTimeCategory.INTERNAL, total: timeEntryTotal.internalTime }
+      { name: WorkTimeCategory.BILLABLE_PROJECT, balance: personTotalTime.billableProjectTime },
+      { name: WorkTimeCategory.NON_BILLABLE_PROJECT, balance: personTotalTime.nonBillableProjectTime },
+      { name: WorkTimeCategory.INTERNAL, balance: personTotalTime.internalTime }
     ];
 
-    const COLORS = [ theme.palette.success.main, theme.palette.warning.main ];
+    const COLORS = [ theme.palette.success.dark, theme.palette.success.light, theme.palette.warning.main ];
 
     return (
       <Paper className={ classes.redirectPersonDetailPaper }>
@@ -256,13 +336,14 @@ const ManagementScreen: React.FC = () => {
           { renderExpectedWorkRow(`${strings.friday}:`, TimeUtils.convertToMinutesAndHours(person.friday)) }
           { renderExpectedWorkRow(`${strings.saturday}:`, TimeUtils.convertToMinutesAndHours(person.saturday)) }
           { renderExpectedWorkRow(`${strings.sunday}:`, TimeUtils.convertToMinutesAndHours(person.sunday)) }
+          { renderExpectedBillableHours(`${strings.billableHours}:`, person.minimumBillableRate.toString()) }
         </Box>
         <ResponsiveContainer className={ classes.pieChartContainer }>
           <PieChart>
             <Pie
               cx="50%"
               cy="50%"
-              dataKey="total"
+              dataKey="balance"
               data={ workTimeData }
               label={ props => TimeUtils.convertToMinutesAndHours(props.value) }
             >
@@ -292,17 +373,17 @@ const ManagementScreen: React.FC = () => {
   /**
    * Renders person entry
    * 
-   * @param personTotalTime person total time data
+   * @param personsTotalTimeEntry person total time data
    */
-  const renderPersonEntry = (personTotalTime: PersonWithTotalTime) => {
-    const { person, timeEntryTotal } = personTotalTime;
+  const renderPersonEntry = (personsTotalTimeEntry: PersonWithTotalTime) => {
+    const { person, personTotalTime } = personsTotalTimeEntry;
 
-    if (!timeEntryTotal) {
-      return null;
+    if (!personTotalTime) {
+      return;
     }
 
-    const expectedTime = TimeUtils.convertToHours(timeEntryTotal.expected);
-    const loggedTime = TimeUtils.convertToHours(timeEntryTotal.logged);
+    const expectedTime = TimeUtils.convertToHours(personTotalTime.expected);
+    const loggedTime = TimeUtils.convertToHours(personTotalTime.logged);
 
     return (
       <ListItem
@@ -310,7 +391,7 @@ const ManagementScreen: React.FC = () => {
         disableRipple
         disableTouchRipple
         selected={ selectedPersonWithTotalTime?.person.id === person.id }
-        onClick={ handleListItemClick(personTotalTime) }
+        onClick={ handleListItemClick(personsTotalTimeEntry) }
         className={ classes.personListEntry }
       >
         <Paper className={ classes.personEntry }>
@@ -332,15 +413,75 @@ const ManagementScreen: React.FC = () => {
               <Typography
                 className={ classes.personEntryTime }
                 style={{
-                  color: timeEntryTotal!.total >= 0 ? theme.palette.success.main : theme.palette.error.main
+                  color: personTotalTime!.balance >= 0 ? theme.palette.success.main : theme.palette.error.main
                 }}
               >
-                { TimeUtils.convertToHours(timeEntryTotal.total) }
+                { TimeUtils.convertToHours(personTotalTime.balance) }
               </Typography>
             </Tooltip>
           </Box>
         </Paper>
       </ListItem>
+    );
+  };
+
+  /**
+   * Renders billiable hours update dialog
+   */
+  const renderBillableHoursUpdateDialog = () => {
+    if (!selectedPersonWithTotalTime || !selectedPersonWithTotalTime.personTotalTime) {
+      return null;
+    }
+
+    const { firstName, lastName, email } = selectedPersonWithTotalTime.person;
+    
+    return (
+      <GenericDialog
+        title={ strings.billableHoursHandling.title }
+        open={ billableHoursUpdate }
+        error={ false }
+        onClose={ () => setBillableHoursUpdate(false) }
+        onCancel={ () => setBillableHoursUpdate(false) }
+        onConfirm={ () => setBillableHoursUpdate(false) }
+      >
+        <Box className={ classes.updateBillableHoursContent }>
+          <Box>
+            <Typography variant="h5">
+              { `${firstName} ${lastName}` }
+            </Typography>
+            <Typography variant="h6" style={{ color: "rgba(0, 0, 0, 0.6)" }}>
+              { email }
+            </Typography>
+          </Box>
+          <Box
+            style={{
+              marginTop: theme.spacing(1)
+            }}
+          >
+            <Typography>
+              { strings.billableHoursHandling.updateBillableHours }
+            </Typography>
+            <TextField
+              helperText={ strings.billableHoursHandling.billingPercentageError }
+              error={ errorState }
+              style={{
+                marginTop: theme.spacing(1)
+              }}
+              label={ strings.billableHoursHandling.billingRate }
+              type="number"
+              defaultValue={ selectedPersonWithTotalTime.person.minimumBillableRate }
+              onChange={ handleChange }
+            />
+          </Box>
+          <Button
+            onClick={ handleBillingRateUpdateClick }
+            color="secondary"
+            variant="contained"
+          >
+            { strings.billableHoursHandling.updateButton }
+          </Button>
+        </Box>
+      </GenericDialog>
     );
   };
 
@@ -398,6 +539,7 @@ const ManagementScreen: React.FC = () => {
         { renderSearch() }
         { renderRedirect() }
         { renderPersonDetail() }
+        { renderBillableHoursUpdateDialog() }
       </Box>
     </AppLayout>
   );

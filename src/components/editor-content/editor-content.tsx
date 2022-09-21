@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, IconButton } from "@material-ui/core";
+import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, IconButton, List, ListItem } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { DatePickerView } from "@material-ui/pickers";
 import useEditorContentStyles from "styles/editor-content/editor-content";
@@ -9,8 +9,8 @@ import Api from "api/api";
 import strings from "localization/strings";
 import theme from "theme/theme";
 import TimeUtils from "utils/time-utils";
-import { FilterScopes, DateFormats, WorkTimeData, WorkTimeTotalData } from "types/index";
-import { TimebankControllerGetTotalRetentionEnum } from "generated/client";
+import { FilterScopes, DateFormats, WorkTimeData, WorkTimeTotalData, VacationWeekData } from "types/index";
+import { Timespan } from "generated/client";
 import TotalChart from "components/generics/total-chart/total-chart";
 import OverviewChart from "components/generics/overview-chart/overview-chart";
 import WorkTimeDataUtils from "utils/work-time-data-utils";
@@ -18,6 +18,7 @@ import moment from "moment";
 import DateRangePicker from "components/generics/date-range-picker/date-range-picker";
 import { ErrorContext } from "components/error-handler/error-handler";
 import DeleteIcon from "@material-ui/icons/Delete";
+import vacationDaysProcess from "utils/vacation-data-utils";
 import { selectAuth } from "features/auth/auth-slice";
 
 /**
@@ -46,6 +47,9 @@ const EditorContent: React.FC<Props> = () => {
   const [ isLoading, setIsLoading ] = React.useState(false);
   const [ displayedTimeData, setDisplayedTimeData ] = React.useState<WorkTimeData[] | undefined>(undefined);
   const [ displayedTotal, setDisplayedTotal ] = React.useState<WorkTimeTotalData | undefined>(undefined);
+  const [ vacationDayList, setVacationDayList ] = React.useState<VacationWeekData[]>([]);
+  const currentVacationSeasonStart = `${new Date().getFullYear()}-04-01`;
+  const currentVacationSeasonEnd = `${new Date().getFullYear() + 1}-03-31`;
   const context = React.useContext(ErrorContext);
 
   /**
@@ -65,7 +69,7 @@ const EditorContent: React.FC<Props> = () => {
   };
 
   /**
-   * Load the date data
+   * Load the daily data
    */
   const loadDateData = async () => {
     if (!person || !selectedStartDate) {
@@ -73,17 +77,15 @@ const EditorContent: React.FC<Props> = () => {
     }
 
     try {
-      const dateEntries = await Api.getTimeBankApi().timebankControllerGetEntries({
-        personId: person.id.toString(),
-        after: TimeUtils.standardizedDateString(selectedStartDate),
-        before: selectedEndDate ?
-          TimeUtils.standardizedDateString(selectedEndDate) :
-          TimeUtils.standardizedDateString(selectedStartDate)
+      const dailyEntries = await Api.getDailyEntriesApi(accessToken?.access_token).listDailyEntries({
+        personId: person.id,
+        before: selectedEndDate || undefined,
+        after: selectedStartDate
       });
 
-      dateEntries.sort((date1, date2) => moment(date1.date).diff(date2.date));
+      dailyEntries.sort((date1, date2) => moment(date1.date).diff(date2.date));
 
-      const { workTimeData, workTimeTotalData } = WorkTimeDataUtils.dateEntriesPreprocess(dateEntries);
+      const { workTimeData, workTimeTotalData } = WorkTimeDataUtils.dateEntriesPreprocess(dailyEntries);
   
       setDisplayedTimeData(workTimeData);
       setDisplayedTotal(workTimeTotalData);
@@ -101,9 +103,9 @@ const EditorContent: React.FC<Props> = () => {
     }
 
     try {
-      const weekEntries = await Api.getTimeBankApi().timebankControllerGetTotal({
-        personId: person.id.toString(),
-        retention: TimebankControllerGetTotalRetentionEnum.WEEK
+      const weekEntries = await Api.getPersonsApi(accessToken?.access_token).listPersonTotalTime({
+        personId: person.id,
+        timespan: Timespan.WEEK
       });
 
       const startMoment = moment().year(selectedStartDate.getFullYear()).week(startWeek);
@@ -139,9 +141,9 @@ const EditorContent: React.FC<Props> = () => {
     }
 
     try {
-      const monthEntries = await Api.getTimeBankApi().timebankControllerGetTotal({
-        personId: person.id.toString(),
-        retention: TimebankControllerGetTotalRetentionEnum.MONTH
+      const monthEntries = await Api.getPersonsApi(accessToken?.access_token).listPersonTotalTime({
+        personId: person.id,
+        timespan: Timespan.MONTH
       });
 
       const startMoment = moment().year(selectedStartDate.getFullYear()).month(selectedStartDate.getMonth());
@@ -176,9 +178,9 @@ const EditorContent: React.FC<Props> = () => {
     }
 
     try {
-      const yearEntries = await Api.getTimeBankApi().timebankControllerGetTotal({
-        personId: person.id.toString(),
-        retention: TimebankControllerGetTotalRetentionEnum.YEAR
+      const yearEntries = await Api.getPersonsApi(accessToken?.access_token).listPersonTotalTime({
+        personId: person.id,
+        timespan: Timespan.YEAR
       });
 
       const startMoment = moment().year(selectedStartDate.getFullYear());
@@ -205,6 +207,26 @@ const EditorContent: React.FC<Props> = () => {
   };
 
   /**
+   * load vacation data
+   */
+  const loadVacationData = async () => {
+    if (!person) {
+      return;
+    }
+
+    try {
+      const vacationEntries = await Api.getDailyEntriesApi(accessToken?.access_token).listDailyEntries({
+        personId: person.id,
+        before: new Date(currentVacationSeasonEnd),
+        after: new Date(currentVacationSeasonStart)
+      });
+      setVacationDayList(vacationDaysProcess(vacationEntries));
+    } catch (error) {
+      context.setError(strings.errorHandling.fetchVacationDataFailed, error);
+    }
+  };
+
+  /**
    * update and set the time data
    */
   const updateTimeData = async () => {
@@ -224,7 +246,6 @@ const EditorContent: React.FC<Props> = () => {
     if (!accessToken) {
       return;
     }
-
     initializeData();
   }, []);
 
@@ -234,6 +255,7 @@ const EditorContent: React.FC<Props> = () => {
     }
 
     updateTimeData();
+    loadVacationData();
   }, [person, scope, startWeek, endWeek, selectedStartDate, selectedEndDate]);
 
   /**
@@ -382,7 +404,7 @@ const EditorContent: React.FC<Props> = () => {
       <Box className={ classes.filterSubtitle } >
         { renderFilterSubtitleText(`${strings.logged}:`, displayedTotal!.logged || 0, false) }
         { renderFilterSubtitleText(`${strings.expected}:`, displayedTotal!.expected || 0, false) }
-        { renderFilterSubtitleText(`${strings.total}:`, displayedTotal!.total, true, displayedTotal!.total >= 0) }
+        { renderFilterSubtitleText(`${strings.balance}:`, displayedTotal!.balance, true, displayedTotal!.balance >= 0) }
       </Box>
     </>
   );
@@ -498,7 +520,7 @@ const EditorContent: React.FC<Props> = () => {
     return (
       <Box>
         <Typography variant="h2">
-          { strings.editorContent.total }
+          { strings.editorContent.balance }
         </Typography>
         <Box className={ classes.totalChartContainer }>
           <TotalChart
@@ -537,12 +559,119 @@ const EditorContent: React.FC<Props> = () => {
   };
 
   /**
+  * Renders vacation days subtitle text
+  * 
+  * @param name name of subtitle text
+  * @param value value of subtitle text
+  * @param unspent if it's displaying unspent vacation days
+  * @param positiveValue if amount of unused vacation days is positive 
+  */
+  const renderVacationDaysSubtitleText = (name: string, value: number, unspent: boolean, positiveValue?: boolean) => {
+    const valueColor = positiveValue ? theme.palette.success.main : theme.palette.error.main;
+
+    return (
+      <>
+        <Typography
+          variant="h4"
+          style={{ marginLeft: theme.spacing(2) }}
+        >
+          { name }
+        </Typography>
+        <Typography
+          variant="h3"
+          style={{
+            color: unspent ? valueColor : undefined,
+            marginLeft: theme.spacing(1),
+            fontStyle: "italic"
+          }}
+        >
+          { Math.abs(value) }
+        </Typography>
+      </>
+    );
+  };
+
+  /**
+  * Renders vacation days summary
+  */
+  const renderVacationDaysSummary = () => {
+    if (!person) {
+      return null;
+    }
+
+    const { spentVacations, unspentVacations } = person;
+    const hasUnspentVacationDays = unspentVacations >= 0;
+    const unspentVacationDaysString = hasUnspentVacationDays ? strings.editorContent.unspentVacationDays : strings.editorContent.extraVacationDays;
+
+    return (
+      <>
+        <Typography variant="h2">
+          { strings.editorContent.vacationDays }
+        </Typography>
+        <Box className={ classes.vacationDaysSubtitle }>
+          { renderVacationDaysSubtitleText(strings.editorContent.spentVacationDays, spentVacations, false) }
+          { renderVacationDaysSubtitleText(unspentVacationDaysString, unspentVacations, true, hasUnspentVacationDays) }
+        </Box>
+      </>
+    );
+  };
+
+  /**
+   * Renders vacation days list per week
+   */
+  const renderVacationDaysList = () => {
+    if (!vacationDayList) {
+      return null;
+    }
+    
+    return vacationDayList.map((entry: VacationWeekData) =>
+      <List className={ classes.vacationList }>
+        <Typography style={{ fontSize: "1.2em" }}>{ strings.editorContent.week + entry.weekNumber }</Typography>
+        { entry.vacationDays.map(oneDay =>
+          <ListItem>
+            { oneDay.day.toLocaleDateString("fi-FI") }
+          </ListItem>)
+        }
+      </List>);
+  };
+  
+  /**
+  * Render vacation days component 
+  */
+  const renderVacationDays = () => {
+    if (!person || !personTotalTime) {
+      return null;
+    }
+
+    return (
+      <Accordion className={ classes.vacationDaysAccordion }>
+        <AccordionSummary
+          expandIcon={ <ExpandMoreIcon/> }
+          aria-controls="panel1a-content"
+          className={ classes.vacationDaysSummary }
+        >
+          { renderVacationDaysSummary() }
+        </AccordionSummary>
+        <AccordionDetails className={ classes.vacationContent }>
+          <Typography variant="h4">
+            { strings.editorContent.listOfVacationDays }
+          </Typography>
+          { vacationDayList.length === 0
+            ? <Typography variant="h4">{ strings.editorContent.noVacationDays }</Typography>
+            : <Box>{ renderVacationDaysList() }</Box>
+          }
+        </AccordionDetails>
+      </Accordion>
+    );
+  };
+  /**
    * Component render
    */
   return (
     <>
       { renderFilter() }
       { renderCharts() }
+      { renderVacationDays() }
     </>
   );
 };

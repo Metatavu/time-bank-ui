@@ -39,10 +39,8 @@ export interface IStrings extends LocalizedStringsMethods {
   drawerContent: {
     userInfo: {
       id: string;
-      userType: string;
       language: string;
-      createdAt: string;
-      updatedAt: string;
+      startDate: string;
     },
     noUser: string;
     statistics: string;
@@ -58,7 +56,13 @@ export interface IStrings extends LocalizedStringsMethods {
     userNotSelected: string;
     noTimeEntries: string;
     overview: string;
-    total: string;
+    balance: string;
+    vacationDays: string;
+    spentVacationDays: string;
+    unspentVacationDays: string;
+    extraVacationDays: string;
+    listOfVacationDays: string;
+    noVacationDays: string;
     workTime: string;
     filterStartingDate: string;
     filterEndingDate: string;
@@ -85,14 +89,38 @@ export interface IStrings extends LocalizedStringsMethods {
   };
 
   /**
+   * Translations related to billable hour update handling
+   */
+  billableHoursHandling: {
+    title: string;
+    updateBillableHours: string;
+    billingRate: string;
+    billingPercentageError: string;
+    updateButton: string;
+    updateBillableHoursSuccess: string;
+  };
+
+  /**
    * Translations related to error handling
    */
   errorHandling: {
     fetchDateDataFailed: string;
     fetchTimeDataFailed: string;
+    fetchVacationDataFailed: string;
     fetchUserDataFailed: string;
     syncTimeDataFailed: string;
+    updateBillingPercentageFailed: string;
     title: string;
+  }
+
+  /**
+   * Translations related to sync handling
+   */
+  syncHandling: {
+    syncTimeDataSuccess: string;
+    sync: string;
+    title: string;
+    syncStart: string;
   }
 
   startDate: string;
@@ -100,8 +128,9 @@ export interface IStrings extends LocalizedStringsMethods {
   logged: string;
   expected: string;
   initialTime: string;
-  total: string;
-  project: string;
+  balance: string;
+  billableProject: string;
+  nonBillableProject: string;
   internal: string;
   sunday: string;
   monday: string;
@@ -110,7 +139,7 @@ export interface IStrings extends LocalizedStringsMethods {
   thursday: string;
   friday: string;
   saturday: string;
-
+  billableHours: string;
 }
 
 const strings: IStrings = new LocalizedStrings({ en: en, fi: fi });

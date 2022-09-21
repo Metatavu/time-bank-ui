@@ -1,4 +1,4 @@
-import { Configuration, TimebankApi } from "../generated/client";
+import { Configuration, DailyEntriesApi, PersonsApi, SynchronizeApi } from "../generated/client";
 
 /**
  * Utility class for loading api with predefined configuration
@@ -8,22 +8,44 @@ export default class Api {
   /**
    * Gets api configuration
    *
+   * @param token accessToken
    * @returns new configuration
    */
-  private static getConfiguration() {
+  private static getConfiguration(token: string | undefined) {
     return new Configuration({
-      basePath: process.env.REACT_APP_API_BASE_URL
+      basePath: process.env.REACT_APP_API_BASE_URL,
+      accessToken: token
     });
   }
 
   /**
-   * Gets initialized Knots API
+   * Gets initialized DailyEntries API
    * 
-   * @param AccessToken Gets knots API
-   * @returns initialized Knots API
+   * @param token accessToken
+   * @returns initialized DailyEntries API
    */
-  public static getTimeBankApi() {
-    return new TimebankApi(Api.getConfiguration());
+  public static getDailyEntriesApi(token: string | undefined) {
+    return new DailyEntriesApi(Api.getConfiguration(token));
+  }
+
+  /**
+   * Gets initialized Persons API
+   * 
+   * @param token accessToken
+   * @returns initialized Persons API
+   */
+  public static getPersonsApi(token: string | undefined) {
+    return new PersonsApi(Api.getConfiguration(token));
+  }
+
+  /**
+   * Gets initialized Synchronize API
+   * 
+   * @param token accessToken
+   * @returns initialized Synchronize API
+   */
+  public static getSynchronizeApi(token: string | undefined) {
+    return new SynchronizeApi(Api.getConfiguration(token));
   }
 
 }
