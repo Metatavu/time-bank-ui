@@ -55,7 +55,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
     setSyncSelection(false);
     try {
       await Api.getSynchronizeApi(accessToken?.access_token).synchronizeTimeEntries({
-        after: selectedStartDate || new Date(2021, 7, 30)
+        after: selectedStartDate || new Date(2021, 6, 31)
       });
       
       syncOrUpdateContext.setSyncOrUpdate(strings.syncHandling.syncTimeDataSuccess);
