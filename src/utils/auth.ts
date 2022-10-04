@@ -1,6 +1,6 @@
 import Config from "app/config";
 import { AuthState } from "features/auth/auth-slice";
-import Keycloak, { KeycloakInstance } from "keycloak-js";
+import Keycloak from "keycloak-js";
 import { AccessToken } from "types";
 
 /**
@@ -13,11 +13,12 @@ export default class AuthUtils {
    *
    * @param keycloak keycloak instance
    */
-  public static keycloakInit = (keycloak: KeycloakInstance) => {
-    return new Promise<boolean>((resolve, reject) =>
-      keycloak.init({ onLoad: "login-required", checkLoginIframe: false })
+  public static keycloakInit = (keycloak: Keycloak) => {
+    return new Promise<boolean>((resolve, reject) => {
+      keycloak.init({ onLoad: "check-sso", checkLoginIframe: false })
         .then(resolve)
-        .catch(reject));
+        .catch(reject);
+    });
   };
 
   /**
@@ -25,7 +26,7 @@ export default class AuthUtils {
    *
    * @param keycloak keycloak instance
    */
-  public static loadUserProfile = (keycloak: KeycloakInstance) => {
+  public static loadUserProfile = (keycloak: Keycloak) => {
     return new Promise((resolve, reject) =>
       keycloak.loadUserProfile()
         .then(resolve)
@@ -39,9 +40,12 @@ export default class AuthUtils {
    */
   public static initAuth = async (): Promise<AuthState> => {
     try {
-      const keycloak = Keycloak(Config.get().auth);
+      const keycloak = new Keycloak(Config.get().auth);
+      const auth = await AuthUtils.keycloakInit(keycloak);
 
-      await AuthUtils.keycloakInit(keycloak);
+      if (!auth) {
+        keycloak.login({ idpHint: "google" });
+      }
 
       const { token, tokenParsed } = keycloak;
 
@@ -63,7 +67,7 @@ export default class AuthUtils {
    * @param keycloak keycloak instance
    * @returns refreshed access token or undefined
    */
-  public static refreshAccessToken = async (keycloak?: KeycloakInstance): Promise<AccessToken | undefined> => {
+  public static refreshAccessToken = async (keycloak?: Keycloak): Promise<AccessToken | undefined> => {
     try {
       if (!keycloak?.authenticated) {
         return;
@@ -93,7 +97,7 @@ export default class AuthUtils {
    * @param keycloak Keycloak instance
    * @returns access token or undefined if building fails
    */
-  public static buildToken = (keycloak: KeycloakInstance): AccessToken | undefined => {
+  public static buildToken = (keycloak: Keycloak): AccessToken | undefined => {
     const {
       token,
       tokenParsed,
