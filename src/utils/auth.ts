@@ -9,31 +9,6 @@ import { AccessToken } from "types";
 export default class AuthUtils {
 
   /**
-   * Initializes keycloak instance
-   *
-   * @param keycloak keycloak instance
-   */
-  public static keycloakInit = (keycloak: Keycloak) => {
-    return new Promise<boolean>((resolve, reject) => {
-      keycloak.init({ onLoad: "check-sso", checkLoginIframe: false })
-        .then(resolve)
-        .catch(reject);
-    });
-  };
-
-  /**
-   * Loads user profile from Keycloak
-   *
-   * @param keycloak keycloak instance
-   */
-  public static loadUserProfile = (keycloak: Keycloak) => {
-    return new Promise((resolve, reject) =>
-      keycloak.loadUserProfile()
-        .then(resolve)
-        .catch(reject));
-  };
-
-  /**
    * Initializes authentication flow
    *
    * @returns promise of initialized auth state
@@ -41,10 +16,10 @@ export default class AuthUtils {
   public static initAuth = async (): Promise<AuthState> => {
     try {
       const keycloak = new Keycloak(Config.get().auth);
-      const auth = await AuthUtils.keycloakInit(keycloak);
+      const auth = await keycloak.init({ onLoad: "check-sso", checkLoginIframe: false });
 
       if (!auth) {
-        keycloak.login({ idpHint: "google" });
+        await keycloak.login({ idpHint: "google" });
       }
 
       const { token, tokenParsed } = keycloak;
@@ -53,7 +28,8 @@ export default class AuthUtils {
         return { keycloak: keycloak };
       }
 
-      await AuthUtils.loadUserProfile(keycloak);
+      await keycloak.loadUserProfile();
+
       const accessToken = AuthUtils.buildToken(keycloak);
       return { keycloak: keycloak, accessToken: accessToken };
     } catch (error) {
