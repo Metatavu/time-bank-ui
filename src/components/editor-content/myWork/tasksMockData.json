@@ -1,0 +1,642 @@
+[
+    {
+    "id": 6958226,
+    "companyTaskId": 2591,
+    "title": "Tuntityöt",
+    "description": "<div><br/></div>",
+    "projectId": 295931,
+    "remaining": 0,
+    "estimate": 0,
+    "startDate": "2022-05-09T00:00:00.000Z",
+    "endDate": "2022-12-31T00:00:00.000Z",
+    "highPriority": false,
+    "assignedPersons": []
+    },
+    {
+        "id": 8297984,
+        "companyTaskId": 4107,
+        "title": "Redirect to selected user view after user creation",
+        "description": "<div>User should be redirected to created user's info view after creation<br/></div>",
+        "projectId": 344858,
+        "remaining": 60,
+        "estimate": 60,
+        "startDate": "2022-12-05T00:00:00.000Z",
+        "endDate": "2022-12-18T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 358579,
+        "assignedPersons": []
+    },
+    {
+        "id": 8297985,
+        "companyTaskId": 4108,
+        "title": "Add role input component to user create/edit view",
+        "description": "<div>Add possibility to add user role editing to User Management. Available roles in component depend on user’s own role and access level. API should prevent user from increasing role above their own role (include tests).<br/></div>",
+        "projectId": 344858,
+        "remaining": 675,
+        "estimate": 675,
+        "startDate": "2022-12-05T00:00:00.000Z",
+        "endDate": "2022-12-18T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 358579,
+        "assignedPersons": []
+    },
+    {
+        "id": 8297986,
+        "companyTaskId": 4109,
+        "title": "Add send password to user checkbox to user creation form",
+        "description": "<div>Admin and mega center admins should have a possibility to reset user's password from User Management UI. Currently we already have an endpoint for reseting user's passoword (need to be tested).<br/><br/>In addition we will add a checkbox for to new user creation form. If this checkbox is checked API should send a password reset to that user (if the new user has email address). Also we should add a button to edit user form for sending this reset call manually if needed.<br/></div>",
+        "projectId": 344858,
+        "remaining": 240,
+        "estimate": 240,
+        "startDate": "2022-12-05T00:00:00.000Z",
+        "endDate": "2022-12-18T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 358579,
+        "assignedPersons": []
+    },
+    {
+        "id": 8297989,
+        "companyTaskId": 4110,
+        "title": "As a user I want to define operational unit to customer group and all customer's subgroups",
+        "description": "<div>Operational unit attribute should be added to groups. This attribute should be added to <strong>keycloak</strong> group. This requires changes to our current User Management API and UI.<br/></div>",
+        "projectId": 344858,
+        "remaining": 0,
+        "estimate": 0,
+        "startDate": "2022-12-05T00:00:00.000Z",
+        "endDate": "2022-12-18T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 358579,
+        "assignedPersons": []
+    },
+    {
+        "id": 8297991,
+        "companyTaskId": 4111,
+        "title": "Add feature to edit group attributes",
+        "description": "<div>Add support for editing <strong>keycloak</strong> group attributes.<br/><br/>Required changes:<br/><ul><li>API:</li><li>Add support for editing group attributes</li><li>UI:</li><li>Add view for editing group attributes</li></ul></div>",
+        "projectId": 344858,
+        "remaining": 675,
+        "estimate": 675,
+        "startDate": "2022-12-05T00:00:00.000Z",
+        "endDate": "2022-12-18T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 358579,
+        "assignedPersons": []
+    },
+    {
+        "id": 8380963,
+        "companyTaskId": 4216,
+        "title": "Add scheduler for clearing old machine debug logs",
+        "description": "<div><br/></div>",
+        "projectId": 344858,
+        "remaining": 120,
+        "estimate": 120,
+        "startDate": "2022-12-05T00:00:00.000Z",
+        "endDate": "2022-12-18T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 358579,
+        "assignedPersons": []
+    },
+    {
+        "id": 8305468,
+        "companyTaskId": 4138,
+        "title": "ESP32 Optimalock replacement firmware",
+        "description": "<div><br/></div>",
+        "projectId": 344858,
+        "remaining": 0,
+        "estimate": 480,
+        "startDate": "2022-11-21T00:00:00.000Z",
+        "endDate": "2022-12-04T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 356256,
+        "assignedPersons": [
+            395923
+        ]
+    },
+    {
+        "id": 8303746,
+        "companyTaskId": 4134,
+        "title": "Borrow Point: Show virtual keyboard when giving item fault description",
+        "projectId": 344858,
+        "remaining": 240,
+        "estimate": 240,
+        "startDate": "2022-11-21T00:00:00.000Z",
+        "endDate": "2023-12-31T00:00:00.000Z",
+        "highPriority": false,
+        "assignedPersons": [
+            395955
+        ]
+    },
+    {
+        "id": 8303747,
+        "companyTaskId": 4135,
+        "title": "AWS: Add PIN code to machine event creation",
+        "projectId": 344858,
+        "remaining": 120,
+        "estimate": 120,
+        "startDate": "2022-11-21T00:00:00.000Z",
+        "endDate": "2022-12-04T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 356256,
+        "assignedPersons": [
+            395923
+        ]
+    },
+    {
+        "id": 8298116,
+        "companyTaskId": 4113,
+        "title": "As I user I want to be able to filter customer level events",
+        "description": "<div><br/></div>",
+        "projectId": 344858,
+        "remaining": 0,
+        "estimate": 0,
+        "startDate": "2022-11-21T00:00:00.000Z",
+        "endDate": "2022-12-04T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 356256,
+        "assignedPersons": [
+            395955
+        ]
+    },
+    {
+        "id": 8303748,
+        "companyTaskId": 4136,
+        "title": "User Management UI: Invalid redirect URL",
+        "description": "<div>User management has some issues with redirection to PIM UI in production. Most likely caused by misconfigured keycloak client in production Keycloak.<br/>Steps to reproduce:<br/><ul><li>Open user management UI</li><li>Click \"Products\"/\"Tuotenimikkeet\" link from header</li></ul></div>",
+        "projectId": 344858,
+        "remaining": 60,
+        "estimate": 60,
+        "startDate": "2022-11-21T00:00:00.000Z",
+        "endDate": "2022-12-04T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 356256,
+        "assignedPersons": [
+            395955
+        ]
+    },
+    {
+        "id": 8298123,
+        "companyTaskId": 4114,
+        "title": "Add time filter to customer events",
+        "projectId": 344858,
+        "remaining": 0,
+        "estimate": 120,
+        "startDate": "2022-11-21T00:00:00.000Z",
+        "endDate": "2022-12-04T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 356256,
+        "assignedPersons": [
+            395955
+        ]
+    },
+    {
+        "id": 8298124,
+        "companyTaskId": 4115,
+        "title": "Add item filter to customer events",
+        "projectId": 344858,
+        "remaining": 0,
+        "estimate": 120,
+        "startDate": "2022-11-21T00:00:00.000Z",
+        "endDate": "2022-12-04T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 356256,
+        "assignedPersons": [
+            395955
+        ]
+    },
+    {
+        "id": 8298125,
+        "companyTaskId": 4116,
+        "title": "Add free text filter to customer events",
+        "projectId": 344858,
+        "remaining": 0,
+        "estimate": 120,
+        "startDate": "2022-11-21T00:00:00.000Z",
+        "endDate": "2022-12-04T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 356256,
+        "assignedPersons": [
+            395955
+        ]
+    },
+    {
+        "id": 8298135,
+        "companyTaskId": 4117,
+        "title": "As a user I would like to be able to see machine logs in Cloud UI",
+        "description": "<div><br/></div>",
+        "projectId": 344858,
+        "remaining": 0,
+        "estimate": 0,
+        "startDate": "2022-11-21T00:00:00.000Z",
+        "endDate": "2022-12-04T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 356256,
+        "assignedPersons": [
+            395955
+        ]
+    },
+    {
+        "id": 8298137,
+        "companyTaskId": 4118,
+        "title": "Add machine log sending to Borrow Point",
+        "projectId": 344858,
+        "remaining": 45,
+        "estimate": 435,
+        "startDate": "2022-11-21T00:00:00.000Z",
+        "endDate": "2022-12-04T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 356256,
+        "assignedPersons": [
+            395923
+        ]
+    },
+    {
+        "id": 8298138,
+        "companyTaskId": 4119,
+        "title": "Machine log events view UI tests and improvements",
+        "description": "<div>UI design link:<br/>https://www.figma.com/proto/90xZG1ZLIQRIxX7RSYkHY0/Cloud?page-id=0%3A1&amp;node-id=2226%3A23705&amp;viewport=13252%2C2127%2C0.53&amp;scaling=scale-down&amp;starting-point-node-id=2226%3A23705<br/></div>",
+        "projectId": 344858,
+        "remaining": 105,
+        "estimate": 240,
+        "startDate": "2022-11-21T00:00:00.000Z",
+        "endDate": "2022-12-04T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 356256,
+        "assignedPersons": [
+            395955
+        ]
+    },
+    {
+        "id": 8298398,
+        "companyTaskId": 4120,
+        "title": "Testing current eCabin look-a-like services",
+        "projectId": 344858,
+        "remaining": 0,
+        "estimate": 120,
+        "startDate": "2022-11-21T00:00:00.000Z",
+        "endDate": "2022-12-04T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 356256,
+        "assignedPersons": [
+            395955
+        ]
+    },
+    {
+        "id": 8322723,
+        "companyTaskId": 4194,
+        "title": "Release of Borrow Point 2.1.07",
+        "projectId": 344858,
+        "remaining": 0,
+        "estimate": 240,
+        "startDate": "2022-11-21T00:00:00.000Z",
+        "endDate": "2022-12-04T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 356256,
+        "assignedPersons": [
+            395955
+        ]
+    },
+    {
+        "id": 8297896,
+        "companyTaskId": 4090,
+        "title": "AdminMC level user can not edit or delete customers",
+        "description": "<div>AdminMC user should not be allowed to edit or delete <strong>ANY</strong> customers.<br/></div>",
+        "projectId": 344858,
+        "remaining": 0,
+        "estimate": 120,
+        "startDate": "2022-11-21T00:00:00.000Z",
+        "endDate": "2022-12-04T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 356256,
+        "assignedPersons": [
+            395958
+        ]
+    },
+    {
+        "id": 8297900,
+        "companyTaskId": 4091,
+        "title": "AdminMC level user can not delete users nor disable users",
+        "description": "<div>AdminMC user should not be allowed to delete users<br/></div>",
+        "projectId": 344858,
+        "remaining": 0,
+        "estimate": 120,
+        "startDate": "2022-11-21T00:00:00.000Z",
+        "endDate": "2022-12-04T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 356256,
+        "assignedPersons": [
+            395958
+        ]
+    },
+    {
+        "id": 8297904,
+        "companyTaskId": 4092,
+        "title": "Deleting users from user management should be set to disabled instead of deleting completely",
+        "description": "<div>User Management UI should have disable/enable button in each user row. Example to this can be found from user's card codes listing (archive button). Currently user can be set to disabled from edit drawer but this should be moved to the list view.<br/></div>",
+        "projectId": 344858,
+        "remaining": 0,
+        "estimate": 60,
+        "startDate": "2022-11-21T00:00:00.000Z",
+        "endDate": "2022-12-04T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 356256,
+        "assignedPersons": [
+            395955
+        ]
+    },
+    {
+        "id": 8297909,
+        "companyTaskId": 4093,
+        "title": "AdminMC level user can not edit or delete product models",
+        "description": "<div>AdminMC level user should not be allowed to edit or delete product models.<br/></div>",
+        "projectId": 344858,
+        "remaining": 0,
+        "estimate": 240,
+        "startDate": "2022-11-21T00:00:00.000Z",
+        "endDate": "2022-12-04T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 356256,
+        "assignedPersons": [
+            395955
+        ]
+    },
+    {
+        "id": 8297911,
+        "companyTaskId": 4094,
+        "title": "AdminMC level user can not edit or delete product sources",
+        "description": "<div>AdminMC user should not be allowed to edit or delete product sources<br/></div>",
+        "projectId": 344858,
+        "remaining": 120,
+        "estimate": 240,
+        "startDate": "2022-11-21T00:00:00.000Z",
+        "endDate": "2022-12-04T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 356256,
+        "assignedPersons": [
+            395955
+        ]
+    },
+    {
+        "id": 8297915,
+        "companyTaskId": 4095,
+        "title": "AdminMC level user can not edit user roles above their user level",
+        "description": "<div><br/></div>",
+        "projectId": 344858,
+        "remaining": 120,
+        "estimate": 120,
+        "startDate": "2022-11-21T00:00:00.000Z",
+        "endDate": "2022-12-04T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 356256,
+        "assignedPersons": [
+            395955
+        ]
+    },
+    {
+        "id": 8298439,
+        "companyTaskId": 4121,
+        "title": "As a user I would like to see eCabin statuses in Cloud",
+        "projectId": 344858,
+        "remaining": 0,
+        "estimate": 0,
+        "startDate": "2022-11-21T00:00:00.000Z",
+        "endDate": "2022-12-04T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 356256,
+        "assignedPersons": [
+            395955
+        ]
+    },
+    {
+        "id": 8298441,
+        "companyTaskId": 4122,
+        "title": "Implement status update to look-a-like service",
+        "projectId": 344858,
+        "remaining": 0,
+        "estimate": 240,
+        "startDate": "2022-11-21T00:00:00.000Z",
+        "endDate": "2022-12-04T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 356256,
+        "assignedPersons": [
+            395955
+        ]
+    },
+    {
+        "id": 8297946,
+        "companyTaskId": 4097,
+        "title": "Users added by AdminMC level user are automatically added to the same groups as the adding user",
+        "description": "<div><br/></div>",
+        "projectId": 344858,
+        "remaining": 255,
+        "estimate": 675,
+        "startDate": "2022-11-21T00:00:00.000Z",
+        "endDate": "2022-12-04T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 356256,
+        "assignedPersons": [
+            395955
+        ]
+    },
+    {
+        "id": 8297691,
+        "companyTaskId": 4085,
+        "title": "As a manager I want to add AdminMC level users",
+        "description": "<div>Customer has requested a AdminMC (Admin Mega Center) role that is close to admin level but limits some of the functionalities.<br/><br/>More detailed restriction specifications to functionalities can be found from the subtasks.<br/><br/>Material related to the roles can be found from https://app.forecast.it/project/P-149/files under Materials<br/><br/>Also unify the manager/admin within the system<br/></div>",
+        "projectId": 344858,
+        "remaining": 0,
+        "estimate": 0,
+        "startDate": "2022-11-21T00:00:00.000Z",
+        "endDate": "2022-12-04T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 356256,
+        "assignedPersons": [
+            395955
+        ]
+    },
+    {
+        "id": 8297694,
+        "companyTaskId": 4086,
+        "title": "User listing should return only users from AdminMC level and its child groups",
+        "description": "<div>Limit the user listing for AdminMC user to include only users that are part of the customer group where the AdminMC user is part of.<br/></div>",
+        "projectId": 344858,
+        "remaining": 0,
+        "estimate": 675,
+        "startDate": "2022-11-21T00:00:00.000Z",
+        "endDate": "2022-12-04T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 356256,
+        "assignedPersons": [
+            395955
+        ]
+    },
+    {
+        "id": 8297700,
+        "companyTaskId": 4088,
+        "title": "AdminMC level user can only edit users from groups that they are part of",
+        "description": "<div>Limit the AdminMC user's group membership editing permissions only to groups that they are part.<br/></div>",
+        "projectId": 344858,
+        "remaining": 0,
+        "estimate": 240,
+        "startDate": "2022-11-21T00:00:00.000Z",
+        "endDate": "2022-12-04T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 356256,
+        "assignedPersons": [
+            395956
+        ]
+    },
+    {
+        "id": 8297958,
+        "companyTaskId": 4098,
+        "title": "As a manager I want to add Customer level users",
+        "description": "<div><br/></div>",
+        "projectId": 344858,
+        "remaining": 0,
+        "estimate": 0,
+        "startDate": "2022-11-21T00:00:00.000Z",
+        "endDate": "2022-12-04T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 356256,
+        "assignedPersons": [
+            395956
+        ]
+    },
+    {
+        "id": 8297959,
+        "companyTaskId": 4099,
+        "title": "Customer can access machine events and contents but can not edit or delete them",
+        "description": "<div><br/></div>",
+        "projectId": 344858,
+        "remaining": 0,
+        "estimate": 120,
+        "startDate": "2022-11-21T00:00:00.000Z",
+        "endDate": "2022-12-04T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 356256,
+        "assignedPersons": [
+            395958
+        ]
+    },
+    {
+        "id": 8297704,
+        "companyTaskId": 4089,
+        "title": "AdminMC level user can not edit or delete groups",
+        "description": "<div>AdminMC should not be allowed to edit nor delete <strong>ANY</strong> groups.<br/></div>",
+        "projectId": 344858,
+        "remaining": 0,
+        "estimate": 240,
+        "startDate": "2022-11-21T00:00:00.000Z",
+        "endDate": "2022-12-04T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 356256,
+        "assignedPersons": [
+            395958
+        ]
+    },
+    {
+        "id": 8297962,
+        "companyTaskId": 4100,
+        "title": "Customer can access their own basic user information using Keycloak account page",
+        "description": "<div>Example user’s (tommi) account page: https://staging-etra-auth.metatavu.io/auth/realms/etra/account/?referrer=fce71e37-f51e-4a00-b416-321481251d3c#/<br/></div>",
+        "projectId": 344858,
+        "remaining": 0,
+        "estimate": 60,
+        "startDate": "2022-11-21T00:00:00.000Z",
+        "endDate": "2022-12-04T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 356256,
+        "assignedPersons": [
+            395955
+        ]
+    },
+    {
+        "id": 8297965,
+        "companyTaskId": 4101,
+        "title": "Customer can not access other UI's",
+        "description": "<div>Hide links to User Management and PIM UI<br/><br/>Requires User Management API changes for allowing logged in user to fetch own information from API.<br/></div>",
+        "projectId": 344858,
+        "remaining": 0,
+        "estimate": 60,
+        "startDate": "2022-11-21T00:00:00.000Z",
+        "endDate": "2022-12-04T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 356256,
+        "assignedPersons": [
+            395955
+        ]
+    },
+    {
+        "id": 8297971,
+        "companyTaskId": 4102,
+        "title": "Customer can access product information but can not edit them",
+        "description": "<div><br/></div>",
+        "projectId": 344858,
+        "remaining": 0,
+        "estimate": 120,
+        "startDate": "2022-11-21T00:00:00.000Z",
+        "endDate": "2022-12-04T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 356256,
+        "assignedPersons": [
+            395956
+        ]
+    },
+    {
+        "id": 8297973,
+        "companyTaskId": 4103,
+        "title": "Resolve event and alarm display information at the back-end",
+        "description": "<div>Just a user name field from Elasticsearch<br/>Check the indexing done before regarding events<br/></div>",
+        "projectId": 344858,
+        "remaining": 298,
+        "estimate": 870,
+        "startDate": "2022-11-21T00:00:00.000Z",
+        "endDate": "2022-12-04T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 356256,
+        "assignedPersons": [
+            395956
+        ]
+    },
+    {
+        "id": 8297978,
+        "companyTaskId": 4104,
+        "title": "As a user I want to input all user related information without manual navigation",
+        "description": "<div>User should be able to update user's information as simply as possible without many unnecessary clicks. To do this we will need to change the navigation logic somewhat.<br/><br/>This task also includes adding more properties to users.<br/></div>",
+        "projectId": 344858,
+        "remaining": 0,
+        "estimate": 0,
+        "startDate": "2022-12-05T00:00:00.000Z",
+        "endDate": "2022-12-18T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 358579,
+        "assignedPersons": []
+    },
+    {
+        "id": 8297980,
+        "companyTaskId": 4105,
+        "title": "Add operational unit attribute to user form",
+        "description": "<div>Add operational unit to API, UI and lambda. Operational unit should be a simple string attribute added to <strong>keycloak</strong>.<br/><br/>Requires following changes:<br/><ul><li>API:</li><li>add operational unit to user create/update requests</li><li>add operational unit to csv import</li><li>add user attributes to elastic search index</li><li>AWS Lambda:</li><li>add operational unit to Outokumpu user update lambda</li><li>UI:</li><li>add operational unit to user create/update form in User Management UI</li><li>add operational unit to user list</li></ul></div>",
+        "projectId": 344858,
+        "remaining": 435,
+        "estimate": 435,
+        "startDate": "2022-12-05T00:00:00.000Z",
+        "endDate": "2022-12-18T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 358579,
+        "assignedPersons": []
+    },
+    {
+        "id": 8297982,
+        "companyTaskId": 4106,
+        "title": "Add company name attribute",
+        "description": "<div>Add company unit to API, UI and lambda. Company name should be a simple string attribute added to <strong>keycloak</strong>.<br/><br/>Requires following changes:<br/><ul><li>API:</li><li>add company name attribute to user create/update requests</li><li>add company name to csv import</li><li>add user attributes to elastic search index</li><li>AWS Lambda</li><li>add company name to Outokumpu user update lambda</li><li>UI:</li><li>add company name to user create/update form</li></ul></div>",
+        "projectId": 344858,
+        "remaining": 435,
+        "estimate": 435,
+        "startDate": "2022-12-05T00:00:00.000Z",
+        "endDate": "2022-12-18T00:00:00.000Z",
+        "highPriority": false,
+        "sprint": 358579,
+        "assignedPersons": []
+    }
+]

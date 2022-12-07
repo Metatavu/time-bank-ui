@@ -1,0 +1,26 @@
+[
+    {
+        "id": 6382211,
+        "project": 344858,
+        "person": 395923,
+        "startDate": "2022-08-01T00:00:00.000Z",
+        "endDate": "2022-12-31T00:00:00.000Z",
+        "monday": 217,
+        "tuesday": 217,
+        "wednesday": 217,
+        "thursday": 217,
+        "friday": 217
+    },
+    {
+        "id": 6403143,
+        "project": 295931,
+        "person": 395923,
+        "startDate": "2022-08-01T00:00:00.000Z",
+        "endDate": "2022-12-31T00:00:00.000Z",
+        "monday": 217,
+        "tuesday": 217,
+        "wednesday": 217,
+        "thursday": 217,
+        "friday": 217
+    }
+]

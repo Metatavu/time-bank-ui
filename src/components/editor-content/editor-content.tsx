@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, IconButton } from "@material-ui/core";
+/* eslint-disable */
+import React, { ChangeEvent, useState } from "react";
+import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, IconButton, Tab, Tabs, FormControlLabel, Switch } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { DatePickerView } from "@material-ui/pickers";
 import useEditorContentStyles from "styles/editor-content/editor-content";
@@ -19,6 +20,9 @@ import DateRangePicker from "components/generics/date-range-picker/date-range-pi
 import { ErrorContext } from "components/error-handler/error-handler";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { selectAuth } from "features/auth/auth-slice";
+import { TabContext, TabList, TabPanel } from "@material-ui/lab";
+import MyAllocations from "./myWork/MyAllocations";
+import MyProject from "./myWork/MyProjects";
 
 /**
  * Component properties
@@ -47,6 +51,9 @@ const EditorContent: React.FC<Props> = () => {
   const [ displayedTimeData, setDisplayedTimeData ] = React.useState<WorkTimeData[] | undefined>(undefined);
   const [ displayedTotal, setDisplayedTotal ] = React.useState<WorkTimeTotalData | undefined>(undefined);
   const context = React.useContext(ErrorContext);
+  const [tabIndex, setTabIndex] = React.useState("1");
+  const [ sprintValue, setSprintValue ] = React.useState<string>("");
+  const [ progressValue, setProgressValue ] = React.useState<string>("");
 
   /**
    * Initialize the component data
@@ -68,6 +75,7 @@ const EditorContent: React.FC<Props> = () => {
    * Load the daily data
    */
   const loadDateData = async () => {
+    console.log(accessToken);
     if (!person || !selectedStartDate) {
       return;
     }
@@ -447,22 +455,23 @@ const EditorContent: React.FC<Props> = () => {
     }
 
     const timeRangeText = TimeUtils.generateTimeRangeText(displayedTimeData);
-
-    return (
-      <Accordion className={ classes.filterAccordion }>
-        <AccordionSummary
-          expandIcon={ <ExpandMoreIcon/> }
-          aria-controls="panel1a-content"
-          className={ classes.filterSummary }
-        >
-          { renderFilterSummary(timeRangeText) }
-        </AccordionSummary>
-        <AccordionDetails className={ classes.filterContent }>
-          { renderFilterDetails() }
-        </AccordionDetails>
-      </Accordion>
-    );
-  };
+    if (tabIndex !== "1") {
+      return (
+        <Accordion className={ classes.filterAccordion }>
+          <AccordionSummary
+            expandIcon={ <ExpandMoreIcon/> }
+            aria-controls="panel1a-content"
+            className={ classes.filterSummary }
+          >
+            { renderFilterSummary(timeRangeText) }
+          </AccordionSummary>
+          <AccordionDetails className={ classes.filterContent }>
+            { renderFilterDetails() }
+          </AccordionDetails>
+        </Accordion>
+      );
+    };
+  }
 
   /**
    * Renders the overview chart
@@ -535,13 +544,77 @@ const EditorContent: React.FC<Props> = () => {
   };
 
   /**
+   * 
+   * @param event 
+   * @param newTabIndex 
+   */
+  const handleChange = (event: ChangeEvent<{}>, newTabIndex: string) => {
+    setTabIndex(newTabIndex);
+  };
+
+  /**
+   * 
+   */
+  const renderMyWork = () => {
+    if (!person || !personTotalTime) {
+      return null;
+    }
+
+    return (
+      <Box className={ classes.filterOptions }>
+        <FormControlLabel
+          control={
+            <Switch
+            />
+          }
+          label="My tasks only"
+        />
+        <TextField
+          className={ classes.textField }
+          select
+          value={ progressValue }
+          onChange={ event => setProgressValue(event.target.value)}
+        >
+          <MenuItem value="Progress">Progress</MenuItem>
+          <MenuItem value="Done">Done</MenuItem>
+        </TextField>
+        <TextField
+          className={ classes.textField }
+          select
+          label="valittu sprint"
+          value={ sprintValue }
+          onChange={ event => setSprintValue(event.target.value)}
+        >
+          <MenuItem value="43-45">43-45</MenuItem>
+        </TextField>
+      </Box>    
+    );
+  };
+
+  /**
    * Component render
    */
   return (
-    <>
-      { renderFilter() }
-      { renderCharts() }
-    </>
+    <Box sx={{ width: "100%" }}>
+      <TabContext value={tabIndex}>
+        <Box>
+          <TabList onChange={ (event, value) => handleChange(event, value) } className={ classes.navBarContainer }>
+            <Tab label="My Work" value="1" />
+            <Tab label="Time Bank" value="2" />
+          </TabList>
+        </Box>
+        <TabPanel value="1">
+        { renderFilter() }
+        { renderMyWork() }
+        <MyAllocations/>
+        <MyProject/>
+        </TabPanel>
+        <TabPanel value="2">
+        { renderFilter() }
+        { renderCharts() }
+        </TabPanel>
+      </TabContext>
+    </Box>
   );
 };
 

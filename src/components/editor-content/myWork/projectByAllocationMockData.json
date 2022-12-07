@@ -1,0 +1,20 @@
+[{
+    "id": 344858,
+    "name": "ETRA / Etra Cloud",
+    "stage": "RUNNING",
+    "status": "GREEN",
+    "estimationUnits": "HOURS",
+    "minutesPerEstimationPoint": 60,
+    "startDate": "2022-11-08T10:05:18.000Z",
+    "endDate": "2023-12-31T00:00:00.000Z"
+},
+{
+    "id": 295931,
+    "name": "Fujitsu - Alihankinta",
+    "stage": "RUNNING",
+    "status": "GREEN",
+    "estimationUnits": "HOURS",
+    "minutesPerEstimationPoint": 60,
+    "startDate": "2022-05-09T13:56:25.000Z",
+    "endDate": "2022-12-31T00:00:00.000Z"
+}]

@@ -1,0 +1,72 @@
+[
+    {
+        "id": 24339543,
+        "person": 395923,
+        "project": 344858,
+        "task": 8297694,
+        "timeRegistered": 30
+    },
+    {
+        "id": 24402633,
+        "person": 395923,
+        "project": 344858,
+        "task": 8297694,
+        "timeRegistered": 30
+    },
+    {
+        "id": 24274885,
+        "person": 395923,
+        "project": 344858,
+        "task": 8297959,
+        "timeRegistered": 15
+    },
+    {
+        "id": 24295900,
+        "person": 395923,
+        "project": 344858,
+        "task": 8298137,
+        "timeRegistered": 30
+    },
+    {
+        "id": 24402620,
+        "person": 395923,
+        "project": 344858,
+        "task": 8298398,
+        "timeRegistered": 15
+    },
+    {
+        "id": 24254551,
+        "person": 395923,
+        "project": 344858,
+        "task": 8305468,
+        "timeRegistered": 390
+    },
+    {
+        "id": 24274835,
+        "person": 395923,
+        "project": 344858,
+        "task": 8305468,
+        "timeRegistered": 120
+    },
+    {
+        "id": 24339522,
+        "person": 395923,
+        "project": 344858,
+        "task": 8305468,
+        "timeRegistered": 405
+    },
+    {
+        "id": 24365553,
+        "person": 395923,
+        "project": 344858,
+        "task": 8305468,
+        "timeRegistered": 300
+    },
+    {
+        "id": 24431664,
+        "person": 395923,
+        "project": 344858,
+        "task": 8305468,
+        "timeRegistered": 90
+    }
+]

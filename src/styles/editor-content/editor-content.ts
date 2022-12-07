@@ -8,7 +8,8 @@ const useEditorContentStyles = makeStyles(theme => ({
     height: 72,
     display: "flex",
     alignItems: "center",
-    padding: `0px ${theme.spacing(3)}px`,
+    marginTop: "16px",
+    padding: `0px ${theme.spacing(4)}px`,
     [theme.breakpoints.down(1921)]: {
       "& .MuiTypography-root": {
         fontSize: "0.9rem"
@@ -24,6 +25,7 @@ const useEditorContentStyles = makeStyles(theme => ({
   filterSummary: {
     display: "flex",
     alignItems: "center",
+    marginTop: "16px",
     padding: theme.spacing(4),
     "&.Mui-expanded": {
       borderBottom: "1px solid rgba(0, 0, 0, 0.2)"
@@ -92,6 +94,62 @@ const useEditorContentStyles = makeStyles(theme => ({
     alignSelf: "flex-end",
     color: "#F9473B",
     marginLeft: theme.spacing(1)
+  },
+
+  navBarContainer: {
+    color: "white",
+    backgroundColor: "gray",
+    margin: "-32px",
+    marginBottom: "0px",
+    paddingTop: "0px"
+  },
+
+  filterOptions: {
+    textAlign: "right",
+    marginTop: theme.spacing(2),
+    width: "auto",
+    borderRadius: "10px !important",
+    padding: theme.spacing(4),
+    paddingRight: "0px"
+  },
+
+  textField: {
+    width: "200px",
+    marginLeft: "20px",
+    backgroundColor: "white",
+    borderRadius: "20px !important"
+  },
+
+  myEtraCloud: {
+    marginTop: theme.spacing(2),
+    width: "100%",
+    borderRadius: "10px !important"
+  },
+
+  dataGridRow: {
+    height: 40,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between"
+  },
+
+  projectRow: {
+    display: "flex",
+    height: "100%",
+    alignItems: "center",
+    marginLeft: "auto"
+  },
+
+  rowStyling: {
+    backgroundColor: "#f2f2f2",
+    borderBottom: "1px solid white",
+    borderRadius: "10px !important"
+  },
+
+  hideRightSeparator: {
+    "& > .MuiDataGrid-columnSeparator": {
+      visibility: "hidden"
+    }
   }
 
 }), {
