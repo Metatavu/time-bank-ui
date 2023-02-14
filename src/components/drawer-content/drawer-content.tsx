@@ -36,7 +36,8 @@ const DrawerContent: React.FC<Props> = () => {
   const [ persons, setPersons ] = React.useState<Person[]>([]);
   const [ searchInput, setSearchInput ] = React.useState<string>("");
   const context = React.useContext(ErrorContext);
-  
+  const yesterday = (d => new Date(d.setDate(d.getDate() - 1)))(new Date());
+
   React.useEffect(() => {
     const foundPerson = persons.find(personData => personData.email === accessToken?.email);
 
@@ -66,7 +67,8 @@ const DrawerContent: React.FC<Props> = () => {
         const fetchedPersonTotalTime = await Api.getPersonsApi(accessToken?.access_token)
           .listPersonTotalTime({
             personId: person.id,
-            timespan: Timespan.ALL_TIME
+            timespan: Timespan.ALL_TIME,
+            before: yesterday
           });
         dispatch(setPersonTotalTime(fetchedPersonTotalTime[0]));
         return;
