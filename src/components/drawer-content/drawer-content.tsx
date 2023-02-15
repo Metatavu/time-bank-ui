@@ -16,6 +16,7 @@ import { CustomPieLabel, WorkTimeCategory, WorkTimeTotalData } from "types/index
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 import { ErrorContext } from "components/error-handler/error-handler";
 import { selectAuth } from "features/auth/auth-slice";
+import { endOfYesterday } from "date-fns";
 
 /**
  * Component properties
@@ -36,7 +37,7 @@ const DrawerContent: React.FC<Props> = () => {
   const [ persons, setPersons ] = React.useState<Person[]>([]);
   const [ searchInput, setSearchInput ] = React.useState<string>("");
   const context = React.useContext(ErrorContext);
-  const yesterday = (d => new Date(d.setDate(d.getDate() - 1)))(new Date());
+  const yesterday = new Date(endOfYesterday());
 
   React.useEffect(() => {
     const foundPerson = persons.find(personData => personData.email === accessToken?.email);
