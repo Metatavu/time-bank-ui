@@ -1,8 +1,9 @@
-import React, { useState } from "react";
-import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, IconButton, List, ListItem } from "@mui/material";
+/* eslint-disable */
+import React, { ChangeEvent, useState } from "react";
+import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, IconButton, List, ListItem, Tab, Button } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { CalendarPickerView } from "@mui/x-date-pickers";
-// import { DatePickerView } from "@material-ui/pickers";
+import { DatePickerView, DatePicker, DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import useEditorContentStyles from "styles/editor-content/editor-content";
 import { useAppSelector } from "app/hooks";
 import { selectPerson } from "features/person/person-slice";
@@ -21,6 +22,16 @@ import { ErrorContext } from "components/error-handler/error-handler";
 import DeleteIcon from "@mui/icons-material/Delete";
 import VacationDataUtils from "utils/vacation-data-utils";
 import { selectAuth } from "features/auth/auth-slice";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
+import { MuiTextFieldProps } from "@mui/x-date-pickers/internals";
+//import { DateRangePicker, DateRange } from "@mui/lab"
+import DateFnsUtils from '@date-io/date-fns';
+import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
+import TestRangePicker from "components/generics/vacation-test-forms/testVacationComponent";
+
+
+
+
 
 /**
  * Component properties
@@ -52,6 +63,7 @@ const EditorContent: React.FC<Props> = () => {
   const currentVacationSeasonStart = `${new Date().getFullYear()}-04-01`;
   const currentVacationSeasonEnd = `${new Date().getFullYear() + 1}-03-31`;
   const context = React.useContext(ErrorContext);
+  const [tabIndex, setTabIndex] = React.useState("1");
 
   /**
    * Initialize the component data
@@ -656,15 +668,68 @@ const EditorContent: React.FC<Props> = () => {
       </Accordion>
     );
   };
+  const testThis = () => {
+    
+  }
+  const handleTestButton = () => {
+
+  }
+  const renderTestNewButton = () => (
+    <Button
+      color="secondary"
+      variant="contained"
+      onClick={ handleTestButton }
+    >
+      <Typography style={{ fontWeight: 600, color: "white" }}>
+        { (`TEST BUTTON`) }
+      </Typography>
+    </Button>
+  );
+  const newTest = () => (
+    <Accordion className={classes.testDatePickers}>
+    <TestRangePicker
+      dateFormat={ dateFormat }
+      selectedStartDate={ selectedStartDate }
+      selectedEndDate={ selectedEndDate }
+      datePickerView={ datePickerView }
+      onStartDateChange={ handleStartDateChange }
+      onEndDateChange={ handleEndDateChange }
+    />
+    { renderTestNewButton() }
+    </Accordion>
+  )
+  /**
+   * 
+   * @param event 
+   * @param newTabIndex 
+   */
+  const handleChange = (event: ChangeEvent<{}>, newTabIndex: string) => {
+    setTabIndex(newTabIndex);
+  };
   /**
    * Component render
    */
   return (
-    <>
-      { renderFilter() }
-      { renderCharts() }
-      { renderVacationDays() }
-    </>
+  <Box sx={{ width: "100%" }}>
+    <TabContext value={tabIndex}>
+      <Box>
+        <TabList onChange={ (event, value) => handleChange(event, value) } className={ classes.navBarContainer }>
+          <Tab label="Timebank" value="1" />
+          <Tab label="TEST" value="2" /> 
+        </TabList>
+      </Box>
+      <TabPanel value="1">
+        { renderFilter }
+        { renderFilter() }
+        { renderCharts() }
+        { renderVacationDays() }
+      </TabPanel>
+      <TabPanel value="2">
+        { newTest() }
+
+      </TabPanel>
+    </TabContext>
+  </Box>
   );
 };
 

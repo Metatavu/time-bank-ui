@@ -126,6 +126,21 @@ const useEditorContentStyles = makeStyles(theme => ({
     alignItems: "center"
   },
 
+  testDatePickers: {
+    marginLeft: "auto",
+    display: "flex",
+    alignItems: "center",
+    padding: theme.spacing(2)
+  },
+
+  navBarContainer: {
+    color: "white",
+    backgroundColor: "gray",
+    margin: "-32px",
+    marginBottom: "0px",
+    paddingTop: "0px"
+  },
+
   deleteButton: {
     padding: "0px !important",
     alignSelf: "flex-end",
