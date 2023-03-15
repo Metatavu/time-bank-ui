@@ -6,10 +6,6 @@ import { Box, TextField, MenuItem, Typography, Button, Accordion } from "@mui/ma
 import strings from "localization/strings";
 import useDateRangePickerStyles from "styles/generics/date-range-picker/date-range-picker";
 import enLocale from "date-fns/locale/en-US";
-import theme from 'theme/theme';
-import moment from 'moment';
-import { RowingSharp } from '@mui/icons-material';
-import { id } from 'date-fns/locale';
 
 
 
@@ -145,7 +141,7 @@ const TestRangePicker: React.FC<Props> = ({
       <Box ml={ 4 } display="flex" alignItems="center" boxShadow="0px 3px 3px -2px rgb(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0,0,0,0.14), 0px 1px 8px 0px rgb(0,0,0,0.12)">
         { renderEndDate() }
       </Box>
-        <Box width="100%" height="474.5px" marginLeft="30px" paddingTop="50px" display="flex" flexDirection="column" alignItems="center" gap="10px" boxShadow="0px 3px 3px -2px rgb(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0,0,0,0.14), 0px 1px 8px 0px rgb(0,0,0,0.12)">
+        <Box width="100%" height="474.5px" marginLeft="10%" paddingTop="50px" display="flex" flexDirection="column" alignItems="center" gap="10px" boxShadow="0px 3px 3px -2px rgb(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0,0,0,0.14), 0px 1px 8px 0px rgb(0,0,0,0.12)">
           { renderDaysSpend() }
           { renderTestTextBox() }
           { renderTestButton() }

@@ -668,25 +668,17 @@ const EditorContent: React.FC<Props> = () => {
       </Accordion>
     );
   };
-  const testThis = () => {
-    
-  }
-  const handleTestButton = () => {
 
-  }
-  const renderTestNewButton = () => (
-    <Button
-      color="secondary"
-      variant="contained"
-      onClick={ handleTestButton }
-    >
-      <Typography style={{ fontWeight: 600, color: "white" }}>
-        { (`TEST BUTTON`) }
-      </Typography>
-    </Button>
-  );
   const newTest = () => (
-    <Accordion className={classes.testDatePickers}>
+    <Accordion className={classes.vacationDaysAccordion}>
+      <AccordionSummary 
+        expandIcon={ <ExpandMoreIcon/> }
+        aria-controls="panel1a-content"
+        className={ classes.vacationDaysSummary }
+      >
+        { renderVacationDaysSummary() }
+        </AccordionSummary>
+        <AccordionDetails className={ classes.vacationContent }>
     <TestRangePicker
       dateFormat={ dateFormat }
       selectedStartDate={ selectedStartDate }
@@ -695,7 +687,7 @@ const EditorContent: React.FC<Props> = () => {
       onStartDateChange={ handleStartDateChange }
       onEndDateChange={ handleEndDateChange }
     />
-    { renderTestNewButton() }
+    </AccordionDetails>
     </Accordion>
   )
   /**
