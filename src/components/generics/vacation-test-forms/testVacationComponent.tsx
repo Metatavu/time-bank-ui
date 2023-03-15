@@ -83,9 +83,6 @@ const TestRangePicker: React.FC<Props> = ({
   /**
    * Renders days spend
    */
-  //var subtractDays = Math.abs(selectedStartDate.getTime() - selectedEndDate.getTime());
-  //var daysBetween = Math.ceil(subtractDays / (1000 * 3600 * 24));
-
   
   const renderDaysSpend = () => {
     var subtractDays = 0
@@ -133,7 +130,7 @@ const TestRangePicker: React.FC<Props> = ({
 
   const renderTestTextBox = () => (
     <TextField id="outlined-multiline-flexible" multiline maxRows={5} label="TestTest" variant='outlined'/>
-  )
+  );
 
 
 
