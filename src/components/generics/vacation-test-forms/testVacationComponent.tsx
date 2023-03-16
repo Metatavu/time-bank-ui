@@ -7,6 +7,7 @@ import strings from "localization/strings";
 import useDateRangePickerStyles from "styles/generics/date-range-picker/date-range-picker";
 import enLocale from "date-fns/locale/en-US";
 import theme from 'theme/theme';
+import { useMediaQuery } from '@material-ui/core';
 
 
 
@@ -46,9 +47,8 @@ const TestRangePicker: React.FC<Props> = ({
    */
     const renderStartDatePicker = () => {
       //const { filterStartingDate } = strings.editorContent;
-  
       return (
-        <LocalizationProvider dateAdapter={ AdapterDateFns } adapterLocale={ pickerLocale } >
+        <LocalizationProvider dateAdapter={ AdapterDateFns } adapterLocale={ pickerLocale }>
           <DatePicker
             views={[ datePickerView ]}
             inputFormat={ dateFormat }
@@ -60,7 +60,7 @@ const TestRangePicker: React.FC<Props> = ({
           />
         </LocalizationProvider>
       );
-    };
+  } 
 
   /**
    * Renders end date picker
@@ -136,16 +136,18 @@ const TestRangePicker: React.FC<Props> = ({
   /**
    * Component render
    */
+  const matches = useMediaQuery(theme.breakpoints.down("md"))
   return (
     <>
-      <Box display="flex" alignItems="center" justifyContent="center" width="100%" gap="10px">
-        <Box>
-        { renderStartDatePicker() }
-        </Box>
+      <Box display="flex" alignItems="center" justifyContent="center" width="100%" gap="10px" padding={theme.spacing(3)}>
+        {!matches 
+         ? <Box>{ renderStartDatePicker() }</Box>
+         : <Box> { `Test` } </Box>
+        }
         <Box>
         { renderEndDate() }
         </Box>
-        <Box display="flex" flexDirection="column" alignItems="center" gap="10px">
+        <Box display="flex" flexDirection="column" alignItems="center" gap="10px" paddingTop="10px">
           { renderDaysSpend() }
           { renderTestTextBox() }
           { renderTestButton() }
