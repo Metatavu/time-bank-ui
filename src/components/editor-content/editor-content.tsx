@@ -691,16 +691,25 @@ const EditorContent: React.FC<Props> = () => {
       >
         { renderVacationDaysSummary() }
         </AccordionSummary>
+        <AccordionDetails className={ classes.vacationContent}>
+                  <Typography variant="h4">
+            { strings.editorContent.listOfVacationDays }
+          </Typography>
+          { vacationDayList.length === 0
+            ? <Typography variant="h4">{ strings.editorContent.noVacationDays }</Typography>
+            : <Box>{ renderVacationDaysList() }</Box>
+          }
+        </AccordionDetails>
         <AccordionDetails className={ classes.vacationContent }>
-    <TestRangePicker
-      dateFormat={ dateFormat }
-      selectedStartDate={ selectedStartDate }
-      selectedEndDate={ selectedEndDate }
-      datePickerView={ datePickerView }
-      onStartDateChange={ handleStartDateChange }
-      onEndDateChange={ handleEndDateChange }
-    />
-    </AccordionDetails>
+          <TestRangePicker
+            dateFormat={ dateFormat }
+            selectedStartDate={ selectedStartDate }
+            selectedEndDate={ selectedEndDate }
+            datePickerView={ datePickerView }
+            onStartDateChange={ handleStartDateChange }
+            onEndDateChange={ handleEndDateChange }
+          />
+        </AccordionDetails>
     </Accordion>
     )
   }

@@ -1,12 +1,13 @@
 /* eslint-disable */ 
 import React, { useState } from 'react';
-import { LocalizationProvider, DatePicker, CalendarPickerView, StaticDatePicker, DesktopDatePicker } from "@mui/x-date-pickers";
+import { LocalizationProvider, DatePicker, CalendarPickerView, StaticDatePicker, DesktopDatePicker, CalendarPicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { Box, TextField, MenuItem, Typography, Button, Accordion } from "@mui/material";
 import strings from "localization/strings";
 import useDateRangePickerStyles from "styles/generics/date-range-picker/date-range-picker";
 import enLocale from "date-fns/locale/en-US";
 import theme from 'theme/theme';
+
 
 
 
@@ -138,10 +139,10 @@ const TestRangePicker: React.FC<Props> = ({
   return (
     <>
       <Box display="flex" alignItems="center" justifyContent="center" width="100%" gap="10px">
-        <Box boxShadow="0px 3px 3px -2px rgb(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0,0,0,0.14), 0px 1px 8px 0px rgb(0,0,0,0.12)">
+        <Box>
         { renderStartDatePicker() }
         </Box>
-        <Box boxShadow="0px 3px 3px -2px rgb(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0,0,0,0.14), 0px 1px 8px 0px rgb(0,0,0,0.12)">
+        <Box>
         { renderEndDate() }
         </Box>
         <Box display="flex" flexDirection="column" alignItems="center" gap="10px">
