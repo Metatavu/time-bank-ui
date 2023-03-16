@@ -1,11 +1,12 @@
 /* eslint-disable */ 
 import React, { useState } from 'react';
-import { LocalizationProvider, DatePicker, CalendarPickerView, StaticDatePicker } from "@mui/x-date-pickers";
+import { LocalizationProvider, DatePicker, CalendarPickerView, StaticDatePicker, DesktopDatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { Box, TextField, MenuItem, Typography, Button, Accordion } from "@mui/material";
 import strings from "localization/strings";
 import useDateRangePickerStyles from "styles/generics/date-range-picker/date-range-picker";
 import enLocale from "date-fns/locale/en-US";
+import theme from 'theme/theme';
 
 
 
@@ -29,7 +30,7 @@ const TestRangePicker: React.FC<Props> = ({
   onStartDateChange,
   onEndDateChange,
 }) => {
-  const classes = useDateRangePickerStyles();
+  //const classes = useDateRangePickerStyles();
   const [ pickerLocale, setPickerLocale ] = React.useState(enLocale);
   const [ testData, setTestData ] = React.useState<any[]>([
     {
@@ -43,17 +44,17 @@ const TestRangePicker: React.FC<Props> = ({
    * Renders start date picker 
    */
     const renderStartDatePicker = () => {
-      const { filterStartingDate } = strings.editorContent;
+      //const { filterStartingDate } = strings.editorContent;
   
       return (
         <LocalizationProvider dateAdapter={ AdapterDateFns } adapterLocale={ pickerLocale } >
-          <StaticDatePicker
+          <DatePicker
             views={[ datePickerView ]}
             inputFormat={ dateFormat }
-            label={ filterStartingDate }
+            label={`alku`}
             value={ selectedStartDate }
             onChange={ onStartDateChange }
-            className={ classes.datePicker }
+            //className={ classes.datePicker }
             renderInput={ params => <TextField {...params}/>}
           />
         </LocalizationProvider>
@@ -65,13 +66,14 @@ const TestRangePicker: React.FC<Props> = ({
    */
   const renderEndDate = () => (
     <LocalizationProvider dateAdapter={ AdapterDateFns } adapterLocale={ pickerLocale } >
-      <StaticDatePicker
+      <DatePicker
+        minDate={selectedStartDate}
         inputFormat={ dateFormat }
         views={ [ datePickerView ] }
-        label={ strings.editorContent.filterEndingDate }
+        label={ `loppu` }
         value={ selectedEndDate }
         onChange={ onEndDateChange }
-        className={ classes.datePicker }
+        //className={ classes.datePicker }
         renderInput={ params => <TextField {...params}/>}
       />
     </LocalizationProvider>
@@ -135,17 +137,19 @@ const TestRangePicker: React.FC<Props> = ({
    */
   return (
     <>
-      <Box display="flex" alignItems="center" boxShadow="0px 3px 3px -2px rgb(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0,0,0,0.14), 0px 1px 8px 0px rgb(0,0,0,0.12)">
+      <Box display="flex" alignItems="center" justifyContent="center" width="100%" gap="10px">
+        <Box boxShadow="0px 3px 3px -2px rgb(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0,0,0,0.14), 0px 1px 8px 0px rgb(0,0,0,0.12)">
         { renderStartDatePicker() }
-      </Box>
-      <Box ml={ 4 } display="flex" alignItems="center" boxShadow="0px 3px 3px -2px rgb(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0,0,0,0.14), 0px 1px 8px 0px rgb(0,0,0,0.12)">
+        </Box>
+        <Box boxShadow="0px 3px 3px -2px rgb(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0,0,0,0.14), 0px 1px 8px 0px rgb(0,0,0,0.12)">
         { renderEndDate() }
-      </Box>
-        <Box width="100%" height="474.5px" marginLeft="10%" paddingTop="50px" display="flex" flexDirection="column" alignItems="center" gap="10px" boxShadow="0px 3px 3px -2px rgb(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0,0,0,0.14), 0px 1px 8px 0px rgb(0,0,0,0.12)">
+        </Box>
+        <Box display="flex" flexDirection="column" alignItems="center" gap="10px">
           { renderDaysSpend() }
           { renderTestTextBox() }
           { renderTestButton() }
         </Box>
+      </Box>
     </>
   );
 }

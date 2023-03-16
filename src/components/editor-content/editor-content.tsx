@@ -669,7 +669,20 @@ const EditorContent: React.FC<Props> = () => {
     );
   };
 
-  const newTest = () => (
+  const newTest = () => {
+    if (!person || !personTotalTime) {
+      return (
+        <Paper
+        elevation={ 3 }
+        className={ classes.emptyFilterContainer }
+      >
+        <Typography style={{ fontStyle: "italic" }}>
+          { strings.editorContent.userNotSelected }
+        </Typography>
+      </Paper>
+      );
+    }
+    return(
     <Accordion className={classes.vacationDaysAccordion}>
       <AccordionSummary 
         expandIcon={ <ExpandMoreIcon/> }
@@ -689,7 +702,8 @@ const EditorContent: React.FC<Props> = () => {
     />
     </AccordionDetails>
     </Accordion>
-  )
+    )
+  }
   /**
    * 
    * @param event 
