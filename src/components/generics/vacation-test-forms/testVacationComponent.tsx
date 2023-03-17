@@ -40,6 +40,7 @@ const TestRangePicker: React.FC<Props> = ({
       text: "asd"
     }
   ])
+  const [ textContent, setTextContent ] = React.useState("");
 
 
   /**
@@ -111,7 +112,9 @@ const TestRangePicker: React.FC<Props> = ({
   }
 
   const handleTestButton = () => {
-
+    return(
+      console.log(`this is START DATE ${selectedStartDate} and this is END DATE${selectedEndDate} and this is TEXT CONTENT ${textContent}`)
+    )
   }
 
 
@@ -127,8 +130,20 @@ const TestRangePicker: React.FC<Props> = ({
     </Button>
   );
 
+  const handleTextContent = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const contentValue = event.target.value;
+    setTextContent(contentValue)
+  }
+
   const renderTestTextBox = () => (
-    <TextField id="outlined-multiline-flexible" multiline maxRows={5} label="TestTest" variant='outlined'/>
+    <TextField 
+      id="outlined-multiline-flexible"
+      multiline maxRows={5}
+      label="TestTest"
+      variant='outlined'
+      value={textContent}
+      onChange={handleTextContent}
+      />
   );
 
 
