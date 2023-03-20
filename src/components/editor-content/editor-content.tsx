@@ -66,6 +66,7 @@ const EditorContent: React.FC<Props> = () => {
   const currentVacationSeasonEnd = `${new Date().getFullYear() + 1}-03-31`;
   const context = React.useContext(ErrorContext);
   const [tabIndex, setTabIndex] = React.useState("1");
+  const [ textContent, setTextContent ] = React.useState("");
 
   /**
    * Initialize the component data
