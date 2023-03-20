@@ -811,7 +811,8 @@ const EditorContent: React.FC<Props> = () => {
         </AccordionDetails>
     </Accordion>
     )
-  }
+  };
+
   /**
    * 
    * @param event 
@@ -829,7 +830,7 @@ const EditorContent: React.FC<Props> = () => {
       <Box>
         <TabList onChange={ (event, value) => handleChange(event, value) } className={ classes.navBarContainer }>
           <Tab label="Timebank" value="1" />
-          <Tab label="TEST" value="2" /> 
+          <Tab label="Vacation" value="2" /> 
         </TabList>
       </Box>
       <TabPanel value="1">
@@ -840,7 +841,6 @@ const EditorContent: React.FC<Props> = () => {
       </TabPanel>
       <TabPanel value="2">
         { renderVacationInfoSummary() }
-
       </TabPanel>
     </TabContext>
   </Box>
