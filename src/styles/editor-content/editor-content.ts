@@ -93,7 +93,8 @@ const useEditorContentStyles = makeStyles(theme => ({
     height: "100%",
     display: "flex",
     alignItems: "center",
-    padding: theme.spacing(2)
+    padding: theme.spacing(2),
+    borderBottom: "1px solid rgba(0, 0, 0, 0.2)"
   },
 
   vacationList: {

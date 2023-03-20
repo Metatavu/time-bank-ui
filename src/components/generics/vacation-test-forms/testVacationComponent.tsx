@@ -17,8 +17,8 @@ interface Props {
   startDate?: Date | null;
   endDate?: Date | null;
   dateFormat?: string;
-  selectedStartDate: any;
-  selectedEndDate: any;
+  selectedVacationStartDate: any;
+  selectedVacationEndDate: any;
   datePickerView: CalendarPickerView;
   onStartDateChange: (value: any) => void;
   onEndDateChange: (value: any) => void;
@@ -26,8 +26,8 @@ interface Props {
 
 const TestRangePicker: React.FC<Props> = ({
   dateFormat,
-  selectedStartDate,
-  selectedEndDate,
+  selectedVacationStartDate,
+  selectedVacationEndDate,
   datePickerView,
   onStartDateChange,
   onEndDateChange,
@@ -54,7 +54,7 @@ const TestRangePicker: React.FC<Props> = ({
             views={[ datePickerView ]}
             inputFormat={ dateFormat }
             label={`alku`}
-            value={ selectedStartDate }
+            value={ selectedVacationStartDate }
             onChange={ onStartDateChange }
             //className={ classes.datePicker }
             renderInput={ params => <TextField {...params}/>}
@@ -69,11 +69,11 @@ const TestRangePicker: React.FC<Props> = ({
   const renderEndDate = () => (
     <LocalizationProvider dateAdapter={ AdapterDateFns } adapterLocale={ pickerLocale } >
       <DatePicker
-        minDate={selectedStartDate}
+        minDate={selectedVacationStartDate}
         inputFormat={ dateFormat }
         views={ [ datePickerView ] }
         label={ `loppu` }
-        value={ selectedEndDate }
+        value={ selectedVacationEndDate }
         onChange={ onEndDateChange }
         //className={ classes.datePicker }
         renderInput={ params => <TextField {...params}/>}
@@ -83,11 +83,11 @@ const TestRangePicker: React.FC<Props> = ({
   /**
    * Renders days spend
    */
-  
+  /*
   const renderDaysSpend = () => {
     var subtractDays = 0
-    if (selectedEndDate != null){
-      subtractDays += Math.abs(selectedStartDate.getTime() - selectedEndDate.getTime());
+    if (selectedVacationEndDate != null){
+      subtractDays += Math.abs(selectedVacationStartDate.getTime() - selectedVacationEndDate.getTime());
     }
     var daysBetween = Math.ceil(subtractDays / (1000 * 3600 * 24));
     return(
@@ -96,6 +96,7 @@ const TestRangePicker: React.FC<Props> = ({
     </Typography>
     )
   };
+  /*
   /**
    * Renders test button
    */
@@ -113,7 +114,7 @@ const TestRangePicker: React.FC<Props> = ({
 
   const handleTestButton = () => {
     return(
-      console.log(`this is START DATE ${selectedStartDate} and this is END DATE${selectedEndDate} and this is TEXT CONTENT ${textContent}`)
+      console.log(`this is START DATE ${selectedVacationStartDate} and this is END DATE${selectedVacationEndDate} and this is TEXT CONTENT ${textContent}`)
     )
   }
 
@@ -151,21 +152,12 @@ const TestRangePicker: React.FC<Props> = ({
   /**
    * Component render
    */
-  const matches = useMediaQuery(theme.breakpoints.down("md"))
   return (
     <>
       <Box display="flex" alignItems="center" justifyContent="center" width="100%" gap="10px" padding={theme.spacing(3)}>
-        {!matches 
-         ? <Box>{ renderStartDatePicker() }</Box>
-         : <Box> { `Test` } </Box>
-        }
         <Box>
+        { renderStartDatePicker() }
         { renderEndDate() }
-        </Box>
-        <Box display="flex" flexDirection="column" alignItems="center" gap="10px" paddingTop="10px">
-          { renderDaysSpend() }
-          { renderTestTextBox() }
-          { renderTestButton() }
         </Box>
       </Box>
     </>

@@ -53,6 +53,8 @@ const EditorContent: React.FC<Props> = () => {
   const [ dateFormat, setDateFormat ] = React.useState<string | undefined>("yyyy.MM.dd");
   const [ datePickerView, setDatePickerView ] = React.useState<CalendarPickerView>("day");
   const [ selectedStartDate, setSelectedStartDate ] = useState<unknown>(new Date());
+  const [ selectedVacationStartDate, setSelectedVacationStartDate ] = useState<any>(new Date());
+  const [ selectedVacationEndDate, setSelectedVacationEndDate ] = useState<any>(new Date())
   const [ selectedEndDate, setSelectedEndDate ] = useState<unknown>(null);
   const [ startWeek, setStartWeek ] = React.useState<number | null>(null);
   const [ endWeek, setEndWeek ] = React.useState<number | null>(null);
@@ -668,8 +670,42 @@ const EditorContent: React.FC<Props> = () => {
       </Accordion>
     );
   };
+  /**
+   * Method to handle starting date change
+   *
+   * @param date selected date
+   */
+  const handleVacationStartDateChange = (date: unknown) => {
+    date && setSelectedVacationStartDate(date);
+  };
 
-  const newTest = () => {
+  /**
+   * Method to handle ending date change
+   *
+   * @param date selected date
+   */
+  const handleVacationEndDateChange = (date: unknown) => {
+    date && setSelectedVacationEndDate(date);
+  };
+
+  /**
+   * Renders days spend for vacation
+   */
+  
+  const renderVacationDaysSpend = () => {
+    var subtractDays = 0
+    if (selectedEndDate != null){
+      subtractDays += Math.abs(selectedVacationStartDate.getTime() - selectedVacationEndDate.getTime());
+    }
+    var daysBetween = Math.ceil(subtractDays / (1000 * 3600 * 24));
+    return(
+    <Typography variant="h4">
+      {(`Amount of vacation days spend ${daysBetween}`)}
+    </Typography>
+    )
+  };
+
+  const renderVacationInfoSummary = () => {
     if (!person || !personTotalTime) {
       return (
         <Paper
@@ -700,15 +736,23 @@ const EditorContent: React.FC<Props> = () => {
             : <Box>{ renderVacationDaysList() }</Box>
           }
         </AccordionDetails>
+        <AccordionDetails >
+        <Typography variant="h2">
+            { `Apply for vacation` }
+          </Typography>
+        </AccordionDetails>
         <AccordionDetails className={ classes.vacationContent }>
           <TestRangePicker
             dateFormat={ dateFormat }
-            selectedStartDate={ selectedStartDate }
-            selectedEndDate={ selectedEndDate }
+            selectedVacationStartDate={ selectedVacationStartDate }
+            selectedVacationEndDate={ selectedVacationEndDate }
             datePickerView={ datePickerView }
-            onStartDateChange={ handleStartDateChange }
-            onEndDateChange={ handleEndDateChange }
+            onStartDateChange={ handleVacationStartDateChange }
+            onEndDateChange={ handleVacationEndDateChange }
           />
+          <Box>
+          { renderVacationDaysSpend() }
+          </Box>
         </AccordionDetails>
     </Accordion>
     )
@@ -740,7 +784,7 @@ const EditorContent: React.FC<Props> = () => {
         { renderVacationDays() }
       </TabPanel>
       <TabPanel value="2">
-        { newTest() }
+        { renderVacationInfoSummary() }
 
       </TabPanel>
     </TabContext>
