@@ -737,7 +737,7 @@ const EditorContent: React.FC<Props> = () => {
             : <Box>{ renderVacationDaysList() }</Box>
           }
         </AccordionDetails>
-        <AccordionDetails >
+        <AccordionDetails className={ classes.filterContent}>
         <Typography variant="h2">
             { `Apply for vacation` }
           </Typography>
@@ -753,6 +753,7 @@ const EditorContent: React.FC<Props> = () => {
           />
           <Box>
           { renderVacationDaysSpend() }
+          { renderTestTextBox() }
           </Box>
         </AccordionDetails>
     </Accordion>
@@ -766,6 +767,23 @@ const EditorContent: React.FC<Props> = () => {
   const handleChange = (event: ChangeEvent<{}>, newTabIndex: string) => {
     setTabIndex(newTabIndex);
   };
+
+  const handleTextContent = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const contentValue = event.target.value;
+    setTextContent(contentValue)
+  }
+
+  const renderTestTextBox = () => (
+    <TextField 
+      id="outlined-multiline-flexible"
+      multiline maxRows={5}
+      label="TestTest"
+      variant='outlined'
+      value={textContent}
+      onChange={handleTextContent}
+      />
+  );
+
   /**
    * Component render
    */
@@ -786,7 +804,7 @@ const EditorContent: React.FC<Props> = () => {
       </TabPanel>
       <TabPanel value="2">
         { renderVacationInfoSummary() }
-
+        
       </TabPanel>
     </TabContext>
   </Box>

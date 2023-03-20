@@ -131,21 +131,6 @@ const TestRangePicker: React.FC<Props> = ({
     </Button>
   );
 
-  const handleTextContent = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const contentValue = event.target.value;
-    setTextContent(contentValue)
-  }
-
-  const renderTestTextBox = () => (
-    <TextField 
-      id="outlined-multiline-flexible"
-      multiline maxRows={5}
-      label="TestTest"
-      variant='outlined'
-      value={textContent}
-      onChange={handleTextContent}
-      />
-  );
 
 
 
