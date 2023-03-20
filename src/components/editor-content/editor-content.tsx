@@ -33,6 +33,7 @@ import TestRangePicker from "components/generics/vacation-test-forms/testVacatio
 
 
 
+
 /**
  * Component properties
  */
@@ -66,6 +67,7 @@ const EditorContent: React.FC<Props> = () => {
   const currentVacationSeasonEnd = `${new Date().getFullYear() + 1}-03-31`;
   const context = React.useContext(ErrorContext);
   const [tabIndex, setTabIndex] = React.useState("1");
+  const [ textContent, setTextContent ] = React.useState("");
 
   /**
    * Initialize the component data
@@ -671,7 +673,7 @@ const EditorContent: React.FC<Props> = () => {
     );
   };
   /**
-   * Method to handle starting date change
+   * Method to handle vacation starting date change
    *
    * @param date selected date
    */
@@ -680,7 +682,7 @@ const EditorContent: React.FC<Props> = () => {
   };
 
   /**
-   * Method to handle ending date change
+   * Method to handle vacation ending date change
    *
    * @param date selected date
    */
@@ -705,6 +707,56 @@ const EditorContent: React.FC<Props> = () => {
     )
   };
 
+    /**
+    * Handle vacation comment box content
+    */
+
+  const handleVacationCommentContent = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const contentValue = event.target.value;
+    setTextContent(contentValue)
+  }
+
+  /**
+    * Renders vacation comment box
+    */
+
+  const renderVacationCommentBox = () => (
+    <TextField 
+      id="outlined-multiline-flexible"
+      multiline maxRows={5}
+      label="Leave a comment"
+      variant='outlined'
+      value={textContent}
+      onChange={handleVacationCommentContent}
+      />
+  );
+
+    /**
+    * Handle vacation apply button
+    */
+
+  const handleVacationApplyButton = () => {
+    return(
+      console.log(`this is START DATE ${selectedVacationStartDate} and this is END DATE${selectedVacationEndDate} and this is TEXT CONTENT ${textContent}`)
+    )
+  }
+
+  /**
+    * Renders vacation apply button
+    */
+
+  const renderVacationApplyButton = () => (
+    <Button
+      color="secondary"
+      variant="contained"
+      onClick={ handleVacationApplyButton }
+    >
+      <Typography style={{ fontWeight: 600, color: "white" }}>
+        { (`APPLY`) }
+      </Typography>
+    </Button>
+  );
+  
   const renderVacationInfoSummary = () => {
     if (!person || !personTotalTime) {
       return (
@@ -737,21 +789,24 @@ const EditorContent: React.FC<Props> = () => {
           }
         </AccordionDetails>
         <AccordionDetails >
-        <Typography variant="h2">
+        <Typography variant="h2" padding={theme.spacing(2)}>
             { `Apply for vacation` }
           </Typography>
         </AccordionDetails>
-        <AccordionDetails className={ classes.vacationContent }>
-          <TestRangePicker
-            dateFormat={ dateFormat }
-            selectedVacationStartDate={ selectedVacationStartDate }
-            selectedVacationEndDate={ selectedVacationEndDate }
-            datePickerView={ datePickerView }
-            onStartDateChange={ handleVacationStartDateChange }
-            onEndDateChange={ handleVacationEndDateChange }
-          />
-          <Box>
+        <AccordionDetails 
+          className={ classes.vacationInfoContent }>
+            <TestRangePicker
+              dateFormat={ dateFormat }
+              selectedVacationStartDate={ selectedVacationStartDate }
+              selectedVacationEndDate={ selectedVacationEndDate }
+              datePickerView={ datePickerView }
+              onStartDateChange={ handleVacationStartDateChange }
+              onEndDateChange={ handleVacationEndDateChange }
+            />
+          <Box className={ classes.vacationDetailsContent }>
           { renderVacationDaysSpend() }
+          { renderVacationCommentBox() }
+          { renderVacationApplyButton() }
           </Box>
         </AccordionDetails>
     </Accordion>

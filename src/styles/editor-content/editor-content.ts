@@ -97,6 +97,15 @@ const useEditorContentStyles = makeStyles(theme => ({
     borderBottom: "1px solid rgba(0, 0, 0, 0.2)"
   },
 
+  vacationInfoContent: {
+    height: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: theme.spacing(2),
+    borderBottom: "1px solid rgba(0, 0, 0, 0.2)"
+  },
+
   vacationList: {
     columnCount: 1,
     columnFill: "auto",
@@ -105,6 +114,16 @@ const useEditorContentStyles = makeStyles(theme => ({
     marginLeft: theme.spacing(2),
     padding: theme.spacing(1),
     display: "inline-block"
+  },
+
+  vacationDetailsContent: {
+    display: "flex",
+    height: "100%",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "10px",
+    padding: theme.spacing(2),
+    marginTop: "10px"
   },
 
   overViewChartContainer: {
