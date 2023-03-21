@@ -13,8 +13,8 @@ interface Props {
   startDate?: Date | null;
   endDate?: Date | null;
   dateFormat?: string;
-  selectedVacationStartDate: any;
-  selectedVacationEndDate: any;
+  selectedVacationStartDate: Date;
+  selectedVacationEndDate: Date;
   datePickerView: CalendarPickerView;
   onStartDateChange: (value: any) => void;
   onEndDateChange: (value: any) => void;

@@ -28,6 +28,8 @@ import { MuiTextFieldProps } from "@mui/x-date-pickers/internals";
 import DateFnsUtils from '@date-io/date-fns';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import TestRangePicker from "components/generics/vacation-test-forms/testVacationComponent";
+import { DataGrid, GridColDef, GridRowsProp } from '@mui/x-data-grid';
+import renderVacationRequests from "components/generics/vacation-test-forms/testVacationRequests";
 
 
 
@@ -812,6 +814,7 @@ const EditorContent: React.FC<Props> = () => {
     </Accordion>
     )
   }
+
   /**
    * 
    * @param event 
@@ -820,22 +823,6 @@ const EditorContent: React.FC<Props> = () => {
   const handleChange = (event: ChangeEvent<{}>, newTabIndex: string) => {
     setTabIndex(newTabIndex);
   };
-
-  const handleTextContent = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const contentValue = event.target.value;
-    setTextContent(contentValue)
-  }
-
-  const renderTestTextBox = () => (
-    <TextField 
-      id="outlined-multiline-flexible"
-      multiline maxRows={5}
-      label="TestTest"
-      variant='outlined'
-      value={textContent}
-      onChange={handleTextContent}
-      />
-  );
 
   /**
    * Component render
@@ -857,7 +844,7 @@ const EditorContent: React.FC<Props> = () => {
       </TabPanel>
       <TabPanel value="2">
         { renderVacationInfoSummary() }
-        
+        { renderVacationRequests() }
       </TabPanel>
     </TabContext>
   </Box>
