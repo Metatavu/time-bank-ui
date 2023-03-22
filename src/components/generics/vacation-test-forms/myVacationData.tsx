@@ -1,13 +1,14 @@
 /* eslint-disable */
 import React, { FC, useEffect } from "react";
-import { DataGrid, GridColDef, gridClasses } from "@mui/x-data-grid";
+import { DataGrid, GridCellParams, GridColDef, gridClasses } from "@mui/x-data-grid";
 import useEditorContentStyles from "styles/editor-content/editor-content";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import vacationData from "./vacationTestMockData.json";
 import myVacation from "./myVacationMockData.json"
 import { alpha, styled } from '@mui/material/styles';
-import { Box, TextField, MenuItem, Typography, Button, Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
+import { Box, TextField, MenuItem, Typography, Button, Accordion, AccordionSummary, AccordionDetails, tableCellClasses } from "@mui/material";
+import CreateIcon from '@mui/icons-material/Create';
 
 interface Props {
 
@@ -61,14 +62,19 @@ const columns: GridColDef[] = [
         headerName: "status",
         flex: 2,
         hideSortIcons: true,
-        headerClassName: classes.hideRightSeparator
+        headerClassName: classes.hideRightSeparator,
     },
     {
         field:"expand",
         headerName: "",
         flex: 1,
         hideSortIcons: true,
-        headerClassName: classes.hideRightSeparator
+        headerClassName: classes.hideRightSeparator,
+        renderCell: (params) => {
+            return (
+                <Button>{ <CreateIcon/> }</Button>
+            )
+        }
     },
 ]
 const ODD_OPACITY = 0.2;
@@ -120,10 +126,24 @@ const renderMyVacations = () => {
         className={ classes.vacationDaysSummary }
       >
         <Typography variant="h2">
-        { `My Vacations` }
+        { `My Requests` }
         </Typography>
         </AccordionSummary>
             <StripedDataGrid
+            sx={{
+                '& .pending': {
+                    color: '#FF493C'
+                },
+                '& .accepted': {
+                    color: '#45cf36'
+                }
+            }}
+            getCellClassName={(params: GridCellParams<any>) => {
+              if (params.field != 'status' || params.value == null) {
+                return ''
+              }
+              return params.value === 'ACCEPTED' ? 'accepted' : 'pending'
+            }}
             getRowClassName={(params) => 
             params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
             }
@@ -143,7 +163,7 @@ const renderMyVacations = () => {
             disableColumnMenu={true}
             disableColumnSelector={true}
             />
-          </Accordion>
+        </Accordion>
     )
 }
 return (

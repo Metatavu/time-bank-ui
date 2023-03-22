@@ -842,7 +842,7 @@ const EditorContent: React.FC<Props> = () => {
       </TabPanel>
       <TabPanel value="2">
         { renderVacationInfoSummary() }
-        <Box>
+        <Box paddingTop="10px">
           <MyVacation/>
         </Box>
       </TabPanel>
