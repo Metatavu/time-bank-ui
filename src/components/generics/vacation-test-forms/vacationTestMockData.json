@@ -1,18 +1,11 @@
 [
     {
-    "id": 6958226,
-    "comment": "<div><br/></div>",
-    "days": 0,
-    "startDate": "2023-02-02T00:00:00.000Z",
-    "EndDate": "2023-03-03T00:00:00.000Z",
+    "id": 344858,
+    "comment": "Test this comment",
+    "employee": "Matti Meikäläinen",
+    "days": 31,
+    "startDate": "2023-01-02T10:05:18.000Z",
+    "endDate": "2023-02-02T00:00:00.000Z",
     "status": "PENDING"
-    },
-    {
-        "id": 8297984,
-        "comment": "<div>I need some time off<br/></div>",
-        "days": 30,
-        "startDate": "2023-02-02T00:00:00.000Z",
-        "EndDate": "2023-03-03T00:00:00.000Z",
-        "status": "PENDING"
     }
 ]

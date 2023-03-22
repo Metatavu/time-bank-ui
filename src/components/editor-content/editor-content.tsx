@@ -28,7 +28,7 @@ import { MuiTextFieldProps } from "@mui/x-date-pickers/internals";
 import DateFnsUtils from '@date-io/date-fns';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import TestRangePicker from "components/generics/vacation-test-forms/testVacationComponent";
-
+import MyVacation from "components/generics/vacation-test-forms/myVacationData"
 
 
 
@@ -813,6 +813,7 @@ const EditorContent: React.FC<Props> = () => {
     )
   };
 
+
   /**
    * 
    * @param event 
@@ -841,6 +842,9 @@ const EditorContent: React.FC<Props> = () => {
       </TabPanel>
       <TabPanel value="2">
         { renderVacationInfoSummary() }
+        <Box>
+          <MyVacation/>
+        </Box>
       </TabPanel>
     </TabContext>
   </Box>

@@ -165,6 +165,38 @@ const useEditorContentStyles = makeStyles(theme => ({
     alignSelf: "flex-end",
     color: "#F9473B",
     marginLeft: theme.spacing(1)
+  },
+  
+  myVacationData: {
+    marginTop: theme.spacing(2),
+    width: "100%",
+    borderRadius: "10px !important"
+  },
+
+  dataGridRow: {
+    height: 40,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between"
+  },
+
+  projectRow: {
+    display: "flex",
+    height: "100%",
+    alignItems: "center",
+    marginLeft: "auto"
+  },
+
+  rowStyling: {
+    backgroundColor: "#f2f2f2",
+    borderBottom: "1px solid white",
+    borderRadius: "10px !important"
+  },
+
+  hideRightSeparator: {
+    "& > .MuiDataGrid-columnSeparator": {
+      visibility: "hidden"
+    }
   }
 
 }), {
