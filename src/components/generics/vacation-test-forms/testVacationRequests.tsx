@@ -32,7 +32,7 @@ const columns: GridColDef[] = [
   },
   {
     field: 'action',
-    headerName: 'Action',
+    headerName: '',
     width: 100,
     sortable: false,
     //disableClickEventBubbling: true,
@@ -44,7 +44,7 @@ const columns: GridColDef[] = [
         };
         
         return (
-            <Button variant="outlined" color="warning" size="small" onClick={onClick}>Edit</Button>
+            <Button onClick={onClick}><CreateIcon/></Button>
         );
     },
   }
