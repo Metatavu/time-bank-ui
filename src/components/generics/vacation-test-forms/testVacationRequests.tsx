@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
-import { Accordion, AccordionSummary, Box, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import { Accordion, AccordionSummary, Box, Button, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 import { DataGrid, GridColDef, GridRowsProp } from "@mui/x-data-grid";
 import useEditorContentStyles from "styles/editor-content/editor-content";
 import theme from "theme/theme";
@@ -30,6 +30,24 @@ const columns: GridColDef[] = [
   {
     field: "status", headerName: "Status", flex: 2
   },
+  {
+    field: 'action',
+    headerName: 'Action',
+    width: 100,
+    sortable: false,
+    //disableClickEventBubbling: true,
+    
+    renderCell: (params) => {
+        const onClick = () => {
+          const currentRow = params.row;
+          return alert(JSON.stringify(currentRow, null, 4));
+        };
+        
+        return (
+            <Button variant="outlined" color="warning" size="small" onClick={onClick}>Edit</Button>
+        );
+    },
+  }
 ];
 
 interface Request {
