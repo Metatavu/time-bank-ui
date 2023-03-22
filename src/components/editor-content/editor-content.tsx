@@ -30,6 +30,7 @@ import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import TestRangePicker from "components/generics/vacation-test-forms/testVacationComponent";
 import { DataGrid, GridColDef, GridRowsProp } from '@mui/x-data-grid';
 import renderVacationRequests from "components/generics/vacation-test-forms/testVacationRequests";
+import renderAllVacationRequests from "components/generics/vacation-test-forms/testVacationAllRequests";
 
 
 
@@ -845,6 +846,7 @@ const EditorContent: React.FC<Props> = () => {
       <TabPanel value="2">
         { renderVacationInfoSummary() }
         { renderVacationRequests() }
+        { renderAllVacationRequests() }
       </TabPanel>
     </TabContext>
   </Box>
