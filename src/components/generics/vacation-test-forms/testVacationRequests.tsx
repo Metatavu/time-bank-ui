@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
-import { Accordion, AccordionSummary, Box, Button, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
-import { DataGrid, GridColDef, GridRowsProp } from "@mui/x-data-grid";
+import { Accordion, AccordionSummary, alpha, Box, Button, Dialog, Modal, styled, Typography } from "@mui/material";
+import { DataGrid, GridCellParams, gridClasses, GridColDef} from "@mui/x-data-grid";
 import useEditorContentStyles from "styles/editor-content/editor-content";
 import theme from "theme/theme";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -9,26 +9,28 @@ import CreateIcon from '@mui/icons-material/Create';
 import { fontSize, fontStyle } from '@mui/system';
 import { columnGroupsStateInitializer } from '@mui/x-data-grid/internals';
 import { useParams } from 'react-router-dom';
-import vacationRequests from './testVacationMockData.json';
+import myVacationRequests from './myVacationMockData.json';
+import BasicModal from './testVacationEditModal';
+
 
 const columns: GridColDef[] = [
   {
-    field: "comment", headerName: "My Requests", flex: 3
+    field: "comment", headerName: "My Requests", flex: 3, hideSortIcons: true
   },
   {
-    field: "employee", headerName: "Employee", flex: 2
+    field: "employee", headerName: "Employee", flex: 2, hideSortIcons: true
   },
   {
-    field: "days", headerName: "Days", flex: 1
+    field: "days", headerName: "Days", flex: 1, hideSortIcons: true
   },
   {
-    field: "startDate", headerName: "Start Date", flex: 2
+    field: "startDate", headerName: "Start Date", flex: 2, hideSortIcons: true
   },
   {
-    field: "endDate", headerName: "End Date", flex: 2
+    field: "endDate", headerName: "End Date", flex: 2, hideSortIcons: true
   },
   {
-    field: "status", headerName: "Status", flex: 2
+    field: "status", headerName: "Status", flex: 2, hideSortIcons: true
   },
   {
     field: 'action',
@@ -36,16 +38,18 @@ const columns: GridColDef[] = [
     width: 100,
     sortable: false,
     //disableClickEventBubbling: true,
-    
+
     renderCell: (params) => {
-        const onClick = () => {
-          const currentRow = params.row;
-          return alert(JSON.stringify(currentRow, null, 4));
-        };
+      const onClick = () => {
+        const currentRow = params.row;
+        console.log(params.id);
         
-        return (
-            <Button onClick={onClick}><CreateIcon/></Button>
-        );
+        return alert(JSON.stringify(currentRow, null, 4));
+      };
+
+      return (
+        <Button onClick={onClick}><CreateIcon/></Button>
+      );
     },
   }
 ];
@@ -60,18 +64,49 @@ interface Request {
   status: string;
 }
 
+const ODD_OPACITY = 0.2;
+
+const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
+  [`& .${gridClasses.row}.even`]: {
+    backgroundColor: theme.palette.grey[200],
+    '&:hover, &.Mui-hovered': {
+      backgroundColor: alpha(theme.palette.primary.main, ODD_OPACITY),
+      '@media (hover: none)': {
+        backgroundColor: 'transparent',
+      },
+    },
+    '&.Mui-selected': {
+      backgroundColor: alpha(
+        theme.palette.primary.main,
+        ODD_OPACITY + theme.palette.action.selectedOpacity,
+      ),
+      '&:hover, &.Mui-hovered': {
+        backgroundColor: alpha(
+          theme.palette.primary.main,
+          ODD_OPACITY +
+            theme.palette.action.selectedOpacity +
+            theme.palette.action.hoverOpacity,
+        ),
+        // Reset on touch devices, it doesn't add specificity
+        '@media (hover: none)': {
+          backgroundColor: alpha(
+            theme.palette.primary.main,
+            ODD_OPACITY + theme.palette.action.selectedOpacity,
+          ),
+        },
+      },
+    },
+  },
+}));
+
 const renderVacationRequests = () => {
   const classes = useEditorContentStyles();
   const id = useParams();
-  const request = vacationRequests.find((r: { id: number; }) => r.id === id)
+  const request = myVacationRequests.find((r: { id: number; }) => r.id === id)
 
-  const [requests, setRequests] = useState([])
+  //const [requests, setRequests] = useState([])
 
-  useEffect(() => {
-
-
-  }, [])
-  console.log(vacationRequests);
+  //console.log(vacationRequests);
 
   return (
     <Accordion className={classes.vacationDaysAccordion}>
@@ -85,10 +120,27 @@ const renderVacationRequests = () => {
         </Typography>
       </AccordionSummary>
       <Box style={{ height: 300, width: "100%" }}>
-        <DataGrid
-          rows={vacationRequests}
+        <StripedDataGrid
+          sx={{
+            '& .pending': {
+              color: '#FF493C'
+            },
+            '& .accepted': {
+              color: '#45cf36'
+            }
+          }}
+          getCellClassName={(params: GridCellParams<any>) => {
+            if (params.field != 'status' || params.value == null) {
+              return ''
+            }
+            return params.value === 'ACCEPTED' ? 'accepted' : 'pending'
+          }}
+          rows={myVacationRequests}
           columns={columns}
           pageSizeOptions={[6]}
+          getRowClassName={(params) =>
+            params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
+          }
         />
       </Box>
     </Accordion>
@@ -96,33 +148,3 @@ const renderVacationRequests = () => {
 };
 
 export default renderVacationRequests;
-/**
- * 
-      <Table style={{ marginBottom: "1em" }}>
-        <TableHead>
-          <TableRow>
-            <TableCell sx={{fontSize: "20px"}}>My Requests</TableCell>
-            <TableCell>Employee</TableCell>
-            <TableCell>Days</TableCell>
-            <TableCell>Start Date</TableCell>
-            <TableCell>End Date</TableCell>
-            <TableCell>Status</TableCell>
-            <TableCell></TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {Object.values(vacationRequests).map((request) => (
-            <TableRow key={request.id}>
-              <TableCell>{request.comment}</TableCell>
-              <TableCell>{request.employee}</TableCell>
-              <TableCell>{request.days}</TableCell>
-              <TableCell>{request.startDate}</TableCell>
-              <TableCell>{request.EndDate}</TableCell>
-              <TableCell>{request.status}</TableCell>
-              <TableCell><CreateIcon/></TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
- */
-

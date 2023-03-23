@@ -834,7 +834,7 @@ const EditorContent: React.FC<Props> = () => {
       <Box>
         <TabList onChange={ (event, value) => handleChange(event, value) } className={ classes.navBarContainer }>
           <Tab label="Timebank" value="1" />
-          <Tab label="TEST" value="2" /> 
+          <Tab label="Vacations" value="2" /> 
         </TabList>
       </Box>
       <TabPanel value="1">

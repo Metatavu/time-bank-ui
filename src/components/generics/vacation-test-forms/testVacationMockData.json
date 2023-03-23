@@ -1,18 +1,36 @@
 [
     {
         "id": 6958226,
-        "comment": "<div><br/></div>",
+        "comment": "Summervacation",
         "employee": "A. Anonyme",
         "days": 0,
+        "startDate": "2023-02-02T00:00:00.000Z",
+        "endDate": "2023-03-03T00:00:00.000Z",
+        "status": "ACCEPTED"
+    },
+    {
+        "id": 8297984,
+        "comment": "I need some time off",
+        "employee": "B. Anonyme",
+        "days": 30,
         "startDate": "2023-02-02T00:00:00.000Z",
         "endDate": "2023-03-03T00:00:00.000Z",
         "status": "PENDING"
     },
     {
-        "id": 8297984,
-        "comment": "<div>I need some time off<br/></div>",
-        "employee": "B. Anonyme",
-        "days": 30,
+        "id": 5667678,
+        "comment": "Leave",
+        "employee": "C. Anonyme",
+        "days": 7,
+        "startDate": "2023-02-02T00:00:00.000Z",
+        "endDate": "2023-03-03T00:00:00.000Z",
+        "status": "PENDING"
+    },
+    {
+        "id": 3244556,
+        "comment": "I want a holiday",
+        "employee": "D. Anonyme",
+        "days": 10,
         "startDate": "2023-02-02T00:00:00.000Z",
         "endDate": "2023-03-03T00:00:00.000Z",
         "status": "PENDING"
