@@ -114,7 +114,6 @@ const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
 
 
 const renderMyVacations = () => {
-    console.log(rows)
     return(
         <Accordion
             elevation={3}

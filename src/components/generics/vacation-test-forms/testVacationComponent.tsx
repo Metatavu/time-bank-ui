@@ -4,10 +4,9 @@ import { LocalizationProvider, DatePicker, CalendarPickerView, StaticDatePicker,
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { Box, TextField, MenuItem, Typography, Button, Accordion } from "@mui/material";
 import enLocale from "date-fns/locale/en-US";
-
-
-
-
+import fiLocale from "date-fns/locale/fi";
+import { selectLocale } from "features/locale/locale-slice";
+import { useAppSelector } from "app/hooks";
 
 interface Props {
   startDate?: Date | null;
@@ -28,7 +27,16 @@ const TestRangePicker: React.FC<Props> = ({
   onStartDateChange,
   onEndDateChange,
 }) => {
+  const { locale } = useAppSelector(selectLocale);
   const [ pickerLocale, setPickerLocale ] = React.useState(enLocale);
+
+    /**
+   * Initialize the date data
+   */
+    React.useEffect(() => {
+      locale === "fi" ? setPickerLocale(fiLocale) : setPickerLocale(enLocale);
+    }, [locale]);
+    
 
   /**
    * Renders start date picker 

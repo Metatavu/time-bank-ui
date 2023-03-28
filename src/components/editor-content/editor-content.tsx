@@ -23,12 +23,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import VacationDataUtils from "utils/vacation-data-utils";
 import { selectAuth } from "features/auth/auth-slice";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { MuiTextFieldProps } from "@mui/x-date-pickers/internals";
-//import { DateRangePicker, DateRange } from "@mui/lab"
-import DateFnsUtils from '@date-io/date-fns';
-import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import TestRangePicker from "components/generics/vacation-test-forms/testVacationComponent";
 import MyVacation from "components/generics/vacation-test-forms/myVacationData"
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import NativeSelect from '@mui/material/NativeSelect';
+
 
 
 
@@ -691,22 +691,46 @@ const EditorContent: React.FC<Props> = () => {
   };
 
   /**
+   * Test new vacation calculations
+   */
+
+  function getVacationDays(startDate: Date, endDate: Date, holidays: Date[]): number{
+    const totalDays = Math.round((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))
+    let vacationDays = 0
+    let currentDate = new Date(startDate)
+    for (let i = 0; i <= totalDays; i++) {
+        if (currentDate.getDay() != 0 && !holidays.some(holiday => holiday.getTime() === currentDate.getTime())) {
+            vacationDays++
+        }
+        currentDate.setDate(currentDate.getDay() + 1)
+    }
+    return vacationDays
+  }
+
+  const startDate = new Date(selectedVacationStartDate)
+  const endDate = new Date(selectedVacationEndDate)
+
+  const holidays = [
+    new Date('2023-01-01'),
+    new Date('2023-01-06'),
+    new Date('2023-04-23'),
+    new Date('2023-04-25'),
+    new Date('2023-04-26')
+  ]
+  const vacationDays = getVacationDays(startDate, endDate, holidays)
+
+    /**
    * Renders days spend for vacation
    */
   
-  const renderVacationDaysSpend = () => {
-    var subtractDays = 0
-    if (selectedEndDate != null){
-      subtractDays += Math.abs(selectedVacationStartDate.getTime() - selectedVacationEndDate.getTime());
-    }
-    var daysBetween = Math.ceil(subtractDays / (1000 * 3600 * 24));
-    return(
-    <Typography variant="h4">
-      {(`Amount of vacation days spend ${daysBetween}`)}
-    </Typography>
-    )
-  };
-
+    const renderVacationDaysSpend = () => {
+      return(
+      <Typography variant="h4">
+        {(`Amount of vacation days spend ${vacationDays}`)}
+      </Typography>
+      )
+    };
+  
     /**
     * Handle vacation comment box content
     */
@@ -731,13 +755,36 @@ const EditorContent: React.FC<Props> = () => {
       />
   );
 
-    /**
-    * Handle vacation apply button
-    */
+  const renderDropDown = () => {
+    return (
+      <Box sx={{ minWidth: 120 }}>
+        <FormControl fullWidth>
+          <InputLabel variant="standard" htmlFor="uncontrolled-native">
+            Type of vacation
+          </InputLabel>
+          <NativeSelect
+            defaultValue={30}
+            inputProps={{
+              name: 'type',
+              id: 'uncontrolled-native',
+            }}
+          >
+            <option value={10}>Summer</option>
+            <option value={20}>Winter</option>
+            <option value={30}>Unpaid</option>
+          </NativeSelect>
+        </FormControl>
+      </Box>
+    );
+  }
+
+  /**
+  * Handle vacation apply button
+  */
 
   const handleVacationApplyButton = () => {
     return(
-      console.log(`this is START DATE ${selectedVacationStartDate} and this is END DATE${selectedVacationEndDate} and this is TEXT CONTENT ${textContent}`)
+      console.log("Works")
     )
   }
 
@@ -795,6 +842,9 @@ const EditorContent: React.FC<Props> = () => {
         </AccordionDetails>
         <AccordionDetails 
           className={ classes.vacationInfoContent }>
+            <Box paddingBottom="10px" paddingRight="10px">
+            { renderDropDown() }
+            </Box>
             <TestRangePicker
               dateFormat={ dateFormat }
               selectedVacationStartDate={ selectedVacationStartDate }
@@ -813,12 +863,12 @@ const EditorContent: React.FC<Props> = () => {
     )
   };
 
-
   /**
    * 
    * @param event 
    * @param newTabIndex 
    */
+
   const handleChange = (event: ChangeEvent<{}>, newTabIndex: string) => {
     setTabIndex(newTabIndex);
   };
@@ -831,7 +881,7 @@ const EditorContent: React.FC<Props> = () => {
       <Box>
         <TabList onChange={ (event, value) => handleChange(event, value) } className={ classes.navBarContainer }>
           <Tab label="Timebank" value="1" />
-          <Tab label="Vacation" value="2" /> 
+          <Tab label="Vacation" value="2" />
         </TabList>
       </Box>
       <TabPanel value="1">
