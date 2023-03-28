@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { ChangeEvent, useState } from "react";
-import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, IconButton, List, ListItem, Tab, Button } from "@mui/material";
+import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, IconButton, List, ListItem, Tab, Button, InputLabel, Select, SelectChangeEvent, FormControl } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { CalendarPickerView } from "@mui/x-date-pickers";
 import { DatePickerView, DatePicker, DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
@@ -71,6 +71,7 @@ const EditorContent: React.FC<Props> = () => {
   const context = React.useContext(ErrorContext);
   const [tabIndex, setTabIndex] = React.useState("1");
   const [ textContent, setTextContent ] = React.useState("");
+  const [vacationType, setVacationType] = React.useState("");
 
   /**
    * Initialize the component data
@@ -694,18 +695,49 @@ const EditorContent: React.FC<Props> = () => {
   };
 
   /**
+   * Test new vacation calculations
+   */
+
+  function getVacationDays(startDate: Date, endDate: Date, holidays: Date[]): number{
+    const totalDays = Math.round((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))
+    let vacationDays = 0
+    let currentDate = new Date(startDate)
+    for (let i = 0; i <= totalDays; i++) {
+        if (currentDate.getDay() != 0 && !holidays.some(holiday => holiday.getTime() === currentDate.getTime())) {
+            vacationDays++
+        }
+        currentDate.setDate(currentDate.getDay() + 1)
+    }
+    return vacationDays
+  }
+
+  const startDate = new Date(selectedVacationStartDate)
+  const endDate = new Date(selectedVacationEndDate)
+
+  const holidays = [
+    new Date('2023-01-01'),
+    new Date('2023-01-06'),
+    new Date('2023-04-23'),
+    new Date('2023-04-25'),
+    new Date('2023-04-26')
+  ]
+
+  const vacationDays = getVacationDays(startDate, endDate, holidays)
+  /**
    * Renders days spend for vacation
    */
   
   const renderVacationDaysSpend = () => {
+    /*
     var subtractDays = 0
     if (selectedEndDate != null){
       subtractDays += Math.abs(selectedVacationStartDate.getTime() - selectedVacationEndDate.getTime());
     }
     var daysBetween = Math.ceil(subtractDays / (1000 * 3600 * 24));
+    */
     return(
     <Typography variant="h4">
-      {(`Amount of vacation days spend ${daysBetween}`)}
+      {(`Amount of vacation days spend ${vacationDays}`)}
     </Typography>
     )
   };
@@ -719,6 +751,39 @@ const EditorContent: React.FC<Props> = () => {
     setTextContent(contentValue)
   }
 
+/**
+ * Handle vacation type 
+ */
+
+  const handleVacationTypeChange = (event: SelectChangeEvent) => {
+    const contentValue = event.target.value;
+    setVacationType(contentValue as string)
+  }
+
+  /**
+   * Renders the vacation type selection
+   */
+
+  const renderVacationType = () => (
+    <FormControl variant="standard" sx={{ m: 1, minWidth: 120, marginBottom: 3 }}>
+      <InputLabel id="demo-simple-select-standard-label">Vacation type</InputLabel>
+      <Select
+        labelId="demo-simple-select-standard-label"
+        id="demo-simple-select-standard"
+        value={vacationType}
+        onChange={handleVacationTypeChange}
+        label="Type"
+      >
+        <MenuItem value="">
+          <em>None</em>
+        </MenuItem>
+        <MenuItem value={10}>Paid leave</MenuItem>
+        <MenuItem value={20}>Parental leave</MenuItem>
+        <MenuItem value={30}>Unpaid leave</MenuItem>
+      </Select>
+    </FormControl>
+  )
+  
   /**
     * Renders vacation comment box
     */
@@ -792,8 +857,8 @@ const EditorContent: React.FC<Props> = () => {
           }
         </AccordionDetails>
         <AccordionDetails >
-        <Typography variant="h2" padding={theme.spacing(2)}>
-            { `Apply for vacation` }
+          <Typography variant="h2" padding={theme.spacing(2)}>
+              { `Apply for vacation` }
           </Typography>
         </AccordionDetails>
         <AccordionDetails 
@@ -807,9 +872,12 @@ const EditorContent: React.FC<Props> = () => {
               onEndDateChange={ handleVacationEndDateChange }
             />
           <Box className={ classes.vacationDetailsContent }>
-          { renderVacationDaysSpend() }
-          { renderVacationCommentBox() }
-          { renderVacationApplyButton() }
+            { renderVacationType() }
+          </Box>
+          <Box className={ classes.vacationDetailsContent }>
+            { renderVacationDaysSpend() }
+            { renderVacationCommentBox() }
+            { renderVacationApplyButton() }
           </Box>
         </AccordionDetails>
     </Accordion>
