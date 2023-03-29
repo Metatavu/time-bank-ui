@@ -28,6 +28,7 @@
     "@types/react-dom": "^17.0.0",
     "classnames": "^2.3.1",
     "date-fns": "^2.23.0",
+    "date-holidays": "^3.19.0",
     "envalid": "^7.2.1",
     "keycloak-js": "^15.0.2",
     "localized-strings": "^0.2.4",

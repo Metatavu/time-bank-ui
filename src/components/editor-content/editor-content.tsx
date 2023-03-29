@@ -28,6 +28,9 @@ import MyVacation from "components/generics/vacation-test-forms/myVacationData"
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import NativeSelect from '@mui/material/NativeSelect';
+import { current } from "@reduxjs/toolkit";
+import Holidays from 'date-holidays';
+
 
 
 
@@ -690,46 +693,29 @@ const EditorContent: React.FC<Props> = () => {
     date && setSelectedVacationEndDate(date);
   };
 
-  /**
-   * Test new vacation calculations
-   */
-
-  function getVacationDays(startDate: Date, endDate: Date, holidays: Date[]): number{
-    const totalDays = Math.round((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))
-    let vacationDays = 0
-    let currentDate = new Date(startDate)
-    for (let i = 0; i <= totalDays; i++) {
-        if (currentDate.getDay() != 0 && !holidays.some(holiday => holiday.getTime() === currentDate.getTime())) {
-            vacationDays++
-        }
-        currentDate.setDate(currentDate.getDay() + 1)
-    }
-    return vacationDays
-  }
-
-  const startDate = new Date(selectedVacationStartDate)
-  const endDate = new Date(selectedVacationEndDate)
-
-  const holidays = [
-    new Date('2023-01-01'),
-    new Date('2023-01-06'),
-    new Date('2023-04-23'),
-    new Date('2023-04-25'),
-    new Date('2023-04-26')
-  ]
-  const vacationDays = getVacationDays(startDate, endDate, holidays)
-
     /**
-   * Renders days spend for vacation
+   * Renders and calculates days spend for vacation
    */
-  
+
     const renderVacationDaysSpend = () => {
+      // Define the date range to compare with holidays
+      const holidaysFi = new Holidays('FI')
+      const startDate = new Date(selectedVacationStartDate)
+      const endDate = new Date(selectedVacationEndDate)
+      let days = 0
+
+      // Iterate over each date in the date range and check if it is a holiday
+      for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+        if (!holidaysFi.isHoliday(d) && d.getDay() != 0) {
+          days++
+        }
+      }
       return(
-      <Typography variant="h4">
-        {(`Amount of vacation days spend ${vacationDays}`)}
-      </Typography>
-      )
-    };
+        <Typography variant="h4">
+          {(`Amount of vacation days spend ${days}`)}
+        </Typography>
+        )
+      };
   
     /**
     * Handle vacation comment box content
@@ -783,9 +769,7 @@ const EditorContent: React.FC<Props> = () => {
   */
 
   const handleVacationApplyButton = () => {
-    return(
-      console.log("Works")
-    )
+    return("This Button Works")
   }
 
   /**
