@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { ChangeEvent, useState } from "react";
-import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, IconButton, List, ListItem, Tab, Button, InputLabel, Select, SelectChangeEvent, FormControl } from "@mui/material";
+import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, IconButton, List, ListItem, Tab, Button, InputLabel, Select, SelectChangeEvent, FormControl, Modal } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { CalendarPickerView } from "@mui/x-date-pickers";
 import { DatePickerView, DatePicker, DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
@@ -72,6 +72,7 @@ const EditorContent: React.FC<Props> = () => {
   const [tabIndex, setTabIndex] = React.useState("1");
   const [ textContent, setTextContent ] = React.useState("");
   const [vacationType, setVacationType] = React.useState("");
+  const [open, setOpen] = React.useState(false);
 
   /**
    * Initialize the component data
@@ -766,10 +767,8 @@ const EditorContent: React.FC<Props> = () => {
 
   const renderVacationType = () => (
     <FormControl variant="standard" sx={{ m: 1, minWidth: 120, marginBottom: 3 }}>
-      <InputLabel id="demo-simple-select-standard-label">Vacation type</InputLabel>
+      <InputLabel>Vacation type</InputLabel>
       <Select
-        labelId="demo-simple-select-standard-label"
-        id="demo-simple-select-standard"
         value={vacationType}
         onChange={handleVacationTypeChange}
         label="Type"
@@ -825,6 +824,10 @@ const EditorContent: React.FC<Props> = () => {
     </Button>
   );
   
+  /**
+   * 
+   * Renders vacation info summary
+   */
   const renderVacationInfoSummary = () => {
     if (!person || !personTotalTime) {
       return (
@@ -838,6 +841,7 @@ const EditorContent: React.FC<Props> = () => {
       </Paper>
       );
     }
+    
     return(
     <Accordion className={classes.vacationDaysAccordion}>
       <AccordionSummary 

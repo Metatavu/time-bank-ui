@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
-import { Accordion, AccordionSummary, alpha, Box, Button, Dialog, Modal, styled, Typography } from "@mui/material";
-import { DataGrid, GridCellParams, gridClasses, GridColDef} from "@mui/x-data-grid";
+import { Accordion, AccordionSummary, alpha, Box, Button, Collapse, Dialog, IconButton, Modal, styled, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import { DataGrid, GridCellParams, gridClasses, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import useEditorContentStyles from "styles/editor-content/editor-content";
 import theme from "theme/theme";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -10,52 +10,10 @@ import { fontSize, fontStyle } from '@mui/system';
 import { columnGroupsStateInitializer } from '@mui/x-data-grid/internals';
 import { useParams } from 'react-router-dom';
 import myVacationRequests from './myVacationMockData.json';
-import BasicModal from './testVacationEditModal';
-
-
-const columns: GridColDef[] = [
-  {
-    field: "comment", headerName: "My Requests", flex: 3, hideSortIcons: true
-  },
-  {
-    field: "employee", headerName: "Employee", flex: 2, hideSortIcons: true
-  },
-  {
-    field: "days", headerName: "Days", flex: 1, hideSortIcons: true
-  },
-  {
-    field: "startDate", headerName: "Start Date", flex: 2, hideSortIcons: true
-  },
-  {
-    field: "endDate", headerName: "End Date", flex: 2, hideSortIcons: true
-  },
-  {
-    field: "status", headerName: "Status", flex: 2, hideSortIcons: true
-  },
-  {
-    field: 'action',
-    headerName: '',
-    width: 100,
-    sortable: false,
-    //disableClickEventBubbling: true,
-
-    renderCell: (params) => {
-      const onClick = () => {
-        const currentRow = params.row;
-        console.log(params.id);
-        
-        return alert(JSON.stringify(currentRow, null, 4));
-      };
-
-      return (
-        <Button onClick={onClick}><CreateIcon/></Button>
-      );
-    },
-  }
-];
 
 interface Request {
   id: number;
+  vacationType: string;
   comment: string;
   employee: string;
   days: number;
@@ -103,10 +61,45 @@ const renderVacationRequests = () => {
   const classes = useEditorContentStyles();
   const id = useParams();
   const request = myVacationRequests.find((r: { id: number; }) => r.id === id)
-
   //const [requests, setRequests] = useState([])
 
-  //console.log(vacationRequests);
+  const columns: GridColDef[] = [
+    {
+      field: "vacationType", headerName: "Vacation type", flex: 2, hideSortIcons: true,
+    },
+    {
+      field: "employee", headerName: "Employee", flex: 2.5, hideSortIcons: true,
+    },
+    {
+      field: "days", headerName: "Days", flex: 1, hideSortIcons: true,
+    },
+    {
+      field: "startDate", headerName: "Start Date", flex: 2, hideSortIcons: true,
+    },
+    {
+      field: "endDate", headerName: "End Date", flex: 2, hideSortIcons: true,
+    },
+    {
+      field: "status", headerName: "Status", flex: 1.5, hideSortIcons: true
+    },
+    {
+      field: "id",
+      headerName: "",
+      width: 100,
+  
+      renderCell: (params) => {
+        const handleOpen = () => {
+          const currentRow = params.row;
+          console.log(params.id);
+          
+          return alert(JSON.stringify(currentRow, null, 4));
+        }
+        return (
+          <IconButton aria-label="create" onClick={handleOpen}><CreateIcon/></IconButton>
+        );
+      }
+    }
+  ];
 
   return (
     <Accordion className={classes.vacationDaysAccordion}>
@@ -120,7 +113,43 @@ const renderVacationRequests = () => {
         </Typography>
       </AccordionSummary>
       <Box style={{ height: 300, width: "100%" }}>
-        <StripedDataGrid
+      <Table aria-label="collapsible table" style={{ marginBottom: "1em" }}>
+        <TableHead>
+          <TableRow>
+            <TableCell style={{ paddingLeft: "3em" }}>Vacation type</TableCell>
+            <TableCell>Employee</TableCell>
+            <TableCell>Days</TableCell>
+            <TableCell>Start Date</TableCell>
+            <TableCell>End Date</TableCell>
+            <TableCell>Status</TableCell>
+            <TableCell></TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {Object.values(myVacationRequests).map((request: Request) => (
+            <TableRow key={request.id}>
+              <TableCell style={{ paddingLeft: "3em" }}>{request.vacationType}</TableCell>
+              <TableCell>{request.employee}</TableCell>
+              <TableCell>{request.days}</TableCell>
+              <TableCell>{request.startDate}</TableCell>
+              <TableCell>{request.endDate}</TableCell>
+              <TableCell>{request.status}</TableCell>
+              <TableCell>
+                <IconButton><CreateIcon/></IconButton>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      </Box>
+    </Accordion>
+  );
+};
+
+export default renderVacationRequests;
+
+/*
+<StripedDataGrid
           sx={{
             '& .pending': {
               color: '#FF493C'
@@ -142,9 +171,4 @@ const renderVacationRequests = () => {
             params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
           }
         />
-      </Box>
-    </Accordion>
-  );
-};
-
-export default renderVacationRequests;
+        */

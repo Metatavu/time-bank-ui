@@ -1,6 +1,7 @@
 [
     {
         "id": 1958226,
+        "vacationType": "Paid leave",
         "comment": "Time off",
         "employee": "A. Anonyme",
         "days": 2,
@@ -10,6 +11,7 @@
     },
     {
         "id": 29582526,
+        "vacationType": "Paid leave",
         "comment": "Holiday",
         "employee": "A. Anonyme",
         "days": 2,
@@ -19,6 +21,7 @@
     },
     {
         "id": 3951226,
+        "vacationType": "Paid leave",
         "comment": "Summervacation",
         "employee": "A. Anonyme",
         "days": 10,
@@ -28,6 +31,7 @@
     },
     {
         "id": 4958226,
+        "vacationType": "Paid leave",
         "comment": "Wintervacation",
         "employee": "A. Anonyme",
         "days": 15,
