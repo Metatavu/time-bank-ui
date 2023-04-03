@@ -1,13 +1,9 @@
 /* eslint-disable */ 
-import React, { useState } from 'react';
-import { LocalizationProvider, DatePicker, CalendarPickerView, StaticDatePicker, DesktopDatePicker, CalendarPicker } from "@mui/x-date-pickers";
+import React from 'react';
+import { LocalizationProvider, DatePicker, CalendarPickerView } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { Box, TextField, MenuItem, Typography, Button, Accordion } from "@mui/material";
+import { Box, TextField } from "@mui/material";
 import enLocale from "date-fns/locale/en-US";
-
-
-
-
 
 interface Props {
   startDate?: Date | null;
@@ -64,10 +60,6 @@ const TestRangePicker: React.FC<Props> = ({
       />
     </LocalizationProvider>
   );
-
-  /**
-   * Component render
-   */
   return (
     <>
       <Box>
@@ -79,7 +71,5 @@ const TestRangePicker: React.FC<Props> = ({
     </>
   );
 }
-
-
 
 export default TestRangePicker;

@@ -1,12 +1,9 @@
 /* eslint-disable */ 
-import * as React from 'react';
 import { Accordion, AccordionSummary, alpha, Box, Button, styled, Typography } from "@mui/material";
-import { DataGrid, GridColDef, gridClasses, GridRowsProp, GridCellParams } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, gridClasses, GridCellParams } from "@mui/x-data-grid";
 import useEditorContentStyles from "styles/editor-content/editor-content";
 import theme from "theme/theme";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { fontSize, fontStyle } from '@mui/system';
-import { columnGroupsStateInitializer } from '@mui/x-data-grid/internals';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import vacationRequests from './testVacationMockData.json';
@@ -35,16 +32,13 @@ const columns: GridColDef[] = [
     headerName: '',
     width: 100,
     sortable: false,
-    //disableClickEventBubbling: true,
 
     renderCell: (params) => {
       const onClick = () => {
         const currentRow = params.row;
         console.log(params.id);
-        
         return alert(JSON.stringify(currentRow, null, 4));
       };
-
       return (
         <Button onClick={onClick}><CheckIcon style={{color: '#45cf36'}}/></Button>
       );
@@ -55,15 +49,12 @@ const columns: GridColDef[] = [
     headerName: '',
     width: 100,
     sortable: false,
-    //disableClickEventBubbling: true,
 
     renderCell: (params) => {
       const onClick = () => {
         const currentRow = params.row;
         console.log(params.id);
-        
       };
-
       return (
         <Button onClick={onClick}><CloseIcon style={{color: '#FF493C'}}/></Button>
       );
@@ -80,6 +71,7 @@ interface Request {
   endDate: string;
   status: string;
 }
+
 const ODD_OPACITY = 0.2;
 
 const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
