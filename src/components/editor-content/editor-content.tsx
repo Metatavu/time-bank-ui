@@ -1,9 +1,8 @@
 /* eslint-disable */
 import React, { ChangeEvent, useState } from "react";
-import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, IconButton, List, ListItem, Tab, Button, InputLabel, Select, SelectChangeEvent, FormControl, Modal } from "@mui/material";
+import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, IconButton, List, ListItem, Tab, Button, InputLabel, Select, SelectChangeEvent, FormControl } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { CalendarPickerView } from "@mui/x-date-pickers";
-import { DatePickerView, DatePicker, DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import useEditorContentStyles from "styles/editor-content/editor-content";
 import { useAppSelector } from "app/hooks";
 import { selectPerson } from "features/person/person-slice";
@@ -23,31 +22,23 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import VacationDataUtils from "utils/vacation-data-utils";
 import { selectAuth } from "features/auth/auth-slice";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { MuiTextFieldProps } from "@mui/x-date-pickers/internals";
-//import { DateRangePicker, DateRange } from "@mui/lab"
-import DateFnsUtils from '@date-io/date-fns';
-import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import TestRangePicker from "components/generics/vacation-test-forms/testVacationComponent";
-import { DataGrid, GridColDef, GridRowsProp } from '@mui/x-data-grid';
 import renderVacationRequests from "components/generics/vacation-test-forms/testVacationRequests";
 import renderAllVacationRequests from "components/generics/vacation-test-forms/testVacationAllRequests";
-
-
-
-
+import Holidays from "date-holidays";
 
 
 /**
- * Component properties
- */
+* Component properties
+*/
 interface Props {
 }
 
 /**
- * Application editor content component
- *
- * @param props component properties
- */
+* Application editor content component
+*
+* @param props component properties
+*/
 const EditorContent: React.FC<Props> = () => {
   const classes = useEditorContentStyles();
 
@@ -434,6 +425,7 @@ const EditorContent: React.FC<Props> = () => {
   /**
    * Renders the filter details
    */
+
   const renderFilterDetails = () => (
     <>
       { renderSelectScope() }
@@ -466,6 +458,7 @@ const EditorContent: React.FC<Props> = () => {
   /**
    * Renders the filter component
    */
+
   const renderFilter = () => {
     if (!person) {
       return (
@@ -724,24 +717,30 @@ const EditorContent: React.FC<Props> = () => {
   ]
 
   const vacationDays = getVacationDays(startDate, endDate, holidays)
-  /**
-   * Renders days spend for vacation
-   */
   
-  const renderVacationDaysSpend = () => {
-    /*
-    var subtractDays = 0
-    if (selectedEndDate != null){
-      subtractDays += Math.abs(selectedVacationStartDate.getTime() - selectedVacationEndDate.getTime());
+   /**
+   * Renders and calculates days spend for vacation
+   */
+
+   const renderVacationDaysSpend = () => {
+    // Define the date range to compare with holidays
+    const holidaysFi = new Holidays('FI')
+    const startDate = new Date(selectedVacationStartDate)
+    const endDate = new Date(selectedVacationEndDate)
+    let days = 0
+
+    // Iterate over each date in the date range and check if it is a holiday
+    for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+      if (!holidaysFi.isHoliday(d) && d.getDay() != 0) {
+        days++
+      }
     }
-    var daysBetween = Math.ceil(subtractDays / (1000 * 3600 * 24));
-    */
     return(
-    <Typography variant="h4">
-      {(`Amount of vacation days spend ${vacationDays}`)}
-    </Typography>
-    )
-  };
+      <Typography variant="h4">
+        {(`Amount of vacation days spend ${days}`)}
+      </Typography>
+      )
+    };
 
     /**
     * Handle vacation comment box content
@@ -764,7 +763,6 @@ const EditorContent: React.FC<Props> = () => {
   /**
    * Renders the vacation type selection
    */
-
   const renderVacationType = () => (
     <FormControl variant="standard" sx={{ m: 1, minWidth: 120, marginBottom: 3 }}>
       <InputLabel>Vacation type</InputLabel>
@@ -776,9 +774,10 @@ const EditorContent: React.FC<Props> = () => {
         <MenuItem value="">
           <em>None</em>
         </MenuItem>
-        <MenuItem value={10}>Paid leave</MenuItem>
-        <MenuItem value={20}>Parental leave</MenuItem>
-        <MenuItem value={30}>Unpaid leave</MenuItem>
+        <MenuItem value={"Paid leave"}>Paid leave</MenuItem>
+        <MenuItem value={"Parental leave"}>Parental leave</MenuItem>
+        <MenuItem value={"Unpaid leave"}>Unpaid leave</MenuItem>
+        <MenuItem value={"Surplus balance"}>Surplus balance</MenuItem>
       </Select>
     </FormControl>
   )
@@ -786,7 +785,6 @@ const EditorContent: React.FC<Props> = () => {
   /**
     * Renders vacation comment box
     */
-
   const renderVacationCommentBox = () => (
     <TextField 
       id="outlined-multiline-flexible"
@@ -795,23 +793,21 @@ const EditorContent: React.FC<Props> = () => {
       variant='outlined'
       value={textContent}
       onChange={handleVacationCommentContent}
-      />
+    />
   );
 
-    /**
-    * Handle vacation apply button
-    */
-
+  /**
+  * Handle vacation apply button
+  */
   const handleVacationApplyButton = () => {
     return(
-      console.log(`this is START DATE ${selectedVacationStartDate} and this is END DATE${selectedVacationEndDate} and this is TEXT CONTENT ${textContent}`)
+      console.log(`this is START DATE ${selectedVacationStartDate} and this is END DATE${selectedVacationEndDate} and this is TEXT CONTENT ${textContent}. Vacation type ${vacationType}`)
     )
   }
 
   /**
     * Renders vacation apply button
     */
-
   const renderVacationApplyButton = () => (
     <Button
       color="secondary"
@@ -823,7 +819,7 @@ const EditorContent: React.FC<Props> = () => {
       </Typography>
     </Button>
   );
-  
+
   /**
    * 
    * Renders vacation info summary
@@ -841,7 +837,6 @@ const EditorContent: React.FC<Props> = () => {
       </Paper>
       );
     }
-    
     return(
     <Accordion className={classes.vacationDaysAccordion}>
       <AccordionSummary 
@@ -852,7 +847,7 @@ const EditorContent: React.FC<Props> = () => {
         { renderVacationDaysSummary() }
         </AccordionSummary>
         <AccordionDetails className={ classes.vacationContent}>
-                  <Typography variant="h4">
+          <Typography variant="h4">
             { strings.editorContent.listOfVacationDays }
           </Typography>
           { vacationDayList.length === 0
@@ -862,7 +857,7 @@ const EditorContent: React.FC<Props> = () => {
         </AccordionDetails>
         <AccordionDetails >
           <Typography variant="h2" padding={theme.spacing(2)}>
-              { `Apply for vacation` }
+            { `Apply for vacation` }
           </Typography>
         </AccordionDetails>
         <AccordionDetails 
@@ -900,13 +895,19 @@ const EditorContent: React.FC<Props> = () => {
   /**
    * Component render
    */
+  const tabStyle = {
+    '&:active': {
+      backgroundColor: "red",
+    }
+  }
   return (
   <Box sx={{ width: "100%" }}>
     <TabContext value={tabIndex}>
       <Box>
         <TabList onChange={ (event, value) => handleChange(event, value) } className={ classes.navBarContainer }>
-          <Tab label="Timebank" value="1" />
-          <Tab label="Vacations" value="2" /> 
+          <Tab sx={tabStyle} label="Timebank" value="1"/>
+          <Tab sx={tabStyle} label="My Vacations" value="2"/> 
+          <Tab sx={tabStyle} label="Employee Vacation Requests" value="3"/> 
         </TabList>
       </Box>
       <TabPanel value="1">
@@ -918,6 +919,8 @@ const EditorContent: React.FC<Props> = () => {
       <TabPanel value="2">
         { renderVacationInfoSummary() }
         { renderVacationRequests() }
+      </TabPanel>
+      <TabPanel value="3">
         { renderAllVacationRequests() }
       </TabPanel>
     </TabContext>
