@@ -1,5 +1,4 @@
 /* eslint-disable */
-
 import { Box, TextField } from "@mui/material";
 import { CalendarPickerView, DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -11,6 +10,7 @@ import useDateRangePickerStyles from "styles/generics/date-range-picker/date-ran
 import TimeUtils from "utils/time-utils";
 import fiLocale from "date-fns/locale/fi";
 import enLocale from "date-fns/locale/en-US";
+import useTestDateRangePickerStyles from "styles/generics/date-range-picker/test-date-range-picker";
 
 /**
  * Component properties
@@ -40,12 +40,12 @@ const DateFilterPicker: React.FC<Props> = ({
   //onStartWeekChange,
   //onEndWeekChange
 }) => {
-  const classes = useDateRangePickerStyles();
+  const classes = useTestDateRangePickerStyles();
   const { locale } = useAppSelector(selectLocale);
 
   //const [ todayDate /* setTodayDate */ ] = React.useState(new Date());
   //const [ currentWeekNumber, setCurrentWeekNumber ] = React.useState(0);
-  const [ pickerLocale, setPickerLocale ] = React.useState(enLocale);
+  const [pickerLocale, setPickerLocale] = React.useState(enLocale);
 
   /**
    * Initialize the date data
@@ -54,7 +54,7 @@ const DateFilterPicker: React.FC<Props> = ({
   React.useEffect(() => {
     locale === "fi" ? setPickerLocale(fiLocale) : setPickerLocale(enLocale);
   }, [locale]);
-  
+
   /**
    * Renders start date picker 
    */
@@ -63,15 +63,15 @@ const DateFilterPicker: React.FC<Props> = ({
 
     return (
       <>
-        <LocalizationProvider dateAdapter={ AdapterDateFns } adapterLocale={ pickerLocale } >
+        <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={pickerLocale} >
           <DatePicker
-            views={[ datePickerView ]}
-            inputFormat={ dateFormat }
-            label={ filterStartingDate }
-            value={ selectedFilteredStartDate }
-            onChange={ onStartDateChange }
-            className={ classes.datePicker }
-            renderInput={ params => <TextField {...params}/>}
+            views={[datePickerView]}
+            inputFormat={dateFormat}
+            label={filterStartingDate}
+            value={selectedFilteredStartDate}
+            onChange={onStartDateChange}
+            className={classes.datePicker}
+            renderInput={params => <TextField {...params} />}
           />
         </LocalizationProvider>
       </>
@@ -82,15 +82,15 @@ const DateFilterPicker: React.FC<Props> = ({
    * Renders end date picker
    */
   const renderEndDatePicker = () => (
-    <LocalizationProvider dateAdapter={ AdapterDateFns } adapterLocale={ pickerLocale } >
+    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={pickerLocale} >
       <DatePicker
-        inputFormat={ dateFormat }
-        views={ [ datePickerView ] }
-        label={ strings.editorContent.filterEndingDate }
-        value={ selectedFilteredEndDate }
-        onChange={ onEndDateChange }
-        className={ classes.datePicker }
-        renderInput={ params => <TextField {...params}/>}
+        inputFormat={dateFormat}
+        views={[datePickerView]}
+        label={strings.editorContent.filterEndingDate}
+        value={selectedFilteredEndDate}
+        onChange={onEndDateChange}
+        className={classes.datePicker}
+        renderInput={params => <TextField {...params} />}
       />
     </LocalizationProvider>
   );
@@ -98,8 +98,8 @@ const DateFilterPicker: React.FC<Props> = ({
   return (
     <>
       <Box display="flex" gap="10px">
-        { renderStartDatePicker() }
-        { renderEndDatePicker() }
+        {renderStartDatePicker()}
+        {renderEndDatePicker()}
       </Box>
     </>
   );

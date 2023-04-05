@@ -31,7 +31,6 @@ import DateFilterPicker from "components/generics/date-range-picker/test-date-ra
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
-
 /**
 * Component properties
 */
@@ -770,7 +769,7 @@ const EditorContent: React.FC<Props> = () => {
    * Renders the vacation type selection
    */
   const renderVacationType = () => (
-    <FormControl variant="standard" sx={{ m: 1, minWidth: 120, marginBottom: 3 }}>
+    <FormControl variant="standard" sx={{ m: 1, minWidth: 165, marginBottom: 4 }}>
       <InputLabel>Vacation type</InputLabel>
       <Select
         value={vacationType}
@@ -781,6 +780,7 @@ const EditorContent: React.FC<Props> = () => {
           <em>None</em>
         </MenuItem>
         <MenuItem value={"Paid leave"}>Paid leave</MenuItem>
+        <MenuItem value={"Maternity leave"}>Paid leave</MenuItem>
         <MenuItem value={"Parental leave"}>Parental leave</MenuItem>
         <MenuItem value={"Unpaid leave"}>Unpaid leave</MenuItem>
         <MenuItem value={"Surplus balance"}>Surplus balance</MenuItem>
@@ -820,7 +820,7 @@ const EditorContent: React.FC<Props> = () => {
    * Renders employee selection
    */
   const renderEmployeeSelection = () => (
-    <FormControl variant="standard" sx={{ m: 1, minWidth: 120, marginBottom: 3 }}>
+    <FormControl variant="standard" sx={{ m: 1, minWidth: 165, marginBottom: 4 }}>
       <InputLabel>Employee</InputLabel>
       <Select
         value={employee}
@@ -849,7 +849,7 @@ const EditorContent: React.FC<Props> = () => {
    * Renders the vacation type selection
    */
   const renderRequestStatus = () => (
-    <FormControl variant="standard" sx={{ m: 1, minWidth: 120, marginBottom: 3 }}>
+    <FormControl variant="standard" sx={{ m: 1, minWidth: 165, marginBottom: 4 }}>
       <InputLabel>Status</InputLabel>
       <Select
         value={status}
@@ -867,11 +867,26 @@ const EditorContent: React.FC<Props> = () => {
   )
 
   /**
-   * Renders datefilter to view requests
+   * Collects vacation type, employee and status in one component
    */
-  const renderDateFilter = () => {
+  const renderRequestFilters = () => {
+    return(
+      <Box>
+      { renderVacationType() }
+      { renderEmployeeSelection() }
+      { renderRequestStatus() }
+      </Box>
+    )
+  }
+  /**
+   * Renders request filter to view requests
+   */
+  const renderRequestFilter = () => {
     return (
       <Box sx={{float: "right", paddingRight: "15px"}}>
+        { renderVacationType() }
+        { renderEmployeeSelection() }
+        { renderRequestStatus() }
         <DateFilterPicker 
           dateFormat={dateFormat}
           selectedFilteredStartDate={selectedVacationStartDate}
@@ -1116,8 +1131,8 @@ const EditorContent: React.FC<Props> = () => {
                         <TableCell>{request.projectManager}</TableCell>
                         <TableCell>{request.humanResourcesManager}</TableCell>
                         <TableCell/>
-                        <TableCell align="right"><Button sx={{color: "#F9473B"}}>DECLINE</Button></TableCell>
-                        <TableCell align="right"><Button sx={{color: "green"}}>APPROVED</Button></TableCell>
+                        <TableCell align="right"><Button variant="outlined" color="error" sx={{color: "#F9473B"}}>DECLINE</Button></TableCell>
+                        <TableCell align="right"><Button variant="outlined" color="success" sx={{color: "green"}}>APPROVED</Button></TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -1141,11 +1156,8 @@ const EditorContent: React.FC<Props> = () => {
           <Typography variant="h2" padding={theme.spacing(2)}>
             {`Requests`}
           </Typography>
-          <Box sx={{paddingLeft: "250px"}}>
-            { renderVacationType() }
-            { renderEmployeeSelection() }
-            { renderRequestStatus() }
-            { renderDateFilter() }
+          <Box>
+            { renderRequestFilter() }
           </Box>
         </Box>
         <Box>
