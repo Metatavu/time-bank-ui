@@ -797,6 +797,9 @@ const EditorContent: React.FC<Props> = () => {
     setEmployee(contentValue as string)
   }
 
+  /**
+   * interface type request
+   */
   interface Request {
     id: number;
     vacationType: string;
@@ -989,7 +992,7 @@ const EditorContent: React.FC<Props> = () => {
   }
   
 /**
- * Striped expandable table
+ * Styled expandable table
  */
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
@@ -1059,7 +1062,7 @@ const EditorContent: React.FC<Props> = () => {
       humanResourcesManager
       
     }
-  }
+  };
   /**
    * 
    * Expandable row
@@ -1125,7 +1128,12 @@ const EditorContent: React.FC<Props> = () => {
         </TableRow>
       </React.Fragment>
     )
-  }
+  };
+
+  /**
+   * 
+   * renders employee vacation request view
+   */
   const renderEmployeeVacationRequests = () => {
     return (
       <Box className={classes.employeeVacationRequests}>
