@@ -1,39 +1,63 @@
 [
     {
         "id": 6958226,
+        "vacationType": "Paid leave",
         "comment": "Summervacation",
         "employee": "A. Anonyme",
         "days": 0,
         "startDate": "2023-02-02T00:00:00.000Z",
         "endDate": "2023-03-03T00:00:00.000Z",
-        "status": "ACCEPTED"
+        "remainingDays": 25,
+        "status": "ACCEPTED",
+        "created": "2023-01-25",
+        "updated": "2023-01-30",
+        "projectManager": "Approved",
+        "humanResourcesManager": "Pending"
     },
     {
         "id": 8297984,
+        "vacationType": "Paid leave",
         "comment": "I need some time off",
         "employee": "B. Anonyme",
         "days": 30,
         "startDate": "2023-02-02T00:00:00.000Z",
         "endDate": "2023-03-03T00:00:00.000Z",
-        "status": "PENDING"
+        "remainingDays": 26,
+        "status": "PENDING",
+        "created": "2023-01-25",
+        "updated": "2023-01-30",
+        "projectManager": "Approved",
+        "humanResourcesManager": "Pending"
     },
     {
         "id": 5667678,
+        "vacationType": "Paid leave",
         "comment": "Leave",
         "employee": "C. Anonyme",
         "days": 7,
         "startDate": "2023-02-02T00:00:00.000Z",
         "endDate": "2023-03-03T00:00:00.000Z",
-        "status": "PENDING"
+        "remainingDays": 20,
+        "status": "PENDING",
+        "created": "2023-01-25",
+        "updated": "2023-01-30",
+        "projectManager": "Approved",
+        "humanResourcesManager": "Pending"
     },
     {
         "id": 3244556,
+        "vacationType": "Paid leave",
         "comment": "I want a holiday",
         "employee": "D. Anonyme",
         "days": 10,
         "startDate": "2023-02-02T00:00:00.000Z",
         "endDate": "2023-03-03T00:00:00.000Z",
-        "status": "PENDING"
+        "remainingDays": 10,
+        "status": "PENDING",
+        "created": "2023-01-25",
+        "updated": "2023-01-30",
+        "projectManager": "Approved",
+        "humanResourcesManager": "Pending"
     }
 ]
 

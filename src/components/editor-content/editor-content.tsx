@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { ChangeEvent, useState } from "react";
-import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, IconButton, List, ListItem, Tab, Button, InputLabel, Select, SelectChangeEvent, FormControl } from "@mui/material";
+import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, IconButton, List, ListItem, Tab, Button, InputLabel, Select, SelectChangeEvent, FormControl, Container, TableCell, TableContainer, Table, TableHead, TableRow, TableBody, Collapse, TableCellProps, styled, tableCellClasses } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { CalendarPickerView } from "@mui/x-date-pickers";
 import useEditorContentStyles from "styles/editor-content/editor-content";
@@ -26,6 +26,10 @@ import TestRangePicker from "components/generics/vacation-test-forms/testVacatio
 import renderVacationRequests from "components/generics/vacation-test-forms/testVacationRequests";
 import renderAllVacationRequests from "components/generics/vacation-test-forms/testVacationAllRequests";
 import Holidays from "date-holidays";
+import vacationRequests from "components/generics/vacation-test-forms/testVacationMockData.json"
+import DateFilterPicker from "components/generics/date-range-picker/test-date-range-picker";
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 
 /**
@@ -60,9 +64,11 @@ const EditorContent: React.FC<Props> = () => {
   const currentVacationSeasonStart = `${new Date().getFullYear()}-04-01`;
   const currentVacationSeasonEnd = `${new Date().getFullYear() + 1}-03-31`;
   const context = React.useContext(ErrorContext);
-  const [tabIndex, setTabIndex] = React.useState("1");
+  const [ tabIndex, setTabIndex ] = React.useState("1");
   const [ textContent, setTextContent ] = React.useState("");
-  const [vacationType, setVacationType] = React.useState("");
+  const [ vacationType, setVacationType ] = React.useState("");
+  const [ employee, setEmployee ] = React.useState("");
+  const [ status, setStatus ] = React.useState("");
   const [open, setOpen] = React.useState(false);
 
   /**
@@ -783,6 +789,105 @@ const EditorContent: React.FC<Props> = () => {
   )
   
   /**
+   * Handle employee change
+   */
+
+  const handleEmployeeChange = (event: SelectChangeEvent) => {
+    const contentValue = event.target.value;
+    setEmployee(contentValue as string)
+  }
+
+  interface Request {
+    id: number;
+    vacationType: string;
+    comment: string;
+    employee: string;
+    days: number;
+    startDate: string;
+    endDate: string;
+    remainingDays: number;
+    status: string;
+    created: string;
+    updated: string;
+    projectManager: string;
+    humanResourcesManager: string;
+  }
+
+  /**
+   * Renders employee selection
+   */
+  const renderEmployeeSelection = () => (
+    <FormControl variant="standard" sx={{ m: 1, minWidth: 120, marginBottom: 3 }}>
+      <InputLabel>Employee</InputLabel>
+      <Select
+        value={employee}
+        onChange={handleEmployeeChange}
+        label="Eployee"
+      >
+        <MenuItem value="">
+          <em>None</em>
+        </MenuItem>
+        {Object.values(vacationRequests).map((request: Request) => (
+          <MenuItem value={request.employee}>{request.employee}</MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  )
+
+  /**
+   * Handle employee change
+   */
+  const handleStatusChange = (event: SelectChangeEvent) => {
+    const contentValue = event.target.value;
+    setStatus(contentValue as string)
+  }
+
+  /**
+   * Renders the vacation type selection
+   */
+  const renderRequestStatus = () => (
+    <FormControl variant="standard" sx={{ m: 1, minWidth: 120, marginBottom: 3 }}>
+      <InputLabel>Status</InputLabel>
+      <Select
+        value={status}
+        onChange={handleStatusChange}
+        label="Status"
+      >
+        <MenuItem value="">
+          <em>None</em>
+        </MenuItem>
+        <MenuItem value={"Pending"}>Pending</MenuItem>
+        <MenuItem value={"Approved"}>Approved</MenuItem>
+        <MenuItem value={"Declined"}>Declined</MenuItem>
+      </Select>
+    </FormControl>
+  )
+
+  /**
+   * Renders datefilter to view requests
+   */
+  const renderDateFilter = () => {
+    return (
+      <Box sx={{float: "right", paddingRight: "15px"}}>
+        <DateFilterPicker 
+          dateFormat={dateFormat}
+          selectedFilteredStartDate={selectedVacationStartDate}
+          selectedFilteredEndDate={selectedVacationEndDate}
+          datePickerView={datePickerView}
+          onStartDateChange={handleVacationStartDateChange}
+          onEndDateChange={handleVacationEndDateChange} 
+          onStartWeekChange={function (weekNumber: number): void {
+            throw new Error("Function not implemented.");
+          } } 
+          onEndWeekChange={function (weekNumber: number): void {
+            throw new Error("Function not implemented.");
+          } }        
+        />
+      </Box>
+    )
+  };
+
+  /**
     * Renders vacation comment box
     */
   const renderVacationCommentBox = () => (
@@ -882,6 +987,185 @@ const EditorContent: React.FC<Props> = () => {
     </Accordion>
     )
   }
+  
+/**
+ * Striped expandable table
+ */
+  const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.action.hover,
+    },
+    // hide last border
+    '&:last-child td, &:last-child th': {
+      border: 0,
+    },
+  }));
+
+  const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+      backgroundColor: theme.palette.common.white,
+      color: theme.palette.common.black,
+    },
+    [`&.${tableCellClasses.body}`]: {
+      fontSize: 14,
+    },
+  }));
+  
+  /**
+   * 
+   * @param id 
+   * @param vacationType 
+   * @param comment 
+   * @param employee 
+   * @param days 
+   * @param startDate 
+   * @param endDate 
+   * @param remainingDays 
+   * @param status 
+   * @param created 
+   * @param updated 
+   * @param projectManager 
+   * @param humanResourcesManager 
+   * @returns 
+   */
+  const createData = (
+    id: number,
+    vacationType: string,
+    comment: string,
+    employee: string,
+    days: number,
+    startDate: string,
+    endDate: string,
+    remainingDays: number,
+    status: string,
+    created: string,
+    updated: string,
+    projectManager: string,
+    humanResourcesManager: string
+  ) => {
+    return {
+      id,
+      vacationType,
+      comment,
+      employee,
+      days,
+      startDate,
+      endDate,
+      remainingDays,
+      status,
+      created,
+      updated,
+      projectManager,
+      humanResourcesManager
+      
+    }
+  }
+  /**
+   * 
+   * Expandable row
+   */
+  const ExpandableRow = (props: { request: ReturnType<typeof createData> }) => {
+    const { request } = props;
+    const [open, setOpen] = React.useState(false);
+    return (
+      <React.Fragment>
+        <StyledTableRow key={request.id}>
+          <StyledTableCell component="th" scope="row">{request.vacationType}</StyledTableCell>
+          <StyledTableCell>{request.employee}</StyledTableCell>
+          <StyledTableCell>{request.days}</StyledTableCell>
+          <StyledTableCell>{request.startDate}</StyledTableCell>
+          <StyledTableCell>{request.endDate}</StyledTableCell>
+          <StyledTableCell>{request.remainingDays}</StyledTableCell>
+          <StyledTableCell>{request.status}</StyledTableCell>
+          <StyledTableCell>
+            <IconButton
+              aria-label="expand row"
+              size="small"
+              onClick={() => setOpen(!open)}
+            >
+              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            </IconButton>
+          </StyledTableCell>
+        </StyledTableRow>
+        <TableRow>
+          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
+            <Collapse in={open} timeout="auto" unmountOnExit>
+              <Box sx={{ margin: 1, width: "100%" }}>
+                <Table size="small" aria-label="purchases">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Comment:</TableCell>
+                      <TableCell>Created:</TableCell>
+                      <TableCell>Updated:</TableCell>
+                      <TableCell>Project manager:</TableCell>
+                      <TableCell>Human resources manager:</TableCell>
+                      <TableCell/>
+                      <TableCell/>
+                      <TableCell/>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {Object.values(vacationRequests).map((request) => (
+                      <TableRow key={request.id}>
+                        <TableCell component="th" scope="row">{request.comment}</TableCell>
+                        <TableCell>{request.created}</TableCell>
+                        <TableCell>{request.updated}</TableCell>
+                        <TableCell>{request.projectManager}</TableCell>
+                        <TableCell>{request.humanResourcesManager}</TableCell>
+                        <TableCell/>
+                        <TableCell align="right"><Button sx={{color: "#F9473B"}}>DECLINE</Button></TableCell>
+                        <TableCell align="right"><Button sx={{color: "green"}}>APPROVED</Button></TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </Box>
+            </Collapse>
+          </TableCell>
+        </TableRow>
+      </React.Fragment>
+    )
+  }
+  const renderEmployeeVacationRequests = () => {
+    return (
+      <Box className={classes.employeeVacationRequests}>
+        <Box>
+          <Typography variant="h2" padding={theme.spacing(2)}>
+            {`Requests`}
+          </Typography>
+          <Box sx={{paddingLeft: "250px"}}>
+            { renderVacationType() }
+            { renderEmployeeSelection() }
+            { renderRequestStatus() }
+            { renderDateFilter() }
+          </Box>
+        </Box>
+        <Box>
+          <TableContainer style={{ height: 300, width: "100%" }}>
+            <Table aria-label="customized table" style={{ marginBottom: "1em" }}>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Vacation type</TableCell>
+                  <TableCell>Employee</TableCell>
+                  <TableCell>Days</TableCell>
+                  <TableCell>Start Date</TableCell>
+                  <TableCell>End Date</TableCell>
+                  <TableCell>Remaining Days</TableCell>
+                  <TableCell>Status</TableCell>
+                  <TableCell/>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {Object.values(vacationRequests).map((request: Request) => (
+                  <ExpandableRow key={request.id} request={request}/>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
+      </Box>
+    )
+  }
 
   /**
    * 
@@ -921,7 +1205,8 @@ const EditorContent: React.FC<Props> = () => {
         { renderVacationRequests() }
       </TabPanel>
       <TabPanel value="3">
-        { renderAllVacationRequests() }
+        { renderEmployeeVacationRequests() }
+        
       </TabPanel>
     </TabContext>
   </Box>

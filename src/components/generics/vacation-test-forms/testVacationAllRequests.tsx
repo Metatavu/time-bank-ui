@@ -1,5 +1,5 @@
 /* eslint-disable */ 
-import { Accordion, AccordionSummary, alpha, Box, Button, styled, Typography } from "@mui/material";
+import { Accordion, AccordionSummary, alpha, Box, Button, Container, FormControl, InputLabel, MenuItem, Select, styled, Typography } from "@mui/material";
 import { DataGrid, GridColDef, gridClasses, GridCellParams } from "@mui/x-data-grid";
 import useEditorContentStyles from "styles/editor-content/editor-content";
 import theme from "theme/theme";
@@ -7,10 +7,11 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import vacationRequests from './testVacationMockData.json';
+import { useState } from "react";
 
 const columns: GridColDef[] = [
   {
-    field: "comment", headerName: "Requests", flex: 3, hideSortIcons: true
+    field: "vacationType", headerName: "Vacation Type", flex: 2.5, hideSortIcons: true
   },
   {
     field: "employee", headerName: "Employee", flex: 2, hideSortIcons: true
@@ -25,7 +26,10 @@ const columns: GridColDef[] = [
     field: "endDate", headerName: "End Date", flex: 2, hideSortIcons: true
   },
   {
-    field: "status", headerName: "Status", flex: 2, hideSortIcons: true
+    field: "remainingDays", headerName: "Remaining Days", flex: 2, hideSortIcons: true
+  },
+  {
+    field: "status", headerName: "Status", flex: 1.5, hideSortIcons: true
   },
   {
     field: 'check',
@@ -62,16 +66,6 @@ const columns: GridColDef[] = [
   }
 ];
 
-interface Request {
-  id: number;
-  comment: string;
-  employee: string;
-  days: number;
-  startDate: string;
-  endDate: string;
-  status: string;
-}
-
 const ODD_OPACITY = 0.2;
 
 const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
@@ -107,19 +101,82 @@ const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
   },
 }));
 
+interface Request {
+  id: number;
+  comment: string;
+  employee: string;
+  days: number;
+  startDate: string;
+  endDate: string;
+  status: string;
+}
+
 const renderAllVacationRequests = () => {
   const classes = useEditorContentStyles();
   
   return (
-    <Accordion className={classes.vacationDaysAccordion}>
+    <Box className={classes.employeeVacationRequests}>
+      <Box>
+        <Typography variant="h2" padding={theme.spacing(2)}>
+            {`Requests`}
+        </Typography>
+      </Box>
+      <Box style={{ height: 300, width: "100%" }}>
+        <StripedDataGrid 
+          sx={{
+            '& .pending': {
+              color: '#FF493C'
+            },
+            '& .accepted': {
+              color: '#45cf36'
+            }
+          }}
+          getCellClassName={(params: GridCellParams<any>) => {
+            if (params.field != 'status' || params.value == null) {
+              return ''
+            }
+            return params.value === 'ACCEPTED' ? 'accepted' : 'pending'
+          }}
+          rows={vacationRequests} 
+          columns={columns}
+          pageSizeOptions={[6]}
+          getRowClassName={(params) =>
+            params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
+          }
+        />
+      </Box>
+    </Box>
+  );
+};
+
+export default renderAllVacationRequests;
+
+/*
+<Accordion className={classes.vacationDaysAccordion}>
       <AccordionSummary
-        expandIcon={ <ExpandMoreIcon/> }
+        expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1a-content"
         className={ classes.vacationDaysSummary }
       >
         <Typography variant="h2" padding={theme.spacing(2)}>
-          {`All Requests`}
+          {`Requests`}
         </Typography>
+        <FormControl variant="standard" sx={{ m: 1, minWidth: 120, marginBottom: 3 }}>
+          <InputLabel>Vacation type</InputLabel>
+          <Select
+            //value={vacationType}
+            //onChange={handleVacationTypeChange}
+            label="Type"
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            <MenuItem value={"Paid leave"}>Paid leave</MenuItem>
+            <MenuItem value={"Parental leave"}>Parental leave</MenuItem>
+            <MenuItem value={"Unpaid leave"}>Unpaid leave</MenuItem>
+            <MenuItem value={"Surplus balance"}>Surplus balance</MenuItem>
+          </Select>
+        </FormControl>
       </AccordionSummary>
       <Box style={{ height: 300, width: "100%" }}>
         <StripedDataGrid 
@@ -146,7 +203,4 @@ const renderAllVacationRequests = () => {
           />
       </Box>
     </Accordion>
-  );
-};
-
-export default renderAllVacationRequests;
+    */
