@@ -1087,7 +1087,14 @@ const EditorContent: React.FC<Props> = () => {
     const [open, setOpen] = React.useState(false);
     return (
       <React.Fragment>
-        <StyledTableRow key={request.id}>
+        <StyledTableRow key={request.id}  sx={{
+                '& .pending': {
+                    color: '#FF493C'
+                },
+                '& .accepted': {
+                    color: '#45cf36'
+                }
+            }}>
           <StyledTableCell component="th" scope="row">{request.vacationType}</StyledTableCell>
           <StyledTableCell>{request.employee}</StyledTableCell>
           <StyledTableCell>{request.days}</StyledTableCell>
