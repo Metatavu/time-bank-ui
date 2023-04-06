@@ -35,7 +35,7 @@ const TestRangePicker: React.FC<Props> = ({
           <DatePicker
             views={[ datePickerView ]}
             inputFormat={ dateFormat }
-            label={`alku`}
+            label={`Start date`}
             value={ selectedVacationStartDate }
             onChange={ onStartDateChange }
             renderInput={ params => <TextField {...params}/>}
@@ -53,7 +53,7 @@ const TestRangePicker: React.FC<Props> = ({
         minDate={selectedVacationStartDate}
         inputFormat={ dateFormat }
         views={ [ datePickerView ] }
-        label={ `loppu` }
+        label={ `End date` }
         value={ selectedVacationEndDate }
         onChange={ onEndDateChange }
         renderInput={ params => <TextField {...params}/>}

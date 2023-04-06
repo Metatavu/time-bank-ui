@@ -1004,13 +1004,6 @@ const EditorContent: React.FC<Props> = () => {
     '&:last-child td, &:last-child th': {
       border: 0,
     }
-     /*
-    getCellClassName={(params: TableCellProps<any>) => {
-      if (params.field != 'status' || params.value == null) {
-        return ''
-      }
-      return params.value === 'ACCEPTED' ? '.accepted' : '.pending'
-    }}*/
   }));
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -1087,10 +1080,7 @@ const EditorContent: React.FC<Props> = () => {
   const ExpandableRow = (props: { request: ReturnType<typeof createData> }) => {
     const { request } = props;
     const [open, setOpen] = React.useState(false);
-    /*
-    const getStatusClass = (status: string) => {
-      return status === 'ACCEPTED' ? 'accepted' : 'pending';
-    };*/
+
     return (
       <React.Fragment>
         <StyledTableRow key={request.id}>
