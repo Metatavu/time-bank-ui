@@ -59,13 +59,13 @@ const renderVacationRequests = () => {
           <TableBody>
           {Object.values(myVacationRequests).map((request: Request, index: number) => (
               <>
-                <TableRow key={request.id}>
+                <TableRow key={request.id} style={{backgroundColor: "#f2f2f2"}}>
                   <TableCell style={{ paddingLeft: "3em" }}>{request.vacationType}</TableCell>
                   <TableCell>{request.employee} </TableCell>
                   <TableCell>{request.days}</TableCell>
                   <TableCell>{request.startDate}</TableCell>
                   <TableCell>{request.endDate}</TableCell>
-                  <TableCell>{request.status}</TableCell>
+                  <TableCell sx={{ '&.pending': { color: '#FF493C' }, '&.accepted': { color: '#45cf36' } }} className={request.status === 'ACCEPTED' ? 'accepted' : 'pending'}>{request.status}</TableCell>
                   <TableCell>
                   <IconButton
                     aria-label="expand row"
