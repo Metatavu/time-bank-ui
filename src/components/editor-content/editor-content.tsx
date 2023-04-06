@@ -1188,8 +1188,10 @@ const EditorContent: React.FC<Props> = () => {
    * Component render
    */
   const tabStyle = {
-    '&:active': {
+    fontFamily: "Trebuchet MS, sans-serif",
+    '&:focus': {
       backgroundColor: "red",
+      color: "white"
     }
   }
   return (

@@ -8,6 +8,7 @@ import myVacationRequests from './myVacationMockData.json';
 import DeleteIcon from '@mui/icons-material/Delete';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { request } from 'http';
 
 interface Request {
   id: number;
@@ -28,6 +29,7 @@ interface Request {
 const renderVacationRequests = () => {
   const classes = useEditorContentStyles();
   const [open, setOpen] = React.useState(false);
+  const [openRows, setOpenRows] = React.useState<boolean[]>([]);
 
   return (
     <Accordion className={classes.vacationDaysAccordion}>
@@ -55,11 +57,11 @@ const renderVacationRequests = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {Object.values(myVacationRequests).map((request: Request) => (
+          {Object.values(myVacationRequests).map((request: Request, index: number) => (
               <>
                 <TableRow key={request.id}>
                   <TableCell style={{ paddingLeft: "3em" }}>{request.vacationType}</TableCell>
-                  <TableCell>{request.employee}</TableCell>
+                  <TableCell>{request.employee} </TableCell>
                   <TableCell>{request.days}</TableCell>
                   <TableCell>{request.startDate}</TableCell>
                   <TableCell>{request.endDate}</TableCell>
@@ -68,14 +70,18 @@ const renderVacationRequests = () => {
                   <IconButton
                     aria-label="expand row"
                     size="small"
-                    onClick={() => setOpen(!open)}
+                    onClick={() => {
+                      const newOpenRows = [...openRows];
+                      newOpenRows[index] = !newOpenRows[index];
+                      setOpenRows(newOpenRows);
+                    }}
                   >
                     {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                   </IconButton>
                   </TableCell>
                 </TableRow>
-                <TableRow key={request.id}>             
-                    <Collapse in={open}>
+                <TableRow>             
+                    <Collapse in={openRows[index]} timeout="auto" unmountOnExit>
                         <IconButton><DeleteIcon/></IconButton>
                     </Collapse>
                 </TableRow>
