@@ -22,8 +22,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import VacationDataUtils from "utils/vacation-data-utils";
 import { selectAuth } from "features/auth/auth-slice";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import TestRangePicker from "components/generics/vacation-test-forms/testVacationComponent";
-import renderVacationRequests from "components/generics/vacation-test-forms/testVacationRequests";
+import TestRangePicker from "components/generics/vacation-test-forms/myVacationComponent";
+import renderVacationRequests from "components/generics/vacation-test-forms/myVacationRequests";
 import renderAllVacationRequests from "components/generics/vacation-test-forms/testVacationAllRequests";
 import Holidays from "date-holidays";
 import vacationRequests from "components/generics/vacation-test-forms/testVacationMockData.json"
@@ -68,7 +68,6 @@ const EditorContent: React.FC<Props> = () => {
   const [ vacationType, setVacationType ] = React.useState("");
   const [ employee, setEmployee ] = React.useState("");
   const [ status, setStatus ] = React.useState("");
-  const [open, setOpen] = React.useState(false);
 
   /**
    * Initialize the component data
@@ -780,7 +779,7 @@ const EditorContent: React.FC<Props> = () => {
           <em>None</em>
         </MenuItem>
         <MenuItem value={"Paid leave"}>Paid leave</MenuItem>
-        <MenuItem value={"Maternity leave"}>Paid leave</MenuItem>
+        <MenuItem value={"Maternity leave"}>Maternity leave</MenuItem>
         <MenuItem value={"Parental leave"}>Parental leave</MenuItem>
         <MenuItem value={"Unpaid leave"}>Unpaid leave</MenuItem>
         <MenuItem value={"Surplus balance"}>Surplus balance</MenuItem>
@@ -867,23 +866,11 @@ const EditorContent: React.FC<Props> = () => {
   )
 
   /**
-   * Collects vacation type, employee and status in one component
-   */
-  const renderRequestFilters = () => {
-    return(
-      <Box>
-      { renderVacationType() }
-      { renderEmployeeSelection() }
-      { renderRequestStatus() }
-      </Box>
-    )
-  }
-  /**
    * Renders request filter to view requests
    */
   const renderRequestFilter = () => {
     return (
-      <Box sx={{float: "right", paddingRight: "15px"}}>
+      <Box sx={{float: "right", paddingRight: "15px", marginBottom: "10px"}}>
         { renderVacationType() }
         { renderEmployeeSelection() }
         { renderRequestStatus() }
@@ -1016,7 +1003,14 @@ const EditorContent: React.FC<Props> = () => {
     // hide last border
     '&:last-child td, &:last-child th': {
       border: 0,
-    },
+    }
+     /*
+    getCellClassName={(params: TableCellProps<any>) => {
+      if (params.field != 'status' || params.value == null) {
+        return ''
+      }
+      return params.value === 'ACCEPTED' ? '.accepted' : '.pending'
+    }}*/
   }));
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -1027,6 +1021,13 @@ const EditorContent: React.FC<Props> = () => {
     [`&.${tableCellClasses.body}`]: {
       fontSize: 14,
     },
+    '& .pending': {
+        color: '#FF493C'
+    },
+    '& .accepted': {
+        color: '#45cf36'
+    },
+    ...(status === 'ACCEPTED' ? { '&.accepted': {} } : { '&.pending': {} })
   }));
   
   /**
@@ -1078,6 +1079,7 @@ const EditorContent: React.FC<Props> = () => {
       
     }
   };
+
   /**
    * 
    * Expandable row
@@ -1085,23 +1087,20 @@ const EditorContent: React.FC<Props> = () => {
   const ExpandableRow = (props: { request: ReturnType<typeof createData> }) => {
     const { request } = props;
     const [open, setOpen] = React.useState(false);
+    /*
+    const getStatusClass = (status: string) => {
+      return status === 'ACCEPTED' ? 'accepted' : 'pending';
+    };*/
     return (
       <React.Fragment>
-        <StyledTableRow key={request.id}  sx={{
-                '& .pending': {
-                    color: '#FF493C'
-                },
-                '& .accepted': {
-                    color: '#45cf36'
-                }
-            }}>
+        <StyledTableRow key={request.id}>
           <StyledTableCell component="th" scope="row">{request.vacationType}</StyledTableCell>
           <StyledTableCell>{request.employee}</StyledTableCell>
           <StyledTableCell>{request.days}</StyledTableCell>
           <StyledTableCell>{request.startDate}</StyledTableCell>
           <StyledTableCell>{request.endDate}</StyledTableCell>
           <StyledTableCell>{request.remainingDays}</StyledTableCell>
-          <StyledTableCell>{request.status}</StyledTableCell>
+          <StyledTableCell sx={{ '&.pending': { color: '#FF493C' }, '&.accepted': { color: '#45cf36' } }} className={request.status === 'ACCEPTED' ? 'accepted' : 'pending'}>{request.status}</StyledTableCell>
           <StyledTableCell>
             <IconButton
               aria-label="expand row"
@@ -1207,8 +1206,9 @@ const EditorContent: React.FC<Props> = () => {
    * Component render
    */
   const tabStyle = {
-    '&:active': {
-      backgroundColor: "red",
+    '&:focus': {
+      color: "white",
+      backgroundColor: "#F9473B",
     }
   }
   return (

@@ -32,25 +32,17 @@ const DateFilterPicker: React.FC<Props> = ({
   dateFormat,
   selectedFilteredStartDate,
   selectedFilteredEndDate,
-  //startWeek,
-  //endWeek,
   datePickerView,
   onStartDateChange,
-  onEndDateChange,
-  //onStartWeekChange,
-  //onEndWeekChange
+  onEndDateChange
 }) => {
   const classes = useTestDateRangePickerStyles();
   const { locale } = useAppSelector(selectLocale);
-
-  //const [ todayDate /* setTodayDate */ ] = React.useState(new Date());
-  //const [ currentWeekNumber, setCurrentWeekNumber ] = React.useState(0);
   const [pickerLocale, setPickerLocale] = React.useState(enLocale);
 
   /**
    * Initialize the date data
    */
-
   React.useEffect(() => {
     locale === "fi" ? setPickerLocale(fiLocale) : setPickerLocale(enLocale);
   }, [locale]);
