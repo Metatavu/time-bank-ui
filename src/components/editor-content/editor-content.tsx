@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { ChangeEvent, useState } from "react";
-import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, IconButton, List, ListItem, Tab, Button, InputLabel, Select, SelectChangeEvent, FormControl, Container, TableCell, TableContainer, Table, TableHead, TableRow, TableBody, Collapse, TableCellProps, styled, tableCellClasses } from "@mui/material";
+import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, IconButton, List, ListItem, Tab, Button, InputLabel, Select, SelectChangeEvent, FormControl, Container, TableCell, TableContainer, Table, TableHead, TableRow, TableBody, Collapse, TableCellProps, styled, tableCellClasses, makeStyles } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { CalendarPickerView } from "@mui/x-date-pickers";
 import useEditorContentStyles from "styles/editor-content/editor-content";
@@ -677,24 +677,6 @@ const EditorContent: React.FC<Props> = () => {
   };
 
   /**
-   * Method to handle vacation starting date change
-   *
-   * @param date selected date
-   */
-  const handleVacationStartDateChange = (date: unknown) => {
-    date && setSelectedVacationStartDate(date);
-  };
-
-  /**
-   * Method to handle vacation ending date change
-   *
-   * @param date selected date
-   */
-  const handleVacationEndDateChange = (date: unknown) => {
-    date && setSelectedVacationEndDate(date);
-  };
-
-  /**
   * Test new vacation calculations
   */
   function getVacationDays(startDate: Date, endDate: Date, holidays: Date[]): number{
@@ -915,10 +897,10 @@ const EditorContent: React.FC<Props> = () => {
   <Box sx={{ width: "100%" }}>
     <TabContext value={tabIndex}>
       <Box>
-        <TabList onChange={ (event, value) => handleChange(event, value) } className={ classes.navBarContainer }>
-          <Tab sx={tabStyle} label="Timebank" value="1"/>
-          <Tab sx={tabStyle} label="My Vacations" value="2"/> 
-          <Tab sx={tabStyle} label="Employee Vacation Requests" value="3"/> 
+        <TabList onChange={ (event, value) => handleChange(event, value) } className={ classes.navBarContainer } sx={tabStyle}>
+          <Tab label="Timebank" value="1"/>
+          <Tab label="My Vacations" value="2"/> 
+          <Tab label="Employee Vacation Requests" value="3"/> 
         </TabList>
       </Box>
       <TabPanel value="1">
@@ -933,7 +915,6 @@ const EditorContent: React.FC<Props> = () => {
       </TabPanel>
       <TabPanel value="3">
         { renderEmployeeVacationRequests() }
-        
       </TabPanel>
     </TabContext>
   </Box>
