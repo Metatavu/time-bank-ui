@@ -1307,7 +1307,7 @@ const renderVacationRequests = () => {
    * Component render
    */
   const tabStyle = {
-    '&:focus': {
+    '&$selected': {
       color: "white",
       backgroundColor: "#F9473B",
     }
