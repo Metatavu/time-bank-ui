@@ -23,13 +23,15 @@ import VacationDataUtils from "utils/vacation-data-utils";
 import { selectAuth } from "features/auth/auth-slice";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import TestRangePicker from "components/generics/vacation-test-forms/myVacationComponent";
-import renderVacationRequests from "components/generics/vacation-test-forms/myVacationRequests";
-import renderAllVacationRequests from "components/generics/vacation-test-forms/testVacationAllRequests";
+//import renderVacationRequests from "components/generics/vacation-test-forms/myVacationRequests";
+//import renderAllVacationRequests from "components/generics/vacation-test-forms/testVacationAllRequests";
 import Holidays from "date-holidays";
 import vacationRequests from "components/generics/vacation-test-forms/testVacationMockData.json"
 import DateFilterPicker from "components/generics/date-range-picker/test-date-range-picker";
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+//import myVacationRequests from "components/generics/vacation-test-forms/myVacationRequests";
+import myVacationRequestsData from 'components/generics/vacation-test-forms/myVacationMockData.json';
 
 /**
 * Component properties
@@ -68,6 +70,7 @@ const EditorContent: React.FC<Props> = () => {
   const [ vacationType, setVacationType ] = React.useState("");
   const [ employee, setEmployee ] = React.useState("");
   const [ status, setStatus ] = React.useState("");
+  const [openRows, setOpenRows] = React.useState<boolean[]>([]);
 
   /**
    * Initialize the component data
@@ -765,6 +768,183 @@ const EditorContent: React.FC<Props> = () => {
   }
 
   /**
+   * interface type request
+   */
+  interface Request {
+    id: number;
+    vacationType: string;
+    comment: string;
+    employee: string;
+    days: number;
+    startDate: string;
+    endDate: string;
+    remainingDays: number;
+    status: string;
+    created: string;
+    updated: string;
+    projectManager: string;
+    humanResourcesManager: string;
+  }
+
+   /**
+   * 
+   * @param id 
+   * @param vacationType 
+   * @param comment 
+   * @param employee 
+   * @param days 
+   * @param startDate 
+   * @param endDate 
+   * @param remainingDays 
+   * @param status 
+   * @param created 
+   * @param updated 
+   * @param projectManager 
+   * @param humanResourcesManager 
+   * @returns 
+   */
+   const createData = (
+    id: number,
+    vacationType: string,
+    comment: string,
+    employee: string,
+    days: number,
+    startDate: string,
+    endDate: string,
+    remainingDays: number,
+    status: string,
+    created: string,
+    updated: string,
+    projectManager: string,
+    humanResourcesManager: string
+  ) => {
+    return {
+      id,
+      vacationType,
+      comment,
+      employee,
+      days,
+      startDate,
+      endDate,
+      remainingDays,
+      status,
+      created,
+      updated,
+      projectManager,
+      humanResourcesManager
+    }
+  };
+
+  const MyRequestExpandableRow = (props: { request: ReturnType<typeof createData> }) => {
+    const { request } = props;
+    const [openMyR, setOpenMyR] = React.useState(false);
+    return (
+      <React.Fragment>
+      
+          <TableRow key={request.id} style={{backgroundColor: "#f2f2f2"}}>
+            <TableCell style={{ paddingLeft: "3em" }}>{request.vacationType}</TableCell>
+            <TableCell>{request.employee} </TableCell>
+            <TableCell>{request.days}</TableCell>
+            <TableCell>{request.startDate}</TableCell>
+            <TableCell>{request.endDate}</TableCell>
+            <TableCell sx={{ '&.pending': { color: '#FF493C' }, '&.accepted': { color: '#45cf36' } }} className={request.status === 'ACCEPTED' ? 'accepted' : 'pending'}>{request.status}</TableCell>
+            <TableCell>
+            <IconButton
+              aria-label="expand row"
+              size="small"
+              onClick={() => setOpenMyR(!openMyR)}
+            >
+              {openMyR ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            </IconButton>
+            </TableCell>
+          </TableRow>
+          <TableRow>             
+            <Collapse in={openMyR} timeout="auto" unmountOnExit>
+            <TableHead>
+              <TableRow>
+                <TableCell/>
+                <TableCell/>
+                <TableCell/>
+                <TableCell/>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableCell>
+                <TestRangePicker
+                    dateFormat={ dateFormat }
+                    selectedVacationStartDate={ selectedVacationStartDate }
+                    selectedVacationEndDate={ selectedVacationEndDate }
+                    datePickerView={ datePickerView }
+                    onStartDateChange={ handleVacationStartDateChange }
+                    onEndDateChange={ handleVacationEndDateChange }
+                  />
+              </TableCell>
+              <TableCell>
+                { renderVacationType() }
+              </TableCell>
+              <TableCell>
+                <IconButton
+                  onClick={ handleStartDateOnlyClick }
+                  aria-label="delete"
+                  className={ classes.deleteButton }
+                  size="large"
+                >
+                  <DeleteIcon fontSize="medium"/>
+                </IconButton>
+              </TableCell>
+              <TableCell>
+                { renderVacationCommentBox() }
+              </TableCell>
+            </TableBody>
+            </Collapse>
+          </TableRow>
+      </React.Fragment>
+    )
+  };
+  
+  /**
+ * 
+ * Renders vacation request table
+ */
+
+const renderVacationRequests = () => {
+  const classes = useEditorContentStyles();
+  
+  return (
+    <Accordion className={classes.vacationDaysAccordion}>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="panel1a-content"
+        className={classes.vacationDaysSummary}
+      >
+        <Typography variant="h2" padding={theme.spacing(2)}>
+          {`Requests`}
+        </Typography>
+      </AccordionSummary>
+      <TableContainer style={{ height: 300, width: "100%" }}>
+        <Table aria-label="collapsible table" style={{ marginBottom: "1em" }}>
+          <TableHead>
+            <TableRow>
+              <TableCell style={{ paddingLeft: "3em" }}>Vacation type</TableCell>
+              <TableCell>Employee</TableCell>
+              <TableCell>Days</TableCell>
+              <TableCell>Start Date</TableCell>
+              <TableCell>End Date</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell/>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {Object.values(myVacationRequestsData).map((request) => (
+              <MyRequestExpandableRow key={request.id} request={request}/>))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Accordion>
+  );
+};       
+
+  /**
    * Renders the vacation type selection
    */
   const renderVacationType = () => (
@@ -794,25 +974,6 @@ const EditorContent: React.FC<Props> = () => {
   const handleEmployeeChange = (event: SelectChangeEvent) => {
     const contentValue = event.target.value;
     setEmployee(contentValue as string)
-  }
-
-  /**
-   * interface type request
-   */
-  interface Request {
-    id: number;
-    vacationType: string;
-    comment: string;
-    employee: string;
-    days: number;
-    startDate: string;
-    endDate: string;
-    remainingDays: number;
-    status: string;
-    created: string;
-    updated: string;
-    projectManager: string;
-    humanResourcesManager: string;
   }
 
   /**
@@ -1004,13 +1165,6 @@ const EditorContent: React.FC<Props> = () => {
     '&:last-child td, &:last-child th': {
       border: 0,
     }
-     /*
-    getCellClassName={(params: TableCellProps<any>) => {
-      if (params.field != 'status' || params.value == null) {
-        return ''
-      }
-      return params.value === 'ACCEPTED' ? '.accepted' : '.pending'
-    }}*/
   }));
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -1029,56 +1183,6 @@ const EditorContent: React.FC<Props> = () => {
     },
     ...(status === 'ACCEPTED' ? { '&.accepted': {} } : { '&.pending': {} })
   }));
-  
-  /**
-   * 
-   * @param id 
-   * @param vacationType 
-   * @param comment 
-   * @param employee 
-   * @param days 
-   * @param startDate 
-   * @param endDate 
-   * @param remainingDays 
-   * @param status 
-   * @param created 
-   * @param updated 
-   * @param projectManager 
-   * @param humanResourcesManager 
-   * @returns 
-   */
-  const createData = (
-    id: number,
-    vacationType: string,
-    comment: string,
-    employee: string,
-    days: number,
-    startDate: string,
-    endDate: string,
-    remainingDays: number,
-    status: string,
-    created: string,
-    updated: string,
-    projectManager: string,
-    humanResourcesManager: string
-  ) => {
-    return {
-      id,
-      vacationType,
-      comment,
-      employee,
-      days,
-      startDate,
-      endDate,
-      remainingDays,
-      status,
-      created,
-      updated,
-      projectManager,
-      humanResourcesManager
-      
-    }
-  };
 
   /**
    * 
@@ -1087,10 +1191,7 @@ const EditorContent: React.FC<Props> = () => {
   const ExpandableRow = (props: { request: ReturnType<typeof createData> }) => {
     const { request } = props;
     const [open, setOpen] = React.useState(false);
-    /*
-    const getStatusClass = (status: string) => {
-      return status === 'ACCEPTED' ? 'accepted' : 'pending';
-    };*/
+
     return (
       <React.Fragment>
         <StyledTableRow key={request.id}>
