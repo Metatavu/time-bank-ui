@@ -1142,6 +1142,7 @@ const EditorContent: React.FC<Props> = () => {
                       </TableRow>
                     ))}
                   </TableBody>
+                  
                 </Table>
               </Box>
             </Collapse>
