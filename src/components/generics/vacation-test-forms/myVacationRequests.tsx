@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useState } from 'react';
-import { Accordion, AccordionSummary, Collapse, FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
+import { Accordion, AccordionSummary, Collapse, FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, Button } from "@mui/material";
 import useEditorContentStyles from "styles/editor-content/editor-content";
 import theme from "theme/theme";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -8,11 +8,10 @@ import myVacationRequests from './myVacationMockData.json';
 import DeleteIcon from '@mui/icons-material/Delete';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { request } from 'http';
-import TestRangePicker from './myVacationComponent';
 import { CalendarPickerView } from '@mui/x-date-pickers';
 import { FilterScopes } from 'types';
 import MyVacationsDatePicker from './myVacationsDatePicker';
+import Holidays from "date-holidays";
 
 interface Request {
   id: number;
@@ -35,11 +34,13 @@ interface Request {
     const [ dateFormat, setDateFormat ] = React.useState<string | undefined>("yyyy.MM.dd");
     const [ selectedVacationStartDate, setSelectedVacationStartDate ] = useState<any>(new Date());
     const [ selectedVacationEndDate, setSelectedVacationEndDate ] = useState<any>(new Date())
-    const [open, setOpen] = React.useState(false);
-    const [openRows, setOpenRows] = React.useState<boolean[]>([]);
-    const [newTextContent, setNewTextContent] = React.useState("");
-    const [newVacationType, setNewVacationType ] = React.useState("");
-    const [ datePickerView, setDatePickerView ] = React.useState<CalendarPickerView>("day");
+    const [ open ] = React.useState(false);
+    const [ openRows, setOpenRows] = React.useState<boolean[]>([]);
+    const [ newTextContent, setNewTextContent] = React.useState("");
+    const [ newVacationType, setNewVacationType ] = React.useState("");
+    const [ datePickerView ] = React.useState<CalendarPickerView>("day");
+    const [ textContent ] = React.useState("");
+    const [ vacationType ] = React.useState("");
     
     /**
     * Handle vacation type 
@@ -93,6 +94,50 @@ interface Request {
         onChange={handleVacationCommentContent}
       />
     );
+
+    /**
+  * Handle vacation apply button
+  */
+  const handleVacationApplyButton = () => {
+    return(
+      console.log(`this is START DATE ${selectedVacationStartDate} and this is END DATE${selectedVacationEndDate} and this is TEXT CONTENT ${textContent}. Vacation type ${vacationType}`)
+    )
+  }
+
+  /**
+    * Renders vacation apply button
+    */
+  const renderVacationApplyButton = () => (
+    <Button
+      color="secondary"
+      variant="contained"
+      onClick={ handleVacationApplyButton }
+    >
+      <Typography style={{ fontWeight: 600, color: "white", fontSize: 10 }}>
+        { (`Save Changes`) }
+      </Typography>
+    </Button>
+  );
+
+  const renderVacationDaysSpend = () => {
+    // Define the date range to compare with holidays
+    const holidaysFi = new Holidays('FI')
+    const startDate = new Date(selectedVacationStartDate)
+    const endDate = new Date(selectedVacationEndDate)
+    let days = 0
+
+    // Iterate over each date in the date range and check if it is a holiday
+    for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+      if (!holidaysFi.isHoliday(d) && d.getDay() != 0) {
+        days++
+      }
+    }
+    return(
+      <Typography variant="h4" style={{fontSize: 13}}>
+        {(`Amount of vacation days spend ${days}`)}
+      </Typography>
+      )
+    };
 
     return (
       <Accordion className={classes.vacationDaysAccordion}>
@@ -162,7 +207,12 @@ interface Request {
                         { renderVacationType() }
                       </TableCell>
                       <TableCell>
-                        <IconButton
+                        { renderVacationDaysSpend() }
+                        { renderVacationCommentBox() }
+                        { renderVacationApplyButton() }
+                      </TableCell>
+                      <TableCell>
+                      <IconButton
                           //onClick={ handleStartDateOnlyClick }
                           aria-label="delete"
                           className={ classes.deleteButton }
@@ -170,9 +220,6 @@ interface Request {
                         >
                           <DeleteIcon fontSize="medium"/>
                         </IconButton>
-                      </TableCell>
-                      <TableCell>
-                        { renderVacationCommentBox() }
                       </TableCell>
                     </TableRow>
                   </Collapse> 
