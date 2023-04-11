@@ -763,6 +763,183 @@ const EditorContent: React.FC<Props> = () => {
   }
 
   /**
+   * interface type request
+   */
+  interface Request {
+    id: number;
+    vacationType: string;
+    comment: string;
+    employee: string;
+    days: number;
+    startDate: string;
+    endDate: string;
+    remainingDays: number;
+    status: string;
+    created: string;
+    updated: string;
+    projectManager: string;
+    humanResourcesManager: string;
+  }
+
+   /**
+   * 
+   * @param id 
+   * @param vacationType 
+   * @param comment 
+   * @param employee 
+   * @param days 
+   * @param startDate 
+   * @param endDate 
+   * @param remainingDays 
+   * @param status 
+   * @param created 
+   * @param updated 
+   * @param projectManager 
+   * @param humanResourcesManager 
+   * @returns 
+   */
+   const createData = (
+    id: number,
+    vacationType: string,
+    comment: string,
+    employee: string,
+    days: number,
+    startDate: string,
+    endDate: string,
+    remainingDays: number,
+    status: string,
+    created: string,
+    updated: string,
+    projectManager: string,
+    humanResourcesManager: string
+  ) => {
+    return {
+      id,
+      vacationType,
+      comment,
+      employee,
+      days,
+      startDate,
+      endDate,
+      remainingDays,
+      status,
+      created,
+      updated,
+      projectManager,
+      humanResourcesManager
+    }
+  };
+/*
+  const MyRequestExpandableRow = (props: { request: ReturnType<typeof createData> }) => {
+    const { request } = props;
+    const [openMyR, setOpenMyR] = React.useState(false);
+    return (
+      <React.Fragment>
+      
+          <TableRow key={request.id} style={{backgroundColor: "#f2f2f2"}}>
+            <TableCell style={{ paddingLeft: "3em" }}>{request.vacationType}</TableCell>
+            <TableCell>{request.employee} </TableCell>
+            <TableCell>{request.days}</TableCell>
+            <TableCell>{request.startDate}</TableCell>
+            <TableCell>{request.endDate}</TableCell>
+            <TableCell sx={{ '&.pending': { color: '#FF493C' }, '&.accepted': { color: '#45cf36' } }} className={request.status === 'ACCEPTED' ? 'accepted' : 'pending'}>{request.status}</TableCell>
+            <TableCell>
+            <IconButton
+              aria-label="expand row"
+              size="small"
+              onClick={() => setOpenMyR(!openMyR)}
+            >
+              {openMyR ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            </IconButton>
+            </TableCell>
+          </TableRow>
+          <TableRow>             
+            <Collapse in={openMyR} timeout="auto" unmountOnExit>
+            <TableHead>
+              <TableRow>
+                <TableCell/>
+                <TableCell/>
+                <TableCell/>
+                <TableCell/>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableCell>
+                <TestRangePicker
+                    dateFormat={ dateFormat }
+                    selectedVacationStartDate={ selectedVacationStartDate }
+                    selectedVacationEndDate={ selectedVacationEndDate }
+                    datePickerView={ datePickerView }
+                    onStartDateChange={ handleVacationStartDateChange }
+                    onEndDateChange={ handleVacationEndDateChange }
+                  />
+              </TableCell>
+              <TableCell>
+                { renderVacationType() }
+              </TableCell>
+              <TableCell>
+                <IconButton
+                  onClick={ handleStartDateOnlyClick }
+                  aria-label="delete"
+                  className={ classes.deleteButton }
+                  size="large"
+                >
+                  <DeleteIcon fontSize="medium"/>
+                </IconButton>
+              </TableCell>
+              <TableCell>
+                { renderVacationCommentBox() }
+              </TableCell>
+            </TableBody>
+            </Collapse>
+          </TableRow>
+      </React.Fragment>
+    )
+  };
+  
+  /**
+ * 
+ * Renders vacation request table
+ */
+/*
+const renderVacationRequests = () => {
+  const classes = useEditorContentStyles();
+  
+  return (
+    <Accordion className={classes.vacationDaysAccordion}>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="panel1a-content"
+        className={classes.vacationDaysSummary}
+      >
+        <Typography variant="h2" padding={theme.spacing(2)}>
+          {`Requests`}
+        </Typography>
+      </AccordionSummary>
+      <TableContainer style={{ height: 300, width: "100%" }}>
+        <Table aria-label="collapsible table" style={{ marginBottom: "1em" }}>
+          <TableHead>
+            <TableRow>
+              <TableCell style={{ paddingLeft: "3em" }}>Vacation type</TableCell>
+              <TableCell>Employee</TableCell>
+              <TableCell>Days</TableCell>
+              <TableCell>Start Date</TableCell>
+              <TableCell>End Date</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell/>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {Object.values(myVacationRequestsData).map((request) => (
+              <MyRequestExpandableRow key={request.id} request={request}/>))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Accordion>
+  );
+};       
+*/
+  /**
    * Renders the vacation type selection
    */
   const renderVacationType = () => (
@@ -865,13 +1042,16 @@ const EditorContent: React.FC<Props> = () => {
         </AccordionDetails>
         <AccordionDetails 
           className={ classes.vacationInfoContent }>
-            <TestRangePicker
-              dateFormat={ dateFormat }
-              selectedVacationStartDate={ selectedVacationStartDate }
-              selectedVacationEndDate={ selectedVacationEndDate }
-              datePickerView={ datePickerView }
-              onStartDateChange={ handleVacationStartDateChange }
-              onEndDateChange={ handleVacationEndDateChange }
+            <MyVacationsDatePicker
+                  dateFormat={dateFormat}
+                  selectedVacationStartDate={selectedVacationStartDate}
+                  selectedVacationEndDate={selectedVacationEndDate}
+                  datePickerView={datePickerView} onStartDateChange={function (value: any): void {
+                    throw new Error('Function not implemented.');
+                  } } onEndDateChange={function (value: any): void {
+                    throw new Error('Function not implemented.');
+                  } }                    //onStartDateChange={ handleVacationStartDateChange }
+              //onEndDateChange={ handleVacationEndDateChange }
             />
           <Box className={ classes.vacationDetailsContent }>
             { renderVacationType() }
