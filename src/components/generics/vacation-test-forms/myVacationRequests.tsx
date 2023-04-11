@@ -12,17 +12,18 @@ import { request } from 'http';
 import TestRangePicker from './myVacationComponent';
 import { CalendarPickerView } from '@mui/x-date-pickers';
 import { FilterScopes } from 'types';
+import MyVacationsDatePicker from './myVacationsDatePicker';
 
 interface Request {
-    id: number;
-    vacationType: string;
-    comment: string;
-    employee: string;
-    days: number;
-    startDate: string;
-    endDate: string;
-    status: string;
-  }
+  id: number;
+  vacationType: string;
+  comment: string;
+  employee: string;
+  days: number;
+  startDate: string;
+  endDate: string;
+  status: string;
+}
   
   /**
    * 
@@ -145,7 +146,7 @@ interface Request {
                   <Collapse in={openRows[index]} timeout="auto" unmountOnExit>
                     <TableRow> 
                       <TableCell>
-                        <TestRangePicker
+                        <MyVacationsDatePicker
                             dateFormat={dateFormat}
                             selectedVacationStartDate={selectedVacationStartDate}
                             selectedVacationEndDate={selectedVacationEndDate}

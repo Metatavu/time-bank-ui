@@ -33,6 +33,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 //import myVacationRequests from "components/generics/vacation-test-forms/myVacationRequests";
 import myVacationRequestsData from 'components/generics/vacation-test-forms/myVacationMockData.json';
 import renderVacationRequests from "components/generics/vacation-test-forms/myVacationRequests";
+import MyVacationsDatePicker from "components/generics/vacation-test-forms/myVacationsDatePicker";
 
 /**
 * Component properties
@@ -1134,13 +1135,16 @@ const renderVacationRequests = () => {
         </AccordionDetails>
         <AccordionDetails 
           className={ classes.vacationInfoContent }>
-            <TestRangePicker
-              dateFormat={ dateFormat }
-              selectedVacationStartDate={ selectedVacationStartDate }
-              selectedVacationEndDate={ selectedVacationEndDate }
-              datePickerView={ datePickerView }
-              onStartDateChange={ handleVacationStartDateChange }
-              onEndDateChange={ handleVacationEndDateChange }
+            <MyVacationsDatePicker
+                  dateFormat={dateFormat}
+                  selectedVacationStartDate={selectedVacationStartDate}
+                  selectedVacationEndDate={selectedVacationEndDate}
+                  datePickerView={datePickerView} onStartDateChange={function (value: any): void {
+                    throw new Error('Function not implemented.');
+                  } } onEndDateChange={function (value: any): void {
+                    throw new Error('Function not implemented.');
+                  } }                    //onStartDateChange={ handleVacationStartDateChange }
+              //onEndDateChange={ handleVacationEndDateChange }
             />
           <Box className={ classes.vacationDetailsContent }>
             { renderVacationType() }
