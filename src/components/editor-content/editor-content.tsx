@@ -1243,6 +1243,7 @@ const renderVacationRequests = () => {
                       </TableRow>
                     ))}
                   </TableBody>
+                  
                 </Table>
               </Box>
             </Collapse>
