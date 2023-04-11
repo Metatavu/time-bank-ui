@@ -32,6 +32,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 //import myVacationRequests from "components/generics/vacation-test-forms/myVacationRequests";
 import myVacationRequestsData from 'components/generics/vacation-test-forms/myVacationMockData.json';
+import renderVacationRequests from "components/generics/vacation-test-forms/myVacationRequests";
 
 /**
 * Component properties
@@ -834,7 +835,7 @@ const EditorContent: React.FC<Props> = () => {
       humanResourcesManager
     }
   };
-
+/*
   const MyRequestExpandableRow = (props: { request: ReturnType<typeof createData> }) => {
     const { request } = props;
     const [openMyR, setOpenMyR] = React.useState(false);
@@ -906,7 +907,7 @@ const EditorContent: React.FC<Props> = () => {
  * 
  * Renders vacation request table
  */
-
+/*
 const renderVacationRequests = () => {
   const classes = useEditorContentStyles();
   
@@ -943,7 +944,7 @@ const renderVacationRequests = () => {
     </Accordion>
   );
 };       
-
+*/
   /**
    * Renders the vacation type selection
    */

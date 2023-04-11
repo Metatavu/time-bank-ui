@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useState } from 'react';
-import { Accordion, AccordionSummary, Collapse, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Accordion, AccordionSummary, Collapse, FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
 import useEditorContentStyles from "styles/editor-content/editor-content";
 import theme from "theme/theme";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -11,8 +11,178 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { request } from 'http';
 import TestRangePicker from './myVacationComponent';
 import { CalendarPickerView } from '@mui/x-date-pickers';
+import { FilterScopes } from 'types';
 
+interface Request {
+    id: number;
+    vacationType: string;
+    comment: string;
+    employee: string;
+    days: number;
+    startDate: string;
+    endDate: string;
+    status: string;
+  }
+  
+  /**
+   * 
+   * Renders vacation request table
+   */
+  const renderVacationRequests = () => {
+    const classes = useEditorContentStyles();
+    const [ scope, setScope ] = React.useState<FilterScopes>(FilterScopes.DATE);
+    const [ dateFormat, setDateFormat ] = React.useState<string | undefined>("yyyy.MM.dd");
+    const [ selectedVacationStartDate, setSelectedVacationStartDate ] = useState<any>(new Date());
+    const [ selectedVacationEndDate, setSelectedVacationEndDate ] = useState<any>(new Date())
+    const [open, setOpen] = React.useState(false);
+    const [openRows, setOpenRows] = React.useState<boolean[]>([]);
+    const [newTextContent, setNewTextContent] = React.useState("");
+    const [newVacationType, setNewVacationType ] = React.useState("");
+    const [ datePickerView, setDatePickerView ] = React.useState<CalendarPickerView>("day");
+    
+    /**
+    * Handle vacation type 
+    */
+    const handleVacationTypeChange = (event: SelectChangeEvent) => {
+      const contentValue = event.target.value;
+      setNewVacationType(contentValue as string)
+    }
 
+    /**
+    * Renders the vacation type selection
+    */
+    const renderVacationType = () => (
+      <FormControl variant="standard" sx={{ m: 1, minWidth: 165, marginBottom: 4 }}>
+        <InputLabel>Vacation type</InputLabel>
+        <Select
+          value={newVacationType}
+          onChange={handleVacationTypeChange}
+          label="Type"
+        >
+          <MenuItem value="">
+            <em>None</em>
+          </MenuItem>
+          <MenuItem value={"Paid leave"}>Paid leave</MenuItem>
+          <MenuItem value={"Maternity leave"}>Maternity leave</MenuItem>
+          <MenuItem value={"Parental leave"}>Parental leave</MenuItem>
+          <MenuItem value={"Unpaid leave"}>Unpaid leave</MenuItem>
+          <MenuItem value={"Surplus balance"}>Surplus balance</MenuItem>
+        </Select>
+      </FormControl>
+    )
 
+    /**
+    * Handle vacation comment box content
+    */
+    const handleVacationCommentContent = (event: React.ChangeEvent<HTMLInputElement>) => {
+      const contentValue = event.target.value;
+      setNewTextContent(contentValue)
+    }
 
+    /**
+    * Renders vacation comment box
+    */
+    const renderVacationCommentBox = () => (
+      <TextField 
+        id="outlined-multiline-flexible"
+        multiline maxRows={5}
+        label="Leave a comment"
+        variant='outlined'
+        value={newTextContent}
+        onChange={handleVacationCommentContent}
+      />
+    );
 
+    return (
+      <Accordion className={classes.vacationDaysAccordion}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          className={classes.vacationDaysSummary}
+        >
+          <Typography variant="h2" padding={theme.spacing(2)}>
+            {`Requests`}
+          </Typography>
+        </AccordionSummary>
+        <React.Fragment>
+          <TableContainer style={{ height: 300, width: "100%" }}>
+            <Table aria-label="collapsible table" style={{ marginBottom: "1em" }}>
+              <TableHead>
+                <TableRow>
+                  <TableCell style={{ paddingLeft: "3em" }}>Vacation type</TableCell>
+                  <TableCell>Employee</TableCell>
+                  <TableCell>Days</TableCell>
+                  <TableCell>Start Date</TableCell>
+                  <TableCell>End Date</TableCell>
+                  <TableCell>Status</TableCell>
+                  <TableCell/>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+              {Object.values(myVacationRequests).map((request: Request, index: number) => (
+                <>
+                  <TableRow key={request.id}>
+                    <TableCell style={{ paddingLeft: "3em" }}>{request.vacationType}</TableCell>
+                    <TableCell>{request.employee} </TableCell>
+                    <TableCell>{request.days}</TableCell>
+                    <TableCell>{request.startDate}</TableCell>
+                    <TableCell>{request.endDate}</TableCell>
+                    <TableCell>{request.status}</TableCell>
+                    <TableCell>
+                      <IconButton
+                        aria-label="expand row"
+                        size="small"
+                        onClick={() => {
+                            const newOpenRows = [...openRows];
+                            newOpenRows[index] = !newOpenRows[index];
+                            setOpenRows(newOpenRows);
+                          }}
+                        >
+                        {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                  <Collapse in={openRows[index]} timeout="auto" unmountOnExit>
+                    <TableRow> 
+                      <TableCell>
+                        <TestRangePicker
+                            dateFormat={dateFormat}
+                            selectedVacationStartDate={selectedVacationStartDate}
+                            selectedVacationEndDate={selectedVacationEndDate}
+                            datePickerView={datePickerView} onStartDateChange={function (value: any): void {
+                              throw new Error('Function not implemented.');
+                            } } onEndDateChange={function (value: any): void {
+                              throw new Error('Function not implemented.');
+                            } }                    //onStartDateChange={ handleVacationStartDateChange }
+                        //onEndDateChange={ handleVacationEndDateChange }
+                        />
+                      </TableCell>
+                      <TableCell>
+                        { renderVacationType() }
+                      </TableCell>
+                      <TableCell>
+                        <IconButton
+                          //onClick={ handleStartDateOnlyClick }
+                          aria-label="delete"
+                          className={ classes.deleteButton }
+                          size="large"
+                        >
+                          <DeleteIcon fontSize="medium"/>
+                        </IconButton>
+                      </TableCell>
+                      <TableCell>
+                        { renderVacationCommentBox() }
+                      </TableCell>
+                    </TableRow>
+                  </Collapse> 
+                  </>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </React.Fragment>
+    </Accordion>
+  );
+};
+
+export default renderVacationRequests;
