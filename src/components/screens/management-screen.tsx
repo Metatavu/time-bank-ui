@@ -508,7 +508,7 @@ const ManagementScreen: React.FC = () => {
               }}
               label={ strings.billableHoursHandling.billingRate }
               type="number"
-              defaultValue={person.minimumBillableRate}
+              defaultValue={ person.minimumBillableRate }
               onChange={handleChange}
             />
           </Box>
