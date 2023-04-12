@@ -867,19 +867,13 @@ const EditorContent: React.FC<Props> = () => {
         <AccordionDetails 
           className={ classes.vacationInfoContent }>
             <DateFilterPicker 
-                        dateFormat={dateFormat}
-                        selectedFilteredStartDate={selectedVacationStartDate}
-                        selectedFilteredEndDate={selectedVacationEndDate}
-                        datePickerView={datePickerView}
-                        onStartDateChange={handleVacationStartDateChange}
-                        onEndDateChange={handleVacationEndDateChange} 
-                        onStartWeekChange={function (weekNumber: number): void {
-                          throw new Error("Function not implemented.");
-                        } } 
-                        onEndWeekChange={function (weekNumber: number): void {
-                          throw new Error("Function not implemented.");
-                        } }        
-                      />
+              dateFormat={dateFormat}
+              selectedFilteredStartDate={selectedVacationStartDate}
+              selectedFilteredEndDate={selectedVacationEndDate}
+              datePickerView={datePickerView}
+              onStartDateChange={handleVacationStartDateChange}
+              onEndDateChange={handleVacationEndDateChange}       
+            />
           <Box className={ classes.vacationDetailsContent }>
             { renderVacationType() }
           </Box>
