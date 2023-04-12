@@ -47,7 +47,7 @@
     "filterStartingDate": "Alku",
     "filterEndingDate": "Loppu",
     "week": "Viikko ",
-    "date": "Pvm",
+    "day": "Pvm",
     "month": "Kuukausi",
     "year": "Vuosi",
     "selectYearStart": "Mistä",
