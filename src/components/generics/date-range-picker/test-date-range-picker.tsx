@@ -10,7 +10,6 @@ import useDateRangePickerStyles from "styles/generics/date-range-picker/date-ran
 import TimeUtils from "utils/time-utils";
 import fiLocale from "date-fns/locale/fi";
 import enLocale from "date-fns/locale/en-US";
-import useTestDateRangePickerStyles from "styles/generics/date-range-picker/test-date-range-picker";
 
 /**
  * Component properties
@@ -24,8 +23,6 @@ interface Props {
   datePickerView: CalendarPickerView;
   onStartDateChange: (value: unknown) => void;
   onEndDateChange: (value: unknown) => void;
-  onStartWeekChange: (weekNumber: number) => void;
-  onEndWeekChange: (weekNumber: number) => void;
 }
 
 const DateFilterPicker: React.FC<Props> = ({
@@ -36,7 +33,7 @@ const DateFilterPicker: React.FC<Props> = ({
   onStartDateChange,
   onEndDateChange
 }) => {
-  const classes = useTestDateRangePickerStyles();
+  const classes = useDateRangePickerStyles();
   const { locale } = useAppSelector(selectLocale);
   const [pickerLocale, setPickerLocale] = React.useState(enLocale);
 
