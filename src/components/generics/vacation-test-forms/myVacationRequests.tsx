@@ -203,7 +203,7 @@ const renderVacationRequests = () => {
                 <React.Fragment>
                   <Collapse in={openRows[index]} timeout="auto" unmountOnExit>
                     <TableRow>
-                      <TableCell component="th" scope="row">
+                      <TableCell>
                       <MyVacationsDatePicker
                             dateFormat={dateFormat}
                             selectedVacationStartDate={selectedVacationStartDate}

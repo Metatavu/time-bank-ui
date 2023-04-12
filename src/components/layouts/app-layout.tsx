@@ -224,7 +224,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
     return (
       <AppBar style={{ zIndex: 1201 }}>
         <Toolbar style={{ width: "100%" }}>
-          <Link to="/" style={{ textDecoration: "none" }}>
+          <Link to="/">
             <Box className={ classes.titleContainer }>
               <img
                 src={ siteLogo }
@@ -238,7 +238,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
           </Link>
           { AuthUtils.isAdmin(accessToken) &&
             <Box className={ classes.managementLinkContainer }>
-              <Link to="/management" style={{ textDecoration: "none" }}>
+              <Link to="/management">
                 <Box
                   className={
                     classNames(classes.managementLink, managementScreen && classes.activeManagementLink)

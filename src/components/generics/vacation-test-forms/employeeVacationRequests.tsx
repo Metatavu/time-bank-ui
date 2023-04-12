@@ -318,7 +318,13 @@ const renderEmployeeVacationRequests = () => {
             selectedFilteredEndDate={selectedVacationEndDate}
             datePickerView={datePickerView}
             onStartDateChange={handleVacationStartDateChange}
-            onEndDateChange={handleVacationEndDateChange}        
+            onEndDateChange={handleVacationEndDateChange} 
+            onStartWeekChange={function (weekNumber: number): void {
+              throw new Error("Function not implemented.");
+            } } 
+            onEndWeekChange={function (weekNumber: number): void {
+              throw new Error("Function not implemented.");
+            } }        
           />
         </Box>
       </Box>
