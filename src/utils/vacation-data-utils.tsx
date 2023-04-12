@@ -3,46 +3,33 @@ import { VacationDayData, VacationWeekData } from "types";
 import getISOWeek from "date-fns/getISOWeek";
 
 /**
- * Utility class for vacation days
+ * Preprocess list for vacation days and weeks
+ * 
+ * @param dailyEntry daily entries from api request
+ * @return weeks and days of vacation 
  */
-export default class VacationDataUtils {
+const vacationDaysProcess = (dailyEntries: DailyEntry[]): VacationWeekData[] => {
+  const vacationDays: VacationDayData[] = dailyEntries
+    .filter(dailyEntry => dailyEntry.isVacation)
+    .map(dailyEntry => ({
+      weekNumber: getISOWeek(new Date(dailyEntry.date)),
+      day: dailyEntry.date
+    })).reverse();
 
-  /**
-   * Preprocess list for vacation days and weeks
-   * 
-   * @param dateEntries daily entries from api request
-   * @return weeks and days of vacation 
-   */
-  public static vacationDaysProcess = (dateEntries: DailyEntry[]): VacationWeekData[] => {
-    const vacationDays: VacationDayData[] = [];
-    const vacationWeeks: VacationWeekData[] = [];
+  const vacationWeeks: VacationWeekData[] = [];
 
-    dateEntries.forEach(
-      entry => {
-        if (entry.isVacation) {
-          const weekNumber = getISOWeek(new Date(entry.date));
-          vacationDays.push({
-            weekNumber: weekNumber,
-            day: entry.date
-          });
-        }
-      }
-    );
-    vacationDays.reverse();
-    for (let index = 0; index < vacationDays.length; index++) {
-      let oneWeek: VacationDayData[] = [];
-      oneWeek = vacationDays.filter(entry => entry.weekNumber === vacationDays[index].weekNumber);
-
-      const idx = vacationWeeks.findIndex(object => object.weekNumber === oneWeek[0].weekNumber);
-
-      if (idx === -1) {
-        vacationWeeks.push({
-          weekNumber: oneWeek[0].weekNumber,
-          vacationDays: oneWeek
-        });
-      }
+  vacationDays.forEach((day: VacationDayData) => {
+    const indexOfWeek = vacationWeeks.findIndex(vacationWeek => vacationWeek.weekNumber === day.weekNumber);
+    if (indexOfWeek < 0) {
+      vacationWeeks.push({
+        weekNumber: day.weekNumber,
+        vacationDays: [day]
+      });
+    } else {
+      vacationWeeks[indexOfWeek].vacationDays.push(day);
     }
-    return vacationWeeks;
-  };
+  });
+  return vacationWeeks;
+};
 
-}
+export default vacationDaysProcess;

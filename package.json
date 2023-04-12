@@ -24,7 +24,7 @@
     "classnames": "^2.3.1",
     "date-fns": "^2.23.0",
     "envalid": "^7.2.1",
-    "keycloak-js": "^15.0.2",
+    "keycloak-js": "^19.0.2",
     "localized-strings": "^0.2.4",
     "moment": "^2.29.1",
     "react": "^17.0.2",
@@ -38,7 +38,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "npm run build-client && react-scripts build",
     "test": "react-scripts test",
     "lint": "eslint --fix --ext .ts,.tsx ./src",
     "eject": "react-scripts eject",

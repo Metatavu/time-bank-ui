@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { AppBar, Box, Drawer, Toolbar, Typography, Select, MenuItem, Button, Dialog, CircularProgress, IconButton } from "@mui/material";
 import useAppLayoutStyles from "styles/layouts/app-layout";
@@ -18,6 +18,7 @@ import { ErrorContext } from "components/error-handler/error-handler";
 import GenericDialog from "components/generics/generic-dialog/generic-dialog";
 import DeleteIcon from "@mui/icons-material/Delete";
 import GenericDatePicker from "components/generics/date-picker/date-picker";
+import moment from "moment";
 
 /**
  * Component properties
@@ -34,7 +35,7 @@ interface Props {
  * @param props component properties
  */
 const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children, managementScreen }) => {
-  const yesterday = new Date().setDate(new Date().getDate() - 1);
+  const yesterday = moment(new Date()).subtract(1, "days").toDate();
   const classes = useAppLayoutStyles();
   const dispatch = useAppDispatch();
   const { person } = useAppSelector(selectPerson);
@@ -70,24 +71,6 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
   };
 
   /**
-   * Handler for sync-date selection dialog
-   */
-  const handleClickOpen = () => {
-    if (!selectedStartDate) {
-      setSelectedStartDate(new Date(yesterday));
-    }
-    
-    setSyncSelection(true);
-  };
-
-  /**
-  * Handler for sync start date
-  */
-  const resetSyncDate = () => {
-    setSelectedStartDate(null);
-  };
-
-  /**
    * Renders the loading dialog
    */
   const renderLoadingDialog = () => {
@@ -115,6 +98,19 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
     );
   };
 
+  /**
+   * Handler for sync starting date
+   */
+  const resetSyncDate = () => {
+    setSelectedStartDate(null);
+  };
+  
+  useEffect(() => {
+    if (!selectedStartDate) {
+      setSelectedStartDate(yesterday);
+    }
+  }, [syncSelection]);
+  
   /**
    * Renders sync selection dialog
    */
@@ -174,7 +170,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
       disabled={ syncingData }
       color="secondary"
       variant="contained"
-      onClick={ handleClickOpen }
+      onClick={ () => setSyncSelection(true) }
     >
       <Typography className={ classes.syncDataText }>
         { strings.header.syncData }
