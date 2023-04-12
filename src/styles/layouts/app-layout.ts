@@ -67,6 +67,7 @@ const useAppLayoutStyles = makeStyles(theme => ({
   title: {
     marginLeft: theme.spacing(2),
     color: theme.palette.text.secondary,
+    textDecoration: "none",
     [theme.breakpoints.down(520)]: {
       display: "none"
     }
@@ -134,7 +135,8 @@ const useAppLayoutStyles = makeStyles(theme => ({
   managementLinkText: {
     color: theme.palette.text.secondary,
     fontSize: 16,
-    fontWeight: 600
+    fontWeight: 600,
+    textDecoration: "none"
   },
 
   activeManagementLinkText: {

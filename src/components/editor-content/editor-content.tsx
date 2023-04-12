@@ -806,6 +806,24 @@ const EditorContent: React.FC<Props> = () => {
     </Button>
   );
 
+   /**
+     * Method to handle vacation starting date change
+     *
+     * @param date selected date
+     */
+   const handleVacationStartDateChange = (date: unknown) => {
+    date && setSelectedVacationStartDate(date);
+  };
+
+  /**
+   * Method to handle vacation ending date change
+   *
+   * @param date selected date
+   */
+  const handleVacationEndDateChange = (date: unknown) => {
+    date && setSelectedVacationEndDate(date);
+  };
+
   /**
    * 
    * Renders vacation info summary
@@ -849,19 +867,19 @@ const EditorContent: React.FC<Props> = () => {
         <AccordionDetails 
           className={ classes.vacationInfoContent }>
             <DateFilterPicker 
-                        dateFormat={dateFormat}
-                        selectedFilteredStartDate={selectedVacationStartDate}
-                        selectedFilteredEndDate={selectedVacationEndDate}
-                        datePickerView={datePickerView}
-                        onStartDateChange={handleVacationStartDateChange}
-                        onEndDateChange={handleVacationEndDateChange} 
-                        onStartWeekChange={function (weekNumber: number): void {
-                          throw new Error("Function not implemented.");
-                        } } 
-                        onEndWeekChange={function (weekNumber: number): void {
-                          throw new Error("Function not implemented.");
-                        } }        
-                      />
+              dateFormat={dateFormat}
+              selectedFilteredStartDate={selectedVacationStartDate}
+              selectedFilteredEndDate={selectedVacationEndDate}
+              datePickerView={datePickerView}
+              onStartDateChange={handleVacationStartDateChange}
+              onEndDateChange={handleVacationEndDateChange} 
+              onStartWeekChange={function (weekNumber: number): void {
+                throw new Error("Function not implemented.");
+              } } 
+              onEndWeekChange={function (weekNumber: number): void {
+                throw new Error("Function not implemented.");
+              } }        
+            />
           <Box className={ classes.vacationDetailsContent }>
             { renderVacationType() }
           </Box>
