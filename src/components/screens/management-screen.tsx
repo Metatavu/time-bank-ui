@@ -112,13 +112,6 @@ const ManagementScreen: React.FC = () => {
           }),
           personTotalTime: selectedPersonWithTotalTime.personTotalTime
         };
-        const updatedPerson: PersonWithTotalTime = {
-          person: await Api.getPersonsApi(accessToken?.access_token).updatePerson({
-            personId: person.id,
-            person: { ...person, minimumBillableRate: newBillablePercentage }
-          }),
-          personTotalTime: selectedPersonWithTotalTime.personTotalTime
-        };
         syncOrUpdateContext.setSyncOrUpdate(strings.billableHoursHandling.updateBillableHoursSuccess);
         const personIndex = personsTotalTime.findIndex(_person => _person.person.id === person.id);
 
@@ -167,6 +160,13 @@ const ManagementScreen: React.FC = () => {
    */
   const handleListItemClick = (personWithTotalTime: PersonWithTotalTime) => () => {
     setSelectedPersonWithTotalTime(personWithTotalTime);
+  };
+
+  /**
+   * Handler for billable hours update dialog
+   */
+  const handleClickOpen = () => {
+    setBillableHoursUpdate(true);
   };
 
   /**
@@ -475,7 +475,7 @@ const ManagementScreen: React.FC = () => {
       return null;
     }
 
-    const { firstName, lastName, email } = selectedPersonWithTotalTime.person;
+    const { person } = selectedPersonWithTotalTime;
     
     return (
       <GenericDialog
