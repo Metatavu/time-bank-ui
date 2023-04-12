@@ -337,7 +337,7 @@ const EditorContent: React.FC<Props> = () => {
    * 
    * @param name name of the subtitle text
    * @param value value of the subtitle text
-   * @param total if it"s displaying the total value
+   * @param total if it's displaying the total value
    * @param positiveTotal if the total is positive
    */
   const renderFilterSubtitleText = (name: string, value: number, total: boolean, positiveTotal?: boolean) => {
