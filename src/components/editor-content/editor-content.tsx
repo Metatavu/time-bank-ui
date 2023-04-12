@@ -807,6 +807,24 @@ const EditorContent: React.FC<Props> = () => {
   );
 
   /**
+     * Method to handle vacation starting date change
+     *
+     * @param date selected date
+     */
+  const handleVacationStartDateChange = (date: unknown) => {
+    date && setSelectedVacationStartDate(date);
+  };
+
+  /**
+   * Method to handle vacation ending date change
+   *
+   * @param date selected date
+   */
+  const handleVacationEndDateChange = (date: unknown) => {
+    date && setSelectedVacationEndDate(date);
+  };
+  
+  /**
    * 
    * Renders vacation info summary
    */
