@@ -132,7 +132,6 @@ const DrawerContent: React.FC<Props> = () => {
       </Box>
     );
   };
-  /* eslint-enable */
 
   /**
    * Renders the search box
@@ -147,7 +146,6 @@ const DrawerContent: React.FC<Props> = () => {
             options={ persons }
             inputValue={ searchInput }
             getOptionLabel={ personLabel => `${(personLabel as Person).firstName} ${(personLabel as Person).lastName}` }
-            // renderOption={ renderOptions }
             onChange={ (event, newValue) => onSearchBoxChange(newValue as Person) }
             onInputChange={ (event, newInputValue) => onSearchBoxInputChange(newInputValue) }
             renderInput={ params => (

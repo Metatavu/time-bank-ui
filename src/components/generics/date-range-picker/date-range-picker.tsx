@@ -1,5 +1,4 @@
 import React from "react";
-// import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePickerView } from "@material-ui/pickers";
 import { LocalizationProvider, DatePicker, CalendarPickerView } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { FilterScopes } from "types";
@@ -50,7 +49,7 @@ const DateRangePicker: React.FC<Props> = ({
 
   const { locale } = useAppSelector(selectLocale);
 
-  const [ todayDate /* setTodayDate */ ] = React.useState(new Date());
+  const [ todayDate ] = React.useState(new Date());
   const [ currentWeekNumber, setCurrentWeekNumber ] = React.useState(0);
   const [ pickerLocale, setPickerLocale ] = React.useState(enLocale);
 

@@ -22,7 +22,6 @@ ReactDOM.render(
           <CssBaseline/>
           <SyncOrUpdateHandler>
             <ErrorHandler>
-
               <App/>
             </ErrorHandler>
           </SyncOrUpdateHandler>

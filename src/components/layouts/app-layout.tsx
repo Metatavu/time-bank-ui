@@ -44,7 +44,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
   const [ syncingData, setSyncingData ] = React.useState(false);
   const errorContext = React.useContext(ErrorContext);
   const syncOrUpdateContext = React.useContext(SyncOrUpdateContext);
-  const [syncSelection, setSyncSelection] = React.useState(false);
+  const [ syncSelection, setSyncSelection ] = React.useState(false);
   const [ selectedStartDate, setSelectedStartDate ] = useState<unknown>(new Date(yesterday));
 
   /**
