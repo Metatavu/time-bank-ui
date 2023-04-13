@@ -35,7 +35,7 @@ export interface Configuration {
  */
 export enum FilterScopes {
   WEEK = "week",
-  DATE = "date",
+  DATE = "day",
   MONTH = "month",
   YEAR = "year"
 }
@@ -103,7 +103,7 @@ export interface VacationDayData {
  */
 export interface VacationWeekData {
   weekNumber: number;
-  vacationDays: VacationDayData[]
+  vacationDays: VacationDayData[];
 }
 
 /**

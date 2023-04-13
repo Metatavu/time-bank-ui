@@ -67,7 +67,7 @@ export interface IStrings extends LocalizedStringsMethods {
     filterStartingDate: string;
     filterEndingDate: string;
     week: string;
-    date: string;
+    day: string;
     month: string;
     year: string;
     selectYearStart: string;

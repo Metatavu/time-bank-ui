@@ -156,25 +156,23 @@ const DateRangePicker: React.FC<Props> = ({
   /**
    * Renders start date picker 
    */
-  const renderStartDatePicker = () => {
-    const { filterStartingDate } = strings.editorContent;
-
-    return (
+  const renderStartDatePicker = () => (
+    <>
       <LocalizationProvider dateAdapter={ AdapterDateFns } adapterLocale={ pickerLocale } >
         <DatePicker
           views={[ datePickerView ]}
           inputFormat={ dateFormat }
           minDate={ new Date(2021, 7, 31) }
           maxDate={ todayDate }
-          label={ filterStartingDate }
-          value={ new Date() }
+          label={ strings.editorContent.filterStartingDate }
+          value={ selectedStartDate }
           onChange={ onStartDateChange }
           className={ classes.datePicker }
           renderInput={ params => <TextField {...params}/>}
         />
       </LocalizationProvider>
-    );
-  };
+    </>
+  );
   
   /**
    * Renders start year picker and week selector 
