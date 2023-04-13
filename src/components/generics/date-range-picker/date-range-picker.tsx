@@ -49,7 +49,7 @@ const DateRangePicker: React.FC<Props> = ({
 
   const { locale } = useAppSelector(selectLocale);
 
-  const [ todayDate ] = React.useState(new Date());
+  const todayDate = new Date();
   const [ currentWeekNumber, setCurrentWeekNumber ] = React.useState(0);
   const [ pickerLocale, setPickerLocale ] = React.useState(enLocale);
 
