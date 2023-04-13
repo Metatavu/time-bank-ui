@@ -29,11 +29,9 @@ interface Request {
  */
 const renderVacationRequests = () => {
   const classes = useEditorContentStyles();
-  const [scope, setScope] = React.useState<FilterScopes>(FilterScopes.DATE);
-  const [dateFormat, setDateFormat] = React.useState<string | undefined>("yyyy.MM.dd");
+  const [dateFormat] = React.useState<string | undefined>("yyyy.MM.dd");
   const [selectedVacationStartDate, setSelectedVacationStartDate] = useState<any>(new Date());
   const [selectedVacationEndDate, setSelectedVacationEndDate] = useState<any>(new Date())
-  const [open, setOpen] = React.useState(false);
   const [openRows, setOpenRows] = React.useState<boolean[]>([]);
   const [newTextContent, setNewTextContent] = React.useState("");
   const [newVacationType, setNewVacationType] = React.useState("");
