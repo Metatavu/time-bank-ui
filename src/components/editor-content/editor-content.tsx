@@ -873,10 +873,10 @@ const EditorContent: React.FC<Props> = () => {
                         datePickerView={datePickerView}
                         onStartDateChange={handleVacationStartDateChange}
                         onEndDateChange={handleVacationEndDateChange} 
-                        onStartWeekChange={function (weekNumber: number): void {
+                        onStartWeekChange={function (): void {
                           throw new Error("Function not implemented.");
                         } } 
-                        onEndWeekChange={function (weekNumber: number): void {
+                        onEndWeekChange={function (): void {
                           throw new Error("Function not implemented.");
                         } }        
                       />

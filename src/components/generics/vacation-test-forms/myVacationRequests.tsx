@@ -140,23 +140,23 @@ const renderVacationRequests = () => {
     )
   };
 
-    /**
-     * Method to handle vacation starting date change
-     *
-     * @param date selected date
-     */
-    const handleVacationStartDateChange = (date: unknown) => {
-      date && setSelectedVacationStartDate(date);
-    };
-  
-    /**
-     * Method to handle vacation ending date change
-     *
-     * @param date selected date
-     */
-    const handleVacationEndDateChange = (date: unknown) => {
-      date && setSelectedVacationEndDate(date);
-    };
+  /**
+   * Method to handle vacation starting date change
+   *
+   * @param date selected date
+   */
+  const handleVacationStartDateChange = (date: unknown) => {
+    date && setSelectedVacationStartDate(date);
+  };
+
+  /**
+   * Method to handle vacation ending date change
+   *
+   * @param date selected date
+   */
+  const handleVacationEndDateChange = (date: unknown) => {
+    date && setSelectedVacationEndDate(date);
+  };
 
   return (
     <Box className={classes.employeeVacationRequests}>
@@ -173,7 +173,8 @@ const renderVacationRequests = () => {
               <TableCell>Start Date</TableCell>
               <TableCell>End Date</TableCell>
               <TableCell>Status</TableCell>
-              <TableCell />
+              <TableCell/>
+              <TableCell/>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -200,44 +201,50 @@ const renderVacationRequests = () => {
                     </IconButton>
                   </TableCell>
                 </TableRow>
-                <React.Fragment>
-                  <Collapse in={openRows[index]} timeout="auto" unmountOnExit>
-                    <TableRow>
-                      <TableCell>
-                      <MyVacationsDatePicker
-                            dateFormat={dateFormat}
-                            selectedVacationStartDate={selectedVacationStartDate}
-                            selectedVacationEndDate={selectedVacationEndDate}
-                            datePickerView={datePickerView} onStartDateChange={function (value: any): void {
-                              throw new Error('Function not implemented.');
-                            } } onEndDateChange={function (value: any): void {
-                              throw new Error('Function not implemented.');
-                            } }
+                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
+                <Collapse in={openRows[index]} timeout="auto" unmountOnExit>
+                    <React.Fragment>
+                      <TableRow>
+                        <TableCell>
+                        <DateFilterPicker 
+                          dateFormat={dateFormat}
+                          selectedFilteredStartDate={selectedVacationStartDate}
+                          selectedFilteredEndDate={selectedVacationEndDate}
+                          datePickerView={datePickerView}
+                          onStartDateChange={handleVacationStartDateChange}
+                          onEndDateChange={handleVacationEndDateChange} 
+                          onStartWeekChange={function (weekNumber: number): void {
+                            throw new Error("Function not implemented.");
+                          }} 
+                          onEndWeekChange={function (weekNumber: number): void {
+                            throw new Error("Function not implemented.");
+                          }}        
                       />
-                      </TableCell>
-                      <TableCell>
-                        {renderVacationType()}
-                      </TableCell>
-                      <TableCell>
-                        {renderVacationDaysSpend()}
-                        {renderVacationCommentBox()}
-                        <Box display="flex" justifyContent="center">
-                          {renderVacationApplyButton()}
-                        </Box>
-                      </TableCell>
-                      <TableCell>
-                        <IconButton
-                          //onClick={ handleStartDateOnlyClick }
-                          aria-label="delete"
-                          className={classes.deleteButton}
-                          size="large"
-                        >
-                          <DeleteIcon fontSize="medium" />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
+                        </TableCell>
+                        <TableCell>
+                          {renderVacationType()}
+                        </TableCell>
+                        <TableCell>
+                          {renderVacationDaysSpend()}
+                          {renderVacationCommentBox()}
+                          <Box display="flex" justifyContent="center">
+                            {renderVacationApplyButton()}
+                          </Box>
+                        </TableCell>
+                        <TableCell>
+                          <IconButton
+                            //onClick={ handleStartDateOnlyClick }
+                            aria-label="delete"
+                            className={classes.deleteButton}
+                            size="large"
+                          >
+                            <DeleteIcon fontSize="medium" />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                      </React.Fragment>
                   </Collapse>
-                </React.Fragment>
+                </TableCell>
               </>
             ))}
           </TableBody>
