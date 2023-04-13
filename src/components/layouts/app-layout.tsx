@@ -54,7 +54,8 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
     setSyncSelection(false);
     try {
       await Api.getSynchronizeApi(accessToken?.access_token).synchronizeTimeEntries({
-        after: selectedStartDate as Date || undefined
+        after: selectedStartDate as Date || undefined,
+        syncDeleted: false
       });
       
       syncOrUpdateContext.setSyncOrUpdate(strings.syncHandling.syncTimeDataSuccess);
@@ -224,7 +225,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
     return (
       <AppBar style={{ zIndex: 1201 }}>
         <Toolbar style={{ width: "100%" }}>
-          <Link to="/">
+          <Link to="/" style={{ textDecoration: "none" }}>
             <Box className={ classes.titleContainer }>
               <img
                 src={ siteLogo }
@@ -238,7 +239,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
           </Link>
           { AuthUtils.isAdmin(accessToken) &&
             <Box className={ classes.managementLinkContainer }>
-              <Link to="/management">
+              <Link to="/management" style={{ textDecoration: "none" }}>
                 <Box
                   className={
                     classNames(classes.managementLink, managementScreen && classes.activeManagementLink)
