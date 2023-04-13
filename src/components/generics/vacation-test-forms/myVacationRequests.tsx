@@ -1,16 +1,14 @@
 /* eslint-disable */
 import React, { useState } from 'react';
-import { Accordion, AccordionSummary, Collapse, FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, Button, Box } from "@mui/material";
+import { Collapse, FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, Button, Box } from "@mui/material";
 import useEditorContentStyles from "styles/editor-content/editor-content";
 import theme from "theme/theme";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import myVacationRequests from './myVacationMockData.json';
 import DeleteIcon from '@mui/icons-material/Delete';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { CalendarPickerView } from '@mui/x-date-pickers';
 import { FilterScopes } from 'types';
-import MyVacationsDatePicker from './myVacationsDatePicker';
 import Holidays from "date-holidays";
 import DateFilterPicker from '../date-range-picker/test-date-range-picker';
 
@@ -31,11 +29,9 @@ interface Request {
  */
 const renderVacationRequests = () => {
   const classes = useEditorContentStyles();
-  const [scope, setScope] = React.useState<FilterScopes>(FilterScopes.DATE);
-  const [dateFormat, setDateFormat] = React.useState<string | undefined>("yyyy.MM.dd");
+  const [dateFormat] = React.useState<string | undefined>("yyyy.MM.dd");
   const [selectedVacationStartDate, setSelectedVacationStartDate] = useState<any>(new Date());
   const [selectedVacationEndDate, setSelectedVacationEndDate] = useState<any>(new Date())
-  const [open] = React.useState(false);
   const [openRows, setOpenRows] = React.useState<boolean[]>([]);
   const [newTextContent, setNewTextContent] = React.useState("");
   const [newVacationType, setNewVacationType] = React.useState("");
@@ -197,7 +193,7 @@ const renderVacationRequests = () => {
                         setOpenRows(newOpenRows);
                       }}
                     >
-                      {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                      {openRows[index] ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                     </IconButton>
                   </TableCell>
                 </TableRow>

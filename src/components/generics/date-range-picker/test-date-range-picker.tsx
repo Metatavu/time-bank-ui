@@ -12,6 +12,7 @@ import fiLocale from "date-fns/locale/fi";
 import enLocale from "date-fns/locale/en-US";
 import useTestDateRangePickerStyles from "styles/generics/date-range-picker/test-date-range-picker";
 
+
 /**
  * Component properties
  */
@@ -57,6 +58,7 @@ const DateFilterPicker: React.FC<Props> = ({
       <>
         <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={pickerLocale} >
           <DatePicker
+            disablePast
             views={[datePickerView]}
             inputFormat={dateFormat}
             label={filterStartingDate}
@@ -76,6 +78,8 @@ const DateFilterPicker: React.FC<Props> = ({
   const renderEndDatePicker = () => (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={pickerLocale} >
       <DatePicker
+        disablePast
+        minDate={selectedFilteredStartDate}
         inputFormat={dateFormat}
         views={[datePickerView]}
         label={strings.editorContent.filterEndingDate}

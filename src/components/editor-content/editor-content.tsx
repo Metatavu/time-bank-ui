@@ -51,7 +51,9 @@ const EditorContent: React.FC<Props> = () => {
   const { accessToken } = useAppSelector(selectAuth);
   const [ scope, setScope ] = React.useState<FilterScopes>(FilterScopes.WEEK);
   const [ dateFormat, setDateFormat ] = React.useState<string | undefined>("yyyy.MM.dd");
+  const [ dateVacationFormat, setDateVacationFormat ] = React.useState<string | undefined>("yyyy.MM.dd");
   const [ datePickerView, setDatePickerView ] = React.useState<CalendarPickerView>("day");
+  const [ datePickerViewVacation, setDatePickerViewVacation ] = React.useState<CalendarPickerView>("day");
   const [ selectedStartDate, setSelectedStartDate ] = useState<unknown>(new Date());
   const [ selectedVacationStartDate, setSelectedVacationStartDate ] = useState<any>(new Date());
   const [ selectedVacationEndDate, setSelectedVacationEndDate ] = useState<any>(new Date())
@@ -871,10 +873,10 @@ const EditorContent: React.FC<Props> = () => {
         <AccordionDetails 
           className={ classes.vacationInfoContent }>
             <DateFilterPicker 
-                        dateFormat={dateFormat}
+                        dateFormat={dateVacationFormat}
                         selectedFilteredStartDate={selectedVacationStartDate}
                         selectedFilteredEndDate={selectedVacationEndDate}
-                        datePickerView={datePickerView}
+                        datePickerView={datePickerViewVacation}
                         onStartDateChange={handleVacationStartDateChange}
                         onEndDateChange={handleVacationEndDateChange} 
                         onStartWeekChange={function (): void {
