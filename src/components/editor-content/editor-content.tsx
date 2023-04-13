@@ -284,6 +284,8 @@ const EditorContent: React.FC<Props> = () => {
    */
   const handleStartDateChange = (date: unknown) => {
     date && setSelectedStartDate(date);
+    console.log(date);
+    
   };
 
   /**
@@ -293,6 +295,8 @@ const EditorContent: React.FC<Props> = () => {
    */
   const handleEndDateChange = (date: unknown) => {
     date && setSelectedEndDate(date);
+    console.log(date);
+    
   };
   
   /**
