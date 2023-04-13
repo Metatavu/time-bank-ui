@@ -16,6 +16,7 @@ import { CustomPieLabel, WorkTimeCategory, WorkTimeTotalData } from "types/index
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 import { ErrorContext } from "components/error-handler/error-handler";
 import { selectAuth } from "features/auth/auth-slice";
+import { endOfYesterday } from "date-fns";
 
 /**
  * Component properties
@@ -36,7 +37,8 @@ const DrawerContent: React.FC<Props> = () => {
   const [ persons, setPersons ] = React.useState<Person[]>([]);
   const [ searchInput, setSearchInput ] = React.useState<string>("");
   const context = React.useContext(ErrorContext);
-  
+  const yesterday = new Date(endOfYesterday());
+
   React.useEffect(() => {
     const foundPerson = persons.find(personData => personData.email === accessToken?.email);
 
@@ -66,7 +68,8 @@ const DrawerContent: React.FC<Props> = () => {
         const fetchedPersonTotalTime = await Api.getPersonsApi(accessToken?.access_token)
           .listPersonTotalTime({
             personId: person.id,
-            timespan: Timespan.ALL_TIME
+            timespan: Timespan.ALL_TIME,
+            before: yesterday
           });
         dispatch(setPersonTotalTime(fetchedPersonTotalTime[0]));
         return;
@@ -129,7 +132,6 @@ const DrawerContent: React.FC<Props> = () => {
       </Box>
     );
   };
-  /* eslint-enable */
 
   /**
    * Renders the search box
@@ -144,7 +146,6 @@ const DrawerContent: React.FC<Props> = () => {
             options={ persons }
             inputValue={ searchInput }
             getOptionLabel={ personLabel => `${(personLabel as Person).firstName} ${(personLabel as Person).lastName}` }
-            // renderOption={ renderOptions }
             onChange={ (event, newValue) => onSearchBoxChange(newValue as Person) }
             onInputChange={ (event, newInputValue) => onSearchBoxInputChange(newInputValue) }
             renderInput={ params => (
@@ -256,7 +257,7 @@ const DrawerContent: React.FC<Props> = () => {
       { name: WorkTimeCategory.INTERNAL, balance: personTotalTime.internalTime }
     ];
 
-    const COLORS = [ theme.palette.success.main, theme.palette.success.light, theme.palette.warning.main ];
+    const COLORS = [ theme.palette.success.dark, theme.palette.success.light, theme.palette.warning.main ];
 
     return (
       <>
