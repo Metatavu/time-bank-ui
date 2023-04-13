@@ -35,7 +35,7 @@ const renderVacationRequests = () => {
   const [dateFormat, setDateFormat] = React.useState<string | undefined>("yyyy.MM.dd");
   const [selectedVacationStartDate, setSelectedVacationStartDate] = useState<any>(new Date());
   const [selectedVacationEndDate, setSelectedVacationEndDate] = useState<any>(new Date())
-  const [open] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
   const [openRows, setOpenRows] = React.useState<boolean[]>([]);
   const [newTextContent, setNewTextContent] = React.useState("");
   const [newVacationType, setNewVacationType] = React.useState("");
@@ -197,7 +197,7 @@ const renderVacationRequests = () => {
                         setOpenRows(newOpenRows);
                       }}
                     >
-                      {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                      {openRows[index] ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                     </IconButton>
                   </TableCell>
                 </TableRow>
