@@ -1,16 +1,14 @@
 /* eslint-disable */
 import React, { useState } from 'react';
-import { Accordion, AccordionSummary, Collapse, FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, Button, Box } from "@mui/material";
+import { Collapse, FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, Button, Box } from "@mui/material";
 import useEditorContentStyles from "styles/editor-content/editor-content";
 import theme from "theme/theme";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import myVacationRequests from './myVacationMockData.json';
 import DeleteIcon from '@mui/icons-material/Delete';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { CalendarPickerView } from '@mui/x-date-pickers';
 import { FilterScopes } from 'types';
-import MyVacationsDatePicker from './myVacationsDatePicker';
 import Holidays from "date-holidays";
 import DateFilterPicker from '../date-range-picker/test-date-range-picker';
 
