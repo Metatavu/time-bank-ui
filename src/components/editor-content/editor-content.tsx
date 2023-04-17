@@ -696,7 +696,7 @@ const EditorContent: React.FC<Props> = () => {
   /**
   * Test new vacation calculations
   */
-  function getVacationDays(startDate: Date, endDate: Date, holidays: Date[]): number{
+  const  getVacationDays = (startDate: Date, endDate: Date, holidays: Date[]): number => {
     const totalDays = Math.round((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))
     let vacationDays = 0
     let currentDate = new Date(startDate)
