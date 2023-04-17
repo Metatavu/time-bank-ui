@@ -53,7 +53,7 @@ const EditorContent: React.FC<Props> = () => {
   const [ dateFormat, setDateFormat ] = React.useState<string | undefined>("yyyy.MM.dd");
   const [ dateVacationFormat, setDateVacationFormat ] = React.useState<string | undefined>("yyyy.MM.dd");
   const [ datePickerView, setDatePickerView ] = React.useState<CalendarPickerView>("day");
-  const [ datePickerViewVacation, setDatePickerViewVacation ] = React.useState<CalendarPickerView>("day");
+  const [ datePickerViewVacation, setDatePickerViewVacation ] = useState<CalendarPickerView>("day");
   const [ selectedStartDate, setSelectedStartDate ] = useState<unknown>(new Date());
   const [ selectedVacationStartDate, setSelectedVacationStartDate ] = useState<any>(new Date());
   const [ selectedVacationEndDate, setSelectedVacationEndDate ] = useState<any>(new Date())
