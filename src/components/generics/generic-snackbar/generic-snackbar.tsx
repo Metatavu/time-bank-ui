@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 
 import { Alert, AlertColor, Snackbar } from "@mui/material";
 
@@ -29,7 +29,7 @@ const GenericSnackbar: React.FC<Props> = ({
   * @param reason reason why snackbar was closed
   */
   const onCloseClick = (reason: string) => {
-    if ((reason === "backdropClick")) {
+    if (reason === "backdropClick") {
       return;
     }
 

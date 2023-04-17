@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { AppBar, Box, Drawer, Toolbar, Typography, Select, MenuItem, Button, Dialog, CircularProgress, IconButton } from "@mui/material";
 import useAppLayoutStyles from "styles/layouts/app-layout";
@@ -18,6 +18,7 @@ import { ErrorContext } from "components/error-handler/error-handler";
 import GenericDialog from "components/generics/generic-dialog/generic-dialog";
 import DeleteIcon from "@mui/icons-material/Delete";
 import GenericDatePicker from "components/generics/date-picker/date-picker";
+import moment from "moment";
 
 /**
  * Component properties
@@ -34,7 +35,7 @@ interface Props {
  * @param props component properties
  */
 const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children, managementScreen }) => {
-  const yesterday = new Date().setDate(new Date().getDate() - 1);
+  const yesterday = moment(new Date()).subtract(1, "days").toDate();
   const classes = useAppLayoutStyles();
   const dispatch = useAppDispatch();
   const { person } = useAppSelector(selectPerson);
@@ -43,7 +44,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
   const [ syncingData, setSyncingData ] = React.useState(false);
   const errorContext = React.useContext(ErrorContext);
   const syncOrUpdateContext = React.useContext(SyncOrUpdateContext);
-  const [syncSelection, setSyncSelection] = React.useState(false);
+  const [ syncSelection, setSyncSelection ] = React.useState(false);
   const [ selectedStartDate, setSelectedStartDate ] = useState<unknown>(new Date(yesterday));
 
   /**
@@ -54,7 +55,8 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
     setSyncSelection(false);
     try {
       await Api.getSynchronizeApi(accessToken?.access_token).synchronizeTimeEntries({
-        after: selectedStartDate as Date || undefined
+        after: selectedStartDate as Date || undefined,
+        syncDeleted: false
       });
       
       syncOrUpdateContext.setSyncOrUpdate(strings.syncHandling.syncTimeDataSuccess);
@@ -67,24 +69,6 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
       dispatch(setPerson(personCloned));
     }
     setSyncingData(false);
-  };
-
-  /**
-   * Handler for sync-date selection dialog
-   */
-  const handleClickOpen = () => {
-    if (!selectedStartDate) {
-      setSelectedStartDate(new Date(yesterday));
-    }
-    
-    setSyncSelection(true);
-  };
-
-  /**
-  * Handler for sync start date
-  */
-  const resetSyncDate = () => {
-    setSelectedStartDate(null);
   };
 
   /**
@@ -115,6 +99,19 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
     );
   };
 
+  /**
+   * Handler for sync starting date
+   */
+  const resetSyncDate = () => {
+    setSelectedStartDate(null);
+  };
+  
+  useEffect(() => {
+    if (!selectedStartDate) {
+      setSelectedStartDate(yesterday);
+    }
+  }, [syncSelection]);
+  
   /**
    * Renders sync selection dialog
    */
@@ -174,7 +171,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
       disabled={ syncingData }
       color="secondary"
       variant="contained"
-      onClick={ handleClickOpen }
+      onClick={ () => setSyncSelection(true) }
     >
       <Typography className={ classes.syncDataText }>
         { strings.header.syncData }
@@ -224,7 +221,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
     return (
       <AppBar style={{ zIndex: 1201 }}>
         <Toolbar style={{ width: "100%" }}>
-          <Link to="/">
+          <Link to="/" style={{ textDecoration: "none" }}>
             <Box className={ classes.titleContainer }>
               <img
                 src={ siteLogo }
@@ -238,7 +235,7 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
           </Link>
           { AuthUtils.isAdmin(accessToken) &&
             <Box className={ classes.managementLinkContainer }>
-              <Link to="/management">
+              <Link to="/management" style={{ textDecoration: "none" }}>
                 <Box
                   className={
                     classNames(classes.managementLink, managementScreen && classes.activeManagementLink)

@@ -30,7 +30,7 @@ const GenericDatePicker: React.FC<Props> = ({
 
   const { locale } = useAppSelector(selectLocale);
 
-  const [ todayDate /* setTodayDate */ ] = React.useState(new Date());
+  const todayDate = new Date();
   const [ pickerLocale, setPickerLocale ] = React.useState(enLocale);
 
   /**
@@ -67,11 +67,9 @@ const GenericDatePicker: React.FC<Props> = ({
    * Component render
    */
   return (
-    <>
-      <Box display="flex" alignItems="center">
-        { renderStartDatePicker() }
-      </Box>
-    </>
+    <Box display="flex" alignItems="center">
+      { renderStartDatePicker() }
+    </Box>
   );
 };
 

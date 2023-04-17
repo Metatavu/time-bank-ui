@@ -98,7 +98,8 @@ const useManagementScreenStyles = makeStyles(theme => ({
 
   updateBillableHoursContent: {
     margin: theme.spacing(1),
-    alignItems: "center"
+    alignItems: "center",
+    textAlign: "center"
   },
 
   redirectLinkPaper: {
@@ -163,7 +164,7 @@ const useManagementScreenStyles = makeStyles(theme => ({
     borderRadius: "10px !important",
     boxShadow: "0px 3px 3px -2px rgb(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0,0,0,0.14), 0px 1px 8px 0px rgb(0,0,0,0.12)",
     marginBottom: theme.spacing(1),
-    height: "326px",
+    height: 326,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",

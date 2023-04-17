@@ -170,7 +170,7 @@ export default class TimeUtils {
    */
   public static generateTimeRangeText = (entries: WorkTimeData[]) => {
     let timeRangeText = "";
-
+    
     switch (entries.length) {
       case 0:
         timeRangeText = "";
@@ -184,5 +184,5 @@ export default class TimeUtils {
     }
     return timeRangeText;
   };
-  
+
 }

@@ -39,9 +39,9 @@ const ManagementScreen: React.FC = () => {
   const [ displayedPersonsTotalTime, setDisplayedPersonsTotalTime ] = React.useState<PersonWithTotalTime[]>([]);
   const [ selectedPersonWithTotalTime, setSelectedPersonWithTotalTime ] = React.useState<PersonWithTotalTime | undefined>(undefined);
   const [ searchInput, setSearchInput ] = React.useState("");
-  const [billableHoursUpdate, setBillableHoursUpdate] = React.useState(false);
-  const [errorState, setErrorState] = React.useState(false);
-  const [newBillablePercentage, setNewBillablePercentage] = React.useState<number>(0);
+  const [ billableHoursUpdate, setBillableHoursUpdate ] = React.useState(false);
+  const [ errorState, setErrorState ] = React.useState(false);
+  const [ newBillablePercentage, setNewBillablePercentage ] = React.useState<number>(0);
   const context = React.useContext(ErrorContext);
   const syncOrUpdateContext = React.useContext(SyncOrUpdateContext);
   const history = useHistory();
@@ -96,7 +96,7 @@ const ManagementScreen: React.FC = () => {
    * Event handler for billing rate update button click
    */
   const handleBillingRateUpdateClick = async () => {
-    if (!selectedPersonWithTotalTime || !selectedPersonWithTotalTime.personTotalTime) {
+    if (!selectedPersonWithTotalTime?.personTotalTime) {
       return null;
     }
 
@@ -486,7 +486,7 @@ const ManagementScreen: React.FC = () => {
         onCancel={ () => setBillableHoursUpdate(false) }
         onConfirm={ () => setBillableHoursUpdate(false) }
       >
-        <Box className={classes.updateBillableHoursContent}>
+        <Box className={ classes.updateBillableHoursContent }>
           <Box>
             <Typography variant="h5">
               { `${person.firstName} ${person.lastName}` }
@@ -498,28 +498,28 @@ const ManagementScreen: React.FC = () => {
             }}
           >
             <Typography>
-              {strings.billableHoursHandling.updateBillableHours}
+              { strings.billableHoursHandling.updateBillableHours }
             </Typography>
             <TextField
-              helperText={strings.billableHoursHandling.billingPercentageError}
-              error={errorState}
+              helperText={ strings.billableHoursHandling.billingPercentageError }
+              error={ errorState }
               style={{
                 marginTop: theme.spacing(1)
               }}
-              label={strings.billableHoursHandling.billingRate}
+              label={ strings.billableHoursHandling.billingRate }
               type="number"
-              defaultValue={person.minimumBillableRate}
-              onChange={handleChange}
+              defaultValue={ person.minimumBillableRate }
+              onChange={ handleChange }
             />
           </Box>
+          <Button
+            onClick={ handleBillingRateUpdateClick }
+            color="secondary"
+            variant="contained"
+          >
+            { strings.billableHoursHandling.updateButton }
+          </Button>
         </Box>
-        <Button
-          onClick={ handleBillingRateUpdateClick }
-          color="secondary"
-          variant="contained"
-        >
-          {strings.billableHoursHandling.updateButton}
-        </Button>
       </GenericDialog>
     );
   };
