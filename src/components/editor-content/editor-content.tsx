@@ -711,7 +711,7 @@ const EditorContent: React.FC<Props> = () => {
   }
 
   const startDate = new Date(selectedVacationStartDate)
-  const endDate = new Date(selectedVacationEndDate)
+  const endDate = new Date(selectedVacationEndDate);
 
   const holidays = [
     new Date('2023-01-01'),
