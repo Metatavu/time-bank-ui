@@ -843,7 +843,6 @@ const EditorContent: React.FC<Props> = () => {
   };
   
   /**
-   * 
    * Renders vacation info summary
    */
   const renderVacationInfoSummary = () => {
