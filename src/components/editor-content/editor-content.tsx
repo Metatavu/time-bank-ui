@@ -810,8 +810,8 @@ const EditorContent: React.FC<Props> = () => {
   }
 
   /**
-    * Renders vacation apply button
-    */
+   * Renders vacation apply button
+   */
   const renderVacationApplyButton = () => (
     <Button
       color="secondary"
