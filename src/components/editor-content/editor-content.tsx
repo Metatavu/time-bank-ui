@@ -724,7 +724,7 @@ const EditorContent: React.FC<Props> = () => {
   const vacationDays = getVacationDays(startDate, endDate, holidays)
   
   /**
-   * Renders and calculates days spend for vacation
+   * Renders and calculates days spent for vacation
    */
   const renderVacationDaysSpend = () => {
     // Define the date range to compare with holidays
