@@ -858,6 +858,7 @@ const EditorContent: React.FC<Props> = () => {
       </Paper>
       );
     }
+    
     return(
     <Accordion className={classes.vacationDaysAccordion}>
       <AccordionSummary 
