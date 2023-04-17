@@ -719,7 +719,7 @@ const EditorContent: React.FC<Props> = () => {
     new Date('2023-04-23'),
     new Date('2023-04-25'),
     new Date('2023-04-26')
-  ]
+  ];
 
   const vacationDays = getVacationDays(startDate, endDate, holidays)
   
