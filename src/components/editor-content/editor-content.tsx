@@ -98,9 +98,13 @@ const EditorContent: React.FC<Props> = () => {
     }
 
     try {
+
+      const selectedEndDateWithOffset = new Date((selectedEndDate as Date).getTime());
+      selectedEndDateWithOffset.setHours(selectedEndDateWithOffset.getHours() + 3);
+
       const dailyEntries = await Api.getDailyEntriesApi(accessToken?.access_token).listDailyEntries({
         personId: person.id,
-        before: selectedEndDate as Date || undefined,
+        before: selectedEndDateWithOffset || undefined,
         after: selectedStartDate as Date
       });
 
