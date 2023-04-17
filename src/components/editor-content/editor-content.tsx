@@ -56,7 +56,7 @@ const EditorContent: React.FC<Props> = () => {
   const [ datePickerViewVacation, setDatePickerViewVacation ] = useState<CalendarPickerView>("day");
   const [ selectedStartDate, setSelectedStartDate ] = useState<unknown>(new Date());
   const [ selectedVacationStartDate, setSelectedVacationStartDate ] = useState<any>(new Date());
-  const [ selectedVacationEndDate, setSelectedVacationEndDate ] = useState<any>(new Date())
+  const [ selectedVacationEndDate, setSelectedVacationEndDate ] = useState<any>(new Date());
   const [ selectedEndDate, setSelectedEndDate ] = useState<unknown>(null);
   const [ startWeek, setStartWeek ] = React.useState<number | null>(null);
   const [ endWeek, setEndWeek ] = React.useState<number | null>(null);
