@@ -12,7 +12,6 @@ import fiLocale from "date-fns/locale/fi";
 import enLocale from "date-fns/locale/en-US";
 import useTestDateRangePickerStyles from "styles/generics/date-range-picker/test-date-range-picker";
 
-
 /**
  * Component properties
  */
