@@ -909,7 +909,7 @@ const EditorContent: React.FC<Props> = () => {
         </AccordionDetails>
     </Accordion>
     )
-  }
+  };
 
   /**
    * 
