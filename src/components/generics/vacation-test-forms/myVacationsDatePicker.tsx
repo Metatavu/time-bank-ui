@@ -1,5 +1,4 @@
-/* eslint-disable */ 
-import React from 'react';
+import React from "react";
 import { LocalizationProvider, DatePicker, CalendarPickerView } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { Box, TextField } from "@mui/material";
@@ -12,38 +11,42 @@ interface Props {
   selectedVacationStartDate: Date;
   selectedVacationEndDate: Date;
   datePickerView: CalendarPickerView;
-  onStartDateChange: (value: any) => void;
-  onEndDateChange: (value: any) => void;
+  onStartDateChange: (value: Date | null) => void;
+  onEndDateChange: (value: Date | null) => void;
 }
 
+/**
+ * Returns MyVacationDatePicker
+ * @param param0 
+ */
 const MyVacationsDatePicker: React.FC<Props> = ({
   dateFormat,
   selectedVacationStartDate,
   selectedVacationEndDate,
   datePickerView,
   onStartDateChange,
-  onEndDateChange,
+  onEndDateChange
 }) => {
-  const [ pickerLocale, setPickerLocale ] = React.useState(enLocale);
+  const pickerLocale = React.useState(enLocale);
 
   /**
    * Renders start date picker 
    */
-    const renderMyVacationsDatePicker = () => {
-      return (
-        <LocalizationProvider dateAdapter={ AdapterDateFns } adapterLocale={ pickerLocale }>
-          <DatePicker
-            disablePast
-            views={[ datePickerView ]}
-            inputFormat={ dateFormat }
-            label={`Start date`}
-            value={ selectedVacationStartDate }
-            onChange={ onStartDateChange }
-            renderInput={ params => <TextField {...params}/>}
-          />
-        </LocalizationProvider>
-      );
-  } 
+  const renderMyVacationsDatePicker = () => {
+    return (
+      <LocalizationProvider dateAdapter={ AdapterDateFns } adapterLocale={ pickerLocale }>
+        <DatePicker
+          disablePast
+          views={[ datePickerView ]}
+          inputFormat={ dateFormat }
+          label="Start date"
+          value={ selectedVacationStartDate }
+          onChange={ onStartDateChange }
+          renderInput={ params => <TextField {...params}/>}
+        />
+      </LocalizationProvider>
+    );
+  };
 
   /**
    * Renders end date picker
@@ -54,7 +57,7 @@ const MyVacationsDatePicker: React.FC<Props> = ({
         minDate={selectedVacationStartDate}
         inputFormat={ dateFormat }
         views={ [ datePickerView ] }
-        label={ `End date` }
+        label="End date"
         value={ selectedVacationEndDate }
         onChange={ onEndDateChange }
         renderInput={ params => <TextField {...params}/>}
@@ -65,12 +68,12 @@ const MyVacationsDatePicker: React.FC<Props> = ({
     <>
       <Box>
         <Box display="flex" gap="10px">
-        { renderMyVacationsDatePicker() }
-        { renderMyVacationsEndDate() }
+          { renderMyVacationsDatePicker() }
+          { renderMyVacationsEndDate() }
         </Box>
       </Box>
     </>
   );
-}
+};
 
 export default MyVacationsDatePicker;

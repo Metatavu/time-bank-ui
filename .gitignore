@@ -23,3 +23,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 /src/generated
+
+# mock data
+/src/components/generics/vacation-test-forms/testVacationMockData.json
+/src/components/generics/vacation-test-forms/myVacationMockData.json

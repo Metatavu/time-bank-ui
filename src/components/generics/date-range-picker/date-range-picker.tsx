@@ -17,14 +17,14 @@ import moment from "moment";
  */
 interface Props {
   scope: FilterScopes;
-  dateFormat?: string;
-  selectedStartDate: unknown;
-  selectedEndDate: unknown;
+  dateFormat: string;
+  selectedStartDate: Date;
+  selectedEndDate: Date | null;
   startWeek?: number | null;
   endWeek?: number | null;
   datePickerView: CalendarPickerView;
-  onStartDateChange: (value: unknown) => void;
-  onEndDateChange: (value: unknown) => void;
+  onStartDateChange: (value: Date | null) => void;
+  onEndDateChange: (value: Date | null) => void;
   onStartWeekChange: (weekNumber: number) => void;
   onEndWeekChange: (weekNumber: number) => void;
 }

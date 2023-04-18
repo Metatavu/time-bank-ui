@@ -1,5 +1,4 @@
-/* eslint-disable */ 
-import React from 'react';
+import React from "react";
 import { LocalizationProvider, DatePicker, CalendarPickerView } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { Box, TextField } from "@mui/material";
@@ -16,33 +15,37 @@ interface Props {
   onEndDateChange: (value: any) => void;
 }
 
+/**
+ * Returns TestRangePicker
+ * @param param0 
+ */
 const TestRangePicker: React.FC<Props> = ({
   dateFormat,
   selectedVacationStartDate,
   selectedVacationEndDate,
   datePickerView,
   onStartDateChange,
-  onEndDateChange,
+  onEndDateChange
 }) => {
-  const [ pickerLocale, setPickerLocale ] = React.useState(enLocale);
+  const pickerLocale = React.useState(enLocale);
 
   /**
    * Renders start date picker 
    */
-    const renderStartDatePicker = () => {
-      return (
-        <LocalizationProvider dateAdapter={ AdapterDateFns } adapterLocale={ pickerLocale }>
-          <DatePicker
-            views={[ datePickerView ]}
-            inputFormat={ dateFormat }
-            label={`Start date`}
-            value={ selectedVacationStartDate }
-            onChange={ onStartDateChange }
-            renderInput={ params => <TextField {...params}/>}
-          />
-        </LocalizationProvider>
-      );
-  } 
+  const renderStartDatePicker = () => {
+    return (
+      <LocalizationProvider dateAdapter={ AdapterDateFns } adapterLocale={ pickerLocale }>
+        <DatePicker
+          views={[ datePickerView ]}
+          inputFormat={ dateFormat }
+          label="Start date"
+          value={ selectedVacationStartDate }
+          onChange={ onStartDateChange }
+          renderInput={ params => <TextField {...params}/>}
+        />
+      </LocalizationProvider>
+    );
+  };
 
   /**
    * Renders end date picker
@@ -53,7 +56,7 @@ const TestRangePicker: React.FC<Props> = ({
         minDate={selectedVacationStartDate}
         inputFormat={ dateFormat }
         views={ [ datePickerView ] }
-        label={ `End date` }
+        label="End date"
         value={ selectedVacationEndDate }
         onChange={ onEndDateChange }
         renderInput={ params => <TextField {...params}/>}
@@ -64,12 +67,12 @@ const TestRangePicker: React.FC<Props> = ({
     <>
       <Box>
         <Box display="flex" gap="10px">
-        { renderStartDatePicker() }
-        { renderEndDate() }
+          { renderStartDatePicker() }
+          { renderEndDate() }
         </Box>
       </Box>
     </>
   );
-}
+};
 
 export default TestRangePicker;

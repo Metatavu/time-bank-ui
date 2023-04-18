@@ -5,7 +5,17 @@
     "managementLink": "Management",
     "logout": "Log out",
     "syncData": "Synchronization",
-    "syncDataLoading": "Synchronizing data, please be patient."
+    "syncDataLoading": "Synchronizing data, please be patient.",
+    "myVacations": "My Vacations",
+    "employeeVacationRequests": "Employee Vacation Requests",
+    "requests": "Requests",
+    "vacationType": "Vacation Type",
+    "employee": "Employee",
+    "days": "Days",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "remainingDays": "Remaining Days",
+    "status": "Status"
   },
   
   "generic": {
@@ -16,7 +26,9 @@
     "save": "Save",
     "delete": "Delete",
     "language": "Language",
-    "select": "Select"
+    "select": "Select",
+    "apply": "Apply",
+    "saveChanges": "Save Changes"
   },
 
   "drawerContent": {
@@ -56,7 +68,26 @@
     "selectWeekStart": "Week-start",
     "from": "From",
     "to": "To",
-    "startOnly": "Start only"
+    "startOnly": "Start only",
+    "amountOfChosenVacationDays": "Amount of vacation days spend: ",
+    "vacationType": "Vacation type",
+    "paidLeave": "Paid leave",
+    "maternityLeave": "Maternity leave",
+    "parentalLeave": "Parental leave",
+    "unpaidLeave": "Unpaid leave",
+    "surplusBalance": "Surplus balance",
+    "employee": "Employee",
+    "status": "Status",
+    "applyForVacation": "Apply for vacation",
+    "comment": "Comment: ",
+    "created": "Created: ",
+    "updated": "Updated: ",
+    "projectManager": "Project manager: ",
+    "humanResourcesManager": "Human resources manager: ",
+    "leaveAComment": "Leave a comment",
+    "pending": "Pending",
+    "approved": "Approved",
+    "declined": "Declined"
   },
 
   "managementScreen": {
