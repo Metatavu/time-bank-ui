@@ -113,7 +113,6 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 /**
- * 
  * Expandable row
  */
 const ExpandableRow = (props: { request: ReturnType<typeof createData> }) => {
