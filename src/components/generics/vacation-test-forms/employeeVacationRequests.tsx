@@ -168,9 +168,6 @@ const renderEmployeeVacationRequests = () => {
         onChange={handleEmployeeChange}
         label={ strings.editorContent.employee }
       >
-        <MenuItem value="">
-          <em>None</em>
-        </MenuItem>
         {Object.values(vacationRequests).map(request => (
           <MenuItem value={request.employee}>{request.employee}</MenuItem>
         ))}
@@ -218,9 +215,6 @@ const renderEmployeeVacationRequests = () => {
         onChange={handleVacationTypeChange}
         label={ strings.editorContent.vacationType }
       >
-        <MenuItem value="">
-          <em>None</em>
-        </MenuItem>
         <MenuItem value="Paid leave">{ strings.editorContent.paidLeave }</MenuItem>
         <MenuItem value="Maternity leave">{ strings.editorContent.maternityLeave }</MenuItem>
         <MenuItem value="Parental leave">{ strings.editorContent.parentalLeave }</MenuItem>
@@ -254,9 +248,6 @@ const renderEmployeeVacationRequests = () => {
         onChange={handleStatusChange}
         label={ strings.editorContent.status }
       >
-        <MenuItem value="">
-          <em>None</em>
-        </MenuItem>
         <MenuItem value="Pending">{ strings.editorContent.pending }</MenuItem>
         <MenuItem value="Approved">{ strings.editorContent.approved }</MenuItem>
         <MenuItem value="Declined">{ strings.editorContent.declined }</MenuItem>
