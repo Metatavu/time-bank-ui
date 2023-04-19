@@ -23,6 +23,10 @@ interface Props {
   startWeek?: number | null;
   endWeek?: number | null;
   datePickerView: CalendarPickerView;
+  minStartDate?: Date;
+  maxStartDate?: Date;
+  minEndDate?: Date;
+  maxEndDate?: Date;
   onStartDateChange: (value: Date | null) => void;
   onEndDateChange: (value: Date | null) => void;
   onStartWeekChange: (weekNumber: number) => void;
@@ -40,6 +44,10 @@ const DateRangePicker: React.FC<Props> = ({
   startWeek,
   endWeek,
   datePickerView,
+  minStartDate,
+  maxStartDate,
+  minEndDate,
+  maxEndDate,
   onStartDateChange,
   onEndDateChange,
   onStartWeekChange,
@@ -161,8 +169,8 @@ const DateRangePicker: React.FC<Props> = ({
         <DatePicker
           views={[ datePickerView ]}
           inputFormat={ dateFormat }
-          minDate={ new Date(2021, 7, 31) }
-          maxDate={ todayDate }
+          minDate={ minStartDate }
+          maxDate={ maxStartDate }
           label={ strings.editorContent.filterStartingDate }
           value={ selectedStartDate }
           onChange={ onStartDateChange }
@@ -211,8 +219,8 @@ const DateRangePicker: React.FC<Props> = ({
       <DatePicker
         inputFormat={ dateFormat }
         views={ [ datePickerView ] }
-        minDate={ selectedStartDate }
-        maxDate={ todayDate }
+        minDate={ minEndDate }
+        maxDate={ maxEndDate }
         label={ strings.editorContent.filterEndingDate }
         value={ selectedEndDate }
         onChange={ onEndDateChange }

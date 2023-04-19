@@ -6,9 +6,10 @@ import vacationRequests from "./testVacationMockData.json";
 import React, { useState } from "react";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import DateFilterPicker from "../date-range-picker/test-date-range-picker";
 import { CalendarPickerView } from "@mui/x-date-pickers";
 import strings from "localization/strings";
+import DateRangePicker from "../date-range-picker/date-range-picker";
+import { FilterScopes } from "types";
 
 /**
  * interface type request
@@ -258,9 +259,14 @@ const renderEmployeeVacationRequests = () => {
   return (
     <Box className={classes.employeeVacationRequests}>
       <Box>
-        <Typography variant="h2" padding={theme.spacing(2)}>
-          { strings.header.requests }
-        </Typography>
+        <Box sx={{
+          float: "left", marginBottom: "10px"
+        }}
+        >
+          <Typography variant="h2" padding={theme.spacing(2)}>
+            { strings.header.requests }
+          </Typography>
+        </Box>
         <Box sx={{
           float: "right", paddingRight: "15px", marginBottom: "10px"
         }}
@@ -268,22 +274,25 @@ const renderEmployeeVacationRequests = () => {
           { renderVacationType() }
           { renderEmployeeSelection() }
           { renderRequestStatus() }
-          <DateFilterPicker
-            dateFormat={dateFormat}
-            selectedFilteredStartDate={selectedVacationStartDate}
-            selectedFilteredEndDate={selectedVacationEndDate}
-            datePickerView={datePickerView}
-            onStartDateChange={handleVacationStartDateChange}
-            onEndDateChange={handleVacationEndDateChange}
-            // eslint-disable-next-line react/jsx-no-bind, func-names
-            onStartWeekChange={function (): void {
-              throw new Error("Function not implemented.");
-            } }
-            // eslint-disable-next-line react/jsx-no-bind, func-names
-            onEndWeekChange={function (): void {
-              throw new Error("Function not implemented.");
-            } }
-          />
+          <Box className={ classes.datePickers }>
+            <DateRangePicker
+              scope={FilterScopes.DATE}
+              dateFormat={dateFormat}
+              selectedStartDate={selectedVacationStartDate}
+              selectedEndDate={selectedVacationEndDate}
+              datePickerView={datePickerView}
+              onStartDateChange={handleVacationStartDateChange}
+              onEndDateChange={handleVacationEndDateChange}
+              // eslint-disable-next-line react/jsx-no-bind, func-names
+              onStartWeekChange={function (): void {
+                throw new Error("Function not implemented.");
+              } }
+              // eslint-disable-next-line react/jsx-no-bind, func-names
+              onEndWeekChange={function (): void {
+                throw new Error("Function not implemented.");
+              } }
+            />
+          </Box>
         </Box>
       </Box>
       <Box>

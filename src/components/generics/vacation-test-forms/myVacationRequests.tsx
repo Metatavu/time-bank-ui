@@ -8,8 +8,9 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { CalendarPickerView } from "@mui/x-date-pickers";
 import Holidays from "date-holidays";
-import DateFilterPicker from "../date-range-picker/test-date-range-picker";
 import strings from "localization/strings";
+import { FilterScopes } from "types";
+import DateRangePicker from "../date-range-picker/date-range-picker";
 
 interface Request {
   id: number;
@@ -215,22 +216,27 @@ const renderVacationRequests = () => {
                     <>
                       <TableRow>
                         <TableCell>
-                          <DateFilterPicker
-                            dateFormat={dateFormat}
-                            selectedFilteredStartDate={selectedVacationStartDate}
-                            selectedFilteredEndDate={selectedVacationEndDate}
-                            datePickerView={datePickerView}
-                            onStartDateChange={handleVacationStartDateChange}
-                            onEndDateChange={handleVacationEndDateChange}
-                            // eslint-disable-next-line react/jsx-no-bind, func-names
-                            onStartWeekChange={function (): void {
-                              throw new Error("Function not implemented.");
-                            }}
-                            // eslint-disable-next-line react/jsx-no-bind, func-names
-                            onEndWeekChange={function (): void {
-                              throw new Error("Function not implemented.");
-                            }}
-                          />
+                          <Box className={ classes.datePickers }>
+                            <DateRangePicker
+                              scope={FilterScopes.DATE}
+                              dateFormat={dateFormat}
+                              selectedStartDate={selectedVacationStartDate}
+                              selectedEndDate={selectedVacationEndDate}
+                              datePickerView={datePickerView}
+                              minStartDate={ new Date() }
+                              minEndDate={ selectedVacationStartDate }
+                              onStartDateChange={handleVacationStartDateChange}
+                              onEndDateChange={handleVacationEndDateChange}
+                              // eslint-disable-next-line react/jsx-no-bind, func-names
+                              onStartWeekChange={function (): void {
+                                throw new Error("Function not implemented.");
+                              }}
+                              // eslint-disable-next-line react/jsx-no-bind, func-names
+                              onEndWeekChange={function (): void {
+                                throw new Error("Function not implemented.");
+                              }}
+                            />
+                          </Box>
                         </TableCell>
                         <TableCell>
                           {renderVacationType()}
