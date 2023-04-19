@@ -61,9 +61,6 @@ const renderVacationRequests = () => {
         onChange={handleVacationTypeChange}
         label={ strings.editorContent.vacationType }
       >
-        <MenuItem value="">
-          <em>None</em>
-        </MenuItem>
         <MenuItem value="Paid leave">{ strings.editorContent.paidLeave }</MenuItem>
         <MenuItem value="Maternity leave">{ strings.editorContent.maternityLeave }</MenuItem>
         <MenuItem value="Parental leave">{ strings.editorContent.parentalLeave }</MenuItem>
