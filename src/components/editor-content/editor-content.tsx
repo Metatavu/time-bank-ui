@@ -22,7 +22,6 @@ import vacationDaysProcess from "utils/vacation-data-utils";
 import { selectAuth } from "features/auth/auth-slice";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import Holidays from "date-holidays";
-import DateFilterPicker from "components/generics/date-range-picker/test-date-range-picker";
 import renderVacationRequests from "components/generics/vacation-test-forms/myVacationRequests";
 import renderEmployeeVacationRequests from "components/generics/vacation-test-forms/employeeVacationRequests";
 
@@ -435,6 +434,10 @@ const EditorContent: React.FC<Props> = () => {
           startWeek={startWeek}
           endWeek={endWeek}
           datePickerView={datePickerView}
+          minStartDate={new Date(2021, 7, 31)}
+          maxStartDate={ new Date() }
+          minEndDate={selectedStartDate}
+          maxEndDate={ new Date() }
           onStartDateChange={handleStartDateChange}
           onEndDateChange={handleEndDateChange}
           onStartWeekChange={handleStartWeekChange}
@@ -851,11 +854,14 @@ const EditorContent: React.FC<Props> = () => {
         <AccordionDetails
           className={ classes.vacationInfoContent }
         >
-          <DateFilterPicker
+          <DateRangePicker
+            scope={FilterScopes.DATE}
             dateFormat={dateVacationFormat}
-            selectedFilteredStartDate={selectedVacationStartDate}
-            selectedFilteredEndDate={selectedVacationEndDate}
+            selectedStartDate={selectedVacationStartDate}
+            selectedEndDate={selectedVacationEndDate}
             datePickerView={datePickerViewVacation}
+            minStartDate={ new Date() }
+            minEndDate={ selectedVacationStartDate }
             onStartDateChange={handleVacationStartDateChange}
             onEndDateChange={handleVacationEndDateChange}
             onStartWeekChange={handleStartWeekChange}
