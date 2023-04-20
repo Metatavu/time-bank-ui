@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { AppBar, Box, Drawer, Toolbar, Typography, Select, MenuItem, Button, Dialog, CircularProgress, IconButton } from "@mui/material";
 import useAppLayoutStyles from "styles/layouts/app-layout";
@@ -41,10 +41,10 @@ const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children
   const { person } = useAppSelector(selectPerson);
   const { accessToken } = useAppSelector(selectAuth);
   const { locale } = useAppSelector(selectLocale);
-  const [ syncingData, setSyncingData ] = React.useState(false);
-  const errorContext = React.useContext(ErrorContext);
-  const syncOrUpdateContext = React.useContext(SyncOrUpdateContext);
-  const [ syncSelection, setSyncSelection ] = React.useState(false);
+  const [ syncingData, setSyncingData ] = useState(false);
+  const errorContext = useContext(ErrorContext);
+  const syncOrUpdateContext = useContext(SyncOrUpdateContext);
+  const [ syncSelection, setSyncSelection ] = useState(false);
   const [ selectedStartDate, setSelectedStartDate ] = useState<unknown>(new Date(yesterday));
 
   /**

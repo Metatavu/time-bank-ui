@@ -1,4 +1,4 @@
-import React from "react";
+import { useLayoutEffect } from "react";
 import { useAppDispatch, useAppSelector } from "app/hooks";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { selectLocale, setLocale } from "features/locale/locale-slice";
@@ -9,11 +9,11 @@ import ManagementScreen from "./screens/management-screen";
 /**
  * App component
  */
-const App: React.FC = () => {
+const App = () => {
   const dispatch = useAppDispatch();
   const { locale } = useAppSelector(selectLocale);
 
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     dispatch(setLocale(locale));
     // eslint-disable-next-line
   }, []);

@@ -1,4 +1,4 @@
-import React from "react";
+import { useState, useContext, useEffect } from "react";
 import AppLayout from "../layouts/app-layout";
 import useManagementScreenStyles from "styles/screens/management-screen";
 import { Toolbar, Box, CircularProgress, Paper, Typography, Divider, Button, TextField, Tooltip, Grid, Card } from "@mui/material";
@@ -29,21 +29,21 @@ import CloseIcon from "@mui/icons-material/Close";
 /**
  * Management screen screen component
  */
-const ManagementScreen: React.FC = () => {
+const ManagementScreen = () => {
   const dispatch = useAppDispatch();
 
   const { accessToken } = useAppSelector(selectAuth);
   const classes = useManagementScreenStyles();
-  const [ isLoading, setIsLoading ] = React.useState(false);
-  const [ personsTotalTime, setPersonsTotalTime ] = React.useState<PersonWithTotalTime[]>([]);
-  const [ displayedPersonsTotalTime, setDisplayedPersonsTotalTime ] = React.useState<PersonWithTotalTime[]>([]);
-  const [ selectedPersonWithTotalTime, setSelectedPersonWithTotalTime ] = React.useState<PersonWithTotalTime | undefined>(undefined);
-  const [ searchInput, setSearchInput ] = React.useState("");
-  const [ billableHoursUpdate, setBillableHoursUpdate ] = React.useState(false);
-  const [ errorState, setErrorState ] = React.useState(false);
-  const [ newBillablePercentage, setNewBillablePercentage ] = React.useState<number>(0);
-  const context = React.useContext(ErrorContext);
-  const syncOrUpdateContext = React.useContext(SyncOrUpdateContext);
+  const [ isLoading, setIsLoading ] = useState(false);
+  const [ personsTotalTime, setPersonsTotalTime ] = useState<PersonWithTotalTime[]>([]);
+  const [ displayedPersonsTotalTime, setDisplayedPersonsTotalTime ] = useState<PersonWithTotalTime[]>([]);
+  const [ selectedPersonWithTotalTime, setSelectedPersonWithTotalTime ] = useState<PersonWithTotalTime | undefined>(undefined);
+  const [ searchInput, setSearchInput ] = useState("");
+  const [ billableHoursUpdate, setBillableHoursUpdate ] = useState(false);
+  const [ errorState, setErrorState ] = useState(false);
+  const [ newBillablePercentage, setNewBillablePercentage ] = useState<number>(0);
+  const context = useContext(ErrorContext);
+  const syncOrUpdateContext = useContext(SyncOrUpdateContext);
   const history = useHistory();
 
   /**
@@ -132,7 +132,7 @@ const ManagementScreen: React.FC = () => {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!accessToken) {
       return;
     }
