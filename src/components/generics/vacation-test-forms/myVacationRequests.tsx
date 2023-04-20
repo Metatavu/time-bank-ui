@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Collapse, FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, Button, Box } from "@mui/material";
 import useEditorContentStyles from "styles/editor-content/editor-content";
 import theme from "theme/theme";
@@ -12,6 +12,9 @@ import strings from "localization/strings";
 import { FilterScopes } from "types";
 import DateRangePicker from "../date-range-picker/date-range-picker";
 
+/**
+ * interface type request
+ */
 interface Request {
   id: number;
   vacationType: string;
@@ -28,22 +31,23 @@ interface Request {
  */
 const renderVacationRequests = () => {
   const classes = useEditorContentStyles();
-  const [dateFormat] = useState<string>("yyyy.MM.dd");
-  const [selectedVacationStartDate, setSelectedVacationStartDate] = useState<Date>(new Date());
-  const [selectedVacationEndDate, setSelectedVacationEndDate] = useState<Date>(new Date());
-  const [openRows, setOpenRows] = useState<boolean[]>([]);
-  const [newTextContent, setNewTextContent] = useState("");
-  const [newVacationType, setNewVacationType] = useState("");
-  const [datePickerView] = useState<CalendarPickerView>("day");
-  const [textContent] = useState("");
-  const [vacationType] = useState("");
+  const [ dateFormat ] = useState("yyyy.MM.dd");
+  const [ selectedVacationStartDate, setSelectedVacationStartDate ] = useState(new Date());
+  const [ selectedVacationEndDate, setSelectedVacationEndDate ] = useState(new Date());
+  const [ openRows, setOpenRows ] = useState<boolean[]>([]);
+  const [ newTextContent, setNewTextContent ] = useState("");
+  const [ newVacationType, setNewVacationType ] = useState("");
+  const [ datePickerView ] = useState<CalendarPickerView>("day");
+  const [ textContent ] = useState("");
+  const [ vacationType ] = useState("");
 
   /**
   * Handle vacation type 
+  * @param event
   */
   const handleVacationTypeChange = (event: SelectChangeEvent) => {
     const contentValue = event.target.value;
-    setNewVacationType(contentValue as string);
+    setNewVacationType(contentValue);
   };
 
   /**
@@ -53,13 +57,15 @@ const renderVacationRequests = () => {
     <FormControl
       variant="standard"
       sx={{
-        m: 1, minWidth: 165, marginBottom: 4
+        margin: 1,
+        minWidth: 165,
+        marginBottom: 4
       }}
     >
       <InputLabel>{ strings.editorContent.vacationType }</InputLabel>
       <Select
-        value={newVacationType}
-        onChange={handleVacationTypeChange}
+        value={ newVacationType }
+        onChange={ handleVacationTypeChange }
         label={ strings.editorContent.vacationType }
       >
         <MenuItem value="Paid leave">{ strings.editorContent.paidLeave }</MenuItem>
@@ -73,6 +79,7 @@ const renderVacationRequests = () => {
 
   /**
   * Handle vacation comment box content
+  * @param event
   */
   const handleVacationCommentContent = (event: React.ChangeEvent<HTMLInputElement>) => {
     const contentValue = event.target.value;
@@ -89,17 +96,17 @@ const renderVacationRequests = () => {
       maxRows={5}
       label={ strings.editorContent.leaveAComment }
       variant="outlined"
-      value={newTextContent}
-      onChange={handleVacationCommentContent}
+      value={ newTextContent }
+      onChange={ handleVacationCommentContent }
     />
   );
 
   /**
-* Handle vacation apply button
-*/
+  * Handle vacation apply button
+  */
   const handleVacationApplyButton = () => {
+    // TODO: functionality to this
     return (
-      // eslint-disable-next-line no-console
       console.log(`this is START DATE ${selectedVacationStartDate} and this is END DATE${selectedVacationEndDate} and this is TEXT CONTENT ${textContent}. Vacation type ${vacationType}`)
     );
   };
@@ -114,7 +121,9 @@ const renderVacationRequests = () => {
       onClick={handleVacationApplyButton}
     >
       <Typography style={{
-        fontWeight: 600, color: "white", fontSize: 10
+        fontWeight: 600,
+        color: "white",
+        fontSize: 10
       }}
       >
         { strings.generic.saveChanges }
@@ -165,9 +174,16 @@ const renderVacationRequests = () => {
     date && setSelectedVacationEndDate(date);
   };
 
+  /**
+   * Method to delete vacation request
+   */
+  const deleteRequest = () => {
+    // TODO: not yet implemented
+  };
+
   return (
-    <Box className={classes.employeeVacationRequests}>
-      <Typography variant="h2" padding={theme.spacing(2)}>
+    <Box className={ classes.employeeVacationRequests }>
+      <Typography variant="h2" padding={ theme.spacing(2) }>
         { strings.header.requests}
       </Typography>
       <TableContainer style={{ height: 300, width: "100%" }}>
@@ -187,16 +203,15 @@ const renderVacationRequests = () => {
           <TableBody>
             {Object.values(myVacationRequests).map((request: Request, index: number) => (
               <>
-                <TableRow key={request.id}>
-                  <TableCell style={{ paddingLeft: "3em" }}>{request.vacationType}</TableCell>
+                <TableRow key={ request.id }>
+                  <TableCell style={{ paddingLeft: "3em" }}>{ request.vacationType }</TableCell>
                   <TableCell>
-                    {request.employee}
-                    {" "}
+                    { request.employee }
                   </TableCell>
-                  <TableCell>{request.days}</TableCell>
-                  <TableCell>{request.startDate}</TableCell>
-                  <TableCell>{request.endDate}</TableCell>
-                  <TableCell>{request.status}</TableCell>
+                  <TableCell>{ request.days }</TableCell>
+                  <TableCell>{ request.startDate }</TableCell>
+                  <TableCell>{ request.endDate }</TableCell>
+                  <TableCell>{ request.status }</TableCell>
                   <TableCell>
                     <IconButton
                       aria-label="expand row"
@@ -207,52 +222,50 @@ const renderVacationRequests = () => {
                         setOpenRows(newOpenRows);
                       }}
                     >
-                      {openRows[index] ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
+                      { openRows[index] ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/> }
                     </IconButton>
                   </TableCell>
                 </TableRow>
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
-                  <Collapse in={openRows[index]} timeout="auto" unmountOnExit>
+                  <Collapse in={ openRows[index] } timeout="auto" unmountOnExit>
                     <>
                       <TableRow>
                         <TableCell>
                           <Box className={ classes.datePickers }>
                             <DateRangePicker
-                              scope={FilterScopes.DATE}
-                              dateFormat={dateFormat}
-                              selectedStartDate={selectedVacationStartDate}
-                              selectedEndDate={selectedVacationEndDate}
-                              datePickerView={datePickerView}
+                              scope={ FilterScopes.DATE }
+                              dateFormat={ dateFormat }
+                              selectedStartDate={ selectedVacationStartDate }
+                              selectedEndDate={ selectedVacationEndDate }
+                              datePickerView={ datePickerView }
                               minStartDate={ new Date() }
                               minEndDate={ selectedVacationStartDate }
-                              onStartDateChange={handleVacationStartDateChange}
-                              onEndDateChange={handleVacationEndDateChange}
-                              // eslint-disable-next-line react/jsx-no-bind, func-names
-                              onStartWeekChange={function (): void {
+                              onStartDateChange={ handleVacationStartDateChange }
+                              onEndDateChange={ handleVacationEndDateChange }
+                              onStartWeekChange={() => {
                                 throw new Error("Function not implemented.");
-                              }}
-                              // eslint-disable-next-line react/jsx-no-bind, func-names
-                              onEndWeekChange={function (): void {
+                              } }
+                              onEndWeekChange={() => {
                                 throw new Error("Function not implemented.");
-                              }}
+                              } }
                             />
                           </Box>
                         </TableCell>
                         <TableCell>
-                          {renderVacationType()}
+                          { renderVacationType() }
                         </TableCell>
                         <TableCell>
-                          {renderVacationDaysSpent()}
-                          {renderVacationCommentBox()}
+                          { renderVacationDaysSpent() }
+                          { renderVacationCommentBox() }
                           <Box display="flex" justifyContent="center">
-                            {renderVacationApplyButton()}
+                            { renderVacationApplyButton() }
                           </Box>
                         </TableCell>
                         <TableCell>
                           <IconButton
-                            // onClick={ handleStartDateOnlyClick }
+                            onClick={ deleteRequest }
                             aria-label="delete"
-                            className={classes.deleteButton}
+                            className={ classes.deleteButton }
                             size="large"
                           >
                             <DeleteIcon fontSize="medium"/>
