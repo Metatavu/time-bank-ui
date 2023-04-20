@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-shadow */
 import { Box, Button, Collapse, FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, styled, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import useEditorContentStyles from "styles/editor-content/editor-content";
 import theme from "theme/theme";
 import vacationRequests from "./testVacationMockData.json";
-import React, { useState } from "react";
+import { useState } from "react";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { CalendarPickerView } from "@mui/x-date-pickers";
@@ -33,7 +32,7 @@ interface Request {
 }
 
 /**
- * Styled expandable tablerow
+ * Styled expandable table row
  */
 const StyledTableRow = styled(TableRow)(() => ({
   "&:nth-of-type(odd)": {
@@ -46,7 +45,7 @@ const StyledTableRow = styled(TableRow)(() => ({
 }));
 
 /**
- * Styled expandable tablecell
+ * Styled expandable table cell
  */
 const StyledTableCell = styled(TableCell)(() => ({
   [`&.${tableCellClasses.head}`]: {
@@ -62,26 +61,45 @@ const StyledTableCell = styled(TableCell)(() => ({
   "& .accepted": {
     color: "#45cf36"
   },
+  
   // eslint-disable-next-line no-restricted-globals
   ...(status === "ACCEPTED" ? { "&.accepted": {} } : { "&.pending": {} })
 }));
 
 /**
- * Expandable row
+ * 
+ * @param id
+ * @param vacationType
+ * @param employee
+ * @param days
+ * @param startDate
+ * @param endDate
+ * @param remainingDays
+ * @param status
+ * @returns Expandable row
  */
-const ExpandableRow: React.FC<Request> = ({ request }) => {
+const ExpandableRow = (
+  { request: { id,
+    vacationType,
+    employee,
+    days,
+    startDate,
+    endDate,
+    remainingDays,
+    status } }: Request
+) => {
   const [open, setOpen] = useState(false);
 
   return (
     <>
-      <StyledTableRow key={request.id}>
-        <StyledTableCell component="th" scope="row">{request.vacationType}</StyledTableCell>
-        <StyledTableCell>{request.employee}</StyledTableCell>
-        <StyledTableCell>{request.days}</StyledTableCell>
-        <StyledTableCell>{request.startDate}</StyledTableCell>
-        <StyledTableCell>{request.endDate}</StyledTableCell>
-        <StyledTableCell>{request.remainingDays}</StyledTableCell>
-        <StyledTableCell sx={{ "&.pending": { color: "#FF493C" }, "&.accepted": { color: "#45cf36" } }} className={request.status === "ACCEPTED" ? "accepted" : "pending"}>{request.status}</StyledTableCell>
+      <StyledTableRow key={ id }>
+        <StyledTableCell component="th" scope="row">{ vacationType }</StyledTableCell>
+        <StyledTableCell>{ employee }</StyledTableCell>
+        <StyledTableCell>{ days }</StyledTableCell>
+        <StyledTableCell>{ startDate }</StyledTableCell>
+        <StyledTableCell>{ endDate }</StyledTableCell>
+        <StyledTableCell>{ remainingDays }</StyledTableCell>
+        <StyledTableCell sx={{ "&.pending": { color: "#FF493C" }, "&.accepted": { color: "#45cf36" } }} className={status === "ACCEPTED" ? "accepted" : "pending"}>{ status }</StyledTableCell>
         <StyledTableCell>
           <IconButton
             aria-label="expand row"
@@ -94,7 +112,7 @@ const ExpandableRow: React.FC<Request> = ({ request }) => {
       </StyledTableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
+          <Collapse in={ open } timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1, width: "100%" }}>
               <Table size="small" aria-label="purchases">
                 <TableHead>
@@ -111,12 +129,12 @@ const ExpandableRow: React.FC<Request> = ({ request }) => {
                 </TableHead>
                 <TableBody>
                   {Object.values(vacationRequests).map(request => (
-                    <TableRow key={request.id}>
-                      <TableCell component="th" scope="row">{request.comment}</TableCell>
-                      <TableCell>{request.created}</TableCell>
-                      <TableCell>{request.updated}</TableCell>
-                      <TableCell>{request.projectManager}</TableCell>
-                      <TableCell>{request.humanResourcesManager}</TableCell>
+                    <TableRow key={ request.id }>
+                      <TableCell component="th" scope="row">{ request.comment }</TableCell>
+                      <TableCell>{ request.created }</TableCell>
+                      <TableCell>{ request.updated }</TableCell>
+                      <TableCell>{ request.projectManager }</TableCell>
+                      <TableCell>{ request.humanResourcesManager }</TableCell>
                       <TableCell/>
                       <TableCell align="right"><Button variant="outlined" color="error" sx={{ color: "#F9473B" }}>{ strings.editorContent.declined }</Button></TableCell>
                       <TableCell align="right"><Button variant="outlined" color="success" sx={{ color: "green" }}>{ strings.editorContent.approved }</Button></TableCell>
@@ -140,17 +158,18 @@ const renderEmployeeVacationRequests = () => {
   const [ status, setStatus ] = useState("");
   const [ employee, setEmployee ] = useState("");
   const [ vacationType, setVacationType ] = useState("");
-  const [ dateFormat ] = useState<string>("yyyy.MM.dd");
+  const [ dateFormat ] = useState("yyyy.MM.dd");
   const [ datePickerView ] = useState<CalendarPickerView>("day");
-  const [ selectedVacationStartDate, setSelectedVacationStartDate ] = useState<Date>(new Date());
-  const [ selectedVacationEndDate, setSelectedVacationEndDate ] = useState<Date>(new Date());
+  const [ selectedVacationStartDate, setSelectedVacationStartDate ] = useState(new Date());
+  const [ selectedVacationEndDate, setSelectedVacationEndDate ] = useState(new Date());
 
   /**
    * Handle employee change
+   * @param event select employee
    */
   const handleEmployeeChange = (event: SelectChangeEvent) => {
     const contentValue = event.target.value;
-    setEmployee(contentValue as string);
+    setEmployee(contentValue);
   };
 
   /**
@@ -160,17 +179,19 @@ const renderEmployeeVacationRequests = () => {
     <FormControl
       variant="standard"
       sx={{
-        m: 1, minWidth: 165, marginBottom: 4
+        margin: 1,
+        minWidth: 165,
+        marginBottom: 4
       }}
     >
       <InputLabel>{ strings.editorContent.employee }</InputLabel>
       <Select
-        value={employee}
-        onChange={handleEmployeeChange}
+        value={ employee }
+        onChange={ handleEmployeeChange }
         label={ strings.editorContent.employee }
       >
         {Object.values(vacationRequests).map(request => (
-          <MenuItem value={request.employee}>{request.employee}</MenuItem>
+          <MenuItem value={ request.employee }>{ request.employee }</MenuItem>
         ))}
       </Select>
     </FormControl>
@@ -197,7 +218,7 @@ const renderEmployeeVacationRequests = () => {
    */
   const handleVacationTypeChange = (event: SelectChangeEvent) => {
     const contentValue = event.target.value;
-    setVacationType(contentValue as string);
+    setVacationType(contentValue);
   };
 
   /**
@@ -207,13 +228,15 @@ const renderEmployeeVacationRequests = () => {
     <FormControl
       variant="standard"
       sx={{
-        m: 1, minWidth: 165, marginBottom: 4
+        margin: 1,
+        minWidth: 165,
+        marginBottom: 4
       }}
     >
       <InputLabel>{ strings.editorContent.vacationType }</InputLabel>
       <Select
-        value={vacationType}
-        onChange={handleVacationTypeChange}
+        value={ vacationType }
+        onChange={ handleVacationTypeChange }
         label={ strings.editorContent.vacationType }
       >
         <MenuItem value="Paid leave">{ strings.editorContent.paidLeave }</MenuItem>
@@ -230,7 +253,7 @@ const renderEmployeeVacationRequests = () => {
    */
   const handleStatusChange = (event: SelectChangeEvent) => {
     const contentValue = event.target.value;
-    setStatus(contentValue as string);
+    setStatus(contentValue);
   };
 
   /**
@@ -245,7 +268,7 @@ const renderEmployeeVacationRequests = () => {
     >
       <InputLabel>{ strings.editorContent.status }</InputLabel>
       <Select
-        value={status}
+        value={ status }
         onChange={handleStatusChange}
         label={ strings.editorContent.status }
       >
@@ -268,7 +291,9 @@ const renderEmployeeVacationRequests = () => {
           </Typography>
         </Box>
         <Box sx={{
-          float: "right", paddingRight: "15px", marginBottom: "10px"
+          float: "right",
+          paddingRight: "15px",
+          marginBottom: "10px"
         }}
         >
           { renderVacationType() }
@@ -276,19 +301,17 @@ const renderEmployeeVacationRequests = () => {
           { renderRequestStatus() }
           <Box className={ classes.datePickers }>
             <DateRangePicker
-              scope={FilterScopes.DATE}
-              dateFormat={dateFormat}
-              selectedStartDate={selectedVacationStartDate}
-              selectedEndDate={selectedVacationEndDate}
-              datePickerView={datePickerView}
-              onStartDateChange={handleVacationStartDateChange}
-              onEndDateChange={handleVacationEndDateChange}
-              // eslint-disable-next-line react/jsx-no-bind, func-names
-              onStartWeekChange={function (): void {
+              scope={ FilterScopes.DATE }
+              dateFormat={ dateFormat }
+              selectedStartDate={ selectedVacationStartDate }
+              selectedEndDate={ selectedVacationEndDate }
+              datePickerView={ datePickerView }
+              onStartDateChange={ handleVacationStartDateChange }
+              onEndDateChange={ handleVacationEndDateChange }
+              onStartWeekChange={() => {
                 throw new Error("Function not implemented.");
               } }
-              // eslint-disable-next-line react/jsx-no-bind, func-names
-              onEndWeekChange={function (): void {
+              onEndWeekChange={() => {
                 throw new Error("Function not implemented.");
               } }
             />
@@ -312,7 +335,7 @@ const renderEmployeeVacationRequests = () => {
             </TableHead>
             <TableBody>
               {Object.values(vacationRequests).map(request => (
-                <ExpandableRow key={request.id} request={request}/>
+                <ExpandableRow key={ request.id } request={ request }/>
               ))}
             </TableBody>
           </Table>
