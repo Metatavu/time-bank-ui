@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState, useContext, useEffect } from "react";
 import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, IconButton, List, ListItem, Tab, Button, InputLabel, Select, SelectChangeEvent, FormControl } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { CalendarPickerView } from "@mui/x-date-pickers";
@@ -26,17 +26,9 @@ import renderVacationRequests from "components/generics/vacation-test-forms/myVa
 import renderEmployeeVacationRequests from "components/generics/vacation-test-forms/employeeVacationRequests";
 
 /**
-* Component properties
-*/
-interface Props {
-}
-
-/**
 * Application editor content component
-*
-* @param props component properties
 */
-const EditorContent: React.FC<Props> = () => {
+const EditorContent = () => {
   const classes = useEditorContentStyles();
 
   const { person, personTotalTime } = useAppSelector(selectPerson);
@@ -58,7 +50,7 @@ const EditorContent: React.FC<Props> = () => {
   const [ vacationDayList, setVacationDayList ] = useState<VacationWeekData[]>([]);
   const currentVacationSeasonStart = `${new Date().getFullYear()}-04-01`;
   const currentVacationSeasonEnd = `${new Date().getFullYear() + 1}-03-31`;
-  const context = React.useContext(ErrorContext);
+  const context = useContext(ErrorContext);
   const [ tabIndex, setTabIndex ] = useState("1");
   const [ textContent, setTextContent ] = useState("");
   const [ vacationType, setVacationType ] = useState("");
@@ -252,14 +244,14 @@ const EditorContent: React.FC<Props> = () => {
     setIsLoading(false);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!accessToken) {
       return;
     }
     initializeData();
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!accessToken) {
       return;
     }
