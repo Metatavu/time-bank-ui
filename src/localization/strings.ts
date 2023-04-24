@@ -17,6 +17,16 @@ export interface IStrings extends LocalizedStringsMethods {
     logout: string;
     syncData: string;
     syncDataLoading: string;
+    myVacations: string;
+    employeeVacationRequests: string;
+    requests: string;
+    vacationType: string;
+    employee: string;
+    days: string;
+    startDate: string;
+    endDate: string;
+    remainingDays: string;
+    status: string;
   }
 
   /**
@@ -31,6 +41,8 @@ export interface IStrings extends LocalizedStringsMethods {
     delete: string;
     language: string;
     select: string;
+    apply: string;
+    saveChanges: string;
   };
 
   /**
@@ -67,7 +79,7 @@ export interface IStrings extends LocalizedStringsMethods {
     filterStartingDate: string;
     filterEndingDate: string;
     week: string;
-    date: string;
+    day: string;
     month: string;
     year: string;
     selectYearStart: string;
@@ -77,6 +89,25 @@ export interface IStrings extends LocalizedStringsMethods {
     from: string;
     to: string;
     startOnly: string;
+    amountOfChosenVacationDays: string;
+    vacationType: string;
+    paidLeave: string;
+    maternityLeave: string;
+    parentalLeave: string;
+    unpaidLeave: string;
+    surplusBalance: string;
+    employee: string;
+    status: string;
+    applyForVacation: string;
+    comment: string;
+    created: string;
+    updated: string;
+    projectManager: string;
+    humanResourcesManager: string;
+    leaveAComment: string;
+    pending: string;
+    approved: string;
+    declined: string;
   };
 
   /**

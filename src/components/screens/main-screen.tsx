@@ -1,4 +1,3 @@
-import React from "react";
 import AppLayout from "../layouts/app-layout";
 import useMainScreenStyles from "styles/screens/main-screen";
 import { Toolbar, Box } from "@mui/material";
@@ -10,7 +9,7 @@ import EditorContent from "components/editor-content/editor-content";
 /**
  * Main screen component
  */
-const MainScreen: React.FC = () => {
+const MainScreen = () => {
   const classes = useMainScreenStyles();
 
   /**

@@ -17,14 +17,18 @@ import moment from "moment";
  */
 interface Props {
   scope: FilterScopes;
-  dateFormat?: string;
-  selectedStartDate: unknown;
-  selectedEndDate: unknown;
+  dateFormat: string;
+  selectedStartDate: Date;
+  selectedEndDate: Date | null;
   startWeek?: number | null;
   endWeek?: number | null;
   datePickerView: CalendarPickerView;
-  onStartDateChange: (value: unknown) => void;
-  onEndDateChange: (value: unknown) => void;
+  minStartDate?: Date;
+  maxStartDate?: Date;
+  minEndDate?: Date;
+  maxEndDate?: Date;
+  onStartDateChange: (value: Date | null) => void;
+  onEndDateChange: (value: Date | null) => void;
   onStartWeekChange: (weekNumber: number) => void;
   onEndWeekChange: (weekNumber: number) => void;
 }
@@ -40,6 +44,10 @@ const DateRangePicker: React.FC<Props> = ({
   startWeek,
   endWeek,
   datePickerView,
+  minStartDate,
+  maxStartDate,
+  minEndDate,
+  maxEndDate,
   onStartDateChange,
   onEndDateChange,
   onStartWeekChange,
@@ -155,25 +163,23 @@ const DateRangePicker: React.FC<Props> = ({
   /**
    * Renders start date picker 
    */
-  const renderStartDatePicker = () => {
-    const { filterStartingDate } = strings.editorContent;
-
-    return (
+  const renderStartDatePicker = () => (
+    <>
       <LocalizationProvider dateAdapter={ AdapterDateFns } adapterLocale={ pickerLocale } >
         <DatePicker
           views={[ datePickerView ]}
           inputFormat={ dateFormat }
-          minDate={ new Date(2021, 7, 31) }
-          maxDate={ todayDate }
-          label={ filterStartingDate }
-          value={ new Date() }
+          minDate={ minStartDate }
+          maxDate={ maxStartDate }
+          label={ strings.editorContent.filterStartingDate }
+          value={ selectedStartDate }
           onChange={ onStartDateChange }
           className={ classes.datePicker }
           renderInput={ params => <TextField {...params}/>}
         />
       </LocalizationProvider>
-    );
-  };
+    </>
+  );
   
   /**
    * Renders start year picker and week selector 
@@ -213,8 +219,8 @@ const DateRangePicker: React.FC<Props> = ({
       <DatePicker
         inputFormat={ dateFormat }
         views={ [ datePickerView ] }
-        minDate={ selectedStartDate }
-        maxDate={ todayDate }
+        minDate={ minEndDate }
+        maxDate={ maxEndDate }
         label={ strings.editorContent.filterEndingDate }
         value={ selectedEndDate }
         onChange={ onEndDateChange }

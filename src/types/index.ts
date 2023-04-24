@@ -35,7 +35,7 @@ export interface Configuration {
  */
 export enum FilterScopes {
   WEEK = "week",
-  DATE = "date",
+  DATE = "day",
   MONTH = "month",
   YEAR = "year"
 }

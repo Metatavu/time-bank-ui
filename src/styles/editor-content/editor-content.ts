@@ -93,6 +93,15 @@ const useEditorContentStyles = makeStyles(theme => ({
     height: "100%",
     display: "flex",
     alignItems: "center",
+    padding: theme.spacing(2),
+    borderBottom: "1px solid rgba(0, 0, 0, 0.2)"
+  },
+
+  vacationInfoContent: {
+    height: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
     padding: theme.spacing(2)
   },
 
@@ -104,6 +113,16 @@ const useEditorContentStyles = makeStyles(theme => ({
     marginLeft: theme.spacing(2),
     padding: theme.spacing(1),
     display: "inline-block"
+  },
+
+  vacationDetailsContent: {
+    display: "flex",
+    height: "100%",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "10px",
+    padding: theme.spacing(2),
+    marginTop: "10px"
   },
 
   overViewChartContainer: {
@@ -126,11 +145,34 @@ const useEditorContentStyles = makeStyles(theme => ({
     alignItems: "center"
   },
 
+  testDatePickers: {
+    marginLeft: "auto",
+    display: "flex",
+    alignItems: "center",
+    padding: theme.spacing(2)
+  },
+
+  navBarContainer: {
+    color: "white",
+    backgroundColor: "gray",
+    margin: "-32px",
+    marginBottom: "0px",
+    paddingTop: "0px"
+  },
+
   deleteButton: {
     padding: "0px !important",
     alignSelf: "flex-end",
     color: "#F9473B",
     marginLeft: theme.spacing(1)
+  },
+
+  employeeVacationRequests: {
+    marginTop: theme.spacing(2),
+    padding: theme.spacing(2),
+    borderRadius: "10px !important",
+    backgroundColor: "white",
+    boxShadow: "0px 3px 3px -2px rgb(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0,0,0,0.14), 0px 1px 8px 0px rgb(0,0,0,0.12)"
   }
 
 }), {
