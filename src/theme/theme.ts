@@ -1,4 +1,4 @@
-import { createTheme } from "@material-ui/core/styles";
+import { createTheme } from "@mui/material/styles";
 
 const { breakpoints } = createTheme();
 
@@ -63,89 +63,108 @@ export default createTheme({
     }
   },
 
-  props: {
-    MuiAppBar: {
-      elevation: 0,
-      position: "fixed"
-    },
-    MuiTextField: {
-      variant: "outlined",
-      size: "small"
-    }
-  },
-
-  overrides: {
-    MuiCssBaseline: {
-      "@global": {
-        a: {
-          textDecoration: "none"
-        },
-        "::-webkit-scrollbar": {
-          width: "0.25em"
-        },
-        "::-webkit-scrollbar-thumb": {
-          backgroundColor: "#F9473B !important",
-          borderRadius: 3
-        }
-      }
-    },
-    MuiAppBar: {
-      root: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between"
-      },
-      colorPrimary: {
-        backgroundColor: "#000"
-      }
-    },
-    MuiToolbar: {
-      root: {
-        alignItems: "center",
-        justifyContent: "space-between"
-      }
-    },
-    MuiButton: {
-      root: {
-        borderRadius: 20
-      }
-    },
-    MuiFormLabel: {
-      root: {
-        color: "rgba(0, 0, 0, 0.54)"
-      }
-    },
-    MuiDivider: {
-      root: {
-        width: "100%"
-      }
-    },
+  components: {
     MuiAccordion: {
-      root: {
-        "&:before": {
-          height: "0px !important"
+      styleOverrides: {
+        root: {
+          "&:before": {
+            height: "0px !important"
+          }
         }
       }
     },
     MuiAccordionSummary: {
-      content: {
-        margin: "0px !important"
+      styleOverrides: {
+        content: {
+          margin: "0px !important"
+        },
+        root: {
+          "&.Mui-expanded": {
+            minHeight: "48px !important"
+          }
+        }
+      }
+    },
+    MuiAppBar: {
+      defaultProps: {
+        elevation: 0,
+        position: "fixed"
       },
-      root: {
-        "&.Mui-expanded": {
-          minHeight: "48px !important"
+      styleOverrides: {
+        root: {
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between"
+        },
+        colorPrimary: {
+          backgroundColor: "#000"
+        }
+      }
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: 20
+        }
+      }
+    },
+    MuiCssBaseline: {
+      styleOverrides: {
+        "@global": {
+          a: {
+            textDecoration: "none"
+          },
+          "::-webkit-scrollbar": {
+            width: "0.25rem"
+          },
+          "::-webkit-scrollbar-thumb": {
+            backgroundColor: "#F9473B !important",
+            borderRadius: 3
+          }
+        }
+      }
+    },
+    MuiDivider: {
+      styleOverrides: {
+        root: {
+          width: "100%"
+        }
+      }
+    },
+    MuiFormLabel: {
+      styleOverrides: {
+        root: {
+          color: "rgba(0, 0, 0, 0.54)"
         }
       }
     },
     MuiIconButton: {
-      root: {
-        paddingTop: "0px !important",
-        paddingBottom: "0px !important"
+      styleOverrides: {
+        root: {
+          paddingTop: "0px !important",
+          paddingBottom: "0px !important"
+        }
       }
     },
     MuiOutlinedInput: {
-      root: {
-        borderRadius: "25px !important"
+      styleOverrides: {
+        root: {
+          borderRadius: "25px !important"
+        }
+      }
+    },
+    MuiTextField: {
+      defaultProps: {
+        variant: "outlined",
+        size: "small"
+      }
+    },
+    MuiToolbar: {
+      styleOverrides: {
+        root: {
+          alignItems: "center",
+          justifyContent: "center"
+        }
       }
     }
   }

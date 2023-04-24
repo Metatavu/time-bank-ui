@@ -1,8 +1,8 @@
 import React from "react";
-import DateFnsUtils from "@date-io/date-fns";
-import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePickerView } from "@material-ui/pickers";
+import { LocalizationProvider, DatePicker, CalendarPickerView } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { FilterScopes } from "types";
-import { Box, TextField, MenuItem } from "@material-ui/core";
+import { Box, TextField, MenuItem } from "@mui/material";
 import TimeUtils from "utils/time-utils";
 import strings from "localization/strings";
 import useDateRangePickerStyles from "styles/generics/date-range-picker/date-range-picker";
@@ -18,13 +18,13 @@ import moment from "moment";
 interface Props {
   scope: FilterScopes;
   dateFormat?: string;
-  selectedStartDate: Date;
-  selectedEndDate: Date | null;
+  selectedStartDate: unknown;
+  selectedEndDate: unknown;
   startWeek?: number | null;
   endWeek?: number | null;
-  datePickerView: DatePickerView;
-  onStartDateChange: (date: Date | null) => void;
-  onEndDateChange: (date: Date | null) => void;
+  datePickerView: CalendarPickerView;
+  onStartDateChange: (value: unknown) => void;
+  onEndDateChange: (value: unknown) => void;
   onStartWeekChange: (weekNumber: number) => void;
   onEndWeekChange: (weekNumber: number) => void;
 }
@@ -49,7 +49,7 @@ const DateRangePicker: React.FC<Props> = ({
 
   const { locale } = useAppSelector(selectLocale);
 
-  const [ todayDate /* setTodayDate */ ] = React.useState(new Date());
+  const todayDate = new Date();
   const [ currentWeekNumber, setCurrentWeekNumber ] = React.useState(0);
   const [ pickerLocale, setPickerLocale ] = React.useState(enLocale);
 
@@ -89,14 +89,14 @@ const DateRangePicker: React.FC<Props> = ({
    * Get max start week
    */
   const getMaxStartWeek = () => {
-    return todayDate.getFullYear() === selectedStartDate.getFullYear() ? currentWeekNumber : moment(selectedStartDate).weeksInYear();
+    return todayDate.getFullYear() === (selectedStartDate as Date).getFullYear() ? currentWeekNumber : moment((selectedStartDate as Date)).weeksInYear();
   };
 
   /**
    * Get max end week
    */
   const getMaxEndWeek = () => {
-    return todayDate.getFullYear() === selectedEndDate?.getFullYear() ? currentWeekNumber : moment(selectedEndDate).weeksInYear();
+    return todayDate.getFullYear() === (selectedEndDate as Date)?.getFullYear() ? currentWeekNumber : moment((selectedEndDate as Date)).weeksInYear();
   };
 
   /**
@@ -129,7 +129,7 @@ const DateRangePicker: React.FC<Props> = ({
 
     const weekOpts = [];
 
-    if (selectedStartDate?.getFullYear() === selectedEndDate.getFullYear() && !!startWeek) {
+    if ((selectedStartDate as Date)?.getFullYear() === (selectedEndDate as Date).getFullYear() && !!startWeek) {
       for (let week = startWeek; week <= getMaxEndWeek(); week++) {
         weekOpts.push((
           <MenuItem value={ week }>
@@ -159,20 +159,19 @@ const DateRangePicker: React.FC<Props> = ({
     const { filterStartingDate } = strings.editorContent;
 
     return (
-      <MuiPickersUtilsProvider locale={ pickerLocale } utils={ DateFnsUtils } >
-        <KeyboardDatePicker
-          inputVariant="standard"
-          variant="inline"
+      <LocalizationProvider dateAdapter={ AdapterDateFns } adapterLocale={ pickerLocale } >
+        <DatePicker
           views={[ datePickerView ]}
-          format={ dateFormat }
+          inputFormat={ dateFormat }
+          minDate={ new Date(2021, 7, 31) }
           maxDate={ todayDate }
           label={ filterStartingDate }
-          value={ selectedStartDate }
+          value={ new Date() }
           onChange={ onStartDateChange }
           className={ classes.datePicker }
-          KeyboardButtonProps={{ "aria-label": `${filterStartingDate}` }}
+          renderInput={ params => <TextField {...params}/>}
         />
-      </MuiPickersUtilsProvider>
+      </LocalizationProvider>
     );
   };
   
@@ -181,20 +180,18 @@ const DateRangePicker: React.FC<Props> = ({
    */
   const renderStartYearPickerAndWeekSelector = () => (
     <>
-      <MuiPickersUtilsProvider locale={ pickerLocale } utils={ DateFnsUtils } >
-        <KeyboardDatePicker
+      <LocalizationProvider dateAdapter={ AdapterDateFns } adapterLocale={ pickerLocale } >
+        <DatePicker
           views={[ FilterScopes.YEAR ]}
-          variant="inline"
-          inputVariant="standard"
-          format="yyyy"
+          inputFormat="yyyy"
           maxDate={ todayDate }
           label={ strings.editorContent.selectYearStart }
           value={ selectedStartDate }
           onChange={ onStartDateChange }
           className={ classes.yearPicker }
-          KeyboardButtonProps={{ "aria-label": `${strings.editorContent.filterStartingDate}` }}
+          renderInput={ params => <TextField {...params}/>}
         />
-      </MuiPickersUtilsProvider>
+      </LocalizationProvider>
       <TextField
         select
         variant="standard"
@@ -212,11 +209,9 @@ const DateRangePicker: React.FC<Props> = ({
    * Renders end date picker
    */
   const renderEndDate = () => (
-    <MuiPickersUtilsProvider locale={ pickerLocale } utils={ DateFnsUtils }>
-      <KeyboardDatePicker
-        inputVariant="standard"
-        variant="inline"
-        format={ dateFormat }
+    <LocalizationProvider dateAdapter={ AdapterDateFns } adapterLocale={ pickerLocale } >
+      <DatePicker
+        inputFormat={ dateFormat }
         views={ [ datePickerView ] }
         minDate={ selectedStartDate }
         maxDate={ todayDate }
@@ -224,9 +219,9 @@ const DateRangePicker: React.FC<Props> = ({
         value={ selectedEndDate }
         onChange={ onEndDateChange }
         className={ classes.datePicker }
-        KeyboardButtonProps={{ "aria-label": `${strings.editorContent.filterEndingDate}` }}
+        renderInput={ params => <TextField {...params}/>}
       />
-    </MuiPickersUtilsProvider>
+    </LocalizationProvider>
   );
 
   /**
@@ -234,21 +229,19 @@ const DateRangePicker: React.FC<Props> = ({
    */
   const renderEndYearPickerAndWeekSelector = () => (
     <>
-      <MuiPickersUtilsProvider locale={ pickerLocale } utils={ DateFnsUtils } >
-        <KeyboardDatePicker
-          inputVariant="standard"
-          variant="inline"
+      <LocalizationProvider dateAdapter={ AdapterDateFns } adapterLocale={ pickerLocale } >
+        <DatePicker
           views={[ FilterScopes.YEAR ]}
-          format="yyyy"
+          inputFormat="yyyy"
           minDate={ selectedStartDate }
           maxDate={ todayDate }
           label={ strings.editorContent.selectYearEnd }
           value={ selectedEndDate }
           onChange={ onEndDateChange }
           className={ classes.yearPicker }
-          KeyboardButtonProps={{ "aria-label": `${strings.editorContent.filterStartingDate}` }}
+          renderInput={ params => <TextField {...params}/>}
         />
-      </MuiPickersUtilsProvider>
+      </LocalizationProvider>
       <TextField
         // TODO label when start only
         select

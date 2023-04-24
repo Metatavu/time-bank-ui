@@ -1,8 +1,8 @@
 import React from "react";
 import AppLayout from "../layouts/app-layout";
 import useManagementScreenStyles from "styles/screens/management-screen";
-import { Toolbar, Box, CircularProgress, Paper, Typography, List, ListItem, Divider, Button, TextField, Tooltip } from "@material-ui/core";
-import { PieChart, Pie, Cell, ResponsiveContainer, TooltipProps, Tooltip as RechartTooltip } from "recharts";
+import { Toolbar, Box, CircularProgress, Paper, Typography, Divider, Button, TextField, Tooltip, Grid, Card } from "@mui/material";
+import { PieChart, Pie, Cell, ResponsiveContainer, TooltipProps, Tooltip as RechartTooltip, Legend } from "recharts";
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 import { useAppDispatch, useAppSelector } from "app/hooks";
 import Api from "api/api";
@@ -10,20 +10,21 @@ import { Person, Timespan } from "generated/client";
 import { ErrorContext } from "components/error-handler/error-handler";
 import { PersonWithTotalTime, WorkTimeCategory, WorkTimeTotalData } from "types";
 import strings from "localization/strings";
-import SubdirectoryArrowLeftIcon from "@material-ui/icons/SubdirectoryArrowLeft";
+import SubdirectoryArrowLeftIcon from "@mui/icons-material/SubdirectoryArrowLeft";
 import { useHistory, Link } from "react-router-dom";
 import TimeUtils from "utils/time-utils";
 import theme from "theme/theme";
-import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { setPerson } from "features/person/person-slice";
 import UserInfo from "components/generics/user-info/user-info";
-import SearchIcon from "@material-ui/icons/Search";
+import SearchIcon from "@mui/icons-material/Search";
 import { selectAuth } from "features/auth/auth-slice";
 import moment from "moment";
-import { Create } from "@material-ui/icons";
+import { Create } from "@mui/icons-material";
 import GenericDialog from "components/generics/generic-dialog/generic-dialog";
 import { SyncOrUpdateContext } from "components/sync-or-update-handler/sync-or-update-handler";
 import AuthUtils from "utils/auth";
+import CloseIcon from "@mui/icons-material/Close";
 
 /**
  * Management screen screen component
@@ -112,7 +113,7 @@ const ManagementScreen: React.FC = () => {
           personTotalTime: selectedPersonWithTotalTime.personTotalTime
         };
         syncOrUpdateContext.setSyncOrUpdate(strings.billableHoursHandling.updateBillableHoursSuccess);
-        const personIndex = personsTotalTime.findIndex(personWithTotalTime => personWithTotalTime.person.id === person.id);
+        const personIndex = personsTotalTime.findIndex(_person => _person.person.id === person.id);
 
         setPersonsTotalTime([
           ...personsTotalTime,
@@ -162,10 +163,28 @@ const ManagementScreen: React.FC = () => {
   };
 
   /**
+   * Handler for billable hours update dialog
+   */
+  const handleClickOpen = () => {
+    setBillableHoursUpdate(true);
+  };
+
+  /**
    * Handler for new billable percentage
    * 
    */
-  const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => setNewBillablePercentage(Number(target.value));
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = event.target.value;
+    const newValueNumber = Number(newValue);
+    setNewBillablePercentage(newValueNumber);
+  };
+
+  /**
+   * Person detail close icon click handler
+   */
+  const handlePersonCloseClick = () => {
+    setSelectedPersonWithTotalTime(undefined);
+  };
 
   /**
    * search input change handler
@@ -292,7 +311,7 @@ const ManagementScreen: React.FC = () => {
         className={ classes.billableHours }
       >
         <Button
-          onClick={ () => setBillableHoursUpdate(true) }
+          onClick={ handleClickOpen }
         >
           <Create color="primary"/>
         </Button>
@@ -302,14 +321,14 @@ const ManagementScreen: React.FC = () => {
   );
 
   /**
-   * Renders the person detail 
+   * Renders piechart
    */
-  const renderPersonDetail = () => {
-    if (!selectedPersonWithTotalTime || !selectedPersonWithTotalTime.personTotalTime) {
+  const renderPieChart = (personWithTotalTime: PersonWithTotalTime, legend: boolean) => {
+    const { person, personTotalTime } = personWithTotalTime;
+
+    if (!person || !personTotalTime) {
       return null;
     }
-
-    const { person, personTotalTime } = selectedPersonWithTotalTime;
 
     const workTimeData: WorkTimeTotalData[] = [
       { name: WorkTimeCategory.BILLABLE_PROJECT, balance: personTotalTime.billableProjectTime },
@@ -317,7 +336,38 @@ const ManagementScreen: React.FC = () => {
       { name: WorkTimeCategory.INTERNAL, balance: personTotalTime.internalTime }
     ];
 
-    const COLORS = [ theme.palette.success.dark, theme.palette.success.light, theme.palette.warning.main ];
+    const COLORS = [ theme.palette.success.main, theme.palette.warning.main ];
+
+    return (
+      <ResponsiveContainer className={ classes.pieChartContainer }>
+        <PieChart>
+          <Pie
+            cx="50%"
+            cy="50%"
+            dataKey="balance"
+            data={ workTimeData }
+            label={ props => TimeUtils.convertToMinutesAndHours(props.value) }
+          >
+            { workTimeData.map((entry, index) => (
+              <Cell fill={ COLORS[index % COLORS.length] }/>
+            )) }
+          </Pie>
+          { legend ? <Legend wrapperStyle={{ position: "relative" }}/> : null }
+          <RechartTooltip content={ renderCustomizedTooltip }/>
+        </PieChart>
+      </ResponsiveContainer>
+    );
+  };
+
+  /**
+   * Renders the person detail 
+   */
+  const renderPersonDetail = () => {
+    if (!selectedPersonWithTotalTime || !selectedPersonWithTotalTime.personTotalTime) {
+      return null;
+    }
+
+    const { person } = selectedPersonWithTotalTime;
 
     return (
       <Paper className={ classes.redirectPersonDetailPaper }>
@@ -338,33 +388,26 @@ const ManagementScreen: React.FC = () => {
           { renderExpectedWorkRow(`${strings.sunday}:`, TimeUtils.convertToMinutesAndHours(person.sunday)) }
           { renderExpectedBillableHours(`${strings.billableHours}:`, person.minimumBillableRate.toString()) }
         </Box>
-        <ResponsiveContainer className={ classes.pieChartContainer }>
-          <PieChart>
-            <Pie
-              cx="50%"
-              cy="50%"
-              dataKey="balance"
-              data={ workTimeData }
-              label={ props => TimeUtils.convertToMinutesAndHours(props.value) }
-            >
-              { workTimeData.map((entry, index) => (
-                <Cell fill={ COLORS[index % COLORS.length] }/>
-              )) }
-            </Pie>
-            <RechartTooltip content={ renderCustomizedTooltip }/>
-          </PieChart>
-        </ResponsiveContainer>
+        { renderPieChart(selectedPersonWithTotalTime, true) }
         <Box className={ classes.personRedirect }>
           <Divider/>
-          <Button
-            onClick={ () => handlePersonRedirectClick(person) }
-            className={ classes.personRedirectButton }
-          >
-            <Typography style={{ fontWeight: 600 }}>
-              { strings.managementScreen.seeMore }
-            </Typography>
-            <KeyboardArrowRightIcon/>
-          </Button>
+          <Box className={ classes.personRedirectBox }>
+            <Button
+              onClick={ () => handlePersonCloseClick() }
+              className={ classes.personCloseButton }
+            >
+              <CloseIcon/>
+            </Button>
+            <Button
+              onClick={ () => handlePersonRedirectClick(person) }
+              className={ classes.personRedirectButton }
+            >
+              <Typography style={{ fontWeight: 600 }}>
+                { strings.managementScreen.seeMore }
+              </Typography>
+              <KeyboardArrowRightIcon/>
+            </Button>
+          </Box>
         </Box>
       </Paper>
     );
@@ -386,15 +429,13 @@ const ManagementScreen: React.FC = () => {
     const loggedTime = TimeUtils.convertToHours(personTotalTime.logged);
 
     return (
-      <ListItem
-        button
-        disableRipple
-        disableTouchRipple
-        selected={ selectedPersonWithTotalTime?.person.id === person.id }
+      <Grid
+        item
+        lg={3}
         onClick={ handleListItemClick(personsTotalTimeEntry) }
         className={ classes.personListEntry }
       >
-        <Paper className={ classes.personEntry }>
+        <Card className={ classes.personEntry }>
           <Box className={ classes.userInfoContainer }>
             <Typography variant="h2">
               { `${person.firstName} ${person.lastName}` }
@@ -403,8 +444,9 @@ const ManagementScreen: React.FC = () => {
               variant="h4"
               className={ classes.personEntryDate }
             >
-              { `${moment(person.startDate).format("DD.MM.YYYY")}-` }
+              { `${moment(person.startDate).format("DD.MM.YYYY")} -` }
             </Typography>
+            { renderPieChart(personsTotalTimeEntry, false) }
           </Box>
           <Box className={ classes.personEntrySubtitle } >
             <Tooltip
@@ -420,8 +462,8 @@ const ManagementScreen: React.FC = () => {
               </Typography>
             </Tooltip>
           </Box>
-        </Paper>
-      </ListItem>
+        </Card>
+      </Grid>
     );
   };
 
@@ -433,7 +475,7 @@ const ManagementScreen: React.FC = () => {
       return null;
     }
 
-    const { firstName, lastName, email } = selectedPersonWithTotalTime.person;
+    const { person } = selectedPersonWithTotalTime;
     
     return (
       <GenericDialog
@@ -447,10 +489,7 @@ const ManagementScreen: React.FC = () => {
         <Box className={ classes.updateBillableHoursContent }>
           <Box>
             <Typography variant="h5">
-              { `${firstName} ${lastName}` }
-            </Typography>
-            <Typography variant="h6" style={{ color: "rgba(0, 0, 0, 0.6)" }}>
-              { email }
+              { `${person.firstName} ${person.lastName}` }
             </Typography>
           </Box>
           <Box
@@ -469,7 +508,7 @@ const ManagementScreen: React.FC = () => {
               }}
               label={ strings.billableHoursHandling.billingRate }
               type="number"
-              defaultValue={ selectedPersonWithTotalTime.person.minimumBillableRate }
+              defaultValue={ person.minimumBillableRate }
               onChange={ handleChange }
             />
           </Box>
@@ -489,9 +528,9 @@ const ManagementScreen: React.FC = () => {
    * Renders bottom padding 
    */
   const renderBottomPadding = () => (
-    <ListItem>
+    <Grid item>
       <Box style={{ height: theme.spacing(14) }}/>
-    </ListItem>
+    </Grid>
   );
 
   /**
@@ -500,19 +539,28 @@ const ManagementScreen: React.FC = () => {
   const renderTimeList = () => {
     if (displayedPersonsTotalTime.length === 0) {
       return (
-        <List className={ classes.timeListContainer }>
-          <Typography variant="h4">
-            { strings.managementScreen.noUser }
-          </Typography>
-        </List>
+        <Grid container className={ classes.timeListContainer }>
+          <Grid
+            item
+            sm={12}
+          >
+            <Typography variant="h4">
+              { strings.managementScreen.noUser }
+            </Typography>
+          </Grid>
+        </Grid>
       );
     }
 
     return (
-      <List className={ classes.timeListContainer }>
+      <Grid
+        container
+        className={ classes.timeListContainer }
+        spacing={2}
+      >
         { displayedPersonsTotalTime.map(renderPersonEntry) }
         { renderBottomPadding() }
-      </List>
+      </Grid>
     );
   };
 
@@ -533,10 +581,10 @@ const ManagementScreen: React.FC = () => {
     <AppLayout managementScreen>
       <Toolbar/>
       <Box className={ classes.root }>
+        { renderSearch() }
         <Box className={ classes.mainContent }>
           { renderTimeList() }
         </Box>
-        { renderSearch() }
         { renderRedirect() }
         { renderPersonDetail() }
         { renderBillableHoursUpdateDialog() }

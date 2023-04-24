@@ -1,7 +1,7 @@
 import React from "react";
-import DateFnsUtils from "@date-io/date-fns";
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
-import { Box } from "@material-ui/core";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { Box, TextField } from "@mui/material";
 import strings from "localization/strings";
 import fiLocale from "date-fns/locale/fi";
 import enLocale from "date-fns/locale/en-US";
@@ -14,8 +14,8 @@ import useDatePickerStyles from "styles/generics/date-picker/date-picker";
  */
 interface Props {
   dateFormat?: string;
-  selectedStartDate: Date | null;
-  onStartDateChange: (date: Date | null) => void;
+  selectedStartDate: unknown;
+  onStartDateChange: (value: unknown) => void;
 }
 
 /**
@@ -30,6 +30,7 @@ const GenericDatePicker: React.FC<Props> = ({
 
   const { locale } = useAppSelector(selectLocale);
 
+  const todayDate = new Date();
   const [ pickerLocale, setPickerLocale ] = React.useState(enLocale);
 
   /**
@@ -46,23 +47,19 @@ const GenericDatePicker: React.FC<Props> = ({
     const { syncStart } = strings.syncHandling;
 
     return (
-      <MuiPickersUtilsProvider locale={ pickerLocale } utils={ DateFnsUtils } >
-        <KeyboardDatePicker
-          autoOk
+      <LocalizationProvider dateAdapter={ AdapterDateFns } adapterLocale={ pickerLocale } >
+        <DatePicker
           disableFuture
-          minDate="2021-07-31"
-          inputVariant="standard"
-          variant="inline"
-          format={ dateFormat }
-          maxDate={ new Date() }
+          minDate={new Date(2021, 7, 31)}
+          inputFormat={ dateFormat }
+          maxDate={ todayDate }
           label={ syncStart }
-          defaultValue={ selectedStartDate }
           value={ selectedStartDate }
           onChange={ onStartDateChange }
           className={ classes.datePicker }
-          KeyboardButtonProps={{ "aria-label": `${syncStart}` }}
+          renderInput={ params => <TextField {...params}/>}
         />
-      </MuiPickersUtilsProvider>
+      </LocalizationProvider>
     );
   };
   

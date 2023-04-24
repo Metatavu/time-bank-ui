@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core";
+import makeStyles from "@mui/styles/makeStyles";
 
 const drawerWidth = 400;
 
@@ -17,10 +17,10 @@ const useMainScreenStyles = makeStyles(theme => ({
     flexDirection: "column",
     width: drawerWidth,
     padding: theme.spacing(2),
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down("sm")]: {
       padding: theme.spacing(1)
     },
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("md")]: {
       width: "100%"
     }
   },
@@ -30,7 +30,7 @@ const useMainScreenStyles = makeStyles(theme => ({
     overflowX: "hidden",
     height: "calc(100vh - 64px)",
     width: "calc(100vw - 400px)",
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("md")]: {
       display: "none"
     }
   },

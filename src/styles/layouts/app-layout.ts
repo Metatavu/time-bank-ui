@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core";
+import makeStyles from "@mui/styles/makeStyles";
 
 const drawerWidth = 400;
 
@@ -31,7 +31,7 @@ const useAppLayoutStyles = makeStyles(theme => ({
     top: 64,
     width: drawerWidth,
     height: "100%",
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("md")]: {
       width: "100%"
     }
   },
@@ -44,9 +44,9 @@ const useAppLayoutStyles = makeStyles(theme => ({
       0 10px 16px 0 rgba(0,0,0,0.2),
       0 6px 20px 0 rgba(0,0,0,0.19)
     `,
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("md")]: {
       width: "100%",
-      padding: `0px ${theme.spacing(2)}px`
+      padding: `0px ${theme.spacing(2)}`
     }
   },
 
@@ -54,7 +54,7 @@ const useAppLayoutStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.default,
     flexGrow: 1,
     overflowX: "hidden",
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("md")]: {
       display: "none"
     }
   },
@@ -87,10 +87,10 @@ const useAppLayoutStyles = makeStyles(theme => ({
   syncButton: {
     marginLeft: theme.spacing(5),
     color: "#fff",
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("md")]: {
       marginLeft: theme.spacing(3)
     },
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down("sm")]: {
       marginLeft: theme.spacing(2)
     }
   },
@@ -98,10 +98,10 @@ const useAppLayoutStyles = makeStyles(theme => ({
   languageSelect: {
     marginLeft: theme.spacing(5),
     color: "#fff",
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("md")]: {
       marginLeft: theme.spacing(3)
     },
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down("sm")]: {
       marginLeft: theme.spacing(2)
     }
   },
@@ -121,7 +121,7 @@ const useAppLayoutStyles = makeStyles(theme => ({
   managementLink: {
     backgroundColor: "rgba(255, 255, 255, 0.3)",
     height: "100%",
-    padding: `0px ${theme.spacing(4)}px`,
+    padding: `0px ${theme.spacing(4)}`,
     alignItems: "center",
     display: "flex",
     borderRadius: "20px 20px 0px 0px"

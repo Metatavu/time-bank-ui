@@ -1,7 +1,6 @@
 import React from "react";
 
-import { Snackbar } from "@material-ui/core";
-import { Alert, Color } from "@material-ui/lab";
+import { Alert, AlertColor, Snackbar } from "@mui/material";
 
 /**
  * Interface representing component properties
@@ -10,7 +9,7 @@ interface Props {
   open: boolean;
   autoHideDuration: number;
   onClose: () => void;
-  severity: Color;
+  severity: AlertColor;
   message?: string;
 }
 

@@ -1,4 +1,4 @@
-import { CssBaseline, responsiveFontSizes, ThemeProvider } from "@material-ui/core";
+import { CssBaseline, responsiveFontSizes, ThemeProvider, Theme, StyledEngineProvider } from "@mui/material";
 import { store } from "app/store";
 import React from "react";
 import ReactDOM from "react-dom";
@@ -9,17 +9,24 @@ import theme from "theme/theme";
 import ErrorHandler from "components/error-handler/error-handler";
 import SyncOrUpdateHandler from "components/sync-or-update-handler/sync-or-update-handler";
 
+declare module "@mui/styles/defaultTheme" {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
+
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={ store }>
-      <ThemeProvider theme={ responsiveFontSizes(theme) }>
-        <CssBaseline/>
-        <ErrorHandler>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={ responsiveFontSizes(theme) }>
+          <CssBaseline/>
           <SyncOrUpdateHandler>
-            <App/>
+            <ErrorHandler>
+              <App/>
+            </ErrorHandler>
           </SyncOrUpdateHandler>
-        </ErrorHandler>
-      </ThemeProvider>
+        </ThemeProvider>
+      </StyledEngineProvider>
     </Provider>
   </React.StrictMode>,
   document.getElementById("root")

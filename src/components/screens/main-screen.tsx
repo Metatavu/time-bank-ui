@@ -1,7 +1,7 @@
 import React from "react";
 import AppLayout from "../layouts/app-layout";
 import useMainScreenStyles from "styles/screens/main-screen";
-import { Toolbar, Box } from "@material-ui/core";
+import { Toolbar, Box } from "@mui/material";
 import DrawerContent from "components/drawer-content/drawer-content";
 import EditorContent from "components/editor-content/editor-content";
 
