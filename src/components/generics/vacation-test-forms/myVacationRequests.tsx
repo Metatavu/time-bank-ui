@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { Collapse, FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, Button, Box } from "@mui/material";
 import useEditorContentStyles from "styles/editor-content/editor-content";
 import theme from "theme/theme";
@@ -11,20 +11,8 @@ import Holidays from "date-holidays";
 import strings from "localization/strings";
 import { FilterScopes } from "types";
 import DateRangePicker from "../date-range-picker/date-range-picker";
-
-/**
- * interface type request
- */
-interface Request {
-  id: number;
-  vacationType: string;
-  comment: string;
-  employee: string;
-  days: number;
-  startDate: string;
-  endDate: string;
-  status: string;
-}
+import { Request } from "types/index";
+import { VacationType } from "generated/client";
 
 /**
  * Renders vacation request table
@@ -39,7 +27,7 @@ const renderVacationRequests = () => {
   const [ newVacationType, setNewVacationType ] = useState("");
   const [ datePickerView ] = useState<CalendarPickerView>("day");
   const [ textContent ] = useState("");
-  const [ vacationType ] = useState("");
+  const [ vacationType ] = useState<VacationType>();
 
   /**
   * Handle vacation type 
@@ -68,11 +56,12 @@ const renderVacationRequests = () => {
         onChange={ handleVacationTypeChange }
         label={ strings.editorContent.vacationType }
       >
-        <MenuItem value="Paid leave">{ strings.editorContent.paidLeave }</MenuItem>
-        <MenuItem value="Maternity leave">{ strings.editorContent.maternityLeave }</MenuItem>
-        <MenuItem value="Parental leave">{ strings.editorContent.parentalLeave }</MenuItem>
-        <MenuItem value="Unpaid leave">{ strings.editorContent.unpaidLeave }</MenuItem>
-        <MenuItem value="Surplus balance">{ strings.editorContent.surplusBalance }</MenuItem>
+        <MenuItem value={ VacationType.VACATION }>{ strings.editorContent.vacation }</MenuItem>
+        <MenuItem value={ VacationType.UNPAID_TIME_OFF}>{ strings.editorContent.unpaidTimeOff }</MenuItem>
+        <MenuItem value={ VacationType.SICKNESS}>{ strings.editorContent.sickness }</MenuItem>
+        <MenuItem value={ VacationType.PERSONAL_DAYS }>{ strings.editorContent.personalDays }</MenuItem>
+        <MenuItem value={ VacationType.MATERNITY_PATERNITY }>{ strings.editorContent.maternityPaternityLeave }</MenuItem>
+        <MenuItem value={ VacationType.CHILD_SICKNESS }>{ strings.editorContent.childSickness }</MenuItem>
       </Select>
     </FormControl>
   );
@@ -81,7 +70,7 @@ const renderVacationRequests = () => {
   * Handle vacation comment box content
   * @param event
   */
-  const handleVacationCommentContent = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleVacationCommentContent = (event: ChangeEvent<HTMLInputElement>) => {
     const contentValue = event.target.value;
     setNewTextContent(contentValue);
   };
@@ -181,6 +170,17 @@ const renderVacationRequests = () => {
     // TODO: not yet implemented
   };
 
+  // const loadVacationRequestData = async () => {
+  //   try {
+  //     const vacationRequest = await Api.
+  //   } catch (error) {
+  //     context.setError(strings.errorHandling.fetchVacationDataFailed, error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   loadVacationRequestData();
+  // })
   return (
     <Box className={ classes.employeeVacationRequests }>
       <Typography variant="h2" padding={ theme.spacing(2) }>
