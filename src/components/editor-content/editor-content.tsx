@@ -10,7 +10,7 @@ import strings from "localization/strings";
 import theme from "theme/theme";
 import TimeUtils from "utils/time-utils";
 import { FilterScopes, DateFormats, WorkTimeData, WorkTimeTotalData, VacationWeekData } from "types/index";
-import { Timespan } from "generated/client";
+import { Timespan, VacationType } from "generated/client";
 import TotalChart from "components/generics/total-chart/total-chart";
 import OverviewChart from "components/generics/overview-chart/overview-chart";
 import WorkTimeDataUtils from "utils/work-time-data-utils";
@@ -222,10 +222,12 @@ const EditorContent = () => {
         before: new Date(currentVacationSeasonEnd),
         after: new Date(currentVacationSeasonStart)
       });
-      setVacationDayList(vacationDaysProcess(vacationEntries));
+      console.log(vacationEntries); // tulostaa kauden merkatut päivät (myös tulevaisuuden merkatut lomat)
+      setVacationDayList(vacationDaysProcess(vacationEntries)); // tekee vacationDayListin
     } catch (error) {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
     }
+    console.log(person);
   };
 
   /**
@@ -732,11 +734,12 @@ const EditorContent = () => {
         onChange={handleVacationTypeChange}
         label={ strings.editorContent.vacationType }
       >
-        <MenuItem value="Paid leave">{ strings.editorContent.paidLeave }</MenuItem>
-        <MenuItem value="Maternity leave">{ strings.editorContent.maternityLeave }</MenuItem>
-        <MenuItem value="Parental leave">{ strings.editorContent.parentalLeave }</MenuItem>
-        <MenuItem value="Unpaid leave">{ strings.editorContent.unpaidLeave }</MenuItem>
-        <MenuItem value="Surplus balance">{ strings.editorContent.surplusBalance }</MenuItem>
+        <MenuItem value={ VacationType.VACATION }>{ strings.editorContent.vacation }</MenuItem>
+        <MenuItem value={ VacationType.UNPAID_TIME_OFF}>{ strings.editorContent.unpaidTimeOff }</MenuItem>
+        <MenuItem value={ VacationType.SICKNESS}>{ strings.editorContent.sickness }</MenuItem>
+        <MenuItem value={ VacationType.PERSONAL_DAYS }>{ strings.editorContent.personalDays }</MenuItem>
+        <MenuItem value={ VacationType.MATERNITY_PATERNITY }>{ strings.editorContent.maternityPaternityLeave }</MenuItem>
+        <MenuItem value={ VacationType.CHILD_SICKNESS }>{ strings.editorContent.childSickness }</MenuItem>
       </Select>
     </FormControl>
   );
