@@ -91,10 +91,12 @@ export interface IStrings extends LocalizedStringsMethods {
     startOnly: string;
     amountOfChosenVacationDays: string;
     vacationType: string;
-    paidLeave: string;
-    maternityLeave: string;
-    parentalLeave: string;
-    unpaidLeave: string;
+    vacation: string;
+    maternityPaternityLeave: string;
+    unpaidTimeOff: string;
+    sickness: string;
+    personalDays: string;
+    childSickness: string;
     surplusBalance: string;
     employee: string;
     status: string;
