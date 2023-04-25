@@ -136,3 +136,17 @@ export interface SyncOrUpdateContextType {
   syncOrUpdate?: string;
   setSyncOrUpdate: (message: string) => void;
 }
+
+/**
+ * interface type request
+ */
+export interface Request {
+  id: number;
+  vacationType: string;
+  comment: string;
+  employee: string;
+  days: number;
+  startDate: string;
+  endDate: string;
+  status: string;
+}
