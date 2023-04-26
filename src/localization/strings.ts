@@ -101,7 +101,7 @@ export interface IStrings extends LocalizedStringsMethods {
     employee: string;
     status: string;
     applyForVacation: string;
-    comment: string;
+    message: string;
     created: string;
     updated: string;
     projectManager: string;

@@ -81,7 +81,7 @@
     "employee": "Employee",
     "status": "Status",
     "applyForVacation": "Apply for vacation",
-    "comment": "Comment: ",
+    "message": "Comment: ",
     "created": "Created: ",
     "updated": "Updated: ",
     "projectManager": "Project manager: ",

@@ -9,7 +9,7 @@ import { CalendarPickerView } from "@mui/x-date-pickers";
 import strings from "localization/strings";
 import DateRangePicker from "../date-range-picker/date-range-picker";
 import { FilterScopes } from "types";
-import { VacationType } from "generated/client";
+import { VacationRequestStatus, VacationType } from "generated/client";
 
 /**
  * interface type request
@@ -17,16 +17,16 @@ import { VacationType } from "generated/client";
 interface Request {
   request: {
     id: number;
-    vacationType: string;
-    comment: string;
+    vacationType: VacationType | string;
+    message: string;
     employee: string;
     days: number;
-    startDate: string;
-    endDate: string;
+    startDate: Date | string;
+    endDate: Date | string;
     remainingDays: number;
-    status: string;
-    created: string;
-    updated: string;
+    status: VacationRequestStatus | string;
+    created: Date | string;
+    updated: Date | string;
     projectManager: string;
     humanResourcesManager: string;
   }
@@ -59,12 +59,12 @@ const StyledTableCell = styled(TableCell)(() => ({
   "& .pending": {
     color: "#FF493C"
   },
-  "& .accepted": {
+  "& .approved": {
     color: "#45cf36"
   },
   
   // eslint-disable-next-line no-restricted-globals
-  ...(status === "ACCEPTED" ? { "&.accepted": {} } : { "&.pending": {} })
+  ...(status === "APPROVED" ? { "&.approved": {} } : { "&.pending": {} })
 }));
 
 /**
@@ -100,7 +100,7 @@ const ExpandableRow = (
         <StyledTableCell>{ startDate }</StyledTableCell>
         <StyledTableCell>{ endDate }</StyledTableCell>
         <StyledTableCell>{ remainingDays }</StyledTableCell>
-        <StyledTableCell sx={{ "&.pending": { color: "#FF493C" }, "&.accepted": { color: "#45cf36" } }} className={status === "ACCEPTED" ? "accepted" : "pending"}>{ status }</StyledTableCell>
+        <StyledTableCell sx={{ "&.pending": { color: "#FF493C" }, "&.approved": { color: "#45cf36" } }} className={status === "APPROVED" ? "approved" : "pending"}>{ status }</StyledTableCell>
         <StyledTableCell>
           <IconButton
             aria-label="expand row"
@@ -118,7 +118,7 @@ const ExpandableRow = (
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <TableCell>{ strings.editorContent.comment }</TableCell>
+                    <TableCell>{ strings.editorContent.message }</TableCell>
                     <TableCell>{ strings.editorContent.created }</TableCell>
                     <TableCell>{ strings.editorContent.updated }</TableCell>
                     <TableCell>{ strings.editorContent.projectManager }</TableCell>
@@ -131,7 +131,7 @@ const ExpandableRow = (
                 <TableBody>
                   {Object.values(vacationRequests).map(request => (
                     <TableRow key={ request.id }>
-                      <TableCell component="th" scope="row">{ request.comment }</TableCell>
+                      <TableCell component="th" scope="row">{ request.message }</TableCell>
                       <TableCell>{ request.created }</TableCell>
                       <TableCell>{ request.updated }</TableCell>
                       <TableCell>{ request.projectManager }</TableCell>
@@ -156,9 +156,9 @@ const ExpandableRow = (
  */
 const renderEmployeeVacationRequests = () => {
   const classes = useEditorContentStyles();
-  const [ status, setStatus ] = useState("");
+  const [ status, setStatus ] = useState<VacationRequestStatus | string>();
   const [ employee, setEmployee ] = useState("");
-  const [ vacationType, setVacationType ] = useState("");
+  const [ vacationType, setVacationType ] = useState<VacationType | string>();
   const [ dateFormat ] = useState("yyyy.MM.dd");
   const [ datePickerView ] = useState<CalendarPickerView>("day");
   const [ selectedVacationStartDate, setSelectedVacationStartDate ] = useState(new Date());
@@ -274,9 +274,9 @@ const renderEmployeeVacationRequests = () => {
         onChange={handleStatusChange}
         label={ strings.editorContent.status }
       >
-        <MenuItem value="Pending">{ strings.editorContent.pending }</MenuItem>
-        <MenuItem value="Approved">{ strings.editorContent.approved }</MenuItem>
-        <MenuItem value="Declined">{ strings.editorContent.declined }</MenuItem>
+        <MenuItem value={ VacationRequestStatus.PENDING }>{ strings.editorContent.pending }</MenuItem>
+        <MenuItem value={ VacationRequestStatus.APPROVED }>{ strings.editorContent.approved }</MenuItem>
+        <MenuItem value={ VacationRequestStatus.DECLINED }>{ strings.editorContent.declined }</MenuItem>
       </Select>
     </FormControl>
   );

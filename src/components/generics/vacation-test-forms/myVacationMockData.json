@@ -2,13 +2,13 @@
     {
         "id": 1958226,
         "vacationType": "Paid leave",
-        "comment": "Time off",
+        "message": "Time off",
         "employee": "A. Anonyme",
         "days": 2,
         "startDate": "01.04.2023",
         "endDate": "02.04.2023",
         "remainingDays": 25,
-        "status": "ACCEPTED",
+        "status": "APPROVED",
         "created": "2023-01-25",
         "updated": "2023-01-30",
         "projectManager": "Approved",
@@ -17,7 +17,7 @@
     {
         "id": 29582526,
         "vacationType": "Paid leave",
-        "comment": "Holiday",
+        "message": "Holiday",
         "employee": "A. Anonyme",
         "days": 2,
         "startDate": "15.04.2023",
@@ -32,7 +32,7 @@
     {
         "id": 3951226,
         "vacationType": "Paid leave",
-        "comment": "Summervacation",
+        "message": "Summervacation",
         "employee": "A. Anonyme",
         "days": 10,
         "startDate": "01.06.2023",
@@ -47,7 +47,7 @@
     {
         "id": 4958226,
         "vacationType": "Paid leave",
-        "comment": "Wintervacation",
+        "message": "Wintervacation",
         "employee": "A. Anonyme",
         "days": 15,
         "startDate": "01.02.2023",
