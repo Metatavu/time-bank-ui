@@ -10,7 +10,7 @@ import strings from "localization/strings";
 import theme from "theme/theme";
 import TimeUtils from "utils/time-utils";
 import { FilterScopes, DateFormats, WorkTimeData, WorkTimeTotalData, VacationWeekData } from "types/index";
-import { Timespan, VacationType } from "generated/client";
+import { Timespan, VacationRequest, VacationType } from "generated/client";
 import TotalChart from "components/generics/total-chart/total-chart";
 import OverviewChart from "components/generics/overview-chart/overview-chart";
 import WorkTimeDataUtils from "utils/work-time-data-utils";
@@ -762,12 +762,30 @@ const EditorContent = () => {
   /**
   * Handle vacation apply button
   */
-  const handleVacationApplyButton = () => {
+  const applyForVacation = async () => {
     // TODO: send vacation request to database
-    return (
-      // eslint-disable-next-line no-console
-      console.log(`this is START DATE ${selectedVacationStartDate} and this is END DATE${selectedVacationEndDate} and this is TEXT CONTENT ${textContent}. Vacation type ${vacationType}`)
-    );
+    // TODO: create a request from dates, type and comment
+    const newRequest: VacationRequest = {
+      startDate: selectedVacationStartDate,
+      endDate: selectedVacationEndDate,
+      type: vacationType as VacationType,
+      message: textContent,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    if (!person) {
+      return;
+    }
+    try {
+      const vacationEntries = await Api.getVacationRequestsApi(accessToken?.access_token).createVacationRequest({ // vie tiedon databaseen??
+        vacationRequest: newRequest
+      });
+      // setNewRequest(tulosta lomat taulukkoonn!!)
+      console.log(vacationEntries);
+    } catch (error) {
+      context.setError(strings.errorHandling.fetchVacationDataFailed, error);
+    }
+    console.log(newRequest);
   };
 
   /**
@@ -777,7 +795,7 @@ const EditorContent = () => {
     <Button
       color="secondary"
       variant="contained"
-      onClick={ handleVacationApplyButton }
+      onClick={ applyForVacation }
     >
       <Typography style={{ fontWeight: 600, color: "white" }}>
         { strings.generic.apply }
