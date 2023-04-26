@@ -53,7 +53,7 @@ const EditorContent = () => {
   const context = useContext(ErrorContext);
   const [ tabIndex, setTabIndex ] = useState("1");
   const [ textContent, setTextContent ] = useState("");
-  const [ vacationType, setVacationType ] = useState("");
+  const [ vacationType, setVacationType ] = useState<VacationType | string>();
 
   /**
    * Initialize the component data
@@ -311,7 +311,7 @@ const EditorContent = () => {
    *
    * @param event React change event
    */
-  const handleDateFormatChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDateFormatChange = (event: ChangeEvent<HTMLInputElement>) => {
     const selectedFilterScope = event.target.value as FilterScopes;
 
     setScope(selectedFilterScope);
@@ -704,7 +704,7 @@ const EditorContent = () => {
   * Handle vacation comment box content
   * @param event
   */
-  const handleVacationCommentContent = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleVacationCommentContent = (event: ChangeEvent<HTMLInputElement>) => {
     const contentValue = event.target.value;
     setTextContent(contentValue);
   };
@@ -715,7 +715,7 @@ const EditorContent = () => {
    */
   const handleVacationTypeChange = (event: SelectChangeEvent) => {
     const contentValue = event.target.value;
-    setVacationType(contentValue as string);
+    setVacationType(contentValue);
   };
 
   /**
@@ -730,8 +730,8 @@ const EditorContent = () => {
     >
       <InputLabel>{ strings.editorContent.vacationType }</InputLabel>
       <Select
-        value={vacationType}
-        onChange={handleVacationTypeChange}
+        value={ vacationType }
+        onChange={ handleVacationTypeChange }
         label={ strings.editorContent.vacationType }
       >
         <MenuItem value={ VacationType.VACATION }>{ strings.editorContent.vacation }</MenuItem>
