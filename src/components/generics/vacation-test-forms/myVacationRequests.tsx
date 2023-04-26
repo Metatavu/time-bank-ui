@@ -1,5 +1,5 @@
 import { ChangeEvent, useState } from "react";
-import { Collapse, FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, Button, Box } from "@mui/material";
+import { Collapse, FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, Button, Box, styled, tableCellClasses } from "@mui/material";
 import useEditorContentStyles from "styles/editor-content/editor-content";
 import theme from "theme/theme";
 import myVacationRequests from "./myVacationMockData.json";
@@ -24,10 +24,9 @@ const renderVacationRequests = () => {
   const [ selectedVacationEndDate, setSelectedVacationEndDate ] = useState(new Date());
   const [ openRows, setOpenRows ] = useState<boolean[]>([]);
   const [ newTextContent, setNewTextContent ] = useState("");
-  const [ newVacationType, setNewVacationType ] = useState("");
+  const [ vacationType, setVacationType ] = useState<VacationType | string>();
   const [ datePickerView ] = useState<CalendarPickerView>("day");
   const [ textContent ] = useState("");
-  const [ vacationType ] = useState<VacationType>();
 
   /**
   * Handle vacation type 
@@ -35,7 +34,7 @@ const renderVacationRequests = () => {
   */
   const handleVacationTypeChange = (event: SelectChangeEvent) => {
     const contentValue = event.target.value;
-    setNewVacationType(contentValue);
+    setVacationType(contentValue);
   };
 
   /**
@@ -52,7 +51,7 @@ const renderVacationRequests = () => {
     >
       <InputLabel>{ strings.editorContent.vacationType }</InputLabel>
       <Select
-        value={ newVacationType }
+        value={ vacationType }
         onChange={ handleVacationTypeChange }
         label={ strings.editorContent.vacationType }
       >
@@ -181,6 +180,26 @@ const renderVacationRequests = () => {
   // useEffect(() => {
   //   loadVacationRequestData();
   // })
+
+  const StyledTableCell = styled(TableCell)(() => ({
+    [`&.${tableCellClasses.head}`]: {
+      backgroundColor: theme.palette.common.white,
+      color: theme.palette.common.black
+    },
+    [`&.${tableCellClasses.body}`]: {
+      fontSize: 14
+    },
+    "& .pending": {
+      color: "#FF493C"
+    },
+    "& .approved": {
+      color: "#45cf36"
+    },
+    
+    // eslint-disable-next-line no-restricted-globals
+    ...(status === "APPROVED" ? { "&.approved": {} } : { "&.pending": {} })
+  }));
+
   return (
     <Box className={ classes.employeeVacationRequests }>
       <Typography variant="h2" padding={ theme.spacing(2) }>
@@ -211,7 +230,7 @@ const renderVacationRequests = () => {
                   <TableCell>{ request.days }</TableCell>
                   <TableCell>{ request.startDate }</TableCell>
                   <TableCell>{ request.endDate }</TableCell>
-                  <TableCell>{ request.status }</TableCell>
+                  <StyledTableCell sx={{ "&.pending": { color: "#FF493C" }, "&.approved": { color: "#45cf36" } }} className={request.status === "APPROVED" ? "approved" : "pending"}>{ request.status }</StyledTableCell>
                   <TableCell>
                     <IconButton
                       aria-label="expand row"
