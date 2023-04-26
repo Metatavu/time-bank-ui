@@ -1,4 +1,4 @@
-import { Person, PersonTotalTime } from "generated/client";
+import { Person, PersonTotalTime, VacationRequestStatus, VacationType } from "generated/client";
 
 /**
  * Access token
@@ -142,11 +142,11 @@ export interface SyncOrUpdateContextType {
  */
 export interface Request {
   id: number;
-  vacationType: string;
-  comment: string;
+  vacationType: VacationType | string;
+  message: string;
   employee: string;
   days: number;
-  startDate: string;
-  endDate: string;
-  status: string;
+  startDate: Date | string;
+  endDate: Date | string;
+  status: VacationRequestStatus | string;
 }
