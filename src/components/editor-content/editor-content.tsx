@@ -10,7 +10,7 @@ import strings from "localization/strings";
 import theme from "theme/theme";
 import TimeUtils from "utils/time-utils";
 import { FilterScopes, DateFormats, WorkTimeData, WorkTimeTotalData, VacationWeekData } from "types/index";
-import { Timespan, VacationRequest, VacationType } from "generated/client";
+import { Timespan, VacationRequest, VacationRequestStatus, VacationType } from "generated/client";
 import TotalChart from "components/generics/total-chart/total-chart";
 import OverviewChart from "components/generics/overview-chart/overview-chart";
 import WorkTimeDataUtils from "utils/work-time-data-utils";
@@ -54,6 +54,7 @@ const EditorContent = () => {
   const [ tabIndex, setTabIndex ] = useState("1");
   const [ textContent, setTextContent ] = useState("");
   const [ vacationType, setVacationType ] = useState<VacationType | string>();
+  const [ requests ] = useState<VacationRequest[]>([]);
 
   /**
    * Initialize the component data
@@ -222,12 +223,10 @@ const EditorContent = () => {
         before: new Date(currentVacationSeasonEnd),
         after: new Date(currentVacationSeasonStart)
       });
-      console.log(vacationEntries); // tulostaa kauden merkatut päivät (myös tulevaisuuden merkatut lomat)
-      setVacationDayList(vacationDaysProcess(vacationEntries)); // tekee vacationDayListin
+      setVacationDayList(vacationDaysProcess(vacationEntries));
     } catch (error) {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
     }
-    console.log(person);
   };
 
   /**
@@ -693,10 +692,7 @@ const EditorContent = () => {
     }
     
     return (
-      <Typography variant="h4">
-        { strings.editorContent.amountOfChosenVacationDays }
-        {days}
-      </Typography>
+      days
     );
   };
 
@@ -748,44 +744,54 @@ const EditorContent = () => {
   * Renders vacation comment box
   */
   const renderVacationCommentBox = () => (
-    <TextField
-      id="outlined-multiline-flexible"
-      multiline
-      maxRows={5}
-      label={ strings.editorContent.leaveAComment }
-      variant="outlined"
-      value={textContent}
-      onChange={handleVacationCommentContent}
-    />
+    <Box>
+      <Typography variant="h4">
+        { strings.editorContent.amountOfChosenVacationDays }
+        { renderVacationDaysSpent() }
+      </Typography>
+      <TextField
+        id="outlined-multiline-flexible"
+        multiline
+        maxRows={ 5 }
+        label={ strings.editorContent.leaveAComment }
+        variant="outlined"
+        value={textContent}
+        onChange={ handleVacationCommentContent }
+      />
+    </Box>
+    
   );
 
   /**
   * Handle vacation apply button
+  * Sends vacation request to database
   */
   const applyForVacation = async () => {
-    // TODO: send vacation request to database
-    // TODO: create a request from dates, type and comment
     const newRequest: VacationRequest = {
+      person: 123456,
       startDate: selectedVacationStartDate,
       endDate: selectedVacationEndDate,
       type: vacationType as VacationType,
       message: textContent,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
+      days: renderVacationDaysSpent(),
+      projectManagerStatus: VacationRequestStatus.PENDING,
+      hrManagerStatus: VacationRequestStatus.PENDING
     };
     if (!person) {
       return;
     }
     try {
-      const vacationEntries = await Api.getVacationRequestsApi(accessToken?.access_token).createVacationRequest({ // vie tiedon databaseen??
+      const vacationsApi = Api.getVacationRequestsApi(accessToken?.access_token);
+
+      const createdVacation = await vacationsApi.createVacationRequest({
         vacationRequest: newRequest
       });
-      // setNewRequest(tulosta lomat taulukkoonn!!)
-      console.log(vacationEntries);
+      requests.push(createdVacation);
     } catch (error) {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
     }
-    console.log(newRequest);
   };
 
   /**
@@ -881,7 +887,6 @@ const EditorContent = () => {
             { renderVacationType() }
           </Box>
           <Box className={ classes.vacationDetailsContent }>
-            { renderVacationDaysSpent() }
             { renderVacationCommentBox() }
             { renderVacationApplyButton() }
           </Box>
