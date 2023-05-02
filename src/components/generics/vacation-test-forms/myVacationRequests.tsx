@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useContext, useState } from "react";
 import { Collapse, FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, Button, Box, styled, tableCellClasses } from "@mui/material";
 import useEditorContentStyles from "styles/editor-content/editor-content";
 import theme from "theme/theme";
@@ -12,22 +12,30 @@ import strings from "localization/strings";
 import { FilterScopes } from "types";
 import DateRangePicker from "../date-range-picker/date-range-picker";
 import { Request } from "types/index";
-import { VacationType } from "generated/client";
+import { VacationRequest, VacationType } from "generated/client";
+import { useAppSelector } from "app/hooks";
+import { selectPerson } from "features/person/person-slice";
+import Api from "api/api";
+import { selectAuth } from "features/auth/auth-slice";
+import { ErrorContext } from "components/error-handler/error-handler";
 
 /**
  * Renders vacation request table
  */
 const renderVacationRequests = () => {
   const classes = useEditorContentStyles();
+  const { person } = useAppSelector(selectPerson);
+  const { accessToken } = useAppSelector(selectAuth);
   const [ dateFormat ] = useState("yyyy.MM.dd");
   const [ selectedVacationStartDate, setSelectedVacationStartDate ] = useState(new Date());
   const [ selectedVacationEndDate, setSelectedVacationEndDate ] = useState(new Date());
   const [ openRows, setOpenRows ] = useState<boolean[]>([]);
-  const [ newTextContent, setNewTextContent ] = useState("");
+  const [ textContent, setTextContent ] = useState("");
   const [ vacationType, setVacationType ] = useState<VacationType | string>();
   const [ datePickerView ] = useState<CalendarPickerView>("day");
-  const [ textContent ] = useState("");
-
+  const context = useContext(ErrorContext);
+  const [ requests ] = useState<VacationRequest[]>([]);
+  
   /**
   * Handle vacation type 
   * @param event
@@ -71,7 +79,7 @@ const renderVacationRequests = () => {
   */
   const handleVacationCommentContent = (event: ChangeEvent<HTMLInputElement>) => {
     const contentValue = event.target.value;
-    setNewTextContent(contentValue);
+    setTextContent(contentValue);
   };
 
   /**
@@ -84,19 +92,62 @@ const renderVacationRequests = () => {
       maxRows={5}
       label={ strings.editorContent.leaveAComment }
       variant="outlined"
-      value={ newTextContent }
+      value={ textContent }
       onChange={ handleVacationCommentContent }
     />
   );
 
   /**
-  * Handle vacation apply button
-  */
-  const handleVacationApplyButton = () => {
-    // TODO: functionality to this
+   * Renders and calculates updated days spent for vacation
+   */
+  const renderUpdatedVacationDaysSpent = () => {
+    // Define the date range to compare with holidays
+    const holidaysFi = new Holidays("FI");
+    const startDate = new Date(selectedVacationStartDate);
+    const endDate = new Date(selectedVacationEndDate);
+    let days = 0;
+
+    // Iterate over each date in the date range and check if it is a holiday
+    for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+      if (!holidaysFi.isHoliday(d) && d.getDay() !== 0) {
+        // eslint-disable-next-line no-plusplus
+        days++;
+      }
+    }
+    
     return (
-      console.log(`this is START DATE ${selectedVacationStartDate} and this is END DATE${selectedVacationEndDate} and this is TEXT CONTENT ${textContent}. Vacation type ${vacationType}`)
+      days
     );
+  };
+
+  /**
+   * @param request 
+  * Handle vacation apply button
+  * Updates the vacation request
+  */
+  const updateRequest = async (request: any) => {
+    const changedRequest: VacationRequest = {
+      ...request,
+      startDate: selectedVacationStartDate,
+      endDate: selectedVacationEndDate,
+      type: vacationType as VacationType,
+      message: textContent,
+      updatedAt: new Date(),
+      days: renderUpdatedVacationDaysSpent()
+    };
+    if (!person) {
+      return;
+    }
+    try {
+      const vacationsApi = Api.getVacationRequestsApi(accessToken?.access_token);
+      const updatedRequest = await vacationsApi.updateVacationRequest({
+        vacationRequest: changedRequest,
+        id: "0eaa5181-0d38-45a4-8e2d-9843aeb40935"
+      });
+      requests.push(updatedRequest);
+    } catch (error) {
+      context.setError(strings.errorHandling.fetchVacationDataFailed, error);
+    }
   };
 
   /**
@@ -106,7 +157,7 @@ const renderVacationRequests = () => {
     <Button
       color="secondary"
       variant="contained"
-      onClick={handleVacationApplyButton}
+      onClick={ updateRequest }
     >
       <Typography style={{
         fontWeight: 600,
@@ -165,22 +216,23 @@ const renderVacationRequests = () => {
   /**
    * Method to delete vacation request
    */
-  const deleteRequest = () => {
-    // TODO: not yet implemented
+  const deleteRequest = async () => {
+    const id = "3ee2b492-e4c8-11ed-8b90-325096b39f47";
+    if (!person) {
+      return;
+    }
+    try {
+      await Api.getVacationRequestsApi(accessToken?.access_token).deleteVacationRequest({
+        id: id
+      });
+    } catch (error) {
+      context.setError(strings.errorHandling.fetchVacationDataFailed, error);
+    }
   };
 
-  // const loadVacationRequestData = async () => {
-  //   try {
-  //     const vacationRequest = await Api.
-  //   } catch (error) {
-  //     context.setError(strings.errorHandling.fetchVacationDataFailed, error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   loadVacationRequestData();
-  // })
-
+  /**
+   * Styles for table cells
+   */
   const StyledTableCell = styled(TableCell)(() => ({
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: theme.palette.common.white,
