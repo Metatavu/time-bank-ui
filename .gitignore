@@ -25,5 +25,5 @@ yarn-error.log*
 /src/generated
 
 # mock data
-/src/components/generics/vacation-test-forms/VacationMockData.ts
+/src/components/generics/vacation-test-forms/vacationMockData.ts
 /src/components/generics/vacation-test-forms/myVacationMockData.ts
