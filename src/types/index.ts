@@ -141,12 +141,23 @@ export interface SyncOrUpdateContextType {
  * interface type request
  */
 export interface Request {
-  id: number;
-  vacationType: VacationType | string;
+  id: string;
+  vacationType: VacationType;
   message: string;
+  person: number;
   employee: string;
   days: number;
-  startDate: Date | string;
-  endDate: Date | string;
-  status: VacationRequestStatus | string;
+  startDate: Date;
+  endDate: Date;
+  remainingDays: number;
+  status: VacationRequestStatus;
+  created: Date;
+  updated: Date;
+  projectManager: string;
+  humanResourcesManager: string;
+}
+
+export enum RequestType {
+  UPDATE = "UPDATE",
+  APPLY = "APPLY"
 }
