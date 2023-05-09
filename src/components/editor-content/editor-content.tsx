@@ -22,8 +22,9 @@ import vacationDaysProcess from "utils/vacation-data-utils";
 import { selectAuth } from "features/auth/auth-slice";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import Holidays from "date-holidays";
-import renderVacationRequests from "components/generics/vacation-test-forms/myVacationRequests";
+import RenderVacationRequests from "components/generics/vacation-test-forms/myVacationRequests";
 import renderEmployeeVacationRequests from "components/generics/vacation-test-forms/employeeVacationRequests";
+import myRequests from "components/generics/vacation-test-forms/myVacationMockData";
 
 /**
 * Application editor content component
@@ -53,9 +54,9 @@ const EditorContent = () => {
   const context = useContext(ErrorContext);
   const [ tabIndex, setTabIndex ] = useState("1");
   const [ textContent, setTextContent ] = useState("");
-  const [ vacationType, setVacationType ] = useState<VacationType | string>();
-  const [ requests ] = useState<VacationRequest[]>([]);
-
+  const [ vacationType, setVacationType ] = useState<VacationType>(VacationType.VACATION);
+  const [ requests, setRequests ] = useState<VacationRequest[]>([]);
+  
   /**
    * Initialize the component data
    */
@@ -691,9 +692,7 @@ const EditorContent = () => {
       }
     }
     
-    return (
-      days
-    );
+    return days;
   };
 
   /**
@@ -710,7 +709,7 @@ const EditorContent = () => {
    * @param event
    */
   const handleVacationTypeChange = (event: SelectChangeEvent) => {
-    const contentValue = event.target.value;
+    const contentValue = event.target.value as VacationType;
     setVacationType(contentValue);
   };
 
@@ -755,11 +754,10 @@ const EditorContent = () => {
         maxRows={ 5 }
         label={ strings.editorContent.leaveAComment }
         variant="outlined"
-        value={textContent}
+        value={ textContent }
         onChange={ handleVacationCommentContent }
       />
     </Box>
-    
   );
 
   /**
@@ -768,10 +766,10 @@ const EditorContent = () => {
   */
   const applyForVacation = async () => {
     const newRequest: VacationRequest = {
-      person: 123456,
+      person: myRequests[0].person,
       startDate: selectedVacationStartDate,
       endDate: selectedVacationEndDate,
-      type: vacationType as VacationType,
+      type: vacationType,
       message: textContent,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -779,16 +777,15 @@ const EditorContent = () => {
       projectManagerStatus: VacationRequestStatus.PENDING,
       hrManagerStatus: VacationRequestStatus.PENDING
     };
-    if (!person) {
-      return;
-    }
+    if (!person) return;
+
     try {
       const vacationsApi = Api.getVacationRequestsApi(accessToken?.access_token);
 
       const createdVacation = await vacationsApi.createVacationRequest({
         vacationRequest: newRequest
       });
-      requests.push(createdVacation);
+      setRequests(requests.concat(createdVacation));
     } catch (error) {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
     }
@@ -931,7 +928,7 @@ const EditorContent = () => {
         </TabPanel>
         <TabPanel value="2">
           { renderVacationInfoSummary() }
-          { renderVacationRequests() }
+          { RenderVacationRequests() }
         </TabPanel>
         <TabPanel value="3">
           { renderEmployeeVacationRequests() }
