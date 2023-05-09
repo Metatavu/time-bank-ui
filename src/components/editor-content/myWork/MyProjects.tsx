@@ -9,6 +9,10 @@ import allocations from "./allocationsMockData.json"; // Allocation mock data Fi
 import myProjects from "./projectByAllocationMockData.json"; // get project data from allocations with project Id
 import tasksMockData from "./tasksMockData.json"; // get Mock data by project Id from forecast and this is result
 import timeRegistrations from "./timeRegistrationMockData.json"; // get time registration by projectId and person id
+import { useAppSelector } from "app/hooks";
+import { selectAuth } from "features/auth/auth-slice";
+import { selectPerson } from "features/person/person-slice";
+
 
 interface Props {
 }
@@ -26,7 +30,9 @@ const renderMyEtraCloudComponent: FC<Props> = ({
   const [rows, setRows] = React.useState<any[]>([]);
   const classes = useEditorContentStyles();
   const [columni, setColumni] = React.useState<GridColDef[]>([]);
-
+  const [access_token, setAccess_token] = React.useState<string>();
+  const { person, personTotalTime } = useAppSelector(selectPerson);
+  const tasksApi_Url = 'https://10zpthpuwc.execute-api.us-east-2.amazonaws.com/tasks?';
 
   const renderColumns = (project: any, columns: any) => {
     columns.push({
@@ -84,6 +90,7 @@ const renderMyEtraCloudComponent: FC<Props> = ({
 
   const renderRows = (project: any, rows: any) => { // Here in future call for TasksApi and get tasks by project Id
     // const taskMockData = getTasksByProjectId(project);
+    
     tasksMockData.map((task, index) => {
       if (task.projectId === project.id) {
         task.assignedPersons.forEach(person => { 
@@ -148,8 +155,39 @@ const renderMyEtraCloudComponent: FC<Props> = ({
     }));
   };
 
+const api_Url = 'https://10zpthpuwc.execute-api.us-east-2.amazonaws.com/tasks?startDate=2020-06-03&endDate=2023-03-03&projectId=344858';
+const { accessToken } = useAppSelector(selectAuth);
+
+React.useEffect(() => {
+setAccess_token("Bearer " + accessToken?.access_token);
+});
+
+
+
+  //Hae data
+  const haeData = async () => {
+    if (access_token) {
+    try {
+    const data = await fetch(api_Url, {
+        "headers": {
+          "Authorization": access_token
+        }
+      });
+
+      const data2 = await data.json();
+      console.log(data2);
+
+      console.log(data);
+    }catch (error) {
+      console.log(error);
+    }
+    return;
+  }
+  };
+
   return (
     <>
+      <Button onClick={haeData}>Hae tiedot</Button>
       {renderMyProjects()}
     </>
   );

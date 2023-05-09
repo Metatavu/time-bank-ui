@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, IconButton, Tab, Tabs, FormControlLabel, Switch } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { DatePickerView } from "@material-ui/pickers";
@@ -21,8 +21,9 @@ import { ErrorContext } from "components/error-handler/error-handler";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { selectAuth } from "features/auth/auth-slice";
 import { TabContext, TabList, TabPanel } from "@material-ui/lab";
-import MyAllocations from "./myWork/MyAllocations";
-import MyProject from "./myWork/MyProjects";
+import MyProjectsComponent from "./myWork/myProjectsComponent";
+import MySettingsComponent from "./myWork/settingsComponent";
+import { link } from "fs";
 
 /**
  * Component properties
@@ -54,6 +55,12 @@ const EditorContent: React.FC<Props> = () => {
   const [tabIndex, setTabIndex] = React.useState("1");
   const [ sprintValue, setSprintValue ] = React.useState<string>("");
   const [ progressValue, setProgressValue ] = React.useState<string>("");
+  const [access_token, setAccess_token] = React.useState<string>();
+  const allocationApi_Url = 'https://10zpthpuwc.execute-api.us-east-2.amazonaws.com/allocations?';
+  const tasksApi_Url = 'https://10zpthpuwc.execute-api.us-east-2.amazonaws.com/tasks?';
+  const [ projektit, setProjects ] = React.useState<any>([]);
+  const [ linkedTasks, setLinkedTasks ] = React.useState<any>();
+  const [selectedPersonId, setSelectedPersonId] = React.useState<number>();
 
   /**
    * Initialize the component data
@@ -75,7 +82,6 @@ const EditorContent: React.FC<Props> = () => {
    * Load the daily data
    */
   const loadDateData = async () => {
-    console.log(accessToken);
     if (!person || !selectedStartDate) {
       return;
     }
@@ -591,6 +597,91 @@ const EditorContent: React.FC<Props> = () => {
     );
   };
 
+//Load tasks for linked allocations/projects from API
+const getTasks = (projects: any) => {
+  let tasks: any = [];
+  projects.map(async (project: any, index: any) => {
+    if (project !== null) {
+    let projectId = "projectId=" + project;
+    
+    try {
+    const data = await fetch(tasksApi_Url + projectId, {
+        "headers": {
+          "Authorization": "Bearer " + accessToken?.access_token
+        }
+      });
+
+      let projectTasks = await data.json();
+      projectTasks.map((task: any) => {
+        tasks.push(task);
+      })
+    
+    }catch (error) {
+      console.log(error);
+    }
+    return;
+  }
+  });
+  setLinkedTasks(tasks);
+};
+
+  //Look for allocations from API
+const checkAllocations = async () => {
+  const activeProjects: any[] = [];
+  activeProjects.length = 0;
+  const current = new Date();
+  const currentDate = current.getFullYear() + "-" + current.getMonth() + "-" + current.getDate();
+  if (accessToken && person) {
+  try {
+  const selectedPerson = "personId=" + person.id;
+  const apiUrlChoices = allocationApi_Url + selectedPerson;
+  const data = await fetch(apiUrlChoices, {
+      "headers": {
+        "Authorization": "Bearer " + accessToken.access_token
+      }
+    });
+
+    const data2 = await data.json();
+    data2.map((allocation: any) => {
+    if (allocation.endDate.toString() > "2023-03-22" ){
+      if (!activeProjects.includes(allocation.project)) {
+      activeProjects.push(allocation.project);
+      }
+      }
+    })
+    setProjects(activeProjects);
+    getTasks(activeProjects);
+
+  }catch (error) {
+    console.log(error);
+  }
+  return;
+}
+};
+
+
+//When person updates check allocations, projects and tasks
+useEffect(() => {
+  setProjects(undefined);
+  setLinkedTasks(undefined);
+  if (person) {
+  checkAllocations();
+  }
+}, [person]);
+
+const renderMyProjects = () => {
+  if (projektit && projektit.length > 0 && linkedTasks && linkedTasks.length > 0) {
+    console.log(linkedTasks);
+    return (
+      <MyProjectsComponent
+      activeProjects={ projektit }
+      linkedTasks={ linkedTasks }
+      selectedPerson={ person }
+      />
+    )
+    }
+  };
+  
   /**
    * Component render
    */
@@ -606,8 +697,7 @@ const EditorContent: React.FC<Props> = () => {
         <TabPanel value="1">
         { renderFilter() }
         { renderMyWork() }
-        <MyAllocations/>
-        <MyProject/>
+        { renderMyProjects() }
         </TabPanel>
         <TabPanel value="2">
         { renderFilter() }
