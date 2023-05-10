@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useState } from "react";
-import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, IconButton, List, ListItem, Tab, Button, InputLabel, Select, SelectChangeEvent, FormControl } from "@mui/material";
+import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, IconButton, List, ListItem, Tab, Button } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { CalendarPickerView } from "@mui/x-date-pickers";
 import useEditorContentStyles from "styles/editor-content/editor-content";
@@ -24,6 +24,7 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 import Holidays from "date-holidays";
 import renderVacationRequests from "components/generics/vacation-test-forms/myVacationRequests";
 import renderEmployeeVacationRequests from "components/generics/vacation-test-forms/employeeVacationRequests";
+import RenderVacationTypeSelector from "components/generics/vacation-apply-components/vacationTypeSelector";
 
 /**
 * Component properties
@@ -61,7 +62,7 @@ const EditorContent: React.FC<Props> = () => {
   const context = React.useContext(ErrorContext);
   const [ tabIndex, setTabIndex ] = useState("1");
   const [ textContent, setTextContent ] = useState("");
-  const [ vacationType, setVacationType ] = useState("");
+  const [ vacationType ] = useState("");
 
   /**
    * Initialize the component data
@@ -716,40 +717,6 @@ const EditorContent: React.FC<Props> = () => {
   };
 
   /**
-   * Handle vacation type
-   * @param event
-   */
-  const handleVacationTypeChange = (event: SelectChangeEvent) => {
-    const contentValue = event.target.value;
-    setVacationType(contentValue as string);
-  };
-
-  /**
-   * Renders the vacation type selection
-   */
-  const renderVacationType = () => (
-    <FormControl
-      variant="standard"
-      sx={{
-        m: 1, minWidth: 165, marginBottom: 4
-      }}
-    >
-      <InputLabel>{ strings.editorContent.vacationType }</InputLabel>
-      <Select
-        value={vacationType}
-        onChange={handleVacationTypeChange}
-        label={ strings.editorContent.vacationType }
-      >
-        <MenuItem value="Paid leave">{ strings.editorContent.paidLeave }</MenuItem>
-        <MenuItem value="Maternity leave">{ strings.editorContent.maternityLeave }</MenuItem>
-        <MenuItem value="Parental leave">{ strings.editorContent.parentalLeave }</MenuItem>
-        <MenuItem value="Unpaid leave">{ strings.editorContent.unpaidLeave }</MenuItem>
-        <MenuItem value="Surplus balance">{ strings.editorContent.surplusBalance }</MenuItem>
-      </Select>
-    </FormControl>
-  );
-
-  /**
   * Renders vacation comment box
   */
   const renderVacationCommentBox = () => (
@@ -861,11 +828,15 @@ const EditorContent: React.FC<Props> = () => {
             minEndDate={ selectedVacationStartDate }
             onStartDateChange={handleVacationStartDateChange}
             onEndDateChange={handleVacationEndDateChange}
-            onStartWeekChange={handleStartWeekChange}
-            onEndWeekChange={handleEndWeekChange}
+            onStartWeekChange={() => {
+              throw new Error("Function not implemented.");
+            }}
+            onEndWeekChange={() => {
+              throw new Error("Function not implemented.");
+            }}
           />
           <Box className={ classes.vacationDetailsContent }>
-            { renderVacationType() }
+            <RenderVacationTypeSelector/>
           </Box>
           <Box className={ classes.vacationDetailsContent }>
             { renderVacationDaysSpent() }
@@ -913,7 +884,11 @@ const EditorContent: React.FC<Props> = () => {
         </TabPanel>
         <TabPanel value="2">
           { renderVacationInfoSummary() }
-          { renderVacationRequests() }
+          { renderVacationRequests({
+            renderVacationDaysSpent: renderVacationDaysSpent,
+            renderVacationApplyButton: renderVacationApplyButton,
+            renderVacationCommentBox: renderVacationCommentBox
+          }) }
         </TabPanel>
         <TabPanel value="3">
           { renderEmployeeVacationRequests() }

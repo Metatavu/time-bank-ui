@@ -10,6 +10,7 @@ import { CalendarPickerView } from "@mui/x-date-pickers";
 import strings from "localization/strings";
 import DateRangePicker from "../date-range-picker/date-range-picker";
 import { FilterScopes } from "types";
+import RenderVacationTypeSelector from "../vacation-apply-components/vacationTypeSelector";
 
 /**
  * interface type request
@@ -139,7 +140,6 @@ const renderEmployeeVacationRequests = () => {
   const classes = useEditorContentStyles();
   const [ status, setStatus ] = useState("");
   const [ employee, setEmployee ] = useState("");
-  const [ vacationType, setVacationType ] = useState("");
   const [ dateFormat ] = useState<string>("yyyy.MM.dd");
   const [ datePickerView ] = useState<CalendarPickerView>("day");
   const [ selectedVacationStartDate, setSelectedVacationStartDate ] = useState<Date>(new Date());
@@ -193,39 +193,6 @@ const renderEmployeeVacationRequests = () => {
   };
 
   /**
-   * Handle vacation type 
-   */
-  const handleVacationTypeChange = (event: SelectChangeEvent) => {
-    const contentValue = event.target.value;
-    setVacationType(contentValue as string);
-  };
-
-  /**
-   * Renders the vacation type selection
-   */
-  const renderVacationType = () => (
-    <FormControl
-      variant="standard"
-      sx={{
-        m: 1, minWidth: 165, marginBottom: 4
-      }}
-    >
-      <InputLabel>{ strings.editorContent.vacationType }</InputLabel>
-      <Select
-        value={vacationType}
-        onChange={handleVacationTypeChange}
-        label={ strings.editorContent.vacationType }
-      >
-        <MenuItem value="Paid leave">{ strings.editorContent.paidLeave }</MenuItem>
-        <MenuItem value="Maternity leave">{ strings.editorContent.maternityLeave }</MenuItem>
-        <MenuItem value="Parental leave">{ strings.editorContent.parentalLeave }</MenuItem>
-        <MenuItem value="Unpaid leave">{ strings.editorContent.unpaidLeave }</MenuItem>
-        <MenuItem value="Surplus balance">{ strings.editorContent.surplusBalance }</MenuItem>
-      </Select>
-    </FormControl>
-  );
-
-  /**
    * Handle employee change
    */
   const handleStatusChange = (event: SelectChangeEvent) => {
@@ -271,7 +238,7 @@ const renderEmployeeVacationRequests = () => {
           float: "right", paddingRight: "15px", marginBottom: "10px"
         }}
         >
-          { renderVacationType() }
+          <RenderVacationTypeSelector/>
           { renderEmployeeSelection() }
           { renderRequestStatus() }
           <Box className={ classes.datePickers }>
