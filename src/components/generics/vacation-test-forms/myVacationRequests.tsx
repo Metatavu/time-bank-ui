@@ -36,7 +36,7 @@ const RenderVacationRequests = () => {
   const context = useContext(ErrorContext);
   const [ requests, setRequests ] = useState<VacationRequest[]>([]);
 
-  // TODO: initialize requests
+  // TODO: initialize requests!
   
   /**
   * Handle vacation type 
