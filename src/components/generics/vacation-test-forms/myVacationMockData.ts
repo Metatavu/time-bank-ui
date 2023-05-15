@@ -3,7 +3,7 @@ import { Request } from "types/index";
 
 const myRequests: Request[] = [
   {
-    id: "1958228",
+    id: "1",
     vacationType: "Personal day" as VacationType,
     message: "Time off",
     person: 123456,
@@ -19,7 +19,7 @@ const myRequests: Request[] = [
     humanResourcesManager: "Pending"
   },
   {
-    id: "29582526",
+    id: "2",
     vacationType: "Vacation" as VacationType,
     message: "Holiday",
     person: 123456,
@@ -35,7 +35,7 @@ const myRequests: Request[] = [
     humanResourcesManager: "Pending"
   },
   {
-    id: "3951226",
+    id: "3",
     vacationType: "Vacation" as VacationType,
     message: "Summervacation",
     person: 123456,
@@ -51,7 +51,7 @@ const myRequests: Request[] = [
     humanResourcesManager: "Pending"
   },
   {
-    id: "4958226",
+    id: "4",
     vacationType: "Vacation" as VacationType,
     message: "Wintervacation",
     person: 123456,
