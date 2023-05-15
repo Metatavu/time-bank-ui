@@ -43,7 +43,7 @@ const RenderVacationRequests = () => {
 
     try {
       const vacationsApi = Api.getVacationRequestsApi(accessToken?.access_token);
-      const vacations = await vacationsApi.listVacationRequests({});
+      const vacations = await vacationsApi.listVacationRequests({ personId: person.id });
       setRequests(vacations);
       console.log(vacations);
     } catch (error) {
@@ -122,10 +122,8 @@ const RenderVacationRequests = () => {
    * @param request 
    */
   const updateRequest = async (id: string) => {
-    const requestToBeUpdated = requests.filter(request => request.id === id);
+    const requestToBeUpdated = requests.find(request => request.id === id);
 
-    // TODO: WIll be resolved when mock data is typed as vacation request
-    // const changedRequest: VacationRequest = {
     const changedRequest: any = {
       ...requestToBeUpdated,
       startDate: selectedVacationStartDate,
@@ -133,7 +131,7 @@ const RenderVacationRequests = () => {
       type: vacationType,
       message: textContent,
       updatedAt: new Date(),
-      days: 2
+      days: renderVacationDaysSpent()
     };
     if (!person) return;
 
@@ -143,8 +141,13 @@ const RenderVacationRequests = () => {
         id: id,
         vacationRequest: changedRequest
       });
-      // setRequests(requests.concat(updatedRequest));
-      console.log(updatedRequest);
+      const update = requests.map((request: VacationRequest) => {
+        if (request.id === id) {
+          return updatedRequest;
+        }
+        return request;
+      });
+      setRequests(update);
     } catch (error) {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
     }
