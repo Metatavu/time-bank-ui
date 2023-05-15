@@ -43,10 +43,8 @@ const RenderVacationRequests = () => {
 
     try {
       const vacationsApi = Api.getVacationRequestsApi(accessToken?.access_token);
-      const vacations = await vacationsApi.listVacationRequests({
-        personId: person.id
-      });
-      // setRequests(newRequests.concat(vacations));
+      const vacations = await vacationsApi.listVacationRequests({});
+      setRequests(vacations);
       console.log(vacations);
     } catch (error) {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
@@ -156,13 +154,6 @@ const RenderVacationRequests = () => {
    * Method to delete vacation request
    */
   const deleteRequest = async (id: string) => {
-    // eslint-disable-next-line no-console
-    console.log("This is to be deleted: ");
-    // eslint-disable-next-line no-console
-    console.log(id);
-    if (!person) return;
-
-    // const requestToBeDeleted: string = requests.find(request => request.id === id);
     try {
       await Api.getVacationRequestsApi(accessToken?.access_token).deleteVacationRequest({
         id: id
@@ -170,7 +161,7 @@ const RenderVacationRequests = () => {
     } catch (error) {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
     }
-    // setRequests(requests.filter(request => request.id !== id));
+    setRequests(requests.filter(request => request.id !== id));
   };
 
   /**
@@ -204,7 +195,7 @@ const RenderVacationRequests = () => {
         <Typography variant="h2" padding={ theme.spacing(2) }>
           { strings.header.requests }
         </Typography>
-        <TableContainer style={{ height: 300, width: "100%" }}>
+        <TableContainer style={{ height: 700, width: "100%" }}>
           <Table aria-label="collapsible table" style={{ marginBottom: "1em" }}>
             <TableHead>
               <TableRow>
@@ -218,13 +209,13 @@ const RenderVacationRequests = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {Object.values(requests).map((request: VacationRequest, index: number) => (
+              {requests.map((request: VacationRequest, index: number) => (
                 <>
                   <TableRow key={ request.id }>
                     <TableCell style={{ paddingLeft: "3em" }}>{ request.type }</TableCell>
                     <TableCell>{ request.days }</TableCell>
-                    <TableCell>{ request.startDate }</TableCell>
-                    <TableCell>{ request.endDate }</TableCell>
+                    <TableCell>{ request.startDate.toDateString() }</TableCell>
+                    <TableCell>{ request.endDate.toDateString() }</TableCell>
                     <StyledTableCell
                       sx={{ "&.pending": { color: "#FF493C" }, "&.approved": { color: "#45cf36" } }}
                       className={request.hrManagerStatus === "APPROVED" ? "approved" : "pending"}
@@ -257,7 +248,7 @@ const RenderVacationRequests = () => {
                         </TableCell>
                         <TableCell>
                           <IconButton
-                            onClick={() => deleteRequest}
+                            onClick={() => deleteRequest(request.id as string)}
                             aria-label="delete"
                             className={ classes.deleteButton }
                             size="large"
