@@ -97,7 +97,7 @@ const RenderVacationRequests = () => {
       type: vacationType,
       message: textContent,
       updatedAt: new Date(),
-      days: renderVacationDaysSpent()
+      days: 2
     };
     if (!person) return;
 
