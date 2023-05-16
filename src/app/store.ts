@@ -2,7 +2,6 @@ import { configureStore } from "@reduxjs/toolkit";
 import localeReducer from "features/locale/locale-slice";
 import personReducer from "features/person/person-slice";
 import authReducer from "features/auth/auth-slice";
-import vacationReducer from "features/vacation/vacation-slice";
 
 /**
  * Initialized Redux store
@@ -12,8 +11,7 @@ export const store = configureStore({
   reducer: {
     locale: localeReducer,
     person: personReducer,
-    auth: authReducer,
-    vacation: vacationReducer
+    auth: authReducer
   }
 });
 
