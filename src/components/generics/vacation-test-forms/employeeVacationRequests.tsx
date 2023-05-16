@@ -1,7 +1,6 @@
 import { Box, Button, Collapse, FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, styled, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import useEditorContentStyles from "styles/editor-content/editor-content";
 import theme from "theme/theme";
-import vacationRequests from "./vacationMockData";
 import { useState, useEffect, useContext } from "react";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -9,7 +8,7 @@ import { CalendarPickerView } from "@mui/x-date-pickers";
 import strings from "localization/strings";
 import DateRangePicker from "../date-range-picker/date-range-picker";
 import { FilterScopes } from "types";
-import { VacationRequest, VacationRequestStatus, VacationType } from "generated/client";
+import { Person, VacationRequest, VacationRequestStatus, VacationType } from "generated/client";
 import Api from "api/api";
 import { useAppSelector } from "app/hooks";
 import { ErrorContext } from "components/error-handler/error-handler";
@@ -50,7 +49,7 @@ const StyledTableCell = styled(TableCell)(() => ({
 const renderEmployeeVacationRequests = () => {
   const classes = useEditorContentStyles();
   const [ status, setStatus ] = useState<VacationRequestStatus>(VacationRequestStatus.PENDING);
-  const [ employee, setEmployee ] = useState("");
+  const [ employee, setEmployee ] = useState("Everyone");
   const [ vacationType, setVacationType ] = useState<VacationType>(VacationType.VACATION);
   const [ dateFormat ] = useState("yyyy.MM.dd");
   const [ datePickerView ] = useState<CalendarPickerView>("day");
@@ -61,6 +60,21 @@ const renderEmployeeVacationRequests = () => {
   const context = useContext(ErrorContext);
   const [ requests, setRequests ] = useState<VacationRequest[]>([]);
   const [ openRows, setOpenRows ] = useState<boolean[]>([]);
+  const [ persons, setPersons ] = useState<Person[]>([]);
+
+  /**
+   * Initializes all vacation requests
+   */
+  const fetchPersonData = async () => {
+    try {
+      const fetchedPersons = await Api.getPersonsApi(accessToken?.access_token).listPersons({
+        active: true
+      });
+      setPersons(fetchedPersons);
+    } catch (error) {
+      context.setError(strings.errorHandling.fetchUserDataFailed, error);
+    }
+  };
 
   /**
    * Initializes all vacation requests
@@ -89,6 +103,7 @@ const renderEmployeeVacationRequests = () => {
     }
     console.log("use effect here");
     initializeRequests();
+    fetchPersonData();
     // eslint-disable-next-line no-console
     console.log(requests);
   }, [person]);
@@ -120,8 +135,13 @@ const renderEmployeeVacationRequests = () => {
         onChange={ handleEmployeeChange }
         label={ strings.editorContent.employee }
       >
-        {Object.values(vacationRequests).map(request => (
-          <MenuItem value={ request.employee }>{ request.employee }</MenuItem>
+        <MenuItem value="Everyone">
+          Everyone
+        </MenuItem>
+        {persons.map(p => (
+          <MenuItem value={ p.id }>
+            { `${p.firstName} ${p.lastName}`}
+          </MenuItem>
         ))}
       </Select>
     </FormControl>
@@ -228,6 +248,24 @@ const renderEmployeeVacationRequests = () => {
     </FormControl>
   );
 
+  /**
+   * Handle person names
+   */
+  const handlePersonNames = (id: Number) => {
+    const foundPerson = persons.find(p => p.id === id);
+    if (foundPerson) { return `${foundPerson.firstName} ${foundPerson.lastName}`; }
+    return null;
+  };
+
+  /**
+   * Handle remaining vacation days
+   */
+  const handleRemainingVacationDays = (request: VacationRequest) => {
+    const foundPerson = persons.find(p => p.id === request.person);
+    if (foundPerson) { return foundPerson.unspentVacations - request.days; }
+    return null;
+  };
+
   return (
     <Box className={classes.employeeVacationRequests}>
       <Box>
@@ -287,11 +325,11 @@ const renderEmployeeVacationRequests = () => {
                 <>
                   <StyledTableRow key={ request.id }>
                     <StyledTableCell component="th" scope="row">{ request.type }</StyledTableCell>
-                    <StyledTableCell>{ request.person }</StyledTableCell>
+                    <StyledTableCell>{ handlePersonNames(request.person!!) }</StyledTableCell>
                     <StyledTableCell>{ request.days }</StyledTableCell>
                     <StyledTableCell>{ request.startDate.toDateString() }</StyledTableCell>
                     <StyledTableCell>{ request.endDate.toDateString() }</StyledTableCell>
-                    <StyledTableCell>{ }</StyledTableCell>
+                    <StyledTableCell>{ handleRemainingVacationDays(request)}</StyledTableCell>
                     <StyledTableCell sx={{ "&.pending": { color: "#FF493C" }, "&.approved": { color: "#45cf36" } }} className={ request.hrManagerStatus === "APPROVED" ? "approved" : "pending"}>{ request.hrManagerStatus }</StyledTableCell>
                     <StyledTableCell>
                       <IconButton
