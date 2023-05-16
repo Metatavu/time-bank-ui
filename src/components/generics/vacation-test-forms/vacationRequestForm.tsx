@@ -1,25 +1,30 @@
 import { CalendarPickerView } from "@mui/x-date-pickers";
 import { Box, Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, Typography } from "@mui/material";
-import { VacationType } from "generated/client";
+import { VacationRequestStatus, VacationType } from "generated/client";
 import strings from "localization/strings";
 import { ChangeEvent, useState } from "react";
 import { FilterScopes, RequestType } from "types";
 import useEditorContentStyles from "styles/editor-content/editor-content";
 import Holidays from "date-holidays";
 import DateRangePicker from "components/generics/date-range-picker/date-range-picker";
+import { useAppSelector } from "app/hooks";
+import { selectPerson } from "features/person/person-slice";
+// import { createRequest } from "features/vacation/vacation-slice";
 
 interface VacationRequestFormProps {
-  onClick: (id?:string) => Promise<void>;
+  onClick: (id?:string) => void;
   buttonLabel: string;
   requestType: RequestType;
+  createRequest: any;
 }
 
 /**
 * Form component for vacation requests
 * @param param0 
 */
-const VacationRequestForm = ({ onClick, buttonLabel, requestType }: VacationRequestFormProps) => {
+const VacationRequestForm = ({ onClick, buttonLabel, requestType, createRequest }: VacationRequestFormProps) => {
   const classes = useEditorContentStyles();
+  const { person } = useAppSelector(selectPerson);
   const dateFormat = "yyyy.MM.dd";
   const [ datePickerView ] = useState<CalendarPickerView>("day");
   const [ selectedVacationStartDate, setSelectedVacationStartDate ] = useState(new Date());
@@ -110,6 +115,7 @@ const VacationRequestForm = ({ onClick, buttonLabel, requestType }: VacationRequ
         // eslint-disable-next-line no-plusplus
         day++;
       }
+      // setDays(day);
     }
     return day;
   };
@@ -148,6 +154,27 @@ const VacationRequestForm = ({ onClick, buttonLabel, requestType }: VacationRequ
   };
 
   /**
+   * Creates a request object
+   */
+  const addRequest = () => {
+    console.log("loman lisäys");
+    
+    createRequest({
+      person: person?.id as number,
+      startDate: selectedVacationStartDate,
+      endDate: selectedVacationEndDate,
+      type: vacationType,
+      message: textContent,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      days: renderVacationDaysSpent(),
+      projectManagerStatus: VacationRequestStatus.PENDING,
+      hrManagerStatus: VacationRequestStatus.PENDING
+    });
+    console.log(selectedVacationStartDate);
+  };
+  
+  /**
    * Renders vacation apply button
    */
   const renderVacationApplyButton = (id: string | undefined) => (
@@ -155,7 +182,8 @@ const VacationRequestForm = ({ onClick, buttonLabel, requestType }: VacationRequ
       color="secondary"
       variant="contained"
       // If being updated need to pass in id
-      onClick={() => (requestType === RequestType.UPDATE ? onClick(id) : onClick()) }
+      // eslint-disable-next-line no-sequences
+      onClick={() => (addRequest(), requestType === RequestType.UPDATE ? onClick(id) : onClick()) }
     >
       <Typography style={{
         fontWeight: 600,
@@ -170,36 +198,38 @@ const VacationRequestForm = ({ onClick, buttonLabel, requestType }: VacationRequ
 
   return (
     <>
-      <Box display="flex" alignItems="center" marginRight="6em">
-        <Box className={ classes.datePickers }>
-          <DateRangePicker
-            scope={ FilterScopes.DATE }
-            dateFormat={ dateFormat }
-            selectedStartDate={ selectedVacationStartDate }
-            selectedEndDate={ selectedVacationEndDate }
-            datePickerView={ datePickerView }
-            minStartDate={ new Date() }
-            minEndDate={ selectedVacationStartDate }
-            onStartDateChange={ handleVacationStartDateChange }
-            onEndDateChange={ handleVacationEndDateChange }
-            onStartWeekChange={() => {
-              throw new Error("Function not implemented.");
-            } }
-            onEndWeekChange={() => {
-              throw new Error("Function not implemented.");
-            } }
-          />
-        </Box>
-        <Box marginLeft="3em">
-          { renderVacationType() }
-        </Box>
-        <Box marginLeft="3em">
-          { renderVacationCommentBox() }
-          <Box display="flex" justifyContent="center" marginTop="1em">
-            { renderVacationApplyButton(undefined) }
+      <FormControl>
+        <Box display="flex" alignItems="center" marginRight="6em">
+          <Box className={ classes.datePickers }>
+            <DateRangePicker
+              scope={ FilterScopes.DATE }
+              dateFormat={ dateFormat }
+              selectedStartDate={ selectedVacationStartDate }
+              selectedEndDate={ selectedVacationEndDate }
+              datePickerView={ datePickerView }
+              minStartDate={ new Date() }
+              minEndDate={ selectedVacationStartDate }
+              onStartDateChange={ handleVacationStartDateChange }
+              onEndDateChange={ handleVacationEndDateChange }
+              onStartWeekChange={() => {
+                throw new Error("Function not implemented.");
+              } }
+              onEndWeekChange={() => {
+                throw new Error("Function not implemented.");
+              } }
+            />
+          </Box>
+          <Box marginLeft="3em">
+            { renderVacationType() }
+          </Box>
+          <Box marginLeft="3em">
+            { renderVacationCommentBox() }
+            <Box display="flex" justifyContent="center" marginTop="1em">
+              { renderVacationApplyButton(undefined) }
+            </Box>
           </Box>
         </Box>
-      </Box>
+      </FormControl>
     </>
   );
 };

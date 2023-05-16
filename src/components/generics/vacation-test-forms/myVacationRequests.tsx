@@ -6,7 +6,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import strings from "localization/strings";
 import { RequestType } from "types";
-import { VacationRequest, VacationRequestStatus, VacationType } from "generated/client";
+import { VacationRequest, VacationType } from "generated/client";
 import { useAppSelector } from "app/hooks";
 import { selectPerson } from "features/person/person-slice";
 import Api from "api/api";
@@ -14,7 +14,8 @@ import { selectAuth } from "features/auth/auth-slice";
 import { ErrorContext } from "components/error-handler/error-handler";
 import DeleteIcon from "@mui/icons-material/Delete";
 import VacationRequestForm from "./vacationRequestForm";
-import Holidays from "date-holidays";
+// import Holidays from "date-holidays";
+// import { useDispatch } from "react-redux";
 
 /**
  * Renders vacation request table
@@ -32,7 +33,7 @@ const RenderVacationRequests = () => {
   const [ requests, setRequests ] = useState<VacationRequest[]>([]);
 
   console.log("IN VACATION REQUESTS");
-  
+
   /**
    * Initializes all vacation requests
    */
@@ -49,8 +50,6 @@ const RenderVacationRequests = () => {
     } catch (error) {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
     }
-    // eslint-disable-next-line no-console
-    console.log(requests);
   };
 
   useEffect(() => {
@@ -58,63 +57,30 @@ const RenderVacationRequests = () => {
     if (!accessToken) {
       return;
     }
-    console.log("use effect here");
     initializeRequests();
-    // eslint-disable-next-line no-console
-    console.log(requests);
+    console.log("use effect here");
   }, [person]);
-  
-  /**
-   * Renders spent vacation days
-   */
-  const renderVacationDaysSpent = () => {
-    // Define the date range to compare with holidays
-    const holidaysFi = new Holidays("FI");
-    const startDate = new Date(selectedVacationStartDate);
-    const endDate = new Date(selectedVacationEndDate);
-    let day = 0;
-
-    // Iterate over each date in the date range and check if it is a holiday
-    for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-      if (!holidaysFi.isHoliday(d) && d.getDay() !== 0) {
-        // eslint-disable-next-line no-plusplus
-        day++;
-      }
-    }
-    return day;
-  };
   
   /**
   * Handle vacation apply button
   * Sends vacation request to database
   */
-  const applyForVacation = async () => {
-    const newRequest: VacationRequest = {
-      person: person?.id as number,
-      startDate: selectedVacationStartDate,
-      endDate: selectedVacationEndDate,
-      type: vacationType,
-      message: textContent,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      days: renderVacationDaysSpent(),
-      projectManagerStatus: VacationRequestStatus.PENDING,
-      hrManagerStatus: VacationRequestStatus.PENDING
-    };
+  const applyForVacation = async (requestObject: VacationRequest) => {
     if (!person) return;
 
     try {
       const vacationsApi = Api.getVacationRequestsApi(accessToken?.access_token);
 
       const createdRequest = await vacationsApi.createVacationRequest({
-        vacationRequest: newRequest
+        vacationRequest: requestObject
       });
+      console.log(createdRequest);
+      
       setRequests(requests.concat(createdRequest));
     } catch (error) {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
     }
   };
-  console.log(requests);
 
   /**
    * Updates the vacation request
@@ -131,7 +97,7 @@ const RenderVacationRequests = () => {
       type: vacationType,
       message: textContent,
       updatedAt: new Date(),
-      days: renderVacationDaysSpent()
+      days: 2
     };
     if (!person) return;
 
@@ -190,8 +156,9 @@ const RenderVacationRequests = () => {
         </Typography>
         <VacationRequestForm
           buttonLabel={ strings.generic.apply }
-          onClick={() => applyForVacation()}
+          onClick={() => applyForVacation}
           requestType={RequestType.APPLY}
+          createRequest={applyForVacation}
         />
       </Box>
       <Box className={ classes.employeeVacationRequests }>
@@ -247,6 +214,7 @@ const RenderVacationRequests = () => {
                             buttonLabel={ strings.generic.saveChanges }
                             onClick={() => updateRequest(request.id as string)}
                             requestType={RequestType.UPDATE}
+                            createRequest={updateRequest}
                           />
                         </TableCell>
                         <TableCell>
