@@ -2,15 +2,19 @@ import { Box, Button, Collapse, FormControl, IconButton, InputLabel, MenuItem, S
 import useEditorContentStyles from "styles/editor-content/editor-content";
 import theme from "theme/theme";
 import vacationRequests from "./vacationMockData";
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { CalendarPickerView } from "@mui/x-date-pickers";
 import strings from "localization/strings";
 import DateRangePicker from "../date-range-picker/date-range-picker";
 import { FilterScopes } from "types";
-import { VacationRequestStatus, VacationType } from "generated/client";
-import { Request } from "types/index";
+import { VacationRequest, VacationRequestStatus, VacationType } from "generated/client";
+import Api from "api/api";
+import { useAppSelector } from "app/hooks";
+import { ErrorContext } from "components/error-handler/error-handler";
+import { selectPerson } from "features/person/person-slice";
+import { selectAuth } from "features/auth/auth-slice";
 
 /**
  * Styled expandable table row
@@ -40,10 +44,6 @@ const StyledTableCell = styled(TableCell)(() => ({
   ...(status === "APPROVED" ? { "&.approved": {} } : { "&.pending": {} })
 }));
 
-interface ExpandableRowProps {
-  request: Request;
-}
-
 /**
  * renders employee vacation request view
  */
@@ -56,76 +56,42 @@ const renderEmployeeVacationRequests = () => {
   const [ datePickerView ] = useState<CalendarPickerView>("day");
   const [ selectedVacationStartDate, setSelectedVacationStartDate ] = useState(new Date());
   const [ selectedVacationEndDate, setSelectedVacationEndDate ] = useState(new Date());
+  const { person } = useAppSelector(selectPerson);
+  const { accessToken } = useAppSelector(selectAuth);
+  const context = useContext(ErrorContext);
+  const [ requests, setRequests ] = useState<VacationRequest[]>([]);
+  const [ openRows, setOpenRows ] = useState<boolean[]>([]);
 
   /**
-   * Expandable row
-   * 
-   * @param request
+   * Initializes all vacation requests
    */
-  const ExpandableRow = (
-    { request }: ExpandableRowProps
-  ) => {
-    const [open, setOpen] = useState(false);
+  const initializeRequests = async () => {
+    console.log("Person not here");
+    if (!person) return;
+    console.log("Person here");
 
-    return (
-      <>
-        <StyledTableRow key={ request.id }>
-          <StyledTableCell component="th" scope="row">{ request.vacationType }</StyledTableCell>
-          <StyledTableCell>{ request.employee }</StyledTableCell>
-          <StyledTableCell>{ request.days }</StyledTableCell>
-          <StyledTableCell>{ request.startDate }</StyledTableCell>
-          <StyledTableCell>{ request.endDate }</StyledTableCell>
-          <StyledTableCell>{ request.remainingDays }</StyledTableCell>
-          <StyledTableCell sx={{ "&.pending": { color: "#FF493C" }, "&.approved": { color: "#45cf36" } }} className={ request.status === "APPROVED" ? "approved" : "pending"}>{ request.status }</StyledTableCell>
-          <StyledTableCell>
-            <IconButton
-              aria-label="expand row"
-              size="small"
-              onClick={() => setOpen(!open)}
-            >
-              {open ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
-            </IconButton>
-          </StyledTableCell>
-        </StyledTableRow>
-        <TableRow>
-          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
-            <Collapse in={ open } timeout="auto" unmountOnExit>
-              <Box sx={{ margin: 1, width: "100%" }}>
-                <Table size="small" aria-label="purchases">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>{ strings.editorContent.message }</TableCell>
-                      <TableCell>{ strings.editorContent.created }</TableCell>
-                      <TableCell>{ strings.editorContent.updated }</TableCell>
-                      <TableCell>{ strings.editorContent.projectManager }</TableCell>
-                      <TableCell>{ strings.editorContent.humanResourcesManager }</TableCell>
-                      <TableCell/>
-                      <TableCell/>
-                      <TableCell/>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {Object.values(vacationRequests).map(() => (
-                      <TableRow key={ request.id }>
-                        <TableCell>{ request.message }</TableCell>
-                        <TableCell>{ request.created }</TableCell>
-                        <TableCell>{ request.updated }</TableCell>
-                        <TableCell>{ request.projectManager }</TableCell>
-                        <TableCell>{ request.humanResourcesManager }</TableCell>
-                        <TableCell/>
-                        <TableCell align="right"><Button variant="outlined" color="error" sx={{ color: "#F9473B" }}>{ strings.editorContent.declined }</Button></TableCell>
-                        <TableCell align="right"><Button variant="outlined" color="success" sx={{ color: "green" }}>{ strings.editorContent.approved }</Button></TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </Box>
-            </Collapse>
-          </TableCell>
-        </TableRow>
-      </>
-    );
+    try {
+      const vacationsApi = Api.getVacationRequestsApi(accessToken?.access_token);
+      const vacations = await vacationsApi.listVacationRequests({});
+      setRequests(vacations);
+      console.log(vacations);
+    } catch (error) {
+      context.setError(strings.errorHandling.fetchVacationDataFailed, error);
+    }
+    // eslint-disable-next-line no-console
+    console.log(requests);
   };
+
+  useEffect(() => {
+    console.log("before access token in UE");
+    if (!accessToken) {
+      return;
+    }
+    console.log("use effect here");
+    initializeRequests();
+    // eslint-disable-next-line no-console
+    console.log(requests);
+  }, [person]);
 
   /**
    * Handle employee change
@@ -302,7 +268,7 @@ const renderEmployeeVacationRequests = () => {
         </Box>
       </Box>
       <Box>
-        <TableContainer style={{ height: 300, width: "100%" }}>
+        <TableContainer style={{ height: 700, width: "100%" }}>
           <Table aria-label="customized table" style={{ marginBottom: "1em" }}>
             <TableHead>
               <TableRow>
@@ -317,8 +283,65 @@ const renderEmployeeVacationRequests = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {Object.values(vacationRequests).map((request: Request) => (
-                <ExpandableRow key={ request.id } request={ request }/>
+              {requests.map((request: VacationRequest, index: number) => (
+                <>
+                  <StyledTableRow key={ request.id }>
+                    <StyledTableCell component="th" scope="row">{ request.type }</StyledTableCell>
+                    <StyledTableCell>{ request.person }</StyledTableCell>
+                    <StyledTableCell>{ request.days }</StyledTableCell>
+                    <StyledTableCell>{ request.startDate.toDateString() }</StyledTableCell>
+                    <StyledTableCell>{ request.endDate.toDateString() }</StyledTableCell>
+                    <StyledTableCell>{ }</StyledTableCell>
+                    <StyledTableCell sx={{ "&.pending": { color: "#FF493C" }, "&.approved": { color: "#45cf36" } }} className={ request.hrManagerStatus === "APPROVED" ? "approved" : "pending"}>{ request.hrManagerStatus }</StyledTableCell>
+                    <StyledTableCell>
+                      <IconButton
+                        aria-label="expand row"
+                        size="small"
+                        onClick={() => {
+                          const newOpenRows = [...openRows];
+                          newOpenRows[index] = !newOpenRows[index];
+                          setOpenRows(newOpenRows);
+                        }}
+                      >
+                        { openRows[index] ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/> }
+                      </IconButton>
+                    </StyledTableCell>
+                  </StyledTableRow>
+                  <TableRow>
+                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
+                      <Collapse in={ openRows[index] } timeout="auto" unmountOnExit>
+                        <Box sx={{ margin: 1, width: "100%" }}>
+                          <Table size="small" aria-label="purchases">
+                            <TableHead>
+                              <TableRow>
+                                <TableCell>{ strings.editorContent.message }</TableCell>
+                                <TableCell>{ strings.editorContent.created }</TableCell>
+                                <TableCell>{ strings.editorContent.updated }</TableCell>
+                                <TableCell>{ strings.editorContent.projectManager }</TableCell>
+                                <TableCell>{ strings.editorContent.humanResourcesManager }</TableCell>
+                                <TableCell/>
+                                <TableCell/>
+                                <TableCell/>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              <TableRow key={ request.id }>
+                                <TableCell>{ request.message }</TableCell>
+                                <TableCell>{ request.createdAt.toDateString() }</TableCell>
+                                <TableCell>{ request.updatedAt.toDateString() }</TableCell>
+                                <TableCell>{ request.projectManagerStatus }</TableCell>
+                                <TableCell>{ request.hrManagerStatus }</TableCell>
+                                <TableCell/>
+                                <TableCell align="right"><Button variant="outlined" color="error" sx={{ color: "#F9473B" }}>{ strings.editorContent.declined }</Button></TableCell>
+                                <TableCell align="right"><Button variant="outlined" color="success" sx={{ color: "green" }}>{ strings.editorContent.approved }</Button></TableCell>
+                              </TableRow>
+                            </TableBody>
+                          </Table>
+                        </Box>
+                      </Collapse>
+                    </TableCell>
+                  </TableRow>
+                </>
               ))}
             </TableBody>
           </Table>
