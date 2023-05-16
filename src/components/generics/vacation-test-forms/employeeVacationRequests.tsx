@@ -129,14 +129,14 @@ const renderEmployeeVacationRequests = () => {
         marginBottom: 4
       }}
     >
-      <InputLabel>{ strings.editorContent.employee }</InputLabel>
+      <InputLabel>{ strings.vacationRequests.employee }</InputLabel>
       <Select
         value={ employee }
         onChange={ handleEmployeeChange }
-        label={ strings.editorContent.employee }
+        label={ strings.vacationRequests.employee }
       >
         <MenuItem value="Everyone">
-          Everyone
+          {strings.vacationRequests.everyone}
         </MenuItem>
         {persons.map(p => (
           <MenuItem value={ p.id }>
@@ -183,29 +183,29 @@ const renderEmployeeVacationRequests = () => {
         marginBottom: 4
       }}
     >
-      <InputLabel>{ strings.editorContent.vacationType }</InputLabel>
+      <InputLabel>{ strings.vacationRequests.vacationType }</InputLabel>
       <Select
         value={ vacationType }
         onChange={ handleVacationTypeChange }
-        label={ strings.editorContent.vacationType }
+        label={ strings.vacationRequests.vacationType }
       >
         <MenuItem value={ VacationType.VACATION }>
-          { strings.editorContent.vacation }
+          { strings.vacationRequests.vacation }
         </MenuItem>
         <MenuItem value={ VacationType.UNPAID_TIME_OFF}>
-          { strings.editorContent.unpaidTimeOff }
+          { strings.vacationRequests.unpaidTimeOff }
         </MenuItem>
         <MenuItem value={ VacationType.SICKNESS}>
-          { strings.editorContent.sickness }
+          { strings.vacationRequests.sickness }
         </MenuItem>
         <MenuItem value={ VacationType.PERSONAL_DAYS }>
-          { strings.editorContent.personalDays }
+          { strings.vacationRequests.personalDays }
         </MenuItem>
         <MenuItem value={ VacationType.MATERNITY_PATERNITY }>
-          { strings.editorContent.maternityPaternityLeave }
+          { strings.vacationRequests.maternityPaternityLeave }
         </MenuItem>
         <MenuItem value={ VacationType.CHILD_SICKNESS }>
-          {strings.editorContent.childSickness }
+          {strings.vacationRequests.childSickness }
         </MenuItem>
       </Select>
     </FormControl>
@@ -229,20 +229,20 @@ const renderEmployeeVacationRequests = () => {
         m: 1, minWidth: 165, marginBottom: 4
       }}
     >
-      <InputLabel>{ strings.editorContent.status }</InputLabel>
+      <InputLabel>{ strings.vacationRequests.status }</InputLabel>
       <Select
         value={ status }
         onChange={handleStatusChange}
-        label={ strings.editorContent.status }
+        label={ strings.vacationRequests.status }
       >
         <MenuItem value={ VacationRequestStatus.PENDING }>
-          { strings.editorContent.pending }
+          { strings.vacationRequests.pending }
         </MenuItem>
         <MenuItem value={ VacationRequestStatus.APPROVED }>
-          { strings.editorContent.approved }
+          { strings.vacationRequests.approved }
         </MenuItem>
         <MenuItem value={ VacationRequestStatus.DECLINED }>
-          { strings.editorContent.declined }
+          { strings.vacationRequests.declined }
         </MenuItem>
       </Select>
     </FormControl>
@@ -264,6 +264,41 @@ const renderEmployeeVacationRequests = () => {
     const foundPerson = persons.find(p => p.id === request.person);
     if (foundPerson) { return foundPerson.unspentVacations - request.days; }
     return null;
+  };
+
+  /**
+ * Handle request type
+ */
+  const handleRequestType = (type: VacationType) => {
+    switch (type) {
+      case VacationType.VACATION:
+        return strings.vacationRequests.vacation;
+      case VacationType.PERSONAL_DAYS:
+        return strings.vacationRequests.personalDays;
+      case VacationType.UNPAID_TIME_OFF:
+        return strings.vacationRequests.unpaidTimeOff;
+      case VacationType.MATERNITY_PATERNITY:
+        return strings.vacationRequests.maternityPaternityLeave;
+      case VacationType.SICKNESS:
+        return strings.vacationRequests.sickness;
+      case VacationType.CHILD_SICKNESS:
+        return strings.vacationRequests.childSickness;
+      default:
+        return strings.vacationRequests.vacation;
+    }
+  };
+
+  /**
+   * Handle request status
+   */
+  const handleRequestStatus = (requestStatus: VacationRequestStatus) => {
+    const statusMap = {
+      [VacationRequestStatus.PENDING]: strings.vacationRequests.pending,
+      [VacationRequestStatus.APPROVED]: strings.vacationRequests.approved,
+      [VacationRequestStatus.DECLINED]: strings.vacationRequests.declined
+    };
+  
+    return statusMap[requestStatus] || "";
   };
 
   return (
@@ -324,13 +359,13 @@ const renderEmployeeVacationRequests = () => {
               {requests.map((request: VacationRequest, index: number) => (
                 <>
                   <StyledTableRow key={ request.id }>
-                    <StyledTableCell component="th" scope="row">{ request.type }</StyledTableCell>
+                    <StyledTableCell component="th" scope="row">{ handleRequestType(request.type)}</StyledTableCell>
                     <StyledTableCell>{ handlePersonNames(request.person!!) }</StyledTableCell>
                     <StyledTableCell>{ request.days }</StyledTableCell>
                     <StyledTableCell>{ request.startDate.toDateString() }</StyledTableCell>
                     <StyledTableCell>{ request.endDate.toDateString() }</StyledTableCell>
                     <StyledTableCell>{ handleRemainingVacationDays(request)}</StyledTableCell>
-                    <StyledTableCell sx={{ "&.pending": { color: "#FF493C" }, "&.approved": { color: "#45cf36" } }} className={ request.hrManagerStatus === "APPROVED" ? "approved" : "pending"}>{ request.hrManagerStatus }</StyledTableCell>
+                    <StyledTableCell sx={{ "&.pending": { color: "#FF493C" }, "&.approved": { color: "#45cf36" } }} className={ request.hrManagerStatus === "APPROVED" ? "approved" : "pending"}>{handleRequestStatus(request.hrManagerStatus)}</StyledTableCell>
                     <StyledTableCell>
                       <IconButton
                         aria-label="expand row"
@@ -352,11 +387,11 @@ const renderEmployeeVacationRequests = () => {
                           <Table size="small" aria-label="purchases">
                             <TableHead>
                               <TableRow>
-                                <TableCell>{ strings.editorContent.message }</TableCell>
-                                <TableCell>{ strings.editorContent.created }</TableCell>
-                                <TableCell>{ strings.editorContent.updated }</TableCell>
-                                <TableCell>{ strings.editorContent.projectManager }</TableCell>
-                                <TableCell>{ strings.editorContent.humanResourcesManager }</TableCell>
+                                <TableCell>{ strings.vacationRequests.message }</TableCell>
+                                <TableCell>{ strings.vacationRequests.created }</TableCell>
+                                <TableCell>{ strings.vacationRequests.updated }</TableCell>
+                                <TableCell>{ strings.vacationRequests.projectManager }</TableCell>
+                                <TableCell>{ strings.vacationRequests.humanResourcesManager }</TableCell>
                                 <TableCell/>
                                 <TableCell/>
                                 <TableCell/>
@@ -367,11 +402,11 @@ const renderEmployeeVacationRequests = () => {
                                 <TableCell>{ request.message }</TableCell>
                                 <TableCell>{ request.createdAt.toDateString() }</TableCell>
                                 <TableCell>{ request.updatedAt.toDateString() }</TableCell>
-                                <TableCell>{ request.projectManagerStatus }</TableCell>
-                                <TableCell>{ request.hrManagerStatus }</TableCell>
+                                <TableCell>{ handleRequestStatus(request.projectManagerStatus) }</TableCell>
+                                <TableCell>{ handleRequestStatus(request.hrManagerStatus) }</TableCell>
                                 <TableCell/>
-                                <TableCell align="right"><Button variant="outlined" color="error" sx={{ color: "#F9473B" }}>{ strings.editorContent.declined }</Button></TableCell>
-                                <TableCell align="right"><Button variant="outlined" color="success" sx={{ color: "green" }}>{ strings.editorContent.approved }</Button></TableCell>
+                                <TableCell align="right"><Button variant="outlined" color="error" sx={{ color: "#F9473B" }}>{ strings.vacationRequests.declined }</Button></TableCell>
+                                <TableCell align="right"><Button variant="outlined" color="success" sx={{ color: "green" }}>{ strings.vacationRequests.approved }</Button></TableCell>
                               </TableRow>
                             </TableBody>
                           </Table>
