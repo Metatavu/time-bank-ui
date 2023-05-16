@@ -97,7 +97,7 @@ const RenderVacationRequests = () => {
       type: vacationType,
       message: textContent,
       updatedAt: new Date(),
-      days: 2
+      days: renderVacationDaysSpent()
     };
     if (!person) return;
 
@@ -107,8 +107,13 @@ const RenderVacationRequests = () => {
         id: id,
         vacationRequest: changedRequest
       });
-      setRequests(requests.concat(updatedRequest));
-      console.log(updatedRequest);
+      const update = requests.map((request: VacationRequest) => {
+        if (request.id === id) {
+          return updatedRequest;
+        }
+        return request;
+      });
+      setRequests(update);
     } catch (error) {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
     }
@@ -118,13 +123,6 @@ const RenderVacationRequests = () => {
    * Method to delete vacation request
    */
   const deleteRequest = async (id: string) => {
-    // eslint-disable-next-line no-console
-    console.log("This is to be deleted: ");
-    // eslint-disable-next-line no-console
-    console.log(id);
-    if (!person) return;
-
-    // const requestToBeDeleted: string = requests.find(request => request.id === id);
     try {
       await Api.getVacationRequestsApi(accessToken?.access_token).deleteVacationRequest({
         id: id
