@@ -122,7 +122,7 @@ const RenderVacationRequests = () => {
   /**
    * Method to delete vacation request
    */
-  const deleteRequest = async (id: string) => {
+  const deleteRequest = async (id: string, index: number) => {
     try {
       await Api.getVacationRequestsApi(accessToken?.access_token).deleteVacationRequest({
         id: id
@@ -131,6 +131,11 @@ const RenderVacationRequests = () => {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
     }
     setRequests(requests.filter(request => request.id !== id));
+
+    const newOpenRows = [...openRows];
+    newOpenRows[index] = !newOpenRows[index];
+    setOpenRows(newOpenRows);
+    openRows[index] ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>;
   };
 
   /**
@@ -255,7 +260,7 @@ const RenderVacationRequests = () => {
                         </TableCell>
                         <TableCell>
                           <IconButton
-                            onClick={() => deleteRequest(request.id as string)}
+                            onClick={() => deleteRequest(request.id as string, index)}
                             aria-label="delete"
                             className={ classes.deleteButton }
                             size="large"
