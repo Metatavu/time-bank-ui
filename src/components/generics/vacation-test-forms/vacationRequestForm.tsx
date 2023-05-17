@@ -71,29 +71,29 @@ const VacationRequestForm = ({ onClick, buttonLabel, requestType, createRequest 
         marginBottom: 4
       }}
     >
-      <InputLabel>{ strings.editorContent.vacationType }</InputLabel>
+      <InputLabel>{ strings.vacationRequests.vacationType }</InputLabel>
       <Select
         value={ vacationType }
         onChange={ handleVacationTypeChange }
-        label={ strings.editorContent.vacationType }
+        label={ strings.vacationRequests.vacationType }
       >
         <MenuItem value={ VacationType.VACATION }>
-          { strings.editorContent.vacation }
+          { strings.vacationRequests.vacation }
         </MenuItem>
         <MenuItem value={ VacationType.UNPAID_TIME_OFF}>
-          { strings.editorContent.unpaidTimeOff }
+          { strings.vacationRequests.unpaidTimeOff }
         </MenuItem>
         <MenuItem value={ VacationType.SICKNESS}>
-          { strings.editorContent.sickness }
+          { strings.vacationRequests.sickness }
         </MenuItem>
         <MenuItem value={ VacationType.PERSONAL_DAYS }>
-          { strings.editorContent.personalDays }
+          { strings.vacationRequests.personalDays }
         </MenuItem>
         <MenuItem value={ VacationType.MATERNITY_PATERNITY }>
-          { strings.editorContent.maternityPaternityLeave }
+          { strings.vacationRequests.maternityPaternityLeave }
         </MenuItem>
         <MenuItem value={ VacationType.CHILD_SICKNESS }>
-          { strings.editorContent.childSickness }
+          { strings.vacationRequests.childSickness }
         </MenuItem>
       </Select>
     </FormControl>
@@ -136,14 +136,14 @@ const VacationRequestForm = ({ onClick, buttonLabel, requestType, createRequest 
     return (
       <>
         <Typography variant="h4" style={{ fontSize: 13 }}>
-          { strings.editorContent.amountOfChosenVacationDays }
+          { strings.vacationRequests.amountOfChosenVacationDays }
           { renderVacationDaysSpent() }
         </Typography>
         <TextField
           id="outlined-multiline-flexible"
           multiline
           maxRows={5}
-          label={ strings.editorContent.leaveAComment }
+          label={ strings.vacationRequests.leaveAComment }
           variant="outlined"
           value={ textContent }
           onChange={ handleVacationCommentContent }

@@ -6,7 +6,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import strings from "localization/strings";
 import { RequestType } from "types";
-import { VacationRequest } from "generated/client";
+import { VacationRequest, VacationRequestStatus, VacationType } from "generated/client";
 import { useAppSelector } from "app/hooks";
 import { selectPerson } from "features/person/person-slice";
 import Api from "api/api";
@@ -120,7 +120,7 @@ const RenderVacationRequests = () => {
   /**
    * Method to delete vacation request
    */
-  const deleteRequest = async (id: string) => {
+  const deleteRequest = async (id: string, index: number) => {
     try {
       await Api.getVacationRequestsApi(accessToken?.access_token).deleteVacationRequest({
         id: id
@@ -129,6 +129,47 @@ const RenderVacationRequests = () => {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
     }
     setRequests(requests.filter(request => request.id !== id));
+
+    const newOpenRows = [...openRows];
+    newOpenRows[index] = !newOpenRows[index];
+    setOpenRows(newOpenRows);
+    openRows[index] ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>;
+  };
+
+  /**
+ * Handle request type
+ */
+  const handleRequestType = (type: VacationType) => {
+    switch (type) {
+      case VacationType.VACATION:
+        return strings.vacationRequests.vacation;
+      case VacationType.PERSONAL_DAYS:
+        return strings.vacationRequests.personalDays;
+      case VacationType.UNPAID_TIME_OFF:
+        return strings.vacationRequests.unpaidTimeOff;
+      case VacationType.MATERNITY_PATERNITY:
+        return strings.vacationRequests.maternityPaternityLeave;
+      case VacationType.SICKNESS:
+        return strings.vacationRequests.sickness;
+      case VacationType.CHILD_SICKNESS:
+        return strings.vacationRequests.childSickness;
+      default:
+        // Handle any other status if necessary
+        break;
+    }
+  };
+  
+  /**
+   * Handle request status
+   */
+  const handleRequestStatus = (requestStatus: VacationRequestStatus) => {
+    const statusMap = {
+      [VacationRequestStatus.PENDING]: strings.vacationRequests.pending,
+      [VacationRequestStatus.APPROVED]: strings.vacationRequests.approved,
+      [VacationRequestStatus.DECLINED]: strings.vacationRequests.declined
+    };
+  
+    return statusMap[requestStatus] || "";
   };
 
   /**
@@ -150,7 +191,7 @@ const RenderVacationRequests = () => {
     <Box>
       <Box className={ classes.employeeVacationRequests }>
         <Typography variant="h2" padding={ theme.spacing(2) }>
-          { strings.editorContent.applyForVacation }
+          { strings.vacationRequests.applyForVacation }
         </Typography>
         <VacationRequestForm
           buttonLabel={ strings.generic.apply }
@@ -180,7 +221,7 @@ const RenderVacationRequests = () => {
               {requests.map((request: VacationRequest, index: number) => (
                 <>
                   <TableRow key={ request.id }>
-                    <TableCell style={{ paddingLeft: "3em" }}>{ request.type }</TableCell>
+                    <TableCell style={{ paddingLeft: "3em" }}>{ handleRequestType(request.type) }</TableCell>
                     <TableCell>{ request.days }</TableCell>
                     <TableCell>{ request.startDate.toDateString() }</TableCell>
                     <TableCell>{ request.endDate.toDateString() }</TableCell>
@@ -188,7 +229,7 @@ const RenderVacationRequests = () => {
                       sx={{ "&.pending": { color: "#FF493C" }, "&.approved": { color: "#45cf36" } }}
                       className={request.hrManagerStatus === "APPROVED" ? "approved" : "pending"}
                     >
-                      { request.hrManagerStatus }
+                      { handleRequestStatus(request.hrManagerStatus) }
                     </StyledTableCell>
                     <TableCell>
                       <IconButton
@@ -217,7 +258,7 @@ const RenderVacationRequests = () => {
                         </TableCell>
                         <TableCell>
                           <IconButton
-                            onClick={() => deleteRequest(request.id as string)}
+                            onClick={() => deleteRequest(request.id as string, index)}
                             aria-label="delete"
                             className={ classes.deleteButton }
                             size="large"
