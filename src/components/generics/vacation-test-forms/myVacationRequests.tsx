@@ -52,6 +52,16 @@ const RenderVacationRequests = () => {
   }, [person]);
 
   /**
+   * Returns the requestObject from vacation Request Form
+   * @param requestObject
+   */
+  const getDefaultRequestObject = (requestObject: VacationRequest) => {
+    setRequestObject([]);
+    console.log(requestObject);
+    setRequestObject(requestObjects.concat(requestObject));
+  };
+
+  /**
   * Handle vacation apply button
   * Sends vacation request to database
   */
@@ -289,7 +299,7 @@ const RenderVacationRequests = () => {
                                     buttonLabel={ strings.generic.saveChanges }
                                     onClick={() => updateRequest(request.id as string)}
                                     requestType={RequestType.UPDATE}
-                                    createRequest={updateRequest}
+                                    createRequest={getDefaultRequestObject}
                                   />
                                 </TableCell>
                                 <TableCell>
