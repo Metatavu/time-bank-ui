@@ -13,6 +13,7 @@ import Api from "api/api";
 import { selectAuth } from "features/auth/auth-slice";
 import { ErrorContext } from "components/error-handler/error-handler";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import VacationRequestForm from "./vacationRequestForm";
 // import Holidays from "date-holidays";
 // import { useDispatch } from "react-redux";
@@ -26,7 +27,8 @@ const RenderVacationRequests = () => {
   const { accessToken } = useAppSelector(selectAuth);
   const [ selectedVacationStartDate ] = useState(new Date());
   const [ selectedVacationEndDate ] = useState(new Date());
-  const [ openRows, setOpenRows ] = useState<boolean[]>([]);
+  const [ openEdit, setOpenEdit ] = useState<boolean[]>([]);
+  const [ openDetails, setOpenDetails ] = useState<boolean[]>([]);
   const [ textContent ] = useState("");
   const [ vacationType ] = useState<VacationType>(VacationType.VACATION);
   const context = useContext(ErrorContext);
@@ -132,10 +134,9 @@ const RenderVacationRequests = () => {
     }
     setRequests(requests.filter(request => request.id !== id));
 
-    const newOpenRows = [...openRows];
+    const newOpenRows = [...openEdit];
     newOpenRows[index] = !newOpenRows[index];
-    setOpenRows(newOpenRows);
-    openRows[index] ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>;
+    setOpenEdit(newOpenRows);
   };
 
   /**
@@ -210,13 +211,12 @@ const RenderVacationRequests = () => {
           <Table aria-label="collapsible table" style={{ marginBottom: "1em" }}>
             <TableHead>
               <TableRow>
-                <TableCell style={{ paddingLeft: "3em" }}>{ strings.header.vacationType }</TableCell>
-                <TableCell>{ strings.header.days }</TableCell>
-                <TableCell>{ strings.header.startDate }</TableCell>
-                <TableCell>{ strings.header.endDate }</TableCell>
-                <TableCell>{ strings.header.status }</TableCell>
-                <TableCell/>
-                <TableCell/>
+                <TableCell style={{ paddingLeft: "3em", width: "20%" }}>{ strings.header.vacationType }</TableCell>
+                <TableCell style={{ width: "20%" }}>{ strings.header.startDate }</TableCell>
+                <TableCell style={{ width: "20%" }}>{ strings.header.endDate }</TableCell>
+                <TableCell style={{ width: "10%" }}>{ strings.header.days }</TableCell>
+                <TableCell style={{ width: "10%" }}>{ strings.header.status }</TableCell>
+                <TableCell style={{ width: "10%" }}/>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -224,9 +224,9 @@ const RenderVacationRequests = () => {
                 <>
                   <TableRow key={ request.id }>
                     <TableCell style={{ paddingLeft: "3em" }}>{ handleRequestType(request.type) }</TableCell>
-                    <TableCell>{ request.days }</TableCell>
                     <TableCell>{ request.startDate.toDateString() }</TableCell>
                     <TableCell>{ request.endDate.toDateString() }</TableCell>
+                    <TableCell>{ request.days }</TableCell>
                     <StyledTableCell
                       sx={{ "&.pending": { color: "#FF493C" }, "&.approved": { color: "#45cf36" } }}
                       className={request.hrManagerStatus === "APPROVED" ? "approved" : "pending"}
@@ -238,39 +238,89 @@ const RenderVacationRequests = () => {
                         aria-label="expand row"
                         size="small"
                         onClick={() => {
-                          const newOpenRows = [...openRows];
+                          const newOpenRows = [...openDetails];
                           newOpenRows[index] = !newOpenRows[index];
-                          setOpenRows(newOpenRows);
+                          setOpenDetails(newOpenRows);
                         }}
                       >
-                        { openRows[index] ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/> }
+                        { openDetails[index] ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/> }
+                      </IconButton>
+                      <IconButton
+                        aria-label="expand row"
+                        size="small"
+                        onClick={() => {
+                          const newOpenRows = [...openEdit];
+                          newOpenRows[index] = !newOpenRows[index];
+                          setOpenEdit(newOpenRows);
+                        }}
+                      >
+                        { openEdit[index] ? <EditIcon color="success"/> : <EditIcon/> }
                       </IconButton>
                     </TableCell>
                   </TableRow>
-                  <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
-                    <Collapse in={ openRows[index] } timeout="auto" unmountOnExit>
-                      <TableRow>
-                        <TableCell>
-                          <VacationRequestForm
-                            buttonLabel={ strings.generic.saveChanges }
-                            onClick={() => updateRequest(request.id as string)}
-                            requestType={RequestType.UPDATE}
-                            createRequest={updateRequest}
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <IconButton
-                            onClick={() => deleteRequest(request.id as string, index)}
-                            aria-label="delete"
-                            className={ classes.deleteButton }
-                            size="large"
-                          >
-                            <DeleteIcon fontSize="medium"/>
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
-                    </Collapse>
-                  </TableCell>
+                  <TableRow>
+                    <TableCell style={{ padding: 0 }} colSpan={6} >
+                      <Collapse in={ openDetails[index] } timeout="auto" unmountOnExit>
+                        <Box sx={{ width: "100%" }}>
+                          <Table size="small" aria-label="purchases">
+                            <TableHead>
+                              <TableRow>
+                                <TableCell style={{ paddingLeft: "3em", width: "20%" }}>{ strings.vacationRequests.message }</TableCell>
+                                <TableCell style={{ width: "20%" }}>{ strings.vacationRequests.created }</TableCell>
+                                <TableCell style={{ width: "20%" }}>{ strings.vacationRequests.updated }</TableCell>
+                                <TableCell style={{ width: "10%" }}>Päivittänyt:</TableCell>
+                                <TableCell style={{ width: "10%" }}>{ strings.vacationRequests.projectManager }</TableCell>
+                                <TableCell style={{ width: "10%" }}>{ strings.vacationRequests.humanResourcesManager }</TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              <TableRow>
+                                <TableCell style={{ paddingLeft: "3em" }}>{ request.message }</TableCell>
+                                <TableCell>{ request.createdAt.toDateString() }</TableCell>
+                                <TableCell>{ request.updatedAt.toDateString() }</TableCell>
+                                <TableCell>Henkilö</TableCell>
+                                <TableCell>{ request.projectManagerStatus }</TableCell>
+                                <TableCell>{ request.hrManagerStatus }</TableCell>
+                              </TableRow>
+                            </TableBody>
+                          </Table>
+                        </Box>
+                      </Collapse>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+                      <Collapse in={ openEdit[index] } timeout="auto" unmountOnExit>
+                        <Box sx={{ margin: 0, width: "100%" }}>
+                          <Table size="small" aria-label="purchases">
+                            <TableHead/>
+                            <TableBody>
+                              <TableRow>
+                                <TableCell>
+                                  <VacationRequestForm
+                                    buttonLabel={ strings.generic.saveChanges }
+                                    onClick={() => updateRequest(request.id as string)}
+                                    requestType={RequestType.UPDATE}
+                                    createRequest={updateRequest}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <IconButton
+                                    onClick={() => deleteRequest(request.id as string, index)}
+                                    aria-label="delete"
+                                    className={ classes.deleteButton }
+                                    size="large"
+                                  >
+                                    <DeleteIcon fontSize="medium"/>
+                                  </IconButton>
+                                </TableCell>
+                              </TableRow>
+                            </TableBody>
+                          </Table>
+                        </Box>
+                      </Collapse>
+                    </TableCell>
+                  </TableRow>
                 </>
               ))}
             </TableBody>
