@@ -9,7 +9,6 @@ import Holidays from "date-holidays";
 import DateRangePicker from "components/generics/date-range-picker/date-range-picker";
 import { useAppSelector } from "app/hooks";
 import { selectPerson } from "features/person/person-slice";
-// import { createRequest } from "features/vacation/vacation-slice";
 
 interface VacationRequestFormProps {
   onClick: (id?:string) => void;
@@ -33,35 +32,36 @@ const VacationRequestForm = ({ onClick, buttonLabel, requestType, createRequest 
   const [ textContent, setTextContent ] = useState("");
 
   /**
-* Method to handle vacation starting date change
-*
-* @param date selected date
-*/
+   * Method to handle vacation starting date change
+   *
+   * @param date selected date
+   */
   const handleVacationStartDateChange = (date: Date | null) => {
     date && setSelectedVacationStartDate(date);
   };
 
   /**
-* Method to handle vacation ending date change
-*
-* @param date selected date
-*/
+   * Method to handle vacation ending date change
+   *
+   * @param date selected date
+   */
   const handleVacationEndDateChange = (date: Date | null) => {
     date && setSelectedVacationEndDate(date);
   };
+
   /**
-* Handle vacation type 
-* 
-* @param event
-*/
+   * Handle vacation type 
+   *  
+   * @param event
+   */
   const handleVacationTypeChange = (event: SelectChangeEvent) => {
     const contentValue = event.target.value as VacationType;
     setVacationType(contentValue);
   };
 
   /**
-* Renders the vacation type selection
-*/
+   * Renders the vacation type selection
+   */
   const renderVacationType = () => (
     <FormControl
       variant="standard"
@@ -115,7 +115,6 @@ const VacationRequestForm = ({ onClick, buttonLabel, requestType, createRequest 
         // eslint-disable-next-line no-plusplus
         day++;
       }
-      // setDays(day);
     }
     return day;
   };
@@ -136,7 +135,7 @@ const VacationRequestForm = ({ onClick, buttonLabel, requestType, createRequest 
   const renderVacationCommentBox = () => {
     return (
       <>
-        <Typography variant="h4" style={{ fontSize: 13 }}>
+        <Typography variant="h4" style={{ fontSize: 13, marginBottom: "1em" }}>
           { strings.vacationRequests.amountOfChosenVacationDays }
           { renderVacationDaysSpent() }
         </Typography>
@@ -157,8 +156,6 @@ const VacationRequestForm = ({ onClick, buttonLabel, requestType, createRequest 
    * Creates a request object
    */
   const addRequest = () => {
-    console.log("loman lisäys");
-    
     createRequest({
       person: person?.id as number,
       startDate: selectedVacationStartDate,
@@ -171,7 +168,6 @@ const VacationRequestForm = ({ onClick, buttonLabel, requestType, createRequest 
       projectManagerStatus: VacationRequestStatus.PENDING,
       hrManagerStatus: VacationRequestStatus.PENDING
     });
-    console.log(selectedVacationStartDate);
   };
   
   /**

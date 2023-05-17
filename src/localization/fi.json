@@ -71,7 +71,8 @@
   "managementScreen": {
     "seeMore": "Näytä lisää",
     "searchPlaceholder": "Hae käyttäjää..",
-    "noUser": "Ei näytettävää käyttäjää."
+    "noUser": "Ei näytettävää käyttäjää.",
+    "statistics": "Tilastot"
   },
 
   "billableHoursHandling": {

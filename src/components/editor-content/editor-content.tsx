@@ -22,7 +22,6 @@ import vacationDaysProcess from "utils/vacation-data-utils";
 import { selectAuth } from "features/auth/auth-slice";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import RenderVacationRequests from "components/generics/vacation-test-forms/myVacationRequests";
-import renderEmployeeVacationRequests from "components/generics/vacation-test-forms/employeeVacationRequests";
 
 /**
 * Application editor content component
@@ -713,23 +712,13 @@ const EditorContent = () => {
     setTabIndex(newTabIndex);
   };
 
-  /**
-   * Component render
-   */
-  const tabStyle = {
-    "&$selected": {
-      color: "white",
-      backgroundColor: "#F9473B"
-    }
-  };
   return (
     <Box sx={{ width: "100%" }}>
       <TabContext value={tabIndex}>
         <Box>
-          <TabList onChange={ (event, value) => handleChange(event, value) } className={ classes.navBarContainer } sx={tabStyle}>
+          <TabList onChange={ (event, value) => handleChange(event, value) } className={ classes.navBarContainer }>
             <Tab label={ strings.header.title } value="1"/>
             <Tab label={ strings.header.myVacations } value="2"/>
-            <Tab label={ strings.header.employeeVacationRequests } value="3"/>
           </TabList>
         </Box>
         <TabPanel value="1">
@@ -741,9 +730,6 @@ const EditorContent = () => {
         <TabPanel value="2">
           { renderVacationInfoSummary() }
           <RenderVacationRequests key={person?.id}/>
-        </TabPanel>
-        <TabPanel value="3">
-          { renderEmployeeVacationRequests() }
         </TabPanel>
       </TabContext>
     </Box>

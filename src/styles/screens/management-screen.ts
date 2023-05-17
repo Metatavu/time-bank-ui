@@ -198,6 +198,13 @@ const useManagementScreenStyles = makeStyles(theme => ({
     width: "calc(100vw)",
     padding: theme.spacing(4),
     overflow: "hidden"
+  },
+
+  navBarContainer: {
+    color: "white",
+    backgroundColor: "gray",
+    marginBottom: "0px",
+    paddingTop: "0px"
   }
 
 }), {

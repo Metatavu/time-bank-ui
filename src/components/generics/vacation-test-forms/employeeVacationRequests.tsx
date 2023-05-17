@@ -46,7 +46,7 @@ const StyledTableCell = styled(TableCell)(() => ({
 /**
  * renders employee vacation request view
  */
-const renderEmployeeVacationRequests = () => {
+const RenderEmployeeVacationRequests = () => {
   const classes = useEditorContentStyles();
   const [ status, setStatus ] = useState<VacationRequestStatus>(VacationRequestStatus.PENDING);
   const [ employee, setEmployee ] = useState("Everyone");
@@ -80,32 +80,21 @@ const renderEmployeeVacationRequests = () => {
    * Initializes all vacation requests
    */
   const initializeRequests = async () => {
-    console.log("Person not here");
-    if (!person) return;
-    console.log("Person here");
-
     try {
       const vacationsApi = Api.getVacationRequestsApi(accessToken?.access_token);
       const vacations = await vacationsApi.listVacationRequests({});
       setRequests(vacations);
-      console.log(vacations);
     } catch (error) {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
     }
-    // eslint-disable-next-line no-console
-    console.log(requests);
   };
 
   useEffect(() => {
-    console.log("before access token in UE");
     if (!accessToken) {
       return;
     }
-    console.log("use effect here");
     initializeRequests();
     fetchPersonData();
-    // eslint-disable-next-line no-console
-    console.log(requests);
   }, [person]);
 
   /**
@@ -267,8 +256,8 @@ const renderEmployeeVacationRequests = () => {
   };
 
   /**
- * Handle request type
- */
+   * Handle request type
+   */
   const handleRequestType = (type: VacationType) => {
     switch (type) {
       case VacationType.VACATION:
@@ -424,4 +413,4 @@ const renderEmployeeVacationRequests = () => {
   );
 };
 
-export default renderEmployeeVacationRequests;
+export default RenderEmployeeVacationRequests;
