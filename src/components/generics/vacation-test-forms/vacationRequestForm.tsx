@@ -115,7 +115,6 @@ const VacationRequestForm = ({ onClick, buttonLabel, requestType, createRequest 
         // eslint-disable-next-line no-plusplus
         day++;
       }
-      // setDays(day);
     }
     return day;
   };
@@ -157,8 +156,6 @@ const VacationRequestForm = ({ onClick, buttonLabel, requestType, createRequest 
    * Creates a request object
    */
   const addRequest = () => {
-    console.log("loman lisäys");
-    
     createRequest({
       person: person?.id as number,
       startDate: selectedVacationStartDate,
@@ -171,7 +168,6 @@ const VacationRequestForm = ({ onClick, buttonLabel, requestType, createRequest 
       projectManagerStatus: VacationRequestStatus.PENDING,
       hrManagerStatus: VacationRequestStatus.PENDING
     });
-    console.log(selectedVacationStartDate);
   };
   
   /**

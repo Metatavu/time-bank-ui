@@ -6,7 +6,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import strings from "localization/strings";
 import { RequestType } from "types";
-import { VacationRequest, VacationType } from "generated/client";
+import { VacationRequest } from "generated/client";
 import { useAppSelector } from "app/hooks";
 import { selectPerson } from "features/person/person-slice";
 import Api from "api/api";
@@ -14,8 +14,6 @@ import { selectAuth } from "features/auth/auth-slice";
 import { ErrorContext } from "components/error-handler/error-handler";
 import DeleteIcon from "@mui/icons-material/Delete";
 import VacationRequestForm from "./vacationRequestForm";
-// import Holidays from "date-holidays";
-// import { useDispatch } from "react-redux";
 
 /**
  * Renders vacation request table
@@ -24,43 +22,43 @@ const RenderVacationRequests = () => {
   const classes = useEditorContentStyles();
   const { person } = useAppSelector(selectPerson);
   const { accessToken } = useAppSelector(selectAuth);
-  const [ selectedVacationStartDate ] = useState(new Date());
-  const [ selectedVacationEndDate ] = useState(new Date());
   const [ openRows, setOpenRows ] = useState<boolean[]>([]);
-  const [ textContent ] = useState("");
-  const [ vacationType ] = useState<VacationType>(VacationType.VACATION);
   const context = useContext(ErrorContext);
   const [ requests, setRequests ] = useState<VacationRequest[]>([]);
-
-  console.log("IN VACATION REQUESTS");
+  const [ requestObjects, setRequestObject ] = useState<VacationRequest[]>([]);
 
   /**
    * Initializes all vacation requests
    */
   const initializeRequests = async () => {
-    console.log("Person not here");
     if (!person) return;
-    console.log("Person here");
 
     try {
       const vacationsApi = Api.getVacationRequestsApi(accessToken?.access_token);
       const vacations = await vacationsApi.listVacationRequests({ personId: person.id });
       setRequests(vacations);
-      console.log(vacations);
     } catch (error) {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
     }
   };
 
   useEffect(() => {
-    console.log("before access token in UE");
     if (!accessToken) {
       return;
     }
     initializeRequests();
-    console.log("use effect here");
   }, [person]);
   
+  /**
+   * Returns the requestObject from vacation Request Form
+   * @param requestObject
+   */
+  const getDefaultRequestObject = (requestObject: VacationRequest) => {
+    setRequestObject([]);
+    console.log(requestObject);
+    setRequestObject(requestObjects.concat(requestObject));
+  };
+
   /**
   * Handle vacation apply button
   * Sends vacation request to database
@@ -69,12 +67,11 @@ const RenderVacationRequests = () => {
     if (!person) return;
 
     try {
-      const vacationsApi = Api.getVacationRequestsApi(accessToken?.access_token);
+      const applyApi = Api.getVacationRequestsApi(accessToken?.access_token);
 
-      const createdRequest = await vacationsApi.createVacationRequest({
+      const createdRequest = await applyApi.createVacationRequest({
         vacationRequest: requestObject
       });
-      console.log(createdRequest);
       
       setRequests(requests.concat(createdRequest));
     } catch (error) {
@@ -89,36 +86,37 @@ const RenderVacationRequests = () => {
    */
   const updateRequest = async (id: string) => {
     const requestToBeUpdated = requests.find(request => request.id === id);
-
-    const changedRequest: any = {
-      ...requestToBeUpdated,
-      startDate: selectedVacationStartDate,
-      endDate: selectedVacationEndDate,
-      type: vacationType,
-      message: textContent,
-      updatedAt: new Date(),
-      days: 2
-    };
+    console.log(id);
+    
+    const requestObject = requestObjects[0];
+    console.log(requestObjects);
+    
     if (!person) return;
 
     try {
-      const vacationsApi = Api.getVacationRequestsApi(accessToken?.access_token);
-      const updatedRequest = await vacationsApi.updateVacationRequest({
+      const updateApi = Api.getVacationRequestsApi(accessToken?.access_token);
+      const updatedRequest = await updateApi.updateVacationRequest({
         id: id,
-        vacationRequest: changedRequest
-      });
-      const update = requests.map((request: VacationRequest) => {
-        if (request.id === id) {
-          return updatedRequest;
+        vacationRequest: {
+          ...requestToBeUpdated as VacationRequest,
+          startDate: requestObject.startDate,
+          endDate: requestObject.endDate,
+          type: requestObject.type,
+          message: requestObject.message,
+          updatedAt: requestObject.updatedAt,
+          days: requestObject.days
         }
-        return request;
       });
+      const update = requests.map((request: VacationRequest) => (request.id !== id ? request : updatedRequest));
+      
       setRequests(update);
+      setRequestObject([]);
+      console.log(update);
     } catch (error) {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
     }
   };
-
+  
   /**
    * Method to delete vacation request
    */
@@ -214,7 +212,7 @@ const RenderVacationRequests = () => {
                             buttonLabel={ strings.generic.saveChanges }
                             onClick={() => updateRequest(request.id as string)}
                             requestType={RequestType.UPDATE}
-                            createRequest={updateRequest}
+                            createRequest={getDefaultRequestObject}
                           />
                         </TableCell>
                         <TableCell>
