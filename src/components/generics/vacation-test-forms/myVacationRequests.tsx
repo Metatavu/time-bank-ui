@@ -273,12 +273,12 @@ const RenderVacationRequests = () => {
                             </TableHead>
                             <TableBody>
                               <TableRow>
-                                <TableCell style={{ paddingLeft: "3em" }}>{ request.message }</TableCell>
-                                <TableCell>{ request.createdAt.toDateString() }</TableCell>
-                                <TableCell>{ request.updatedAt.toDateString() }</TableCell>
-                                <TableCell>Henkilö</TableCell>
-                                <TableCell>{ request.projectManagerStatus }</TableCell>
-                                <TableCell>{ request.hrManagerStatus }</TableCell>
+                                <TableCell style={{ paddingLeft: "3em", border: 0 }}>{ request.message }</TableCell>
+                                <TableCell style={{ border: 0 }}>{ request.createdAt.toDateString() }</TableCell>
+                                <TableCell style={{ border: 0 }}>{ request.updatedAt.toDateString() }</TableCell>
+                                <TableCell style={{ border: 0 }}>Henkilö</TableCell>
+                                <TableCell style={{ border: 0 }}>{ request.projectManagerStatus }</TableCell>
+                                <TableCell style={{ border: 0 }}>{ request.hrManagerStatus }</TableCell>
                               </TableRow>
                             </TableBody>
                           </Table>
@@ -294,7 +294,7 @@ const RenderVacationRequests = () => {
                             <TableHead/>
                             <TableBody>
                               <TableRow>
-                                <TableCell>
+                                <TableCell style={{ border: 0 }}>
                                   <VacationRequestForm
                                     buttonLabel={ strings.generic.saveChanges }
                                     onClick={() => updateRequest(request.id as string)}
@@ -302,7 +302,7 @@ const RenderVacationRequests = () => {
                                     createRequest={getDefaultRequestObject}
                                   />
                                 </TableCell>
-                                <TableCell>
+                                <TableCell style={{ border: 0 }}>
                                   <IconButton
                                     onClick={() => deleteRequest(request.id as string, index)}
                                     aria-label="delete"
