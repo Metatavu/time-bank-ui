@@ -135,7 +135,7 @@ const VacationRequestForm = ({ onClick, buttonLabel, requestType, createRequest 
   const renderVacationCommentBox = () => {
     return (
       <>
-        <Typography variant="h4" style={{ fontSize: 13 }}>
+        <Typography variant="h4" style={{ fontSize: 13, marginBottom: "1em" }}>
           { strings.vacationRequests.amountOfChosenVacationDays }
           { renderVacationDaysSpent() }
         </Typography>
