@@ -185,7 +185,7 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
   );
 
   /**
-   * Handle employee change
+   * Handle status change
    */
   const handleStatusChange = (event: SelectChangeEvent) => {
     const contentValue = event.target.value as VacationRequestStatus;
