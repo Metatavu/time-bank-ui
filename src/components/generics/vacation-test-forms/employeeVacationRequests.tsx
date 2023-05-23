@@ -46,7 +46,7 @@ const StyledTableCell = styled(TableCell)(() => ({
 /**
  * renders employee vacation request view
  */
-const RenderEmployeeVacationRequests = () => {
+const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
   const classes = useEditorContentStyles();
   const [ status, setStatus ] = useState<VacationRequestStatus>(VacationRequestStatus.PENDING);
   const [ employee, setEmployee ] = useState("Everyone");
@@ -60,21 +60,6 @@ const RenderEmployeeVacationRequests = () => {
   const context = useContext(ErrorContext);
   const [ requests, setRequests ] = useState<VacationRequest[]>([]);
   const [ openRows, setOpenRows ] = useState<boolean[]>([]);
-  const [ persons, setPersons ] = useState<Person[]>([]);
-
-  /**
-   * Initializes all vacation requests
-   */
-  const fetchPersonData = async () => {
-    try {
-      const fetchedPersons = await Api.getPersonsApi(accessToken?.access_token).listPersons({
-        active: true
-      });
-      setPersons(fetchedPersons);
-    } catch (error) {
-      context.setError(strings.errorHandling.fetchUserDataFailed, error);
-    }
-  };
 
   /**
    * Initializes all vacation requests
@@ -94,7 +79,6 @@ const RenderEmployeeVacationRequests = () => {
       return;
     }
     initializeRequests();
-    fetchPersonData();
   }, [person]);
 
   /**
@@ -330,7 +314,7 @@ const RenderEmployeeVacationRequests = () => {
         </Box>
       </Box>
       <Box>
-        <TableContainer style={{ height: 700, width: "100%" }}>
+        <TableContainer style={{ marginBottom: "10px", width: "100%" }}>
           <Table aria-label="customized table" style={{ marginBottom: "1em" }}>
             <TableHead>
               <TableRow>
