@@ -14,6 +14,8 @@ import { useAppSelector } from "app/hooks";
 import { ErrorContext } from "components/error-handler/error-handler";
 import { selectPerson } from "features/person/person-slice";
 import { selectAuth } from "features/auth/auth-slice";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
 /**
  * Styled expandable table row
@@ -112,9 +114,10 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
           {strings.vacationRequests.everyone}
         </MenuItem>
         {persons.map(p => (
-          <MenuItem value={ p.id }>
-            { `${p.firstName} ${p.lastName}`}
+          <MenuItem key={p.id} value={p.id}>
+            {`${p.firstName} ${p.lastName}`}
           </MenuItem>
+
         ))}
       </Select>
     </FormControl>
@@ -185,69 +188,6 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
   );
 
   /**
-   * Handle the column header click and update the sorting state
-   * @param column 
-   */
-  const handleSort = (column: string) => {
-    if (column === sortBy) {
-      // If the same column is clicked again, toggle the sort order
-      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-    } else {
-      // If a different column is clicked, update the sorting column and set the sort order to ascending
-      setSortBy(column);
-      setSortOrder("asc");
-    }
-  };
-
-  /**
-   * Convert a date string or Date object to ISO format
-   * @param dateStringOrDate - The date string or Date object
-   * @returns The date in ISO format
-   */
-  function convertToISOFormat(dateStringOrDate: string | Date): string {
-    if (typeof dateStringOrDate === "string") {
-      const [day, month, year] = dateStringOrDate.split(".");
-      const isoDate = `${year}-${month}-${day}`;
-      return isoDate;
-    }
-    return dateStringOrDate.toISOString();
-  }
-
-  const sortedVacationRequests = Object.values(vacationRequests).sort((a, b) => {
-    if (sortBy === "days") {
-      const daysA = Number(a.days);
-      const daysB = Number(b.days);
-      return sortOrder === "asc" ? daysA - daysB : daysB - daysA;
-    }
-    if (sortBy === "employee") {
-      return sortOrder === "asc"
-        ? a.employee.localeCompare(b.employee)
-        : b.employee.localeCompare(a.employee);
-    }
-    if (sortBy === "startDate") {
-      const dateA = new Date(convertToISOFormat(a.startDate));
-      const dateB = new Date(convertToISOFormat(b.startDate));
-      return sortOrder === "asc" ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
-    }
-    if (sortBy === "endDate") {
-      const dateA = new Date(convertToISOFormat(a.endDate));
-      const dateB = new Date(convertToISOFormat(b.endDate));
-      return sortOrder === "asc" ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
-    }
-    if (sortBy === "vacationType") {
-      return sortOrder === "asc"
-        ? a.vacationType.localeCompare(b.vacationType)
-        : b.vacationType.localeCompare(a.vacationType);
-    }
-    if (sortBy === "status") {
-      return sortOrder === "asc"
-        ? a.status.localeCompare(b.status)
-        : b.status.localeCompare(a.status);
-    }
-    return 0; // No sorting applied
-  });
-
-  /**
    * Handle employee change
    */
   const handleStatusChange = (event: SelectChangeEvent) => {
@@ -283,16 +223,85 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
       </Select>
     </FormControl>
   );
-
+  
   /**
-   * Handle person names
+   * 
+   * @param id 
+   * @returns 
    */
-  const handlePersonNames = (id: Number) => {
+  const handlePersonNames = (id: number) => {
     const foundPerson = persons.find(p => p.id === id);
-    if (foundPerson) { return `${foundPerson.firstName} ${foundPerson.lastName}`; }
-    return null;
+    if (foundPerson) {
+      return `${foundPerson.firstName} ${foundPerson.lastName}`;
+    }
+    return "";
   };
 
+  /**
+ * Handle the column header click and update the sorting state
+ * @param column 
+ */
+  const handleSort = (column: string) => {
+    if (column === sortBy) {
+      // If the same column is clicked again, toggle the sort order
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    } else {
+      // If a different column is clicked, update the sorting column and set the sort order to ascending
+      setSortBy(column);
+      setSortOrder("asc");
+    }
+  };
+
+  /**
+   * Convert a date string or Date object to ISO format
+   * @param dateStringOrDate - The date string or Date object
+   * @returns The date in ISO format
+   */
+  function convertToISOFormat(dateStringOrDate: string | Date): string {
+    if (typeof dateStringOrDate === "string") {
+      const [day, month, year] = dateStringOrDate.split(".");
+      const isoDate = `${year}-${month}-${day}`;
+      return isoDate;
+    }
+    return dateStringOrDate.toISOString();
+  }
+
+  const sortedVacationRequests = requests.sort((a, b) => {
+    if (sortBy === "days") {
+      const daysA = Number(a.days);
+      const daysB = Number(b.days);
+      return sortOrder === "asc" ? daysA - daysB : daysB - daysA;
+    }
+    /*
+    if (sortBy === "employee") {
+      return sortOrder === "asc"
+        ? a.person.localeCompare(b.person)
+        : b.person.localeCompare(a.person);
+    }
+    */
+    if (sortBy === "startDate") {
+      const dateA = new Date(convertToISOFormat(a.startDate));
+      const dateB = new Date(convertToISOFormat(b.startDate));
+      return sortOrder === "asc" ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
+    }
+    if (sortBy === "endDate") {
+      const dateA = new Date(convertToISOFormat(a.endDate));
+      const dateB = new Date(convertToISOFormat(b.endDate));
+      return sortOrder === "asc" ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
+    }
+    if (sortBy === "vacationType") {
+      return sortOrder === "asc"
+        ? a.type.localeCompare(b.type)
+        : b.type.localeCompare(a.type);
+    }
+    if (sortBy === "status") {
+      return sortOrder === "asc"
+        ? a.hrManagerStatus.localeCompare(b.hrManagerStatus)
+        : b.hrManagerStatus.localeCompare(a.hrManagerStatus);
+    }
+    return 0; // No sorting applied
+  });
+  
   /**
    * Handle remaining vacation days
    */
@@ -490,7 +499,7 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {requests.map((request: VacationRequest, index: number) => (
+              {sortedVacationRequests.map((request: VacationRequest, index: number) => (
                 <>
                   <StyledTableRow key={ request.id }>
                     <StyledTableCell component="th" scope="row">{ handleRequestType(request.type)}</StyledTableCell>
