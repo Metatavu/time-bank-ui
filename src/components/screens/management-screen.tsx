@@ -48,6 +48,7 @@ const ManagementScreen = () => {
   const syncOrUpdateContext = useContext(SyncOrUpdateContext);
   const history = useHistory();
   const [ tabIndex, setTabIndex ] = useState("1");
+  const [ persons, setPersons ] = useState<Person[]>([]);
 
   /**
    * Populate one person's total work data
@@ -79,10 +80,13 @@ const ManagementScreen = () => {
     setIsLoading(true);
 
     try {
-      const persons = await Api.getPersonsApi(accessToken?.access_token).listPersons({
+      const fetchedPersons = await Api.getPersonsApi(accessToken?.access_token).listPersons({
         active: true
       });
-      const personTotalsTimeList: PersonWithTotalTime[] = persons.map(_person => ({ person: _person }));
+
+      setPersons(fetchedPersons);
+
+      const personTotalsTimeList: PersonWithTotalTime[] = fetchedPersons.map(_person => ({ person: _person }));
 
       const populatedPersonTotalsTimeList = await Promise.all(personTotalsTimeList.map(populatePersonTotalTimeData));
 
@@ -612,7 +616,7 @@ const ManagementScreen = () => {
             </Box>
           </TabPanel>
           <TabPanel value="2">
-            <RenderEmployeeVacationRequests/>
+            <RenderEmployeeVacationRequests persons={ persons }/>
           </TabPanel>
         </TabContext>
       </Box>

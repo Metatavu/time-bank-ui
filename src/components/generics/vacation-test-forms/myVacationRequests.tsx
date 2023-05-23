@@ -205,7 +205,7 @@ const RenderVacationRequests = () => {
         <Typography variant="h2" padding={ theme.spacing(2) }>
           { strings.header.requests }
         </Typography>
-        <TableContainer style={{ height: 700, width: "100%" }}>
+        <TableContainer style={{ marginBottom: "10px", width: "100%" }}>
           <Table aria-label="collapsible table" style={{ marginBottom: "1em" }}>
             <TableHead>
               <TableRow>
@@ -277,8 +277,8 @@ const RenderVacationRequests = () => {
                                 <TableCell>{ request.createdAt.toDateString() }</TableCell>
                                 <TableCell>{ request.updatedAt.toDateString() }</TableCell>
                                 <TableCell>Henkilö</TableCell>
-                                <TableCell>{ request.projectManagerStatus }</TableCell>
-                                <TableCell>{ request.hrManagerStatus }</TableCell>
+                                <TableCell>{ handleRequestStatus(request.projectManagerStatus) }</TableCell>
+                                <TableCell>{ handleRequestStatus(request.hrManagerStatus) }</TableCell>
                               </TableRow>
                             </TableBody>
                           </Table>
