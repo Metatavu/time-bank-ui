@@ -39,7 +39,9 @@ const StyledTableCell = styled(TableCell)(() => ({
   },
   "& .approved": {
     color: "#45cf36"
-  }
+  },
+  // eslint-disable-next-line no-restricted-globals
+  ...(status === "APPROVED" ? { "&.approved": {} } : { "&.pending": {} })
 
 }));
 
