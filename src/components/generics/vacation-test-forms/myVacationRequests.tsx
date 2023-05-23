@@ -27,7 +27,7 @@ const RenderVacationRequests = () => {
   const [ openDetails, setOpenDetails ] = useState<boolean[]>([]);
   const context = useContext(ErrorContext);
   const [ requests, setRequests ] = useState<VacationRequest[]>([]);
-  const [ requestObjects, setRequestObject ] = useState<VacationRequest[]>([]);
+  let updatedObject: VacationRequest = {} as VacationRequest;
 
   /**
    * Initializes all vacation requests
@@ -52,13 +52,14 @@ const RenderVacationRequests = () => {
   }, [person]);
 
   /**
-   * Returns the requestObject from vacation Request Form
+   * Sets the requestObject from vacation Request Form
    * @param requestObject
    */
   const getDefaultRequestObject = (requestObject: VacationRequest) => {
-    setRequestObject([]);
-    console.log(requestObject);
-    setRequestObject(requestObjects.concat(requestObject));
+    if (!person) return;
+    updatedObject = requestObject;
+
+    return updatedObject;
   };
 
   /**
@@ -86,12 +87,9 @@ const RenderVacationRequests = () => {
    * 
    * @param request 
    */
-  const updateRequest = async (id: string) => {
+  const updateRequest = async (id: string, index: number) => {
     const requestToBeUpdated = requests.find(request => request.id === id);
-    console.log(id);
-    
-    const requestObject = requestObjects[0];
-    console.log(requestObjects);
+    const requestObject = updatedObject;
     
     if (!person) return;
 
@@ -109,14 +107,15 @@ const RenderVacationRequests = () => {
           days: requestObject.days
         }
       });
-      const update = requests.map((request: VacationRequest) => (request.id !== id ? request : updatedRequest));
       
+      const update = requests.map((request: VacationRequest) => (request.id !== id ? request : updatedRequest));
       setRequests(update);
-      setRequestObject([]);
-      console.log(update);
     } catch (error) {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
     }
+    const newOpenRows = [...openEdit];
+    newOpenRows[index] = !newOpenRows[index];
+    setOpenEdit(newOpenRows);
   };
   
   /**
@@ -297,7 +296,7 @@ const RenderVacationRequests = () => {
                                 <TableCell style={{ border: 0 }}>
                                   <VacationRequestForm
                                     buttonLabel={ strings.generic.saveChanges }
-                                    onClick={() => updateRequest(request.id as string)}
+                                    onClick={() => updateRequest(request.id as string, index)}
                                     requestType={RequestType.UPDATE}
                                     createRequest={getDefaultRequestObject}
                                   />
