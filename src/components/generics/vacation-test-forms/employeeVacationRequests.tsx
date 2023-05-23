@@ -14,6 +14,8 @@ import { useAppSelector } from "app/hooks";
 import { ErrorContext } from "components/error-handler/error-handler";
 import { selectPerson } from "features/person/person-slice";
 import { selectAuth } from "features/auth/auth-slice";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
 /**
  * Styled expandable table row
@@ -37,10 +39,8 @@ const StyledTableCell = styled(TableCell)(() => ({
   },
   "& .approved": {
     color: "#45cf36"
-  },
+  }
 
-  // eslint-disable-next-line no-restricted-globals
-  ...(status === "APPROVED" ? { "&.approved": {} } : { "&.pending": {} })
 }));
 
 /**
@@ -60,6 +60,8 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
   const context = useContext(ErrorContext);
   const [ requests, setRequests ] = useState<VacationRequest[]>([]);
   const [ openRows, setOpenRows ] = useState<boolean[]>([]);
+  const [sortBy, setSortBy] = useState("");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
   /**
    * Initializes all vacation requests
@@ -112,9 +114,10 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
           {strings.vacationRequests.everyone}
         </MenuItem>
         {persons.map(p => (
-          <MenuItem value={ p.id }>
-            { `${p.firstName} ${p.lastName}`}
+          <MenuItem key={p.id} value={p.id}>
+            {`${p.firstName} ${p.lastName}`}
           </MenuItem>
+
         ))}
       </Select>
     </FormControl>
@@ -220,16 +223,85 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
       </Select>
     </FormControl>
   );
-
+  
   /**
-   * Handle person names
+   * 
+   * @param id 
+   * @returns 
    */
-  const handlePersonNames = (id: Number) => {
+  const handlePersonNames = (id: number) => {
     const foundPerson = persons.find(p => p.id === id);
-    if (foundPerson) { return `${foundPerson.firstName} ${foundPerson.lastName}`; }
-    return null;
+    if (foundPerson) {
+      return `${foundPerson.firstName} ${foundPerson.lastName}`;
+    }
+    return "";
   };
 
+  /**
+ * Handle the column header click and update the sorting state
+ * @param column 
+ */
+  const handleSort = (column: string) => {
+    if (column === sortBy) {
+      // If the same column is clicked again, toggle the sort order
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    } else {
+      // If a different column is clicked, update the sorting column and set the sort order to ascending
+      setSortBy(column);
+      setSortOrder("asc");
+    }
+  };
+
+  /**
+   * Convert a date string or Date object to ISO format
+   * @param dateStringOrDate - The date string or Date object
+   * @returns The date in ISO format
+   */
+  function convertToISOFormat(dateStringOrDate: string | Date): string {
+    if (typeof dateStringOrDate === "string") {
+      const [day, month, year] = dateStringOrDate.split(".");
+      const isoDate = `${year}-${month}-${day}`;
+      return isoDate;
+    }
+    return dateStringOrDate.toISOString();
+  }
+
+  const sortedVacationRequests = requests.sort((a, b) => {
+    if (sortBy === "days") {
+      const daysA = Number(a.days);
+      const daysB = Number(b.days);
+      return sortOrder === "asc" ? daysA - daysB : daysB - daysA;
+    }
+    /*
+    if (sortBy === "employee") {
+      return sortOrder === "asc"
+        ? a.person.localeCompare(b.person)
+        : b.person.localeCompare(a.person);
+    }
+    */
+    if (sortBy === "startDate") {
+      const dateA = new Date(convertToISOFormat(a.startDate));
+      const dateB = new Date(convertToISOFormat(b.startDate));
+      return sortOrder === "asc" ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
+    }
+    if (sortBy === "endDate") {
+      const dateA = new Date(convertToISOFormat(a.endDate));
+      const dateB = new Date(convertToISOFormat(b.endDate));
+      return sortOrder === "asc" ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
+    }
+    if (sortBy === "vacationType") {
+      return sortOrder === "asc"
+        ? a.type.localeCompare(b.type)
+        : b.type.localeCompare(a.type);
+    }
+    if (sortBy === "status") {
+      return sortOrder === "asc"
+        ? a.hrManagerStatus.localeCompare(b.hrManagerStatus)
+        : b.hrManagerStatus.localeCompare(a.hrManagerStatus);
+    }
+    return 0; // No sorting applied
+  });
+  
   /**
    * Handle remaining vacation days
    */
@@ -318,18 +390,116 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
           <Table aria-label="customized table" style={{ marginBottom: "1em" }}>
             <TableHead>
               <TableRow>
-                <TableCell>{ strings.header.vacationType }</TableCell>
-                <TableCell>{ strings.header.employee }</TableCell>
-                <TableCell>{ strings.header.days }</TableCell>
-                <TableCell>{ strings.header.startDate }</TableCell>
-                <TableCell>{ strings.header.endDate }</TableCell>
-                <TableCell>{ strings.header.remainingDays }</TableCell>
-                <TableCell>{ strings.header.status }</TableCell>
+                <TableCell
+                  onClick={() => handleSort("vacationType")}
+                  style={{ cursor: "pointer" }}
+                >
+                  {strings.header.vacationType}
+                  {sortBy === "vacationType" && (
+                    <Box component="span" ml={1}>
+                      {sortOrder === "asc" ? (
+                        <ArrowUpwardIcon fontSize="small"/>
+                      ) : (
+                        <ArrowDownwardIcon fontSize="small"/>
+                      )}
+                    </Box>
+                  )}
+                </TableCell>
+                <TableCell
+                  onClick={() => handleSort("employee")}
+                  style={{ cursor: "pointer" }}
+                >
+                  {strings.header.employee}
+                  {sortBy === "employee" && (
+                    <Box component="span" ml={1}>
+                      {sortOrder === "asc" ? (
+                        <ArrowUpwardIcon fontSize="small"/>
+                      ) : (
+                        <ArrowDownwardIcon fontSize="small"/>
+                      )}
+                    </Box>
+                  )}
+                </TableCell>
+                <TableCell
+                  onClick={() => handleSort("days")}
+                  style={{ cursor: "pointer" }}
+                >
+                  {strings.header.days}
+                  {sortBy === "days" && (
+                    <Box component="span" ml={1}>
+                      {sortOrder === "asc" ? (
+                        <ArrowUpwardIcon fontSize="small"/>
+                      ) : (
+                        <ArrowDownwardIcon fontSize="small"/>
+                      )}
+                    </Box>
+                  )}
+                </TableCell>
+                <TableCell
+                  onClick={() => handleSort("startDate")}
+                  style={{ cursor: "pointer" }}
+                >
+                  {strings.header.startDate}
+                  {sortBy === "startDate" && (
+                    <Box component="span" ml={1}>
+                      {sortOrder === "asc" ? (
+                        <ArrowUpwardIcon fontSize="small"/>
+                      ) : (
+                        <ArrowDownwardIcon fontSize="small"/>
+                      )}
+                    </Box>
+                  )}
+                </TableCell>
+                <TableCell
+                  onClick={() => handleSort("endDate")}
+                  style={{ cursor: "pointer" }}
+                >
+                  {strings.header.endDate}
+                  {sortBy === "endDate" && (
+                    <Box component="span" ml={1}>
+                      {sortOrder === "asc" ? (
+                        <ArrowUpwardIcon fontSize="small"/>
+                      ) : (
+                        <ArrowDownwardIcon fontSize="small"/>
+                      )}
+                    </Box>
+                  )}
+                </TableCell>
+                <TableCell
+                  onClick={() => handleSort("remainingDays")}
+                  style={{ cursor: "pointer" }}
+                >
+                  {strings.header.remainingDays}
+                  {sortBy === "remainingDays" && (
+                    <Box component="span" ml={1}>
+                      {sortOrder === "asc" ? (
+                        <ArrowUpwardIcon fontSize="small"/>
+                      ) : (
+                        <ArrowDownwardIcon fontSize="small"/>
+                      )}
+                    </Box>
+                  )}
+                </TableCell>
+                <TableCell
+                  onClick={() => handleSort("status")}
+                  style={{ cursor: "pointer" }}
+                >
+                  {strings.header.status}
+                  {sortBy === "status" && (
+                    <Box component="span" ml={1}>
+                      {sortOrder === "asc" ? (
+                        <ArrowUpwardIcon fontSize="small"/>
+                      ) : (
+                        <ArrowDownwardIcon fontSize="small"/>
+                      )}
+                    </Box>
+                  )}
+                </TableCell>
                 <TableCell/>
               </TableRow>
             </TableHead>
             <TableBody>
-              {requests.map((request: VacationRequest, index: number) => (
+              {sortedVacationRequests.map((request: VacationRequest, index: number) => (
                 <>
                   <StyledTableRow key={ request.id }>
                     <StyledTableCell component="th" scope="row">{ handleRequestType(request.type)}</StyledTableCell>
