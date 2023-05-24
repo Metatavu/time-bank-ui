@@ -168,6 +168,7 @@ const VacationRequestForm = ({ onClick, buttonLabel, requestType, createRequest 
       projectManagerStatus: VacationRequestStatus.PENDING,
       hrManagerStatus: VacationRequestStatus.PENDING
     });
+    setTextContent("");
   };
   
   /**
