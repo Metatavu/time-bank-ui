@@ -15,6 +15,7 @@ import { ErrorContext } from "components/error-handler/error-handler";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import VacationRequestForm from "./vacationRequestForm";
+import DeleteDialog from "../dialogs/delete-dialog";
 
 /**
  * Renders vacation request table
@@ -25,6 +26,7 @@ const RenderVacationRequests = () => {
   const { accessToken } = useAppSelector(selectAuth);
   const [ openEdit, setOpenEdit ] = useState<boolean[]>([]);
   const [ openDetails, setOpenDetails ] = useState<boolean[]>([]);
+  const [ openDeleteDialog, setOpenDeleteDialog ] = useState<boolean>(false);
   const context = useContext(ErrorContext);
   const [ requests, setRequests ] = useState<VacationRequest[]>([]);
   let updatedObject: VacationRequest = {} as VacationRequest;
@@ -173,6 +175,22 @@ const RenderVacationRequests = () => {
   };
 
   /**
+   * Handles delete dialog open
+   */
+  const handleClickOpen = () => {
+    setOpenDeleteDialog(true);
+  };
+
+  /**
+   * Handles delete dialog close
+   */
+  const handleClose = (value: string) => {
+    console.log(value);
+    
+    setOpenDeleteDialog(false);
+  };
+
+  /**
    * Styles for table cells
    */
   const StyledTableCell = styled(TableCell)(() => ({
@@ -298,12 +316,12 @@ const RenderVacationRequests = () => {
                                     buttonLabel={ strings.generic.saveChanges }
                                     onClick={() => updateRequest(request.id as string, index)}
                                     requestType={RequestType.UPDATE}
-                                    createRequest={getDefaultRequestObject}
+                                    createRequest={ getDefaultRequestObject }
                                   />
                                 </TableCell>
                                 <TableCell style={{ border: 0 }}>
                                   <IconButton
-                                    onClick={() => deleteRequest(request.id as string, index)}
+                                    onClick={ handleClickOpen }
                                     aria-label="delete"
                                     className={ classes.deleteButton }
                                     size="large"
@@ -311,6 +329,11 @@ const RenderVacationRequests = () => {
                                     <DeleteIcon fontSize="medium"/>
                                   </IconButton>
                                 </TableCell>
+                                <DeleteDialog
+                                  open={openDeleteDialog}
+                                  // eslint-disable-next-line no-sequences
+                                  onClose={(value: string) => (handleClose(value), value === "2" ? deleteRequest(request.id as string, index) : handleClose("1"))}
+                                />
                               </TableRow>
                             </TableBody>
                           </Table>
