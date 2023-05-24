@@ -129,6 +129,12 @@
     "everyone": "Kaikki"
   },
 
+  "dialogHandling": {
+    "deleteConfirmTitle": "Poistetaanko lomahakemus?",
+    "cancel": "Peruuta",
+    "delete": "Poista ja sulje"
+  },
+
   "startDate": "Aloituspäivämäärä",
   "week": "Viikko",
   "logged": "Kirjattu",

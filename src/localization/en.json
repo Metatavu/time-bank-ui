@@ -129,6 +129,12 @@
     "everyone": "Everyone"
   },
 
+  "dialogHandling": {
+    "deleteConfirmTitle": "Delete vacation request?",
+    "cancel": "Cancel",
+    "delete": "Delete and close"
+  },
+
   "startDate": "Start Date",
   "week": "Week",
   "logged": "Logged",

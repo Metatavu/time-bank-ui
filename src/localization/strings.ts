@@ -165,6 +165,15 @@ export interface IStrings extends LocalizedStringsMethods {
     everyone: String;
   };
 
+  /**
+   * Translations related to vacation dialogs
+   */
+  dialogHandling: {
+    deleteConfirmTitle: string;
+    cancel: string;
+    delete: string;
+  };
+
   startDate: string;
   week: string;
   logged: string;
