@@ -325,12 +325,13 @@ const RenderVacationRequests = () => {
                                     aria-label="delete"
                                     className={ classes.deleteButton }
                                     size="large"
+                                    style={{ marginRight: "20px" }}
                                   >
                                     <DeleteIcon fontSize="medium"/>
                                   </IconButton>
                                 </TableCell>
                                 <DeleteDialog
-                                  open={openDeleteDialog}
+                                  open={ openDeleteDialog }
                                   // eslint-disable-next-line no-sequences
                                   onClose={(value: string) => (handleClose(value), value === "2" ? deleteRequest(request.id as string, index) : handleClose("1"))}
                                 />
