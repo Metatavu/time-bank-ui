@@ -195,8 +195,13 @@ const VacationRequestForm = ({ onClick, buttonLabel, requestType, createRequest 
 
   return (
     <>
-      <FormControl>
-        <Box display="flex" alignItems="center" marginRight="6em">
+      <FormControl style={{
+        width: "100%",
+        display: "flex",
+        alignItems: "center"
+      }}
+      >
+        <Box display="flex" alignItems="center">
           <Box className={ classes.datePickers }>
             <DateRangePicker
               scope={ FilterScopes.DATE }
