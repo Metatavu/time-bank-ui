@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Collapse, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Box, styled } from "@mui/material";
+import { Collapse, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Box, styled, Modal } from "@mui/material";
 import useEditorContentStyles from "styles/editor-content/editor-content";
 import theme from "theme/theme";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
@@ -16,6 +16,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import VacationRequestForm from "./vacationRequestForm";
 import DeleteDialog from "../dialogs/delete-dialog";
+import CloseIcon from "@mui/icons-material/Close";
 
 /**
  * Renders vacation request table
@@ -261,12 +262,12 @@ const RenderVacationRequests = () => {
                         { openDetails[index] ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/> }
                       </IconButton>
                       <IconButton
-                        aria-label="expand row"
+                        aria-label="open modal"
                         size="small"
                         onClick={() => {
-                          const newOpenRows = [...openEdit];
-                          newOpenRows[index] = !newOpenRows[index];
-                          setOpenEdit(newOpenRows);
+                          const openModal = [...openEdit];
+                          openModal[index] = !openModal[index];
+                          setOpenEdit(openModal);
                         }}
                       >
                         { openEdit[index] ? <EditIcon color="success"/> : <EditIcon/> }
@@ -303,45 +304,57 @@ const RenderVacationRequests = () => {
                       </Collapse>
                     </TableCell>
                   </TableRow>
-                  <TableRow>
-                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-                      <Collapse in={ openEdit[index] } timeout="auto" unmountOnExit>
-                        <Box sx={{ margin: 0, width: "100%" }}>
-                          <Table size="small" aria-label="purchases">
-                            <TableHead/>
-                            <TableBody>
-                              <TableRow>
-                                <TableCell style={{ border: 0 }}>
-                                  <VacationRequestForm
-                                    buttonLabel={ strings.generic.saveChanges }
-                                    onClick={() => updateRequest(request.id as string, index)}
-                                    requestType={RequestType.UPDATE}
-                                    createRequest={ getDefaultRequestObject }
-                                  />
-                                </TableCell>
-                                <TableCell style={{ border: 0 }}>
-                                  <IconButton
-                                    onClick={ handleClickOpen }
-                                    aria-label="delete"
-                                    className={ classes.deleteButton }
-                                    size="large"
-                                    style={{ marginRight: "20px" }}
-                                  >
-                                    <DeleteIcon fontSize="medium"/>
-                                  </IconButton>
-                                </TableCell>
-                                <DeleteDialog
-                                  open={ openDeleteDialog }
-                                  // eslint-disable-next-line no-sequences
-                                  onClose={(value: string) => (handleClose(value), value === "2" ? deleteRequest(request.id as string, index) : handleClose("1"))}
-                                />
-                              </TableRow>
-                            </TableBody>
-                          </Table>
-                        </Box>
-                      </Collapse>
-                    </TableCell>
-                  </TableRow>
+                  <Modal open={ openEdit[index] }>
+                    <Box sx={{
+                      margin: 0,
+                      width: "70%",
+                      position: "absolute" as "absolute",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%)",
+                      bgcolor: "background.paper",
+                      border: "2px solid #000",
+                      boxShadow: 24,
+                      p: 4
+                    }}
+                    >
+                      <IconButton
+                        onClick={() => {
+                          const openModal = [...openEdit];
+                          openModal[index] = !openModal[index];
+                          setOpenEdit(openModal);
+                        }}
+                        aria-label="close"
+                        className={ classes.closeButton }
+                        size="large"
+                        style={{ marginRight: "20px" }}
+                      >
+                        <CloseIcon fontSize="medium"/>
+                      </IconButton>
+                      <Box display="flex" alignItems="center">
+                        <VacationRequestForm
+                          buttonLabel={ strings.generic.saveChanges }
+                          onClick={() => updateRequest(request.id as string, index)}
+                          requestType={RequestType.UPDATE}
+                          createRequest={ getDefaultRequestObject }
+                        />
+                        <IconButton
+                          onClick={ handleClickOpen }
+                          aria-label="delete"
+                          className={ classes.deleteButton }
+                          size="large"
+                          style={{ marginRight: "20px" }}
+                        >
+                          <DeleteIcon fontSize="medium"/>
+                        </IconButton>
+                      </Box>
+                    </Box>
+                  </Modal>
+                  <DeleteDialog
+                    open={ openDeleteDialog }
+                    // eslint-disable-next-line no-sequences
+                    onClose={(value: string) => (handleClose(value), value === "2" ? deleteRequest(request.id as string, index) : handleClose("1"))}
+                  />
                 </>
               ))}
             </TableBody>
