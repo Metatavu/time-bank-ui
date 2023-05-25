@@ -162,8 +162,14 @@ const useEditorContentStyles = makeStyles(theme => ({
 
   deleteButton: {
     padding: "0px !important",
-    alignSelf: "flex-end",
+    alignSelf: "center",
     color: "#F9473B",
+    marginLeft: theme.spacing(1)
+  },
+
+  closeButton: {
+    padding: "0px !important",
+    alignSelf: "flex-end",
     marginLeft: theme.spacing(1)
   },
 
