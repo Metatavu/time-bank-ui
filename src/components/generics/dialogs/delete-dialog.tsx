@@ -1,11 +1,9 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import strings from "localization/strings";
-// import { useState } from "react";
 
 interface DeleteDialogProps {
   open: boolean;
   onClose: (value: string) => void;
-  // value: string;
 }
 
 /**
