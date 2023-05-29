@@ -274,13 +274,13 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
       const daysB = Number(b.days);
       return sortOrder === "asc" ? daysA - daysB : daysB - daysA;
     }
-    /*
+    
     if (sortBy === "employee") {
       return sortOrder === "asc"
-        ? a.person.localeCompare(b.person)
-        : b.person.localeCompare(a.person);
+        ? handlePersonNames(a.person).localeCompare(handlePersonNames(b.person))
+        : handlePersonNames(b.person).localeCompare(handlePersonNames(a.person));
     }
-    */
+    
     if (sortBy === "startDate") {
       const dateA = new Date(convertToISOFormat(a.startDate));
       const dateB = new Date(convertToISOFormat(b.startDate));
