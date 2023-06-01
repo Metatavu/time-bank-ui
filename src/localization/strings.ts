@@ -6,6 +6,7 @@ import fi from "./fi.json";
  * Interface describing localized strings
  */
 export interface IStrings extends LocalizedStringsMethods {
+  [x: string]: any;
 
   /**
    * Translations related to header words

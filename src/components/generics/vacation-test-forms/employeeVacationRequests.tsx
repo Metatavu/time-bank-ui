@@ -50,29 +50,108 @@ const StyledTableCell = styled(TableCell)(() => ({
  */
 const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
   const classes = useEditorContentStyles();
-  const [ status, setStatus ] = useState<VacationRequestStatus>(VacationRequestStatus.PENDING);
-  const [ employee, setEmployee ] = useState("Everyone");
-  const [ vacationType, setVacationType ] = useState<VacationType>(VacationType.VACATION);
+  const [ status ] = useState<VacationRequestStatus>(VacationRequestStatus.PENDING);
+  const [ employee ] = useState("Everyone");
+  const [ vacationType ] = useState<VacationType>(VacationType.VACATION);
   const [ dateFormat ] = useState("yyyy.MM.dd");
   const [ datePickerView ] = useState<CalendarPickerView>("day");
-  const [ selectedVacationStartDate, setSelectedVacationStartDate ] = useState(new Date());
-  const [ selectedVacationEndDate, setSelectedVacationEndDate ] = useState(new Date());
+  const [ selectedVacationStartDate ] = useState(new Date());
+  const [ selectedVacationEndDate ] = useState(new Date());
   const { person } = useAppSelector(selectPerson);
   const { accessToken } = useAppSelector(selectAuth);
   const context = useContext(ErrorContext);
-  const [ requests, setRequests ] = useState<VacationRequest[]>([]);
+  const [, setRequests ] = useState<VacationRequest[]>([]);
   const [ openRows, setOpenRows ] = useState<boolean[]>([]);
   const [sortBy, setSortBy] = useState("");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [filteredRequests, setFilteredRequests] = useState<VacationRequest[]>([]);
+  const [filterOptions, setFilterOptions] = useState<{
+    employee: string;
+    vacationType: VacationType;
+    status: VacationRequestStatus;
+    startDate: Date | null;
+    endDate: Date | null;
+  }>({
+    employee: "Everyone",
+    vacationType: VacationType.VACATION,
+    status: VacationRequestStatus.PENDING,
+    startDate: null,
+    endDate: null
+  });
 
   /**
-   * Initializes all vacation requests
-   */
+ * Initializes all vacation requests
+ */
   const initializeRequests = async () => {
     try {
       const vacationsApi = Api.getVacationRequestsApi(accessToken?.access_token);
       const vacations = await vacationsApi.listVacationRequests({});
+
+      /**
+       * Filters for filtering application
+       */
+      const applyFilters = () => {
+        const filteredVacations = vacations.filter(request => {
+        // Filter by employee
+          if (filterOptions.employee !== "Everyone" && request.person.toString() !== filterOptions.employee) {
+            return false;
+          }
+          // Filter by vacation type
+          if (request.type !== filterOptions.vacationType) {
+            return false;
+          }
+          // Filter by application status
+          if (request.hrManagerStatus !== filterOptions.status) {
+            return false;
+          }
+          // Filter by start and end dates
+          if (
+            filterOptions.startDate &&
+          new Date(request.startDate) < filterOptions.startDate
+          ) {
+            return false;
+          }
+          if (
+            filterOptions.endDate &&
+          new Date(request.endDate) > filterOptions.endDate
+          ) {
+            return false;
+          }
+          return true;
+        });
+
+        setFilteredRequests(filteredVacations);
+      };
+
       setRequests(vacations);
+      applyFilters(); // Apply filters after setting the vacations
+
+      /**
+       *  Reset filters when the button is clicked
+       */
+      const handleResetFilters = () => {
+        /**
+         * Function for resetting filters
+         */
+        const resetFilters = () => {
+          setFilterOptions({
+            employee: "Everyone",
+            vacationType: VacationType.VACATION,
+            status: VacationRequestStatus.PENDING,
+            startDate: null,
+            endDate: null
+          });
+      
+          // After resetting the filters, apply them again
+          applyFilters();
+        };
+      
+        resetFilters();
+      };
+      
+      return (
+        <button type="button" onClick={handleResetFilters}>Reset Filters</button>
+      );
     } catch (error) {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
     }
@@ -83,7 +162,7 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
       return;
     }
     initializeRequests();
-  }, [person]);
+  }, [person, filterOptions]);
 
   /**
    * Handle employee change
@@ -91,7 +170,10 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
    */
   const handleEmployeeChange = (event: SelectChangeEvent) => {
     const contentValue = event.target.value;
-    setEmployee(contentValue);
+    setFilterOptions(prevOptions => ({
+      ...prevOptions,
+      employee: contentValue
+    }));
   };
 
   /**
@@ -130,7 +212,10 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
    * @param date selected date
    */
   const handleVacationStartDateChange = (date: Date | null) => {
-    date && setSelectedVacationStartDate(date);
+    setFilterOptions(prevOptions => ({
+      ...prevOptions,
+      startDate: date
+    }));
   };
 
   /**
@@ -138,7 +223,10 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
    * @param date selected date
    */
   const handleVacationEndDateChange = (date: Date | null) => {
-    date && setSelectedVacationEndDate(date);
+    setFilterOptions(prevOptions => ({
+      ...prevOptions,
+      endDate: date
+    }));
   };
 
   /**
@@ -146,7 +234,10 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
    */
   const handleVacationTypeChange = (event: SelectChangeEvent) => {
     const contentValue = event.target.value as VacationType;
-    setVacationType(contentValue);
+    setFilterOptions(prevOptions => ({
+      ...prevOptions,
+      vacationType: contentValue
+    }));
   };
 
   /**
@@ -194,7 +285,10 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
    */
   const handleStatusChange = (event: SelectChangeEvent) => {
     const contentValue = event.target.value as VacationRequestStatus;
-    setStatus(contentValue);
+    setFilterOptions(prevOptions => ({
+      ...prevOptions,
+      status: contentValue
+    }));
   };
 
   /**
@@ -268,7 +362,7 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
     return dateStringOrDate.toISOString();
   }
 
-  const sortedVacationRequests = requests.sort((a, b) => {
+  const sortedVacationRequests = filteredRequests.sort((a, b) => {
     if (sortBy === "days") {
       const daysA = Number(a.days);
       const daysB = Number(b.days);
