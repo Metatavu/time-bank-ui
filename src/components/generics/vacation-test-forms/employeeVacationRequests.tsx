@@ -125,33 +125,6 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
 
       setRequests(vacations);
       applyFilters(); // Apply filters after setting the vacations
-
-      /**
-       *  Reset filters when the button is clicked
-       */
-      const handleResetFilters = () => {
-        /**
-         * Function for resetting filters
-         */
-        const resetFilters = () => {
-          setFilterOptions({
-            employee: "Everyone",
-            vacationType: VacationType.VACATION,
-            status: VacationRequestStatus.PENDING,
-            startDate: null,
-            endDate: null
-          });
-      
-          // After resetting the filters, apply them again
-          applyFilters();
-        };
-      
-        resetFilters();
-      };
-      
-      return (
-        <button type="button" onClick={handleResetFilters}>Reset Filters</button>
-      );
     } catch (error) {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
     }
@@ -174,6 +147,26 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
       ...prevOptions,
       employee: contentValue
     }));
+  };
+
+  /**
+   * Resetting the filtering
+   */
+  const resetFilters = () => {
+    setFilterOptions({
+      employee: "Everyone",
+      vacationType: VacationType.VACATION,
+      status: VacationRequestStatus.PENDING,
+      startDate: null,
+      endDate: null
+    });
+  };
+
+  /**
+   * Handle the reset filters
+   */
+  const handleResetFilters = () => {
+    resetFilters();
   };
 
   /**
@@ -445,6 +438,15 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
   return (
     <Box className={classes.employeeVacationRequests}>
       <Box>
+        <Button
+          type="button"
+          onClick={handleResetFilters}
+          style={{
+            float: "right", color: "white", backgroundColor: "#FF493C"
+          }}
+        >
+          Reset Filters
+        </Button>
         <Box sx={{
           float: "left", marginBottom: "10px"
         }}
