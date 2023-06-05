@@ -150,7 +150,7 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
   };
 
   /**
-   * Resetting the filtering
+   * Function to resetting the filtering
    */
   const resetFilters = () => {
     setFilterOptions({
