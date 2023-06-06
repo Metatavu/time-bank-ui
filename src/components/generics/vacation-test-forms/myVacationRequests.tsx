@@ -5,7 +5,6 @@ import theme from "theme/theme";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import strings from "localization/strings";
-import { RequestType } from "types";
 import { VacationRequest, VacationRequestStatus, VacationType } from "generated/client";
 import { useAppSelector } from "app/hooks";
 import { selectPerson } from "features/person/person-slice";
@@ -15,6 +14,7 @@ import { ErrorContext } from "components/error-handler/error-handler";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import VacationRequestForm from "./vacationRequestForm";
+import { VacationData } from "types";
 
 /**
  * Renders vacation request table
@@ -27,7 +27,20 @@ const RenderVacationRequests = () => {
   const [ openDetails, setOpenDetails ] = useState<boolean[]>([]);
   const context = useContext(ErrorContext);
   const [ requests, setRequests ] = useState<VacationRequest[]>([]);
-  let updatedObject: VacationRequest = {} as VacationRequest;
+  const [vacationRequest, setVacationRequest] = useState<VacationData>({
+    startDate: new Date(),
+    endDate: new Date(),
+    type: VacationType.VACATION,
+    message: "",
+    days: 1
+  });
+  const [updatedVacationRequest, setUpdatedVacationRequest] = useState<VacationData>({
+    startDate: new Date(),
+    endDate: new Date(),
+    type: VacationType.VACATION,
+    message: "",
+    days: 1
+  });
 
   /**
    * Initializes all vacation requests
@@ -52,28 +65,28 @@ const RenderVacationRequests = () => {
   }, [person]);
 
   /**
-   * Sets the requestObject from vacation Request Form
-   * @param requestObject
-   */
-  const getDefaultRequestObject = (requestObject: VacationRequest) => {
-    if (!person) return;
-    updatedObject = requestObject;
-
-    return updatedObject;
-  };
-
-  /**
   * Handle vacation apply button
   * Sends vacation request to database
   */
-  const applyForVacation = async (requestObject: VacationRequest) => {
+  const applyForVacation = async () => {
     if (!person) return;
 
     try {
       const applyApi = Api.getVacationRequestsApi(accessToken?.access_token);
 
       const createdRequest = await applyApi.createVacationRequest({
-        vacationRequest: requestObject
+        vacationRequest: {
+          person: person?.id as number,
+          startDate: vacationRequest.startDate,
+          endDate: vacationRequest.endDate,
+          type: vacationRequest.type,
+          message: vacationRequest.message,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          days: vacationRequest.days,
+          projectManagerStatus: VacationRequestStatus.PENDING,
+          hrManagerStatus: VacationRequestStatus.PENDING
+        }
       });
       
       setRequests(requests.concat(createdRequest));
@@ -89,8 +102,6 @@ const RenderVacationRequests = () => {
    */
   const updateRequest = async (id: string, index: number) => {
     const requestToBeUpdated = requests.find(request => request.id === id);
-    const requestObject = updatedObject;
-    
     if (!person) return;
 
     try {
@@ -99,12 +110,12 @@ const RenderVacationRequests = () => {
         id: id,
         vacationRequest: {
           ...requestToBeUpdated as VacationRequest,
-          startDate: requestObject.startDate,
-          endDate: requestObject.endDate,
-          type: requestObject.type,
-          message: requestObject.message,
-          updatedAt: requestObject.updatedAt,
-          days: requestObject.days
+          startDate: updatedVacationRequest.startDate,
+          endDate: updatedVacationRequest.endDate,
+          type: updatedVacationRequest.type,
+          message: updatedVacationRequest.message,
+          updatedAt: new Date(),
+          days: updatedVacationRequest.days
         }
       });
       
@@ -194,10 +205,10 @@ const RenderVacationRequests = () => {
           { strings.vacationRequests.applyForVacation }
         </Typography>
         <VacationRequestForm
-          buttonLabel={ strings.generic.apply }
-          onClick={() => applyForVacation}
-          requestType={RequestType.APPLY}
-          createRequest={applyForVacation}
+          buttonLabel={strings.generic.apply}
+          onClick={() => applyForVacation()}
+          vacationData={vacationRequest}
+          setVacationData={setVacationRequest}
         />
       </Box>
       <Box className={ classes.employeeVacationRequests }>
@@ -249,6 +260,13 @@ const RenderVacationRequests = () => {
                           const newOpenRows = [...openEdit];
                           newOpenRows[index] = !newOpenRows[index];
                           setOpenEdit(newOpenRows);
+                          setUpdatedVacationRequest({
+                            startDate: request.startDate,
+                            endDate: request.endDate,
+                            type: request.type,
+                            message: request.message,
+                            days: request.days
+                          });
                         }}
                       >
                         { openEdit[index] ? <EditIcon color="success"/> : <EditIcon/> }
@@ -295,10 +313,10 @@ const RenderVacationRequests = () => {
                               <TableRow>
                                 <TableCell style={{ border: 0 }}>
                                   <VacationRequestForm
-                                    buttonLabel={ strings.generic.saveChanges }
+                                    buttonLabel={strings.generic.saveChanges}
                                     onClick={() => updateRequest(request.id as string, index)}
-                                    requestType={RequestType.UPDATE}
-                                    createRequest={getDefaultRequestObject}
+                                    vacationData={updatedVacationRequest}
+                                    setVacationData={setUpdatedVacationRequest}
                                   />
                                 </TableCell>
                                 <TableCell style={{ border: 0 }}>

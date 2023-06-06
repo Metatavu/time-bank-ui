@@ -27,8 +27,8 @@ interface Props {
   maxStartDate?: Date;
   minEndDate?: Date;
   maxEndDate?: Date;
-  onStartDateChange: (value: Date | null) => void;
-  onEndDateChange: (value: Date | null) => void;
+  onStartDateChange: (value: Date | null, isStart: boolean) => void;
+  onEndDateChange: (value: Date | null, isStart: boolean) => void;
   onStartWeekChange: (weekNumber: number) => void;
   onEndWeekChange: (weekNumber: number) => void;
 }
@@ -173,7 +173,7 @@ const DateRangePicker: React.FC<Props> = ({
           maxDate={ maxStartDate }
           label={ strings.editorContent.filterStartingDate }
           value={ selectedStartDate }
-          onChange={ onStartDateChange }
+          onChange={ onStartDateChange as any }
           className={ classes.datePicker }
           renderInput={ params => <TextField {...params}/>}
         />
@@ -181,6 +181,7 @@ const DateRangePicker: React.FC<Props> = ({
     </>
   );
   
+  // TODO: onCHnage as any may have broken something
   /**
    * Renders start year picker and week selector 
    */
@@ -193,7 +194,7 @@ const DateRangePicker: React.FC<Props> = ({
           maxDate={ todayDate }
           label={ strings.editorContent.selectYearStart }
           value={ selectedStartDate }
-          onChange={ onStartDateChange }
+          onChange={ onStartDateChange as any }
           className={ classes.yearPicker }
           renderInput={ params => <TextField {...params}/>}
         />
@@ -223,7 +224,7 @@ const DateRangePicker: React.FC<Props> = ({
         maxDate={ maxEndDate }
         label={ strings.editorContent.filterEndingDate }
         value={ selectedEndDate }
-        onChange={ onEndDateChange }
+        onChange={ onEndDateChange as any}
         className={ classes.datePicker }
         renderInput={ params => <TextField {...params}/>}
       />
@@ -243,7 +244,7 @@ const DateRangePicker: React.FC<Props> = ({
           maxDate={ todayDate }
           label={ strings.editorContent.selectYearEnd }
           value={ selectedEndDate }
-          onChange={ onEndDateChange }
+          onChange={ onEndDateChange as any}
           className={ classes.yearPicker }
           renderInput={ params => <TextField {...params}/>}
         />

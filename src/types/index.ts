@@ -161,3 +161,11 @@ export enum RequestType {
   UPDATE = "UPDATE",
   APPLY = "APPLY"
 }
+
+export interface VacationData {
+  startDate: Date;
+  endDate: Date;
+  type: VacationType;
+  message: string;
+  days: number;
+}

@@ -1,52 +1,59 @@
 import { CalendarPickerView } from "@mui/x-date-pickers";
 import { Box, Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, Typography } from "@mui/material";
-import { VacationRequestStatus, VacationType } from "generated/client";
+import { VacationType } from "generated/client";
 import strings from "localization/strings";
-import { ChangeEvent, useState } from "react";
-import { FilterScopes, RequestType } from "types";
+import { ChangeEvent, useEffect, useState } from "react";
+import { FilterScopes, VacationData } from "types";
 import useEditorContentStyles from "styles/editor-content/editor-content";
 import Holidays from "date-holidays";
 import DateRangePicker from "components/generics/date-range-picker/date-range-picker";
-import { useAppSelector } from "app/hooks";
-import { selectPerson } from "features/person/person-slice";
 
 interface VacationRequestFormProps {
-  onClick: (id?:string) => void;
+  onClick: () => void;
   buttonLabel: string;
-  requestType: RequestType;
-  createRequest: any;
+  vacationData: VacationData;
+  setVacationData: (vacationData: VacationData) => void;
 }
 
 /**
 * Form component for vacation requests
 * @param param0 
 */
-const VacationRequestForm = ({ onClick, buttonLabel, requestType, createRequest }: VacationRequestFormProps) => {
+const VacationRequestForm = ({
+  onClick,
+  buttonLabel,
+  vacationData,
+  setVacationData
+}: VacationRequestFormProps) => {
   const classes = useEditorContentStyles();
-  const { person } = useAppSelector(selectPerson);
   const dateFormat = "yyyy.MM.dd";
   const [ datePickerView ] = useState<CalendarPickerView>("day");
-  const [ selectedVacationStartDate, setSelectedVacationStartDate ] = useState(new Date());
-  const [ selectedVacationEndDate, setSelectedVacationEndDate ] = useState(new Date());
-  const [ vacationType, setVacationType ] = useState<VacationType>(VacationType.VACATION);
-  const [ textContent, setTextContent ] = useState("");
 
   /**
-   * Method to handle vacation starting date change
-   *
-   * @param date selected date
-   */
-  const handleVacationStartDateChange = (date: Date | null) => {
-    date && setSelectedVacationStartDate(date);
+ * handle DateRangePicker chances
+ * 
+ * @param date
+ * @param isStart
+ */
+  const handleVacationDateChange = (date: Date | null, isStart: boolean) => {
+    if (!date) return;
+    if (isStart) {
+      const newRequest: VacationData = { ...vacationData, startDate: date };
+      setVacationData(newRequest);
+    } else {
+      const newRequest: VacationData = { ...vacationData, endDate: date };
+      setVacationData(newRequest);
+    }
   };
 
   /**
-   * Method to handle vacation ending date change
-   *
-   * @param date selected date
-   */
-  const handleVacationEndDateChange = (date: Date | null) => {
-    date && setSelectedVacationEndDate(date);
+ * Handle message textfield chance
+ * 
+ * @param event
+ */
+  const handleVacationMessageChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const newRequest: VacationData = { ...vacationData, message: event.target.value };
+    setVacationData(newRequest);
   };
 
   /**
@@ -55,8 +62,8 @@ const VacationRequestForm = ({ onClick, buttonLabel, requestType, createRequest 
    * @param event
    */
   const handleVacationTypeChange = (event: SelectChangeEvent) => {
-    const contentValue = event.target.value as VacationType;
-    setVacationType(contentValue);
+    const newRequest: VacationData = { ...vacationData, type: event.target.value as VacationType };
+    setVacationData(newRequest);
   };
 
   /**
@@ -73,7 +80,8 @@ const VacationRequestForm = ({ onClick, buttonLabel, requestType, createRequest 
     >
       <InputLabel>{ strings.vacationRequests.vacationType }</InputLabel>
       <Select
-        value={ vacationType }
+        name="type"
+        value={ vacationData.type }
         onChange={ handleVacationTypeChange }
         label={ strings.vacationRequests.vacationType }
       >
@@ -105,8 +113,8 @@ const VacationRequestForm = ({ onClick, buttonLabel, requestType, createRequest 
   const renderVacationDaysSpent = () => {
     // Define the date range to compare with holidays
     const holidaysFi = new Holidays("FI");
-    const startDate = new Date(selectedVacationStartDate);
-    const endDate = new Date(selectedVacationEndDate);
+    const startDate = new Date(vacationData.startDate);
+    const endDate = new Date(vacationData.endDate);
     let day = 0;
 
     // Iterate over each date in the date range and check if it is a holiday
@@ -117,16 +125,6 @@ const VacationRequestForm = ({ onClick, buttonLabel, requestType, createRequest 
       }
     }
     return day;
-  };
-
-  /**
-   * Handle vacation comment box content
-   * 
-   * @param event
-   */
-  const handleVacationCommentContent = (event: ChangeEvent<HTMLInputElement>) => {
-    const contentValue = event.target.value;
-    setTextContent(contentValue);
   };
 
   /**
@@ -145,41 +143,27 @@ const VacationRequestForm = ({ onClick, buttonLabel, requestType, createRequest 
           maxRows={5}
           label={ strings.vacationRequests.leaveAComment }
           variant="outlined"
-          value={ textContent }
-          onChange={ handleVacationCommentContent }
+          value={ vacationData.message }
+          onChange={ handleVacationMessageChange }
+          name="message"
         />
       </>
     );
   };
 
-  /**
-   * Creates a request object
-   */
-  const addRequest = () => {
-    createRequest({
-      person: person?.id as number,
-      startDate: selectedVacationStartDate,
-      endDate: selectedVacationEndDate,
-      type: vacationType,
-      message: textContent,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      days: renderVacationDaysSpent(),
-      projectManagerStatus: VacationRequestStatus.PENDING,
-      hrManagerStatus: VacationRequestStatus.PENDING
-    });
-  };
+  useEffect(() => {
+    const newRequest: VacationData = { ...vacationData, days: renderVacationDaysSpent() };
+    setVacationData(newRequest);
+  }, [vacationData.startDate, vacationData.endDate]);
   
   /**
    * Renders vacation apply button
    */
-  const renderVacationApplyButton = (id: string | undefined) => (
+  const renderVacationApplyButton = () => (
     <Button
       color="secondary"
       variant="contained"
-      // If being updated need to pass in id
-      // eslint-disable-next-line no-sequences
-      onClick={() => (addRequest(), requestType === RequestType.UPDATE ? onClick(id) : onClick()) }
+      onClick={() => (onClick())}
     >
       <Typography style={{
         fontWeight: 600,
@@ -200,13 +184,13 @@ const VacationRequestForm = ({ onClick, buttonLabel, requestType, createRequest 
             <DateRangePicker
               scope={ FilterScopes.DATE }
               dateFormat={ dateFormat }
-              selectedStartDate={ selectedVacationStartDate }
-              selectedEndDate={ selectedVacationEndDate }
+              selectedStartDate={ vacationData.startDate }
+              selectedEndDate={ vacationData.endDate }
               datePickerView={ datePickerView }
               minStartDate={ new Date() }
-              minEndDate={ selectedVacationStartDate }
-              onStartDateChange={ handleVacationStartDateChange }
-              onEndDateChange={ handleVacationEndDateChange }
+              minEndDate={ vacationData.startDate }
+              onStartDateChange={date => handleVacationDateChange(date, true)}
+              onEndDateChange={date => handleVacationDateChange(date, false) }
               onStartWeekChange={() => {
                 throw new Error("Function not implemented.");
               } }
@@ -221,7 +205,7 @@ const VacationRequestForm = ({ onClick, buttonLabel, requestType, createRequest 
           <Box marginLeft="3em">
             { renderVacationCommentBox() }
             <Box display="flex" justifyContent="center" marginTop="1em">
-              { renderVacationApplyButton(undefined) }
+              { renderVacationApplyButton() }
             </Box>
           </Box>
         </Box>
