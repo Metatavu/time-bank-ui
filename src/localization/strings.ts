@@ -163,7 +163,8 @@ export interface IStrings extends LocalizedStringsMethods {
     pending: string;
     approved: string;
     declined: string;
-    everyone: String;
+    everyone: string;
+    all: string;
   };
 
   startDate: string;

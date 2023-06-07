@@ -7,7 +7,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { CalendarPickerView } from "@mui/x-date-pickers";
 import strings from "localization/strings";
 import DateRangePicker from "../date-range-picker/date-range-picker";
-import { FilterScopes } from "types";
+import { END_OF_YEAR, FilterScopes, START_OF_YEAR } from "types";
 import { Person, VacationRequest, VacationRequestStatus, VacationType } from "generated/client";
 import Api from "api/api";
 import { useAppSelector } from "app/hooks";
@@ -50,13 +50,9 @@ const StyledTableCell = styled(TableCell)(() => ({
  */
 const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
   const classes = useEditorContentStyles();
-  const [ status ] = useState<VacationRequestStatus>(VacationRequestStatus.PENDING);
-  const [ employee ] = useState("Everyone");
-  const [ vacationType ] = useState<VacationType>(VacationType.VACATION);
+  const [ status, setStatus ] = useState<VacationRequestStatus>(VacationRequestStatus.PENDING);
   const [ dateFormat ] = useState("yyyy.MM.dd");
   const [ datePickerView ] = useState<CalendarPickerView>("day");
-  const [ selectedVacationStartDate ] = useState(new Date());
-  const [ selectedVacationEndDate ] = useState(new Date());
   const { person } = useAppSelector(selectPerson);
   const { accessToken } = useAppSelector(selectAuth);
   const context = useContext(ErrorContext);
@@ -67,17 +63,54 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
   const [filteredRequests, setFilteredRequests] = useState<VacationRequest[]>([]);
   const [filterOptions, setFilterOptions] = useState<{
     employee: string;
-    vacationType: VacationType;
+    vacationType: VacationType | string;
     status: VacationRequestStatus;
     startDate: Date | null;
     endDate: Date | null;
   }>({
     employee: "Everyone",
-    vacationType: VacationType.VACATION,
+    vacationType: "All",
     status: VacationRequestStatus.PENDING,
-    startDate: null,
-    endDate: null
+    startDate: START_OF_YEAR,
+    endDate: END_OF_YEAR
   });
+
+  /**
+   * Filters for filtering application
+   */
+  const applyFilters = (vacations: VacationRequest[]) => {
+    const filteredVacations = vacations.filter(request => {
+    // Filter by employee
+      if (filterOptions.employee !== "Everyone" && request.person.toString() !== filterOptions.employee) {
+        return false;
+      }
+
+      // Filter by vacation type
+      if (filterOptions.vacationType !== "All" && request.type !== filterOptions.vacationType) {
+        return false;
+      }
+      // Filter by application status
+      if (request.hrManagerStatus !== filterOptions.status) {
+        return false;
+      }
+      // Filter by start and end dates
+      if (
+        filterOptions.startDate &&
+      new Date(request.startDate) <= filterOptions.startDate
+      ) {
+        return false;
+      }
+      if (
+        filterOptions.endDate &&
+      new Date(request.endDate) >= filterOptions.endDate
+      ) {
+        return false;
+      }
+      return true;
+    });
+
+    setFilteredRequests(filteredVacations);
+  };
 
   /**
  * Initializes all vacation requests
@@ -87,44 +120,8 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
       const vacationsApi = Api.getVacationRequestsApi(accessToken?.access_token);
       const vacations = await vacationsApi.listVacationRequests({});
 
-      /**
-       * Filters for filtering application
-       */
-      const applyFilters = () => {
-        const filteredVacations = vacations.filter(request => {
-        // Filter by employee
-          if (filterOptions.employee !== "Everyone" && request.person.toString() !== filterOptions.employee) {
-            return false;
-          }
-          // Filter by vacation type
-          if (request.type !== filterOptions.vacationType) {
-            return false;
-          }
-          // Filter by application status
-          if (request.hrManagerStatus !== filterOptions.status) {
-            return false;
-          }
-          // Filter by start and end dates
-          if (
-            filterOptions.startDate &&
-          new Date(request.startDate) < filterOptions.startDate
-          ) {
-            return false;
-          }
-          if (
-            filterOptions.endDate &&
-          new Date(request.endDate) > filterOptions.endDate
-          ) {
-            return false;
-          }
-          return true;
-        });
-
-        setFilteredRequests(filteredVacations);
-      };
-
       setRequests(vacations);
-      applyFilters(); // Apply filters after setting the vacations
+      applyFilters(vacations); // Apply filters after setting the vacations
     } catch (error) {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
     }
@@ -145,7 +142,7 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
     const contentValue = event.target.value;
     setFilterOptions(prevOptions => ({
       ...prevOptions,
-      employee: contentValue
+      employee: contentValue.toString()
     }));
   };
 
@@ -155,9 +152,9 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
   const resetFilters = () => {
     setFilterOptions({
       employee: "Everyone",
-      vacationType: VacationType.VACATION,
+      vacationType: "All",
       status: VacationRequestStatus.PENDING,
-      startDate: null,
+      startDate: new Date(),
       endDate: null
     });
   };
@@ -183,7 +180,7 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
     >
       <InputLabel>{ strings.vacationRequests.employee }</InputLabel>
       <Select
-        value={ employee }
+        value={ filterOptions.employee }
         onChange={ handleEmployeeChange }
         label={ strings.vacationRequests.employee }
       >
@@ -205,6 +202,8 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
    * @param date selected date
    */
   const handleVacationStartDateChange = (date: Date | null) => {
+    if (!date) return;
+
     setFilterOptions(prevOptions => ({
       ...prevOptions,
       startDate: date
@@ -216,6 +215,8 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
    * @param date selected date
    */
   const handleVacationEndDateChange = (date: Date | null) => {
+    if (!date) return;
+
     setFilterOptions(prevOptions => ({
       ...prevOptions,
       endDate: date
@@ -230,6 +231,7 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
     setFilterOptions(prevOptions => ({
       ...prevOptions,
       vacationType: contentValue
+
     }));
   };
 
@@ -247,10 +249,13 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
     >
       <InputLabel>{ strings.vacationRequests.vacationType }</InputLabel>
       <Select
-        value={ vacationType }
+        value={ filterOptions.vacationType }
         onChange={ handleVacationTypeChange }
         label={ strings.vacationRequests.vacationType }
       >
+        <MenuItem value="All">
+          { strings.vacationRequests.all }
+        </MenuItem>
         <MenuItem value={ VacationType.VACATION }>
           { strings.vacationRequests.vacation }
         </MenuItem>
@@ -282,6 +287,7 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
       ...prevOptions,
       status: contentValue
     }));
+    setStatus(contentValue);
   };
 
   /**
@@ -468,8 +474,8 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
             <DateRangePicker
               scope={ FilterScopes.DATE }
               dateFormat={ dateFormat }
-              selectedStartDate={ selectedVacationStartDate }
-              selectedEndDate={ selectedVacationEndDate }
+              selectedStartDate={ filterOptions.startDate ?? new Date(new Date().getFullYear(), 0, 1) }
+              selectedEndDate={ filterOptions.endDate ?? new Date(new Date().getFullYear(), 11, 31)}
               datePickerView={ datePickerView }
               onStartDateChange={ handleVacationStartDateChange }
               onEndDateChange={ handleVacationEndDateChange }

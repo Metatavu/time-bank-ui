@@ -126,7 +126,8 @@
     "pending": "Pending",
     "approved": "Approved",
     "declined": "Declined",
-    "everyone": "Everyone"
+    "everyone": "Everyone",
+    "all": "All Types"
   },
 
   "startDate": "Start Date",

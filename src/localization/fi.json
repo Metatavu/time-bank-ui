@@ -126,7 +126,8 @@
     "pending": "Odottaa",
     "approved": "Hyväksytty",
     "declined": "Hylätty",
-    "everyone": "Kaikki"
+    "everyone": "Kaikki",
+    "all": "Kaikki Tyypit"
   },
 
   "startDate": "Aloituspäivämäärä",
