@@ -1,4 +1,4 @@
-import { Person, PersonTotalTime } from "generated/client";
+import { Person, PersonTotalTime, VacationRequestStatus, VacationType } from "generated/client";
 
 /**
  * Access token
@@ -136,3 +136,32 @@ export interface SyncOrUpdateContextType {
   syncOrUpdate?: string;
   setSyncOrUpdate: (message: string) => void;
 }
+
+/**
+ * interface type request
+ */
+export interface Request {
+  id: string;
+  vacationType: VacationType;
+  message: string;
+  person: number;
+  employee: string;
+  days: number;
+  startDate: Date;
+  endDate: Date;
+  remainingDays: number;
+  status: VacationRequestStatus;
+  created: Date;
+  updated: Date;
+  projectManager: string;
+  humanResourcesManager: string;
+}
+
+export enum RequestType {
+  UPDATE = "UPDATE",
+  APPLY = "APPLY"
+}
+
+export const START_OF_YEAR = new Date(new Date().getFullYear(), 0, 1);
+
+export const END_OF_YEAR = new Date(new Date().getFullYear(), 11, 31);

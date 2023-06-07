@@ -27,7 +27,7 @@
     "delete": "Poista",
     "language": "Kieli",
     "select": "Valitse",
-    "apply": "Käytä",
+    "apply": "Hae",
     "saveChanges": "Tallenna"
   },
 
@@ -65,35 +65,14 @@
     "selectYearStart": "Mistä",
     "selectWeekStart": "Mistä",
     "selectWeekEnd": "Mihin",
-    "selectYearEnd": "Mihin",
-    "from": "Jälkeen",
-    "to": "Ennen",
-    "startOnly": "Vain aloitusviikko",
-    "amountOfChosenVacationDays": "Valittuja lomapäiviä: ",
-    "vacationType": "Lomatyyppi",
-    "paidLeave": "Palkallinen loma",
-    "maternityLeave": "Äitiysvapaa",
-    "parentalLeave": "Vanhempainvapaa",
-    "unpaidLeave": "Palkaton vapaa",
-    "surplusBalance": "Ylimääräinen loma",
-    "employee": "Työntekijä",
-    "status": "Tila",
-    "applyForVacation": "Hae lomaa",
-    "comment": "Kommentti: ",
-    "created": "Luotu: ",
-    "updated": "Päivitetty: ",
-    "projectManager": "Projekti päällikkö: ",
-    "humanResourcesManager": "Esihenkilö: ",
-    "leaveAComment": "Kommentoi..",
-    "pending": "Odottaa",
-    "approved": "Hyväksytty",
-    "declined": "Hylätty"
+    "selectYearEnd": "Mihin"
   },
 
   "managementScreen": {
     "seeMore": "Näytä lisää",
     "searchPlaceholder": "Hae käyttäjää..",
-    "noUser": "Ei näytettävää käyttäjää."
+    "noUser": "Ei näytettävää käyttäjää.",
+    "statistics": "Tilastot"
   },
 
   "billableHoursHandling": {
@@ -120,6 +99,35 @@
     "sync": "Synkronoi aikakirjaukset",
     "syncStart": "Synkronoi valitusta päivästä",
     "title": "Synkronointi"
+  },
+
+  "vacationRequests": {
+    "from": "Jälkeen",
+    "to": "Ennen",
+    "startOnly": "Vain aloitusviikko",
+    "amountOfChosenVacationDays": "Valittuja lomapäiviä: ",
+    "vacationType": "Lomatyyppi",
+    "vacation": "Loma",
+    "maternityPaternityLeave": "Äitiys/vanhempainvapaa",
+    "unpaidTimeOff": "Palkaton vapaa",
+    "sickness": "Sairaus",
+    "personalDays": "Henkilökohtainen vapaa",
+    "childSickness": "Lapsen sairaus",
+    "surplusBalance": "Ylimääräinen loma",
+    "employee": "Työntekijä",
+    "status": "Tila",
+    "applyForVacation": "Hae lomaa",
+    "message": "Kommentti: ",
+    "created": "Luotu: ",
+    "updated": "Päivitetty: ",
+    "projectManager": "Projekti päällikkö: ",
+    "humanResourcesManager": "Esihenkilö: ",
+    "leaveAComment": "Kommentoi..",
+    "pending": "Odottaa",
+    "approved": "Hyväksytty",
+    "declined": "Hylätty",
+    "everyone": "Kaikki",
+    "all": "Kaikki Tyypit"
   },
 
   "startDate": "Aloituspäivämäärä",

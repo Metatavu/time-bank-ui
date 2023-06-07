@@ -27,7 +27,7 @@ const useManagementScreenStyles = makeStyles(theme => ({
 
   searchIcon: {
     position: "absolute",
-    left: theme.spacing(2),
+    left: theme.spacing(-5),
     transform: "translateY(50%)",
     bottom: "50%"
   },
@@ -105,7 +105,7 @@ const useManagementScreenStyles = makeStyles(theme => ({
   redirectLinkPaper: {
     position: "absolute",
     bottom: theme.spacing(8),
-    left: theme.spacing(8),
+    left: theme.spacing(-8),
     padding: `${theme.spacing(1)} ${theme.spacing(1.3)}`,
     borderRadius: "10px !important",
     boxShadow: "0px 3px 3px -2px rgb(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0,0,0,0.14), 0px 1px 8px 0px rgb(0,0,0,0.12)"
@@ -198,6 +198,13 @@ const useManagementScreenStyles = makeStyles(theme => ({
     width: "calc(100vw)",
     padding: theme.spacing(4),
     overflow: "hidden"
+  },
+
+  navBarContainer: {
+    color: "white",
+    backgroundColor: "gray",
+    marginBottom: "0px",
+    paddingTop: "0px"
   }
 
 }), {
