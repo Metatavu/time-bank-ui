@@ -41,6 +41,15 @@ export enum FilterScopes {
 }
 
 /**
+ * Values for calender picker view
+ */
+export enum CalendarPickerView {
+  DATE = "day",
+  MONTH = "month",
+  YEAR = "year"
+}
+
+/**
  * Values for date formats
  */
 export enum DateFormats {
@@ -169,3 +178,7 @@ export interface VacationData {
   message: string;
   days: number;
 }
+
+export const VACATION_SEASON_START = new Date(new Date().getFullYear(), 3, 1);
+
+export const VACATION_SEASON_END = new Date(new Date().getFullYear(), 2, 31);

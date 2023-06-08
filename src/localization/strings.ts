@@ -86,7 +86,6 @@ export interface IStrings extends LocalizedStringsMethods {
     selectYearEnd: string;
     selectWeekStart: string;
     selectWeekEnd: string;
-
   };
 
   /**

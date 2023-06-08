@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Collapse, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Box, styled } from "@mui/material";
+import { Collapse, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Box } from "@mui/material";
 import useEditorContentStyles from "styles/editor-content/editor-content";
 import theme from "theme/theme";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
@@ -65,10 +65,44 @@ const RenderVacationRequests = () => {
   }, [person]);
 
   /**
+ * Handle opening and closing details and edit
+ * 
+ * @param index index of the request
+ * @param edit true open edit false open details
+ * @param request default values for edited request
+ */
+  const handleDetails = (index: number) => {
+    const newOpenRows = [...openDetails];
+    newOpenRows[index] = !newOpenRows[index];
+    setOpenDetails(newOpenRows);
+  };
+
+  /**
+ * Handle opening and closing details and edit
+ * 
+ * @param index index of the request
+ * @param edit true open edit false open details
+ * @param request default values for edited request
+ */
+  const handleEdit = (index: number, request?: VacationData) => {
+    if (request) {
+      setUpdatedVacationRequest({
+        startDate: request.startDate,
+        endDate: request.endDate,
+        type: request.type,
+        message: request.message,
+        days: request.days
+      });
+    }
+    const newOpenRows = [...openEdit];
+    newOpenRows[index] = !newOpenRows[index];
+    setOpenEdit(newOpenRows);
+  };
+  /**
   * Handle vacation apply button
   * Sends vacation request to database
   */
-  const applyForVacation = async () => {
+  const createVacationRequest = async () => {
     if (!person) return;
 
     try {
@@ -89,7 +123,7 @@ const RenderVacationRequests = () => {
         }
       });
       
-      setRequests(requests.concat(createdRequest));
+      setRequests([...requests, createdRequest]);
     } catch (error) {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
     }
@@ -98,18 +132,19 @@ const RenderVacationRequests = () => {
   /**
    * Updates the vacation request
    * 
-   * @param request 
+   * @param id id updated vacation request
+   * @param index index of request in list
    */
-  const updateRequest = async (id: string, index: number) => {
+  const updateVacationRequest = async (id: string, index: number) => {
     const requestToBeUpdated = requests.find(request => request.id === id);
-    if (!person) return;
+    if (!person || !requestToBeUpdated) return;
 
     try {
       const updateApi = Api.getVacationRequestsApi(accessToken?.access_token);
       const updatedRequest = await updateApi.updateVacationRequest({
         id: id,
         vacationRequest: {
-          ...requestToBeUpdated as VacationRequest,
+          ...requestToBeUpdated,
           startDate: updatedVacationRequest.startDate,
           endDate: updatedVacationRequest.endDate,
           type: updatedVacationRequest.type,
@@ -119,14 +154,12 @@ const RenderVacationRequests = () => {
         }
       });
       
-      const update = requests.map((request: VacationRequest) => (request.id !== id ? request : updatedRequest));
+      const update = requests.map(request => (request.id !== id ? request : updatedRequest));
       setRequests(update);
     } catch (error) {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
     }
-    const newOpenRows = [...openEdit];
-    newOpenRows[index] = !newOpenRows[index];
-    setOpenEdit(newOpenRows);
+    handleEdit(index);
   };
   
   /**
@@ -142,13 +175,13 @@ const RenderVacationRequests = () => {
     }
     setRequests(requests.filter(request => request.id !== id));
 
-    const newOpenRows = [...openEdit];
-    newOpenRows[index] = !newOpenRows[index];
-    setOpenEdit(newOpenRows);
+    handleEdit(index);
   };
 
   /**
  * Handle request type
+ * 
+ * @param type Type of vacation
  */
   const handleRequestType = (type: VacationType) => {
     switch (type) {
@@ -165,13 +198,14 @@ const RenderVacationRequests = () => {
       case VacationType.CHILD_SICKNESS:
         return strings.vacationRequests.childSickness;
       default:
-        // Handle any other status if necessary
-        break;
+        return strings.vacationRequests.vacation;
     }
   };
   
   /**
    * Handle request status
+   * 
+   * @param requestStatus Vacation requests status
    */
   const handleRequestStatus = (requestStatus: VacationRequestStatus) => {
     const statusMap = {
@@ -183,21 +217,6 @@ const RenderVacationRequests = () => {
     return statusMap[requestStatus] || "";
   };
 
-  /**
-   * Styles for table cells
-   */
-  const StyledTableCell = styled(TableCell)(() => ({
-    "& .pending": {
-      color: "#FF493C"
-    },
-    "& .approved": {
-      color: "#45cf36"
-    },
-    
-    // eslint-disable-next-line no-restricted-globals
-    ...(status === "APPROVED" ? { "&.approved": {} } : { "&.pending": {} })
-  }));
-
   return (
     <Box>
       <Box className={ classes.employeeVacationRequests }>
@@ -206,7 +225,7 @@ const RenderVacationRequests = () => {
         </Typography>
         <VacationRequestForm
           buttonLabel={strings.generic.apply}
-          onClick={() => applyForVacation()}
+          onClick={() => createVacationRequest()}
           vacationData={vacationRequest}
           setVacationData={setVacationRequest}
         />
@@ -235,20 +254,18 @@ const RenderVacationRequests = () => {
                     <TableCell>{ request.startDate.toDateString() }</TableCell>
                     <TableCell>{ request.endDate.toDateString() }</TableCell>
                     <TableCell>{ request.days }</TableCell>
-                    <StyledTableCell
+                    <TableCell
                       sx={{ "&.pending": { color: "#FF493C" }, "&.approved": { color: "#45cf36" } }}
                       className={request.hrManagerStatus === "APPROVED" ? "approved" : "pending"}
                     >
                       { handleRequestStatus(request.hrManagerStatus) }
-                    </StyledTableCell>
+                    </TableCell>
                     <TableCell>
                       <IconButton
                         aria-label="expand row"
                         size="small"
                         onClick={() => {
-                          const newOpenRows = [...openDetails];
-                          newOpenRows[index] = !newOpenRows[index];
-                          setOpenDetails(newOpenRows);
+                          handleDetails(index);
                         }}
                       >
                         { openDetails[index] ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/> }
@@ -256,18 +273,7 @@ const RenderVacationRequests = () => {
                       <IconButton
                         aria-label="expand row"
                         size="small"
-                        onClick={() => {
-                          const newOpenRows = [...openEdit];
-                          newOpenRows[index] = !newOpenRows[index];
-                          setOpenEdit(newOpenRows);
-                          setUpdatedVacationRequest({
-                            startDate: request.startDate,
-                            endDate: request.endDate,
-                            type: request.type,
-                            message: request.message,
-                            days: request.days
-                          });
-                        }}
+                        onClick={() => { handleEdit(index, request); }}
                       >
                         { openEdit[index] ? <EditIcon color="success"/> : <EditIcon/> }
                       </IconButton>
@@ -314,14 +320,14 @@ const RenderVacationRequests = () => {
                                 <TableCell style={{ border: 0 }}>
                                   <VacationRequestForm
                                     buttonLabel={strings.generic.saveChanges}
-                                    onClick={() => updateRequest(request.id as string, index)}
+                                    onClick={() => updateVacationRequest(request.id!, index)}
                                     vacationData={updatedVacationRequest}
                                     setVacationData={setUpdatedVacationRequest}
                                   />
                                 </TableCell>
                                 <TableCell style={{ border: 0 }}>
                                   <IconButton
-                                    onClick={() => deleteRequest(request.id as string, index)}
+                                    onClick={() => deleteRequest(request.id!, index)}
                                     aria-label="delete"
                                     className={ classes.deleteButton }
                                     size="large"

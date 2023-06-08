@@ -1,7 +1,6 @@
 import { ChangeEvent, useState, useContext, useEffect } from "react";
 import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, IconButton, List, ListItem, Tab } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { CalendarPickerView } from "@mui/x-date-pickers";
 import useEditorContentStyles from "styles/editor-content/editor-content";
 import { useAppSelector } from "app/hooks";
 import { selectPerson } from "features/person/person-slice";
@@ -9,7 +8,7 @@ import Api from "api/api";
 import strings from "localization/strings";
 import theme from "theme/theme";
 import TimeUtils from "utils/time-utils";
-import { FilterScopes, DateFormats, WorkTimeData, WorkTimeTotalData, VacationWeekData } from "types/index";
+import { FilterScopes, DateFormats, WorkTimeData, CalendarPickerView, WorkTimeTotalData, VacationWeekData, VACATION_SEASON_START, VACATION_SEASON_END } from "types/index";
 import { Timespan } from "generated/client";
 import TotalChart from "components/generics/total-chart/total-chart";
 import OverviewChart from "components/generics/overview-chart/overview-chart";
@@ -28,12 +27,11 @@ import RenderVacationRequests from "components/generics/vacation-test-forms/myVa
 */
 const EditorContent = () => {
   const classes = useEditorContentStyles();
-
   const { person, personTotalTime } = useAppSelector(selectPerson);
   const { accessToken } = useAppSelector(selectAuth);
   const [ scope, setScope ] = useState<FilterScopes>(FilterScopes.WEEK);
   const [ dateFormat, setDateFormat ] = useState<string>("yyyy.MM.dd");
-  const [ datePickerView, setDatePickerView ] = useState<CalendarPickerView>("day");
+  const [ datePickerView, setDatePickerView ] = useState<CalendarPickerView>(CalendarPickerView.DATE);
   const [ selectedStartDate, setSelectedStartDate ] = useState<Date>(new Date());
   const [ selectedEndDate, setSelectedEndDate ] = useState<Date | null>(new Date());
   const [ startWeek, setStartWeek ] = useState<number | null>(null);
@@ -42,8 +40,6 @@ const EditorContent = () => {
   const [ displayedTimeData, setDisplayedTimeData ] = useState<WorkTimeData[] | undefined>(undefined);
   const [ displayedTotal, setDisplayedTotal ] = useState<WorkTimeTotalData | undefined>(undefined);
   const [ vacationDayList, setVacationDayList ] = useState<VacationWeekData[]>([]);
-  const currentVacationSeasonStart = `${new Date().getFullYear()}-04-01`;
-  const currentVacationSeasonEnd = `${new Date().getFullYear() + 1}-03-31`;
   const context = useContext(ErrorContext);
   const [ tabIndex, setTabIndex ] = useState("1");
   
@@ -211,8 +207,8 @@ const EditorContent = () => {
     try {
       const vacationEntries = await Api.getDailyEntriesApi(accessToken?.access_token).listDailyEntries({
         personId: person.id,
-        before: new Date(currentVacationSeasonEnd),
-        after: new Date(currentVacationSeasonStart)
+        before: new Date(VACATION_SEASON_START),
+        after: new Date(VACATION_SEASON_END)
       });
       setVacationDayList(vacationDaysProcess(vacationEntries));
     } catch (error) {
@@ -301,11 +297,38 @@ const EditorContent = () => {
    *
    * @param event React change event
    */
-  const handleDateFormatChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const selectedFilterScope = event.target.value as FilterScopes;
+  const handleFilterScopes = (str: string) => {
+    switch (str) {
+      case "day":
+        return FilterScopes.DATE;
+      case "week":
+        return FilterScopes.WEEK;
+      case "month":
+        return FilterScopes.MONTH;
+      case "year":
+        return FilterScopes.YEAR;
+      default:
+        return null;
+    }
+  };
+
+  /**
+   * Changes the presented date format accordion to selected scope
+   *
+   * @param event React change event
+   */
+  const handleDateFormatChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
+    const selectedFilterScope = handleFilterScopes(value);
+
+    if (!selectedFilterScope) return;
 
     setScope(selectedFilterScope);
-    setDatePickerView(selectedFilterScope as CalendarPickerView);
+    setDatePickerView({
+      [FilterScopes.DATE]: CalendarPickerView.DATE,
+      [FilterScopes.WEEK]: CalendarPickerView.DATE,
+      [FilterScopes.MONTH]: CalendarPickerView.MONTH,
+      [FilterScopes.YEAR]: CalendarPickerView.YEAR
+    }[selectedFilterScope]);
     setDateFormat({
       [FilterScopes.DATE]: DateFormats.DATE,
       [FilterScopes.WEEK]: DateFormats.DATE,

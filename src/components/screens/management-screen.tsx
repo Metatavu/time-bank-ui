@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect, ChangeEvent } from "react";
+import { useState, useContext, useEffect } from "react";
 import AppLayout from "../layouts/app-layout";
 import useManagementScreenStyles from "styles/screens/management-screen";
 import { Toolbar, Box, CircularProgress, Paper, Typography, Divider, Button, TextField, Tooltip, Grid, Card, Tab } from "@mui/material";
@@ -586,7 +586,7 @@ const ManagementScreen = () => {
    * @param event 
    * @param newTabIndex 
    */
-  const handleTabChange = (event: ChangeEvent<{}>, newTabIndex: string) => {
+  const handleTabChange = (newTabIndex: string) => {
     setTabIndex(newTabIndex);
   };
   
@@ -599,7 +599,7 @@ const ManagementScreen = () => {
       <Box>
         <TabContext value={tabIndex}>
           <Box>
-            <TabList onChange={ (event, value) => handleTabChange(event, value) } className={ classes.navBarContainer }>
+            <TabList onChange={ (_event, value) => handleTabChange(value) } className={ classes.navBarContainer }>
               <Tab label={ strings.managementScreen.statistics } value="1"/>
               <Tab label={ strings.header.employeeVacationRequests } value="2"/>
             </TabList>

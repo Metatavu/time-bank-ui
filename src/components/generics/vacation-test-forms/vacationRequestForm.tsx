@@ -1,14 +1,16 @@
-import { CalendarPickerView } from "@mui/x-date-pickers";
 import { Box, Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, Typography } from "@mui/material";
 import { VacationType } from "generated/client";
 import strings from "localization/strings";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect } from "react";
 import { FilterScopes, VacationData } from "types";
 import useEditorContentStyles from "styles/editor-content/editor-content";
 import Holidays from "date-holidays";
 import DateRangePicker from "components/generics/date-range-picker/date-range-picker";
 
-interface VacationRequestFormProps {
+/**
+* Component properties
+*/
+interface Props {
   onClick: () => void;
   buttonLabel: string;
   vacationData: VacationData;
@@ -16,18 +18,18 @@ interface VacationRequestFormProps {
 }
 
 /**
-* Form component for vacation requests
-* @param param0 
+* Form component for vacation request
+*
+* @param component props  
 */
 const VacationRequestForm = ({
   onClick,
   buttonLabel,
   vacationData,
   setVacationData
-}: VacationRequestFormProps) => {
+}: Props) => {
   const classes = useEditorContentStyles();
   const dateFormat = "yyyy.MM.dd";
-  const [ datePickerView ] = useState<CalendarPickerView>("day");
 
   /**
  * handle DateRangePicker chances
@@ -38,11 +40,9 @@ const VacationRequestForm = ({
   const handleVacationDateChange = (date: Date | null, isStart: boolean) => {
     if (!date) return;
     if (isStart) {
-      const newRequest: VacationData = { ...vacationData, startDate: date };
-      setVacationData(newRequest);
+      setVacationData({ ...vacationData, startDate: date });
     } else {
-      const newRequest: VacationData = { ...vacationData, endDate: date };
-      setVacationData(newRequest);
+      setVacationData({ ...vacationData, endDate: date });
     }
   };
 
@@ -51,9 +51,8 @@ const VacationRequestForm = ({
  * 
  * @param event
  */
-  const handleVacationMessageChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const newRequest: VacationData = { ...vacationData, message: event.target.value };
-    setVacationData(newRequest);
+  const handleVacationMessageChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
+    setVacationData({ ...vacationData, message: value });
   };
 
   /**
@@ -61,9 +60,8 @@ const VacationRequestForm = ({
    *  
    * @param event
    */
-  const handleVacationTypeChange = (event: SelectChangeEvent) => {
-    const newRequest: VacationData = { ...vacationData, type: event.target.value as VacationType };
-    setVacationData(newRequest);
+  const handleVacationTypeChange = ({ target: { value } }: SelectChangeEvent) => {
+    setVacationData({ ...vacationData, type: value as VacationType });
   };
 
   /**
@@ -163,7 +161,7 @@ const VacationRequestForm = ({
     <Button
       color="secondary"
       variant="contained"
-      onClick={() => (onClick())}
+      onClick={onClick}
     >
       <Typography style={{
         fontWeight: 600,
@@ -179,24 +177,22 @@ const VacationRequestForm = ({
   return (
     <>
       <FormControl>
-        <Box display="flex" alignItems="center" marginRight="6em">
+        <Box
+          display="flex"
+          alignItems="center"
+          marginRight="6em"
+        >
           <Box className={ classes.datePickers }>
             <DateRangePicker
               scope={ FilterScopes.DATE }
               dateFormat={ dateFormat }
               selectedStartDate={ vacationData.startDate }
               selectedEndDate={ vacationData.endDate }
-              datePickerView={ datePickerView }
+              datePickerView="day"
               minStartDate={ new Date() }
               minEndDate={ vacationData.startDate }
               onStartDateChange={date => handleVacationDateChange(date, true)}
               onEndDateChange={date => handleVacationDateChange(date, false) }
-              onStartWeekChange={() => {
-                throw new Error("Function not implemented.");
-              } }
-              onEndWeekChange={() => {
-                throw new Error("Function not implemented.");
-              } }
             />
           </Box>
           <Box marginLeft="3em">

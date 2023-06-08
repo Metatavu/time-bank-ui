@@ -27,10 +27,10 @@ interface Props {
   maxStartDate?: Date;
   minEndDate?: Date;
   maxEndDate?: Date;
-  onStartDateChange: (value: Date | null, isStart: boolean) => void;
-  onEndDateChange: (value: Date | null, isStart: boolean) => void;
-  onStartWeekChange: (weekNumber: number) => void;
-  onEndWeekChange: (weekNumber: number) => void;
+  onStartDateChange: (value: Date | null) => void;
+  onEndDateChange: (value: Date | null) => void;
+  onStartWeekChange?: (weekNumber: number) => void;
+  onEndWeekChange?: (weekNumber: number) => void;
 }
 
 /**
@@ -86,6 +86,7 @@ const DateRangePicker: React.FC<Props> = ({
     const { value } = event.target;
 
     const numberValue = Number(value);
+    if (!onStartWeekChange || !onEndWeekChange) return;
     if (start) {
       onStartWeekChange(numberValue);
     } else {
@@ -173,7 +174,7 @@ const DateRangePicker: React.FC<Props> = ({
           maxDate={ maxStartDate }
           label={ strings.editorContent.filterStartingDate }
           value={ selectedStartDate }
-          onChange={ onStartDateChange as any }
+          onChange={ onStartDateChange }
           className={ classes.datePicker }
           renderInput={ params => <TextField {...params}/>}
         />
@@ -181,7 +182,6 @@ const DateRangePicker: React.FC<Props> = ({
     </>
   );
   
-  // TODO: onCHnage as any may have broken something
   /**
    * Renders start year picker and week selector 
    */
@@ -194,7 +194,7 @@ const DateRangePicker: React.FC<Props> = ({
           maxDate={ todayDate }
           label={ strings.editorContent.selectYearStart }
           value={ selectedStartDate }
-          onChange={ onStartDateChange as any }
+          onChange={ onStartDateChange }
           className={ classes.yearPicker }
           renderInput={ params => <TextField {...params}/>}
         />
@@ -224,7 +224,7 @@ const DateRangePicker: React.FC<Props> = ({
         maxDate={ maxEndDate }
         label={ strings.editorContent.filterEndingDate }
         value={ selectedEndDate }
-        onChange={ onEndDateChange as any}
+        onChange={ onEndDateChange }
         className={ classes.datePicker }
         renderInput={ params => <TextField {...params}/>}
       />
@@ -244,7 +244,7 @@ const DateRangePicker: React.FC<Props> = ({
           maxDate={ todayDate }
           label={ strings.editorContent.selectYearEnd }
           value={ selectedEndDate }
-          onChange={ onEndDateChange as any}
+          onChange={ onEndDateChange }
           className={ classes.yearPicker }
           renderInput={ params => <TextField {...params}/>}
         />
