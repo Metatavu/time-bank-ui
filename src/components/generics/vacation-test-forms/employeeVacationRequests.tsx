@@ -18,6 +18,13 @@ import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
 /**
+ * Component properties
+ */
+interface Props {
+  persons: Person[]
+}
+
+/**
  * Styled expandable table row
  */
 const StyledTableRow = styled(TableRow)(() => ({
@@ -48,7 +55,7 @@ const StyledTableCell = styled(TableCell)(() => ({
 /**
  * renders employee vacation request view
  */
-const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
+const RenderEmployeeVacationRequests = ({ persons }: Props) => {
   const classes = useEditorContentStyles();
   const [ status, setStatus ] = useState<VacationRequestStatus>(VacationRequestStatus.PENDING);
   const [ employee, setEmployee ] = useState("Everyone");
@@ -87,6 +94,7 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
 
   /**
    * Handle employee change
+   * 
    * @param event select employee
    */
   const handleEmployeeChange = (event: SelectChangeEvent) => {
@@ -119,7 +127,6 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
           <MenuItem key={p.id} value={p.id}>
             {`${p.firstName} ${p.lastName}`}
           </MenuItem>
-
         ))}
       </Select>
     </FormControl>
@@ -127,6 +134,7 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
 
   /**
    * Method to handle vacation starting date change
+   * 
    * @param date selected date
    */
   const handleVacationStartDateChange = (date: Date | null) => {
@@ -135,14 +143,17 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
 
   /**
    * Method to handle vacation ending date change
+   * 
    * @param date selected date
    */
   const handleVacationEndDateChange = (date: Date | null) => {
     date && setSelectedVacationEndDate(date);
   };
-
+  
   /**
    * Handle vacation type 
+   * 
+   * @param event Change event
    */
   const handleVacationTypeChange = (event: SelectChangeEvent) => {
     const contentValue = event.target.value as VacationType;
@@ -191,6 +202,8 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
 
   /**
    * Handle status change
+   * 
+   * @param event Select change event
    */
   const handleStatusChange = (event: SelectChangeEvent) => {
     const contentValue = event.target.value as VacationRequestStatus;
@@ -227,9 +240,10 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
   );
   
   /**
+   * Method to handle person names on vacation applications
    * 
    * @param id 
-   * @returns 
+   * @returns foundPerson.firstName and foundPerson.lastName
    */
   const handlePersonNames = (id: number) => {
     const foundPerson = persons.find(p => p.id === id);
@@ -245,50 +259,31 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
  */
   const handleSort = (column: string) => {
     if (column === sortBy) {
-      // If the same column is clicked again, toggle the sort order
       setSortOrder(sortOrder === "asc" ? "desc" : "asc");
     } else {
-      // If a different column is clicked, update the sorting column and set the sort order to ascending
       setSortBy(column);
       setSortOrder("asc");
     }
   };
 
   /**
-   * Convert a date string or Date object to ISO format
-   * @param dateStringOrDate - The date string or Date object
-   * @returns The date in ISO format
+   * Sorting function for vacation applications
    */
-  function convertToISOFormat(dateStringOrDate: string | Date): string {
-    if (typeof dateStringOrDate === "string") {
-      const [day, month, year] = dateStringOrDate.split(".");
-      const isoDate = `${year}-${month}-${day}`;
-      return isoDate;
-    }
-    return dateStringOrDate.toISOString();
-  }
-
   const sortedVacationRequests = requests.sort((a, b) => {
     if (sortBy === "days") {
       const daysA = Number(a.days);
       const daysB = Number(b.days);
       return sortOrder === "asc" ? daysA - daysB : daysB - daysA;
     }
-    /*
-    if (sortBy === "employee") {
-      return sortOrder === "asc"
-        ? a.person.localeCompare(b.person)
-        : b.person.localeCompare(a.person);
-    }
-    */
+    
     if (sortBy === "startDate") {
-      const dateA = new Date(convertToISOFormat(a.startDate));
-      const dateB = new Date(convertToISOFormat(b.startDate));
+      const dateA = new Date(a.startDate.toISOString());
+      const dateB = new Date(b.startDate.toISOString());
       return sortOrder === "asc" ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
     }
     if (sortBy === "endDate") {
-      const dateA = new Date(convertToISOFormat(a.endDate));
-      const dateB = new Date(convertToISOFormat(b.endDate));
+      const dateA = new Date(a.endDate.toISOString());
+      const dateB = new Date(b.endDate.toISOString());
       return sortOrder === "asc" ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
     }
     if (sortBy === "vacationType") {
@@ -301,20 +296,24 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
         ? a.hrManagerStatus.localeCompare(b.hrManagerStatus)
         : b.hrManagerStatus.localeCompare(a.hrManagerStatus);
     }
-    return 0; // No sorting applied
+    return 0;
   });
   
   /**
    * Handle remaining vacation days
+   * 
+   * @param request vacation request
    */
   const handleRemainingVacationDays = (request: VacationRequest) => {
     const foundPerson = persons.find(p => p.id === request.person);
-    if (foundPerson) { return foundPerson.unspentVacations - request.days; }
+    if (foundPerson) return foundPerson.unspentVacations - request.days;
     return null;
   };
 
   /**
    * Handle request type
+   * 
+   * @param type Vacation type
    */
   const handleRequestType = (type: VacationType) => {
     switch (type) {
@@ -337,6 +336,8 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
 
   /**
    * Handle request status
+   * 
+   * @param requestStatus Vacation request status
    */
   const handleRequestStatus = (requestStatus: VacationRequestStatus) => {
     const statusMap = {
@@ -526,8 +527,18 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
                     </StyledTableCell>
                   </StyledTableRow>
                   <TableRow>
-                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
-                      <Collapse in={ openRows[index] } timeout="auto" unmountOnExit>
+                    <TableCell
+                      style={{
+                        paddingBottom: 0,
+                        paddingTop: 0
+                      }}
+                      colSpan={8}
+                    >
+                      <Collapse
+                        in={ openRows[index] }
+                        timeout="auto"
+                        unmountOnExit
+                      >
                         <Box sx={{ margin: 1, width: "100%" }}>
                           <Table size="small" aria-label="purchases">
                             <TableHead>
@@ -550,7 +561,15 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
                                 <TableCell>{ handleRequestStatus(request.projectManagerStatus) }</TableCell>
                                 <TableCell>{ handleRequestStatus(request.hrManagerStatus) }</TableCell>
                                 <TableCell/>
-                                <TableCell align="right"><Button variant="outlined" color="error" sx={{ color: "#F9473B" }}>{ strings.vacationRequests.declined }</Button></TableCell>
+                                <TableCell align="right">
+                                  <Button
+                                    variant="outlined"
+                                    color="error"
+                                    sx={{ color: "#F9473B" }}
+                                  >
+                                    { strings.vacationRequests.declined }
+                                  </Button>
+                                </TableCell>
                                 <TableCell align="right"><Button variant="outlined" color="success" sx={{ color: "green" }}>{ strings.vacationRequests.approved }</Button></TableCell>
                               </TableRow>
                             </TableBody>
