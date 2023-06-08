@@ -7,7 +7,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { CalendarPickerView } from "@mui/x-date-pickers";
 import strings from "localization/strings";
 import DateRangePicker from "../date-range-picker/date-range-picker";
-import { FilterScopes } from "types";
+import { FilterScopes, VacationRequestSort } from "types";
 import { Person, VacationRequest, VacationRequestStatus, VacationType } from "generated/client";
 import Api from "api/api";
 import { useAppSelector } from "app/hooks";
@@ -69,7 +69,7 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
   const context = useContext(ErrorContext);
   const [ requests, setRequests ] = useState<VacationRequest[]>([]);
   const [ openRows, setOpenRows ] = useState<boolean[]>([]);
-  const [sortBy, setSortBy] = useState("");
+  const [sortBy, setSortBy] = useState<VacationRequestSort>(VacationRequestSort.START_DATE);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
   /**
@@ -155,8 +155,8 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
    * 
    * @param event Change event
    */
-  const handleVacationTypeChange = (event: SelectChangeEvent) => {
-    const contentValue = event.target.value as VacationType;
+  const handleVacationTypeChange = ({ target: { value } }: SelectChangeEvent) => {
+    const contentValue = value as VacationType;
     setVacationType(contentValue);
   };
 
@@ -257,7 +257,7 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
  * Handle the column header click and update the sorting state
  * @param column 
  */
-  const handleSort = (column: string) => {
+  const handleSort = (column: VacationRequestSort) => {
     if (column === sortBy) {
       setSortOrder(sortOrder === "asc" ? "desc" : "asc");
     } else {
@@ -270,28 +270,28 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
    * Sorting function for vacation applications
    */
   const sortedVacationRequests = requests.sort((a, b) => {
-    if (sortBy === "days") {
+    if (sortBy === VacationRequestSort.DAYS) {
       const daysA = Number(a.days);
       const daysB = Number(b.days);
       return sortOrder === "asc" ? daysA - daysB : daysB - daysA;
     }
     
-    if (sortBy === "startDate") {
+    if (sortBy === VacationRequestSort.START_DATE) {
       const dateA = new Date(a.startDate.toISOString());
       const dateB = new Date(b.startDate.toISOString());
       return sortOrder === "asc" ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
     }
-    if (sortBy === "endDate") {
+    if (sortBy === VacationRequestSort.END_DATE) {
       const dateA = new Date(a.endDate.toISOString());
       const dateB = new Date(b.endDate.toISOString());
       return sortOrder === "asc" ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
     }
-    if (sortBy === "vacationType") {
+    if (sortBy === VacationRequestSort.VACATION_TYPE) {
       return sortOrder === "asc"
         ? a.type.localeCompare(b.type)
         : b.type.localeCompare(a.type);
     }
-    if (sortBy === "status") {
+    if (sortBy === VacationRequestSort.STATUS) {
       return sortOrder === "asc"
         ? a.hrManagerStatus.localeCompare(b.hrManagerStatus)
         : b.hrManagerStatus.localeCompare(a.hrManagerStatus);
@@ -394,11 +394,11 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
             <TableHead>
               <TableRow>
                 <TableCell
-                  onClick={() => handleSort("vacationType")}
+                  onClick={() => handleSort(VacationRequestSort.VACATION_TYPE)}
                   style={{ cursor: "pointer" }}
                 >
                   {strings.header.vacationType}
-                  {sortBy === "vacationType" && (
+                  {sortBy === VacationRequestSort.VACATION_TYPE && (
                     <Box component="span" ml={1}>
                       {sortOrder === "asc" ? (
                         <ArrowUpwardIcon fontSize="small"/>
@@ -409,11 +409,11 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
                   )}
                 </TableCell>
                 <TableCell
-                  onClick={() => handleSort("employee")}
+                  onClick={() => handleSort(VacationRequestSort.EMPLOYEE)}
                   style={{ cursor: "pointer" }}
                 >
                   {strings.header.employee}
-                  {sortBy === "employee" && (
+                  {sortBy === VacationRequestSort.EMPLOYEE && (
                     <Box component="span" ml={1}>
                       {sortOrder === "asc" ? (
                         <ArrowUpwardIcon fontSize="small"/>
@@ -424,11 +424,11 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
                   )}
                 </TableCell>
                 <TableCell
-                  onClick={() => handleSort("days")}
+                  onClick={() => handleSort(VacationRequestSort.DAYS)}
                   style={{ cursor: "pointer" }}
                 >
                   {strings.header.days}
-                  {sortBy === "days" && (
+                  {sortBy === VacationRequestSort.DAYS && (
                     <Box component="span" ml={1}>
                       {sortOrder === "asc" ? (
                         <ArrowUpwardIcon fontSize="small"/>
@@ -439,11 +439,11 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
                   )}
                 </TableCell>
                 <TableCell
-                  onClick={() => handleSort("startDate")}
+                  onClick={() => handleSort(VacationRequestSort.START_DATE)}
                   style={{ cursor: "pointer" }}
                 >
                   {strings.header.startDate}
-                  {sortBy === "startDate" && (
+                  {sortBy === VacationRequestSort.START_DATE && (
                     <Box component="span" ml={1}>
                       {sortOrder === "asc" ? (
                         <ArrowUpwardIcon fontSize="small"/>
@@ -454,11 +454,11 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
                   )}
                 </TableCell>
                 <TableCell
-                  onClick={() => handleSort("endDate")}
+                  onClick={() => handleSort(VacationRequestSort.END_DATE)}
                   style={{ cursor: "pointer" }}
                 >
                   {strings.header.endDate}
-                  {sortBy === "endDate" && (
+                  {sortBy === VacationRequestSort.END_DATE && (
                     <Box component="span" ml={1}>
                       {sortOrder === "asc" ? (
                         <ArrowUpwardIcon fontSize="small"/>
@@ -469,11 +469,11 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
                   )}
                 </TableCell>
                 <TableCell
-                  onClick={() => handleSort("remainingDays")}
+                  onClick={() => handleSort(VacationRequestSort.REMAINING_DAYS)}
                   style={{ cursor: "pointer" }}
                 >
                   {strings.header.remainingDays}
-                  {sortBy === "remainingDays" && (
+                  {sortBy === VacationRequestSort.REMAINING_DAYS && (
                     <Box component="span" ml={1}>
                       {sortOrder === "asc" ? (
                         <ArrowUpwardIcon fontSize="small"/>
@@ -484,11 +484,11 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
                   )}
                 </TableCell>
                 <TableCell
-                  onClick={() => handleSort("status")}
+                  onClick={() => handleSort(VacationRequestSort.STATUS)}
                   style={{ cursor: "pointer" }}
                 >
                   {strings.header.status}
-                  {sortBy === "status" && (
+                  {sortBy === VacationRequestSort.STATUS && (
                     <Box component="span" ml={1}>
                       {sortOrder === "asc" ? (
                         <ArrowUpwardIcon fontSize="small"/>

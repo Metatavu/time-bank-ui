@@ -179,6 +179,16 @@ export interface VacationData {
   days: number;
 }
 
+export enum VacationRequestSort{
+  VACATION_TYPE = "vacationType",
+  EMPLOYEE = "employee",
+  DAYS = "days",
+  START_DATE = "startDate",
+  END_DATE = "endDate",
+  REMAINING_DAYS = "remainingDays",
+  STATUS = "status"
+}
+
 export const VACATION_SEASON_START = new Date(new Date().getFullYear(), 3, 1);
 
 export const VACATION_SEASON_END = new Date(new Date().getFullYear(), 2, 31);
