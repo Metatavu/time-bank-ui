@@ -68,8 +68,6 @@ const RenderVacationRequests = () => {
  * Handle opening and closing details and edit
  * 
  * @param index index of the request
- * @param edit true open edit false open details
- * @param request default values for edited request
  */
   const handleDetails = (index: number) => {
     const newOpenRows = [...openDetails];
@@ -81,7 +79,6 @@ const RenderVacationRequests = () => {
  * Handle opening and closing details and edit
  * 
  * @param index index of the request
- * @param edit true open edit false open details
  * @param request default values for edited request
  */
   const handleEdit = (index: number, request?: VacationData) => {
@@ -164,6 +161,9 @@ const RenderVacationRequests = () => {
   
   /**
    * Method to delete vacation request
+   * 
+   * @param id id updated vacation request
+   * @param index index of request in list
    */
   const deleteRequest = async (id: string, index: number) => {
     try {

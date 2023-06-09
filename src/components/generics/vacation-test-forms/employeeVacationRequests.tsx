@@ -149,6 +149,30 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
   const handleVacationEndDateChange = (date: Date | null) => {
     date && setSelectedVacationEndDate(date);
   };
+
+  /**
+   * set the string to corresponding enum value
+   *
+   * @param filterString filter scope as string
+   */
+  const handleVacationType = (typeString: string) => {
+    switch (typeString) {
+      case "VACATION":
+        return VacationType.VACATION;
+      case "UNPAID_TIME_OFF":
+        return VacationType.UNPAID_TIME_OFF;
+      case "SICKNESS":
+        return VacationType.SICKNESS;
+      case "PERSONAL_DAYS":
+        return VacationType.PERSONAL_DAYS;
+      case "MATERNITY_PATERNITY":
+        return VacationType.MATERNITY_PATERNITY;
+      case "CHILD_SICKNESS":
+        return VacationType.CHILD_SICKNESS;
+      default:
+        return null;
+    }
+  };
   
   /**
    * Handle vacation type 
@@ -156,8 +180,42 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
    * @param event Change event
    */
   const handleVacationTypeChange = ({ target: { value } }: SelectChangeEvent) => {
-    const contentValue = value as VacationType;
+    const contentValue = handleVacationType(value);
+
+    if (!contentValue) return;
+
     setVacationType(contentValue);
+  };
+
+  /**
+   * set the string to corresponding enum value
+   *
+   * @param filterString filter scope as string
+   */
+  const handleVacationStatus = (statusString: string) => {
+    switch (statusString) {
+      case "PENDING":
+        return VacationRequestStatus.PENDING;
+      case "APPROVED":
+        return VacationRequestStatus.APPROVED;
+      case "DECLINED":
+        return VacationRequestStatus.DECLINED;
+      default:
+        return null;
+    }
+  };
+
+  /**
+ * Handle status change
+ * 
+ * @param event Select change event
+ */
+  const handleStatusChange = ({ target: { value } }: SelectChangeEvent) => {
+    const contentValue = handleVacationStatus(value);
+
+    if (!contentValue) return;
+
+    setStatus(contentValue);
   };
 
   /**
@@ -199,16 +257,6 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
       </Select>
     </FormControl>
   );
-
-  /**
-   * Handle status change
-   * 
-   * @param event Select change event
-   */
-  const handleStatusChange = (event: SelectChangeEvent) => {
-    const contentValue = event.target.value as VacationRequestStatus;
-    setStatus(contentValue);
-  };
 
   /**
    * Renders the vacation type selection
@@ -511,7 +559,12 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
                     <StyledTableCell>{ request.startDate.toDateString() }</StyledTableCell>
                     <StyledTableCell>{ request.endDate.toDateString() }</StyledTableCell>
                     <StyledTableCell>{ handleRemainingVacationDays(request)}</StyledTableCell>
-                    <StyledTableCell sx={{ "&.pending": { color: "#FF493C" }, "&.approved": { color: "#45cf36" } }} className={ request.hrManagerStatus === "APPROVED" ? "approved" : "pending"}>{handleRequestStatus(request.hrManagerStatus)}</StyledTableCell>
+                    <StyledTableCell
+                      sx={{ "&.pending": { color: "#FF493C" }, "&.approved": { color: "#45cf36" } }}
+                      className={ request.hrManagerStatus === "APPROVED" ? "approved" : "pending"}
+                    >
+                      {handleRequestStatus(request.hrManagerStatus)}
+                    </StyledTableCell>
                     <StyledTableCell>
                       <IconButton
                         aria-label="expand row"
@@ -570,7 +623,16 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
                                     { strings.vacationRequests.declined }
                                   </Button>
                                 </TableCell>
-                                <TableCell align="right"><Button variant="outlined" color="success" sx={{ color: "green" }}>{ strings.vacationRequests.approved }</Button></TableCell>
+                                <TableCell align="right">
+                                  <Button
+                                    variant="outlined"
+                                    color="success"
+                                    sx={{ color: "green" }}
+                                  >
+                                    { strings.vacationRequests.approved }
+                                  </Button>
+
+                                </TableCell>
                               </TableRow>
                             </TableBody>
                           </Table>

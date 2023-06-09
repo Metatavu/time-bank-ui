@@ -583,6 +583,7 @@ const ManagementScreen = () => {
 
   /**
    * Handles view change
+   * 
    * @param event 
    * @param newTabIndex 
    */

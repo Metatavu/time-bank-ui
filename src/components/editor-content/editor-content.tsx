@@ -293,19 +293,19 @@ const EditorContent = () => {
   };
 
   /**
-   * Changes the presented date format accordion to selected scope
+   * set the string to corresponding enum value
    *
-   * @param event React change event
+   * @param filterString filter scope as string
    */
-  const handleFilterScopes = (str: string) => {
-    switch (str) {
-      case "day":
+  const handleFilterScopes = (filterString: string) => {
+    switch (filterString) {
+      case "DAY":
         return FilterScopes.DATE;
-      case "week":
+      case "WEEK":
         return FilterScopes.WEEK;
-      case "month":
+      case "MONTH":
         return FilterScopes.MONTH;
-      case "year":
+      case "YEAR":
         return FilterScopes.YEAR;
       default:
         return null;
