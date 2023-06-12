@@ -299,13 +299,13 @@ const EditorContent = () => {
    */
   const handleFilterScopes = (filterString: string) => {
     switch (filterString) {
-      case "DAY":
+      case "day":
         return FilterScopes.DATE;
-      case "WEEK":
+      case "week":
         return FilterScopes.WEEK;
-      case "MONTH":
+      case "month":
         return FilterScopes.MONTH;
-      case "YEAR":
+      case "year":
         return FilterScopes.YEAR;
       default:
         return null;
