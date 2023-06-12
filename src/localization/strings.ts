@@ -86,28 +86,6 @@ export interface IStrings extends LocalizedStringsMethods {
     selectYearEnd: string;
     selectWeekStart: string;
     selectWeekEnd: string;
-    from: string;
-    to: string;
-    startOnly: string;
-    amountOfChosenVacationDays: string;
-    vacationType: string;
-    paidLeave: string;
-    maternityLeave: string;
-    parentalLeave: string;
-    unpaidLeave: string;
-    surplusBalance: string;
-    employee: string;
-    status: string;
-    applyForVacation: string;
-    comment: string;
-    created: string;
-    updated: string;
-    projectManager: string;
-    humanResourcesManager: string;
-    leaveAComment: string;
-    pending: string;
-    approved: string;
-    declined: string;
   };
 
   /**
@@ -117,6 +95,7 @@ export interface IStrings extends LocalizedStringsMethods {
     seeMore: string;
     searchPlaceholder: string;
     noUser: string;
+    statistics: string;
   };
 
   /**
@@ -142,7 +121,7 @@ export interface IStrings extends LocalizedStringsMethods {
     syncTimeDataFailed: string;
     updateBillingPercentageFailed: string;
     title: string;
-  }
+  };
 
   /**
    * Translations related to sync handling
@@ -152,7 +131,38 @@ export interface IStrings extends LocalizedStringsMethods {
     sync: string;
     title: string;
     syncStart: string;
-  }
+  };
+
+  /**
+ * Translations related to vacation requests
+ */
+  vacationRequests: {
+    from: string;
+    to: string;
+    startOnly: string;
+    amountOfChosenVacationDays: string;
+    vacationType: string;
+    vacation: string;
+    maternityPaternityLeave: string;
+    unpaidTimeOff: string;
+    sickness: string;
+    personalDays: string;
+    childSickness: string;
+    surplusBalance: string;
+    employee: string;
+    status: string;
+    applyForVacation: string;
+    message: string;
+    created: string;
+    updated: string;
+    projectManager: string;
+    humanResourcesManager: string;
+    leaveAComment: string;
+    pending: string;
+    approved: string;
+    declined: string;
+    everyone: String;
+  };
 
   startDate: string;
   week: string;

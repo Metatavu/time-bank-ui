@@ -1,7 +1,6 @@
 import { ChangeEvent, useState, useContext, useEffect } from "react";
-import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, IconButton, List, ListItem, Tab, Button, InputLabel, Select, SelectChangeEvent, FormControl } from "@mui/material";
+import { Paper, Typography, MenuItem, TextField, Box, Accordion, AccordionSummary, AccordionDetails, IconButton, List, ListItem, Tab } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { CalendarPickerView } from "@mui/x-date-pickers";
 import useEditorContentStyles from "styles/editor-content/editor-content";
 import { useAppSelector } from "app/hooks";
 import { selectPerson } from "features/person/person-slice";
@@ -9,7 +8,7 @@ import Api from "api/api";
 import strings from "localization/strings";
 import theme from "theme/theme";
 import TimeUtils from "utils/time-utils";
-import { FilterScopes, DateFormats, WorkTimeData, WorkTimeTotalData, VacationWeekData } from "types/index";
+import { FilterScopes, DateFormats, WorkTimeData, CalendarPickerView, WorkTimeTotalData, VacationWeekData, VACATION_SEASON_START, VACATION_SEASON_END } from "types/index";
 import { Timespan } from "generated/client";
 import TotalChart from "components/generics/total-chart/total-chart";
 import OverviewChart from "components/generics/overview-chart/overview-chart";
@@ -21,26 +20,19 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import vacationDaysProcess from "utils/vacation-data-utils";
 import { selectAuth } from "features/auth/auth-slice";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import Holidays from "date-holidays";
-import renderVacationRequests from "components/generics/vacation-test-forms/myVacationRequests";
-import renderEmployeeVacationRequests from "components/generics/vacation-test-forms/employeeVacationRequests";
+import RenderVacationRequests from "components/generics/vacation-test-forms/myVacationRequests";
 
 /**
 * Application editor content component
 */
 const EditorContent = () => {
   const classes = useEditorContentStyles();
-
   const { person, personTotalTime } = useAppSelector(selectPerson);
   const { accessToken } = useAppSelector(selectAuth);
   const [ scope, setScope ] = useState<FilterScopes>(FilterScopes.WEEK);
   const [ dateFormat, setDateFormat ] = useState<string>("yyyy.MM.dd");
-  const [ dateVacationFormat ] = useState<string>("yyyy.MM.dd");
-  const [ datePickerView, setDatePickerView ] = useState<CalendarPickerView>("day");
-  const [ datePickerViewVacation ] = useState<CalendarPickerView>("day");
+  const [ datePickerView, setDatePickerView ] = useState<CalendarPickerView>(CalendarPickerView.DATE);
   const [ selectedStartDate, setSelectedStartDate ] = useState<Date>(new Date());
-  const [ selectedVacationStartDate, setSelectedVacationStartDate ] = useState<Date>(new Date());
-  const [ selectedVacationEndDate, setSelectedVacationEndDate ] = useState<Date>(new Date());
   const [ selectedEndDate, setSelectedEndDate ] = useState<Date | null>(new Date());
   const [ startWeek, setStartWeek ] = useState<number | null>(null);
   const [ endWeek, setEndWeek ] = useState<number | null>(null);
@@ -48,13 +40,9 @@ const EditorContent = () => {
   const [ displayedTimeData, setDisplayedTimeData ] = useState<WorkTimeData[] | undefined>(undefined);
   const [ displayedTotal, setDisplayedTotal ] = useState<WorkTimeTotalData | undefined>(undefined);
   const [ vacationDayList, setVacationDayList ] = useState<VacationWeekData[]>([]);
-  const currentVacationSeasonStart = `${new Date().getFullYear()}-04-01`;
-  const currentVacationSeasonEnd = `${new Date().getFullYear() + 1}-03-31`;
   const context = useContext(ErrorContext);
   const [ tabIndex, setTabIndex ] = useState("1");
-  const [ textContent, setTextContent ] = useState("");
-  const [ vacationType, setVacationType ] = useState("");
-
+  
   /**
    * Initialize the component data
    */
@@ -219,8 +207,8 @@ const EditorContent = () => {
     try {
       const vacationEntries = await Api.getDailyEntriesApi(accessToken?.access_token).listDailyEntries({
         personId: person.id,
-        before: new Date(currentVacationSeasonEnd),
-        after: new Date(currentVacationSeasonStart)
+        before: new Date(VACATION_SEASON_START),
+        after: new Date(VACATION_SEASON_END)
       });
       setVacationDayList(vacationDaysProcess(vacationEntries));
     } catch (error) {
@@ -305,15 +293,42 @@ const EditorContent = () => {
   };
 
   /**
+   * set the string to corresponding enum value
+   *
+   * @param filterString filter scope as string
+   */
+  const handleFilterScopes = (filterString: string) => {
+    switch (filterString) {
+      case "day":
+        return FilterScopes.DATE;
+      case "week":
+        return FilterScopes.WEEK;
+      case "month":
+        return FilterScopes.MONTH;
+      case "year":
+        return FilterScopes.YEAR;
+      default:
+        return null;
+    }
+  };
+
+  /**
    * Changes the presented date format accordion to selected scope
    *
    * @param event React change event
    */
-  const handleDateFormatChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFilterScope = event.target.value as FilterScopes;
+  const handleDateFormatChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
+    const selectedFilterScope = handleFilterScopes(value);
+
+    if (!selectedFilterScope) return;
 
     setScope(selectedFilterScope);
-    setDatePickerView(selectedFilterScope as CalendarPickerView);
+    setDatePickerView({
+      [FilterScopes.DATE]: CalendarPickerView.DATE,
+      [FilterScopes.WEEK]: CalendarPickerView.DATE,
+      [FilterScopes.MONTH]: CalendarPickerView.MONTH,
+      [FilterScopes.YEAR]: CalendarPickerView.YEAR
+    }[selectedFilterScope]);
     setDateFormat({
       [FilterScopes.DATE]: DateFormats.DATE,
       [FilterScopes.WEEK]: DateFormats.DATE,
@@ -673,134 +688,6 @@ const EditorContent = () => {
   };
  
   /**
-   * Renders and calculates days spent for vacation
-   */
-  const renderVacationDaysSpent = () => {
-    // Define the date range to compare with holidays
-    const holidaysFi = new Holidays("FI");
-    const startDate = new Date(selectedVacationStartDate);
-    const endDate = new Date(selectedVacationEndDate);
-    let days = 0;
-
-    // Iterate over each date in the date range and check if it is a holiday
-    for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-      if (!holidaysFi.isHoliday(d) && d.getDay() !== 0) {
-        // eslint-disable-next-line no-plusplus
-        days++;
-      }
-    }
-    
-    return (
-      <Typography variant="h4">
-        { strings.editorContent.amountOfChosenVacationDays }
-        {days}
-      </Typography>
-    );
-  };
-
-  /**
-  * Handle vacation comment box content
-  * @param event
-  */
-  const handleVacationCommentContent = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const contentValue = event.target.value;
-    setTextContent(contentValue);
-  };
-
-  /**
-   * Handle vacation type
-   * @param event
-   */
-  const handleVacationTypeChange = (event: SelectChangeEvent) => {
-    const contentValue = event.target.value;
-    setVacationType(contentValue as string);
-  };
-
-  /**
-   * Renders the vacation type selection
-   */
-  const renderVacationType = () => (
-    <FormControl
-      variant="standard"
-      sx={{
-        m: 1, minWidth: 165, marginBottom: 4
-      }}
-    >
-      <InputLabel>{ strings.editorContent.vacationType }</InputLabel>
-      <Select
-        value={vacationType}
-        onChange={handleVacationTypeChange}
-        label={ strings.editorContent.vacationType }
-      >
-        <MenuItem value="Paid leave">{ strings.editorContent.paidLeave }</MenuItem>
-        <MenuItem value="Maternity leave">{ strings.editorContent.maternityLeave }</MenuItem>
-        <MenuItem value="Parental leave">{ strings.editorContent.parentalLeave }</MenuItem>
-        <MenuItem value="Unpaid leave">{ strings.editorContent.unpaidLeave }</MenuItem>
-        <MenuItem value="Surplus balance">{ strings.editorContent.surplusBalance }</MenuItem>
-      </Select>
-    </FormControl>
-  );
-
-  /**
-  * Renders vacation comment box
-  */
-  const renderVacationCommentBox = () => (
-    <TextField
-      id="outlined-multiline-flexible"
-      multiline
-      maxRows={5}
-      label={ strings.editorContent.leaveAComment }
-      variant="outlined"
-      value={textContent}
-      onChange={handleVacationCommentContent}
-    />
-  );
-
-  /**
-  * Handle vacation apply button
-  */
-  const handleVacationApplyButton = () => {
-    // TODO: send vacation request to database
-    return (
-      // eslint-disable-next-line no-console
-      console.log(`this is START DATE ${selectedVacationStartDate} and this is END DATE${selectedVacationEndDate} and this is TEXT CONTENT ${textContent}. Vacation type ${vacationType}`)
-    );
-  };
-
-  /**
-   * Renders vacation apply button
-   */
-  const renderVacationApplyButton = () => (
-    <Button
-      color="secondary"
-      variant="contained"
-      onClick={ handleVacationApplyButton }
-    >
-      <Typography style={{ fontWeight: 600, color: "white" }}>
-        { strings.generic.apply }
-      </Typography>
-    </Button>
-  );
-
-  /**
-   * Method to handle vacation starting date change
-   *
-   * @param date selected date
-   */
-  const handleVacationStartDateChange = (date: Date | null) => {
-    date && setSelectedVacationStartDate(date);
-  };
-
-  /**
-   * Method to handle vacation ending date change
-   *
-   * @param date selected date
-   */
-  const handleVacationEndDateChange = (date: Date | null) => {
-    date && setSelectedVacationEndDate(date);
-  };
- 
-  /**
    * Renders vacation info summary
    */
   const renderVacationInfoSummary = () => {
@@ -835,36 +722,6 @@ const EditorContent = () => {
             : <Box>{ renderVacationDaysList() }</Box>
           }
         </AccordionDetails>
-        <AccordionDetails >
-          <Typography variant="h2" padding={theme.spacing(2)}>
-            { strings.editorContent.applyForVacation }
-          </Typography>
-        </AccordionDetails>
-        <AccordionDetails
-          className={ classes.vacationInfoContent }
-        >
-          <DateRangePicker
-            scope={FilterScopes.DATE}
-            dateFormat={dateVacationFormat}
-            selectedStartDate={selectedVacationStartDate}
-            selectedEndDate={selectedVacationEndDate}
-            datePickerView={datePickerViewVacation}
-            minStartDate={ new Date() }
-            minEndDate={ selectedVacationStartDate }
-            onStartDateChange={handleVacationStartDateChange}
-            onEndDateChange={handleVacationEndDateChange}
-            onStartWeekChange={handleStartWeekChange}
-            onEndWeekChange={handleEndWeekChange}
-          />
-          <Box className={ classes.vacationDetailsContent }>
-            { renderVacationType() }
-          </Box>
-          <Box className={ classes.vacationDetailsContent }>
-            { renderVacationDaysSpent() }
-            { renderVacationCommentBox() }
-            { renderVacationApplyButton() }
-          </Box>
-        </AccordionDetails>
       </Accordion>
     );
   };
@@ -878,23 +735,13 @@ const EditorContent = () => {
     setTabIndex(newTabIndex);
   };
 
-  /**
-   * Component render
-   */
-  const tabStyle = {
-    "&$selected": {
-      color: "white",
-      backgroundColor: "#F9473B"
-    }
-  };
   return (
     <Box sx={{ width: "100%" }}>
       <TabContext value={tabIndex}>
         <Box>
-          <TabList onChange={ (event, value) => handleChange(event, value) } className={ classes.navBarContainer } sx={tabStyle}>
+          <TabList onChange={ (event, value) => handleChange(event, value) } className={ classes.navBarContainer }>
             <Tab label={ strings.header.title } value="1"/>
             <Tab label={ strings.header.myVacations } value="2"/>
-            <Tab label={ strings.header.employeeVacationRequests } value="3"/>
           </TabList>
         </Box>
         <TabPanel value="1">
@@ -905,10 +752,7 @@ const EditorContent = () => {
         </TabPanel>
         <TabPanel value="2">
           { renderVacationInfoSummary() }
-          { renderVacationRequests() }
-        </TabPanel>
-        <TabPanel value="3">
-          { renderEmployeeVacationRequests() }
+          <RenderVacationRequests key={person?.id}/>
         </TabPanel>
       </TabContext>
     </Box>

@@ -29,8 +29,8 @@ interface Props {
   maxEndDate?: Date;
   onStartDateChange: (value: Date | null) => void;
   onEndDateChange: (value: Date | null) => void;
-  onStartWeekChange: (weekNumber: number) => void;
-  onEndWeekChange: (weekNumber: number) => void;
+  onStartWeekChange?: (weekNumber: number) => void;
+  onEndWeekChange?: (weekNumber: number) => void;
 }
 
 /**
@@ -86,6 +86,7 @@ const DateRangePicker: React.FC<Props> = ({
     const { value } = event.target;
 
     const numberValue = Number(value);
+    if (!onStartWeekChange || !onEndWeekChange) return;
     if (start) {
       onStartWeekChange(numberValue);
     } else {

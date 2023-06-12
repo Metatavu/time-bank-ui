@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from "react";
 import AppLayout from "../layouts/app-layout";
 import useManagementScreenStyles from "styles/screens/management-screen";
-import { Toolbar, Box, CircularProgress, Paper, Typography, Divider, Button, TextField, Tooltip, Grid, Card } from "@mui/material";
+import { Toolbar, Box, CircularProgress, Paper, Typography, Divider, Button, TextField, Tooltip, Grid, Card, Tab } from "@mui/material";
 import { PieChart, Pie, Cell, ResponsiveContainer, TooltipProps, Tooltip as RechartTooltip, Legend } from "recharts";
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 import { useAppDispatch, useAppSelector } from "app/hooks";
@@ -25,6 +25,8 @@ import GenericDialog from "components/generics/generic-dialog/generic-dialog";
 import { SyncOrUpdateContext } from "components/sync-or-update-handler/sync-or-update-handler";
 import AuthUtils from "utils/auth";
 import CloseIcon from "@mui/icons-material/Close";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
+import RenderEmployeeVacationRequests from "components/generics/vacation-test-forms/employeeVacationRequests";
 
 /**
  * Management screen screen component
@@ -45,6 +47,8 @@ const ManagementScreen = () => {
   const context = useContext(ErrorContext);
   const syncOrUpdateContext = useContext(SyncOrUpdateContext);
   const history = useHistory();
+  const [ tabIndex, setTabIndex ] = useState("1");
+  const [ persons, setPersons ] = useState<Person[]>([]);
 
   /**
    * Populate one person's total work data
@@ -76,10 +80,13 @@ const ManagementScreen = () => {
     setIsLoading(true);
 
     try {
-      const persons = await Api.getPersonsApi(accessToken?.access_token).listPersons({
+      const fetchedPersons = await Api.getPersonsApi(accessToken?.access_token).listPersons({
         active: true
       });
-      const personTotalsTimeList: PersonWithTotalTime[] = persons.map(_person => ({ person: _person }));
+
+      setPersons(fetchedPersons);
+
+      const personTotalsTimeList: PersonWithTotalTime[] = fetchedPersons.map(_person => ({ person: _person }));
 
       const populatedPersonTotalsTimeList = await Promise.all(personTotalsTimeList.map(populatePersonTotalTimeData));
 
@@ -575,20 +582,46 @@ const ManagementScreen = () => {
   }
 
   /**
+   * Handles view change
+   * 
+   * @param event 
+   * @param newTabIndex 
+   */
+  const handleTabChange = (newTabIndex: string) => {
+    setTabIndex(newTabIndex);
+  };
+  
+  /**
    * Component render
    */
   return (
     <AppLayout managementScreen>
       <Toolbar/>
-      <Box className={ classes.root }>
-        { renderSearch() }
-        <Box className={ classes.mainContent }>
-          { renderTimeList() }
-        </Box>
-        { renderRedirect() }
-        { renderPersonDetail() }
-        { renderBillableHoursUpdateDialog() }
+      <Box>
+        <TabContext value={tabIndex}>
+          <Box>
+            <TabList onChange={ (_event, value) => handleTabChange(value) } className={ classes.navBarContainer }>
+              <Tab label={ strings.managementScreen.statistics } value="1"/>
+              <Tab label={ strings.header.employeeVacationRequests } value="2"/>
+            </TabList>
+          </Box>
+          <TabPanel value="1">
+            <Box className={ classes.root }>
+              { renderSearch() }
+              <Box className={ classes.mainContent }>
+                { renderTimeList() }
+              </Box>
+              { renderRedirect() }
+              { renderPersonDetail() }
+              { renderBillableHoursUpdateDialog() }
+            </Box>
+          </TabPanel>
+          <TabPanel value="2">
+            <RenderEmployeeVacationRequests persons={ persons }/>
+          </TabPanel>
+        </TabContext>
       </Box>
+      
     </AppLayout>
   );
 };

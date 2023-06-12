@@ -1,4 +1,4 @@
-import { Configuration, DailyEntriesApi, PersonsApi, SynchronizeApi } from "../generated/client";
+import { Configuration, DailyEntriesApi, PersonsApi, SynchronizeApi, VacationRequestsApi } from "../generated/client";
 
 /**
  * Utility class for loading api with predefined configuration
@@ -48,4 +48,14 @@ export default class Api {
     return new SynchronizeApi(Api.getConfiguration(token));
   }
 
+  /**
+   * Gets initialized VacationRequests API
+   * 
+   * @param token accessToken
+   * @returns initialized VacationRequests API
+   */
+  public static getVacationRequestsApi(token: string | undefined) {
+    return new VacationRequestsApi(Api.getConfiguration(token));
+  }
+  
 }

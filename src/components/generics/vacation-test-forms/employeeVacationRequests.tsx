@@ -1,34 +1,27 @@
-import { Box, Button, Collapse, FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, styled, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Box, Button, Collapse, FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, styled, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import useEditorContentStyles from "styles/editor-content/editor-content";
 import theme from "theme/theme";
-import vacationRequests from "./testVacationMockData.json";
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { CalendarPickerView } from "@mui/x-date-pickers";
 import strings from "localization/strings";
 import DateRangePicker from "../date-range-picker/date-range-picker";
-import { FilterScopes } from "types";
+import { FilterScopes, VacationRequestSort } from "types";
+import { Person, VacationRequest, VacationRequestStatus, VacationType } from "generated/client";
+import Api from "api/api";
+import { useAppSelector } from "app/hooks";
+import { ErrorContext } from "components/error-handler/error-handler";
+import { selectPerson } from "features/person/person-slice";
+import { selectAuth } from "features/auth/auth-slice";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
 /**
- * interface type request
+ * Component properties
  */
-interface Request {
-  request: {
-    id: number;
-    vacationType: string;
-    comment: string;
-    employee: string;
-    days: number;
-    startDate: string;
-    endDate: string;
-    remainingDays: number;
-    status: string;
-    created: string;
-    updated: string;
-    projectManager: string;
-    humanResourcesManager: string;
-  }
+interface Props {
+  persons: Person[]
 }
 
 /**
@@ -48,123 +41,60 @@ const StyledTableRow = styled(TableRow)(() => ({
  * Styled expandable table cell
  */
 const StyledTableCell = styled(TableCell)(() => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.white,
-    color: theme.palette.common.black
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14
-  },
   "& .pending": {
     color: "#FF493C"
   },
-  "& .accepted": {
+  "& .approved": {
     color: "#45cf36"
   },
-  
   // eslint-disable-next-line no-restricted-globals
-  ...(status === "ACCEPTED" ? { "&.accepted": {} } : { "&.pending": {} })
+  ...(status === "APPROVED" ? { "&.approved": {} } : { "&.pending": {} })
+
 }));
-
-/**
- * 
- * @param id
- * @param vacationType
- * @param employee
- * @param days
- * @param startDate
- * @param endDate
- * @param remainingDays
- * @param status
- * @returns Expandable row
- */
-const ExpandableRow = (
-  { request: { id,
-    vacationType,
-    employee,
-    days,
-    startDate,
-    endDate,
-    remainingDays,
-    status } }: Request
-) => {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <>
-      <StyledTableRow key={ id }>
-        <StyledTableCell component="th" scope="row">{ vacationType }</StyledTableCell>
-        <StyledTableCell>{ employee }</StyledTableCell>
-        <StyledTableCell>{ days }</StyledTableCell>
-        <StyledTableCell>{ startDate }</StyledTableCell>
-        <StyledTableCell>{ endDate }</StyledTableCell>
-        <StyledTableCell>{ remainingDays }</StyledTableCell>
-        <StyledTableCell sx={{ "&.pending": { color: "#FF493C" }, "&.accepted": { color: "#45cf36" } }} className={status === "ACCEPTED" ? "accepted" : "pending"}>{ status }</StyledTableCell>
-        <StyledTableCell>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
-          >
-            {open ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
-          </IconButton>
-        </StyledTableCell>
-      </StyledTableRow>
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
-          <Collapse in={ open } timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1, width: "100%" }}>
-              <Table size="small" aria-label="purchases">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>{ strings.editorContent.comment }</TableCell>
-                    <TableCell>{ strings.editorContent.created }</TableCell>
-                    <TableCell>{ strings.editorContent.updated }</TableCell>
-                    <TableCell>{ strings.editorContent.projectManager }</TableCell>
-                    <TableCell>{ strings.editorContent.humanResourcesManager }</TableCell>
-                    <TableCell/>
-                    <TableCell/>
-                    <TableCell/>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {Object.values(vacationRequests).map(request => (
-                    <TableRow key={ request.id }>
-                      <TableCell component="th" scope="row">{ request.comment }</TableCell>
-                      <TableCell>{ request.created }</TableCell>
-                      <TableCell>{ request.updated }</TableCell>
-                      <TableCell>{ request.projectManager }</TableCell>
-                      <TableCell>{ request.humanResourcesManager }</TableCell>
-                      <TableCell/>
-                      <TableCell align="right"><Button variant="outlined" color="error" sx={{ color: "#F9473B" }}>{ strings.editorContent.declined }</Button></TableCell>
-                      <TableCell align="right"><Button variant="outlined" color="success" sx={{ color: "green" }}>{ strings.editorContent.approved }</Button></TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
-    </>
-  );
-};
 
 /**
  * renders employee vacation request view
  */
-const renderEmployeeVacationRequests = () => {
+const RenderEmployeeVacationRequests = ({ persons }: Props) => {
   const classes = useEditorContentStyles();
-  const [ status, setStatus ] = useState("");
-  const [ employee, setEmployee ] = useState("");
-  const [ vacationType, setVacationType ] = useState("");
+  const [ status, setStatus ] = useState<VacationRequestStatus>(VacationRequestStatus.PENDING);
+  const [ employee, setEmployee ] = useState("Everyone");
+  const [ vacationType, setVacationType ] = useState<VacationType>(VacationType.VACATION);
   const [ dateFormat ] = useState("yyyy.MM.dd");
   const [ datePickerView ] = useState<CalendarPickerView>("day");
   const [ selectedVacationStartDate, setSelectedVacationStartDate ] = useState(new Date());
   const [ selectedVacationEndDate, setSelectedVacationEndDate ] = useState(new Date());
+  const { person } = useAppSelector(selectPerson);
+  const { accessToken } = useAppSelector(selectAuth);
+  const context = useContext(ErrorContext);
+  const [ requests, setRequests ] = useState<VacationRequest[]>([]);
+  const [ openRows, setOpenRows ] = useState<boolean[]>([]);
+  const [sortBy, setSortBy] = useState<VacationRequestSort>(VacationRequestSort.START_DATE);
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+
+  /**
+   * Initializes all vacation requests
+   */
+  const initializeRequests = async () => {
+    try {
+      const vacationsApi = Api.getVacationRequestsApi(accessToken?.access_token);
+      const vacations = await vacationsApi.listVacationRequests({});
+      setRequests(vacations);
+    } catch (error) {
+      context.setError(strings.errorHandling.fetchVacationDataFailed, error);
+    }
+  };
+
+  useEffect(() => {
+    if (!accessToken) {
+      return;
+    }
+    initializeRequests();
+  }, [person]);
 
   /**
    * Handle employee change
+   * 
    * @param event select employee
    */
   const handleEmployeeChange = (event: SelectChangeEvent) => {
@@ -184,14 +114,19 @@ const renderEmployeeVacationRequests = () => {
         marginBottom: 4
       }}
     >
-      <InputLabel>{ strings.editorContent.employee }</InputLabel>
+      <InputLabel>{ strings.vacationRequests.employee }</InputLabel>
       <Select
         value={ employee }
         onChange={ handleEmployeeChange }
-        label={ strings.editorContent.employee }
+        label={ strings.vacationRequests.employee }
       >
-        {Object.values(vacationRequests).map(request => (
-          <MenuItem value={ request.employee }>{ request.employee }</MenuItem>
+        <MenuItem value="Everyone">
+          {strings.vacationRequests.everyone}
+        </MenuItem>
+        {persons.map(p => (
+          <MenuItem key={p.id} value={p.id}>
+            {`${p.firstName} ${p.lastName}`}
+          </MenuItem>
         ))}
       </Select>
     </FormControl>
@@ -199,6 +134,7 @@ const renderEmployeeVacationRequests = () => {
 
   /**
    * Method to handle vacation starting date change
+   * 
    * @param date selected date
    */
   const handleVacationStartDateChange = (date: Date | null) => {
@@ -207,6 +143,7 @@ const renderEmployeeVacationRequests = () => {
 
   /**
    * Method to handle vacation ending date change
+   * 
    * @param date selected date
    */
   const handleVacationEndDateChange = (date: Date | null) => {
@@ -214,11 +151,71 @@ const renderEmployeeVacationRequests = () => {
   };
 
   /**
-   * Handle vacation type 
+   * set the string to corresponding enum value
+   *
+   * @param filterString filter scope as string
    */
-  const handleVacationTypeChange = (event: SelectChangeEvent) => {
-    const contentValue = event.target.value;
+  const handleVacationType = (typeString: string) => {
+    switch (typeString) {
+      case "VACATION":
+        return VacationType.VACATION;
+      case "UNPAID_TIME_OFF":
+        return VacationType.UNPAID_TIME_OFF;
+      case "SICKNESS":
+        return VacationType.SICKNESS;
+      case "PERSONAL_DAYS":
+        return VacationType.PERSONAL_DAYS;
+      case "MATERNITY_PATERNITY":
+        return VacationType.MATERNITY_PATERNITY;
+      case "CHILD_SICKNESS":
+        return VacationType.CHILD_SICKNESS;
+      default:
+        return null;
+    }
+  };
+  
+  /**
+   * Handle vacation type 
+   * 
+   * @param event Change event
+   */
+  const handleVacationTypeChange = ({ target: { value } }: SelectChangeEvent) => {
+    const contentValue = handleVacationType(value);
+
+    if (!contentValue) return;
+
     setVacationType(contentValue);
+  };
+
+  /**
+   * set the string to corresponding enum value
+   *
+   * @param filterString filter scope as string
+   */
+  const handleVacationStatus = (statusString: string) => {
+    switch (statusString) {
+      case "PENDING":
+        return VacationRequestStatus.PENDING;
+      case "APPROVED":
+        return VacationRequestStatus.APPROVED;
+      case "DECLINED":
+        return VacationRequestStatus.DECLINED;
+      default:
+        return null;
+    }
+  };
+
+  /**
+ * Handle status change
+ * 
+ * @param event Select change event
+ */
+  const handleStatusChange = ({ target: { value } }: SelectChangeEvent) => {
+    const contentValue = handleVacationStatus(value);
+
+    if (!contentValue) return;
+
+    setStatus(contentValue);
   };
 
   /**
@@ -233,28 +230,33 @@ const renderEmployeeVacationRequests = () => {
         marginBottom: 4
       }}
     >
-      <InputLabel>{ strings.editorContent.vacationType }</InputLabel>
+      <InputLabel>{ strings.vacationRequests.vacationType }</InputLabel>
       <Select
         value={ vacationType }
         onChange={ handleVacationTypeChange }
-        label={ strings.editorContent.vacationType }
+        label={ strings.vacationRequests.vacationType }
       >
-        <MenuItem value="Paid leave">{ strings.editorContent.paidLeave }</MenuItem>
-        <MenuItem value="Maternity leave">{ strings.editorContent.maternityLeave }</MenuItem>
-        <MenuItem value="Parental leave">{ strings.editorContent.parentalLeave }</MenuItem>
-        <MenuItem value="Unpaid leave">{ strings.editorContent.unpaidLeave }</MenuItem>
-        <MenuItem value="Surplus balance">{ strings.editorContent.surplusBalance }</MenuItem>
+        <MenuItem value={ VacationType.VACATION }>
+          { strings.vacationRequests.vacation }
+        </MenuItem>
+        <MenuItem value={ VacationType.UNPAID_TIME_OFF}>
+          { strings.vacationRequests.unpaidTimeOff }
+        </MenuItem>
+        <MenuItem value={ VacationType.SICKNESS}>
+          { strings.vacationRequests.sickness }
+        </MenuItem>
+        <MenuItem value={ VacationType.PERSONAL_DAYS }>
+          { strings.vacationRequests.personalDays }
+        </MenuItem>
+        <MenuItem value={ VacationType.MATERNITY_PATERNITY }>
+          { strings.vacationRequests.maternityPaternityLeave }
+        </MenuItem>
+        <MenuItem value={ VacationType.CHILD_SICKNESS }>
+          {strings.vacationRequests.childSickness }
+        </MenuItem>
       </Select>
     </FormControl>
   );
-
-  /**
-   * Handle employee change
-   */
-  const handleStatusChange = (event: SelectChangeEvent) => {
-    const contentValue = event.target.value;
-    setStatus(contentValue);
-  };
 
   /**
    * Renders the vacation type selection
@@ -266,18 +268,134 @@ const renderEmployeeVacationRequests = () => {
         m: 1, minWidth: 165, marginBottom: 4
       }}
     >
-      <InputLabel>{ strings.editorContent.status }</InputLabel>
+      <InputLabel>{ strings.vacationRequests.status }</InputLabel>
       <Select
         value={ status }
         onChange={handleStatusChange}
-        label={ strings.editorContent.status }
+        label={ strings.vacationRequests.status }
       >
-        <MenuItem value="Pending">{ strings.editorContent.pending }</MenuItem>
-        <MenuItem value="Approved">{ strings.editorContent.approved }</MenuItem>
-        <MenuItem value="Declined">{ strings.editorContent.declined }</MenuItem>
+        <MenuItem value={ VacationRequestStatus.PENDING }>
+          { strings.vacationRequests.pending }
+        </MenuItem>
+        <MenuItem value={ VacationRequestStatus.APPROVED }>
+          { strings.vacationRequests.approved }
+        </MenuItem>
+        <MenuItem value={ VacationRequestStatus.DECLINED }>
+          { strings.vacationRequests.declined }
+        </MenuItem>
       </Select>
     </FormControl>
   );
+  
+  /**
+   * Method to handle person names on vacation applications
+   * 
+   * @param id 
+   * @returns foundPerson.firstName and foundPerson.lastName
+   */
+  const handlePersonNames = (id: number) => {
+    const foundPerson = persons.find(p => p.id === id);
+    if (foundPerson) {
+      return `${foundPerson.firstName} ${foundPerson.lastName}`;
+    }
+    return "";
+  };
+
+  /**
+ * Handle the column header click and update the sorting state
+ * @param column 
+ */
+  const handleSort = (column: VacationRequestSort) => {
+    if (column === sortBy) {
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    } else {
+      setSortBy(column);
+      setSortOrder("asc");
+    }
+  };
+
+  /**
+   * Sorting function for vacation applications
+   */
+  const sortedVacationRequests = requests.sort((a, b) => {
+    if (sortBy === VacationRequestSort.DAYS) {
+      const daysA = Number(a.days);
+      const daysB = Number(b.days);
+      return sortOrder === "asc" ? daysA - daysB : daysB - daysA;
+    }
+    
+    if (sortBy === VacationRequestSort.START_DATE) {
+      const dateA = new Date(a.startDate.toISOString());
+      const dateB = new Date(b.startDate.toISOString());
+      return sortOrder === "asc" ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
+    }
+    if (sortBy === VacationRequestSort.END_DATE) {
+      const dateA = new Date(a.endDate.toISOString());
+      const dateB = new Date(b.endDate.toISOString());
+      return sortOrder === "asc" ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
+    }
+    if (sortBy === VacationRequestSort.VACATION_TYPE) {
+      return sortOrder === "asc"
+        ? a.type.localeCompare(b.type)
+        : b.type.localeCompare(a.type);
+    }
+    if (sortBy === VacationRequestSort.STATUS) {
+      return sortOrder === "asc"
+        ? a.hrManagerStatus.localeCompare(b.hrManagerStatus)
+        : b.hrManagerStatus.localeCompare(a.hrManagerStatus);
+    }
+    return 0;
+  });
+  
+  /**
+   * Handle remaining vacation days
+   * 
+   * @param request vacation request
+   */
+  const handleRemainingVacationDays = (request: VacationRequest) => {
+    const foundPerson = persons.find(p => p.id === request.person);
+    if (foundPerson) return foundPerson.unspentVacations - request.days;
+    return null;
+  };
+
+  /**
+   * Handle request type
+   * 
+   * @param type Vacation type
+   */
+  const handleRequestType = (type: VacationType) => {
+    switch (type) {
+      case VacationType.VACATION:
+        return strings.vacationRequests.vacation;
+      case VacationType.PERSONAL_DAYS:
+        return strings.vacationRequests.personalDays;
+      case VacationType.UNPAID_TIME_OFF:
+        return strings.vacationRequests.unpaidTimeOff;
+      case VacationType.MATERNITY_PATERNITY:
+        return strings.vacationRequests.maternityPaternityLeave;
+      case VacationType.SICKNESS:
+        return strings.vacationRequests.sickness;
+      case VacationType.CHILD_SICKNESS:
+        return strings.vacationRequests.childSickness;
+      default:
+        return strings.vacationRequests.vacation;
+    }
+  };
+
+  /**
+   * Handle request status
+   * 
+   * @param requestStatus Vacation request status
+   */
+  const handleRequestStatus = (requestStatus: VacationRequestStatus) => {
+    const statusMap = {
+      [VacationRequestStatus.PENDING]: strings.vacationRequests.pending,
+      [VacationRequestStatus.APPROVED]: strings.vacationRequests.approved,
+      [VacationRequestStatus.DECLINED]: strings.vacationRequests.declined
+    };
+  
+    return statusMap[requestStatus] || "";
+  };
 
   return (
     <Box className={classes.employeeVacationRequests}>
@@ -319,23 +437,210 @@ const renderEmployeeVacationRequests = () => {
         </Box>
       </Box>
       <Box>
-        <TableContainer style={{ height: 300, width: "100%" }}>
+        <TableContainer style={{ marginBottom: "10px", width: "100%" }}>
           <Table aria-label="customized table" style={{ marginBottom: "1em" }}>
             <TableHead>
               <TableRow>
-                <TableCell>{ strings.header.vacationType }</TableCell>
-                <TableCell>{ strings.header.employee }</TableCell>
-                <TableCell>{ strings.header.days }</TableCell>
-                <TableCell>{ strings.header.startDate }</TableCell>
-                <TableCell>{ strings.header.endDate }</TableCell>
-                <TableCell>{ strings.header.remainingDays }</TableCell>
-                <TableCell>{ strings.header.status }</TableCell>
+                <TableCell
+                  onClick={() => handleSort(VacationRequestSort.VACATION_TYPE)}
+                  style={{ cursor: "pointer" }}
+                >
+                  {strings.header.vacationType}
+                  {sortBy === VacationRequestSort.VACATION_TYPE && (
+                    <Box component="span" ml={1}>
+                      {sortOrder === "asc" ? (
+                        <ArrowUpwardIcon fontSize="small"/>
+                      ) : (
+                        <ArrowDownwardIcon fontSize="small"/>
+                      )}
+                    </Box>
+                  )}
+                </TableCell>
+                <TableCell
+                  onClick={() => handleSort(VacationRequestSort.EMPLOYEE)}
+                  style={{ cursor: "pointer" }}
+                >
+                  {strings.header.employee}
+                  {sortBy === VacationRequestSort.EMPLOYEE && (
+                    <Box component="span" ml={1}>
+                      {sortOrder === "asc" ? (
+                        <ArrowUpwardIcon fontSize="small"/>
+                      ) : (
+                        <ArrowDownwardIcon fontSize="small"/>
+                      )}
+                    </Box>
+                  )}
+                </TableCell>
+                <TableCell
+                  onClick={() => handleSort(VacationRequestSort.DAYS)}
+                  style={{ cursor: "pointer" }}
+                >
+                  {strings.header.days}
+                  {sortBy === VacationRequestSort.DAYS && (
+                    <Box component="span" ml={1}>
+                      {sortOrder === "asc" ? (
+                        <ArrowUpwardIcon fontSize="small"/>
+                      ) : (
+                        <ArrowDownwardIcon fontSize="small"/>
+                      )}
+                    </Box>
+                  )}
+                </TableCell>
+                <TableCell
+                  onClick={() => handleSort(VacationRequestSort.START_DATE)}
+                  style={{ cursor: "pointer" }}
+                >
+                  {strings.header.startDate}
+                  {sortBy === VacationRequestSort.START_DATE && (
+                    <Box component="span" ml={1}>
+                      {sortOrder === "asc" ? (
+                        <ArrowUpwardIcon fontSize="small"/>
+                      ) : (
+                        <ArrowDownwardIcon fontSize="small"/>
+                      )}
+                    </Box>
+                  )}
+                </TableCell>
+                <TableCell
+                  onClick={() => handleSort(VacationRequestSort.END_DATE)}
+                  style={{ cursor: "pointer" }}
+                >
+                  {strings.header.endDate}
+                  {sortBy === VacationRequestSort.END_DATE && (
+                    <Box component="span" ml={1}>
+                      {sortOrder === "asc" ? (
+                        <ArrowUpwardIcon fontSize="small"/>
+                      ) : (
+                        <ArrowDownwardIcon fontSize="small"/>
+                      )}
+                    </Box>
+                  )}
+                </TableCell>
+                <TableCell
+                  onClick={() => handleSort(VacationRequestSort.REMAINING_DAYS)}
+                  style={{ cursor: "pointer" }}
+                >
+                  {strings.header.remainingDays}
+                  {sortBy === VacationRequestSort.REMAINING_DAYS && (
+                    <Box component="span" ml={1}>
+                      {sortOrder === "asc" ? (
+                        <ArrowUpwardIcon fontSize="small"/>
+                      ) : (
+                        <ArrowDownwardIcon fontSize="small"/>
+                      )}
+                    </Box>
+                  )}
+                </TableCell>
+                <TableCell
+                  onClick={() => handleSort(VacationRequestSort.STATUS)}
+                  style={{ cursor: "pointer" }}
+                >
+                  {strings.header.status}
+                  {sortBy === VacationRequestSort.STATUS && (
+                    <Box component="span" ml={1}>
+                      {sortOrder === "asc" ? (
+                        <ArrowUpwardIcon fontSize="small"/>
+                      ) : (
+                        <ArrowDownwardIcon fontSize="small"/>
+                      )}
+                    </Box>
+                  )}
+                </TableCell>
                 <TableCell/>
               </TableRow>
             </TableHead>
             <TableBody>
-              {Object.values(vacationRequests).map(request => (
-                <ExpandableRow key={ request.id } request={ request }/>
+              {sortedVacationRequests.map((request: VacationRequest, index: number) => (
+                <>
+                  <StyledTableRow key={ request.id }>
+                    <StyledTableCell component="th" scope="row">{ handleRequestType(request.type)}</StyledTableCell>
+                    <StyledTableCell>{ handlePersonNames(request.person!!) }</StyledTableCell>
+                    <StyledTableCell>{ request.days }</StyledTableCell>
+                    <StyledTableCell>{ request.startDate.toDateString() }</StyledTableCell>
+                    <StyledTableCell>{ request.endDate.toDateString() }</StyledTableCell>
+                    <StyledTableCell>{ handleRemainingVacationDays(request)}</StyledTableCell>
+                    <StyledTableCell
+                      sx={{ "&.pending": { color: "#FF493C" }, "&.approved": { color: "#45cf36" } }}
+                      className={ request.hrManagerStatus === "APPROVED" ? "approved" : "pending"}
+                    >
+                      {handleRequestStatus(request.hrManagerStatus)}
+                    </StyledTableCell>
+                    <StyledTableCell>
+                      <IconButton
+                        aria-label="expand row"
+                        size="small"
+                        onClick={() => {
+                          const newOpenRows = [...openRows];
+                          newOpenRows[index] = !newOpenRows[index];
+                          setOpenRows(newOpenRows);
+                        }}
+                      >
+                        { openRows[index] ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/> }
+                      </IconButton>
+                    </StyledTableCell>
+                  </StyledTableRow>
+                  <TableRow>
+                    <TableCell
+                      style={{
+                        paddingBottom: 0,
+                        paddingTop: 0
+                      }}
+                      colSpan={8}
+                    >
+                      <Collapse
+                        in={ openRows[index] }
+                        timeout="auto"
+                        unmountOnExit
+                      >
+                        <Box sx={{ margin: 1, width: "100%" }}>
+                          <Table size="small" aria-label="purchases">
+                            <TableHead>
+                              <TableRow>
+                                <TableCell>{ strings.vacationRequests.message }</TableCell>
+                                <TableCell>{ strings.vacationRequests.created }</TableCell>
+                                <TableCell>{ strings.vacationRequests.updated }</TableCell>
+                                <TableCell>{ strings.vacationRequests.projectManager }</TableCell>
+                                <TableCell>{ strings.vacationRequests.humanResourcesManager }</TableCell>
+                                <TableCell/>
+                                <TableCell/>
+                                <TableCell/>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              <TableRow key={ request.id }>
+                                <TableCell>{ request.message }</TableCell>
+                                <TableCell>{ request.createdAt.toDateString() }</TableCell>
+                                <TableCell>{ request.updatedAt.toDateString() }</TableCell>
+                                <TableCell>{ handleRequestStatus(request.projectManagerStatus) }</TableCell>
+                                <TableCell>{ handleRequestStatus(request.hrManagerStatus) }</TableCell>
+                                <TableCell/>
+                                <TableCell align="right">
+                                  <Button
+                                    variant="outlined"
+                                    color="error"
+                                    sx={{ color: "#F9473B" }}
+                                  >
+                                    { strings.vacationRequests.declined }
+                                  </Button>
+                                </TableCell>
+                                <TableCell align="right">
+                                  <Button
+                                    variant="outlined"
+                                    color="success"
+                                    sx={{ color: "green" }}
+                                  >
+                                    { strings.vacationRequests.approved }
+                                  </Button>
+
+                                </TableCell>
+                              </TableRow>
+                            </TableBody>
+                          </Table>
+                        </Box>
+                      </Collapse>
+                    </TableCell>
+                  </TableRow>
+                </>
               ))}
             </TableBody>
           </Table>
@@ -345,4 +650,4 @@ const renderEmployeeVacationRequests = () => {
   );
 };
 
-export default renderEmployeeVacationRequests;
+export default RenderEmployeeVacationRequests;

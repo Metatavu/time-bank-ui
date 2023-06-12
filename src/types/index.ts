@@ -1,4 +1,4 @@
-import { Person, PersonTotalTime } from "generated/client";
+import { Person, PersonTotalTime, VacationRequestStatus, VacationType } from "generated/client";
 
 /**
  * Access token
@@ -35,6 +35,15 @@ export interface Configuration {
  */
 export enum FilterScopes {
   WEEK = "week",
+  DATE = "day",
+  MONTH = "month",
+  YEAR = "year"
+}
+
+/**
+ * Values for calender picker view
+ */
+export enum CalendarPickerView {
   DATE = "day",
   MONTH = "month",
   YEAR = "year"
@@ -136,3 +145,50 @@ export interface SyncOrUpdateContextType {
   syncOrUpdate?: string;
   setSyncOrUpdate: (message: string) => void;
 }
+
+/**
+ * interface type request
+ */
+export interface Request {
+  id: string;
+  vacationType: VacationType;
+  message: string;
+  person: number;
+  employee: string;
+  days: number;
+  startDate: Date;
+  endDate: Date;
+  remainingDays: number;
+  status: VacationRequestStatus;
+  created: Date;
+  updated: Date;
+  projectManager: string;
+  humanResourcesManager: string;
+}
+
+export enum RequestType {
+  UPDATE = "UPDATE",
+  APPLY = "APPLY"
+}
+
+export interface VacationData {
+  startDate: Date;
+  endDate: Date;
+  type: VacationType;
+  message: string;
+  days: number;
+}
+
+export enum VacationRequestSort{
+  VACATION_TYPE = "vacationType",
+  EMPLOYEE = "employee",
+  DAYS = "days",
+  START_DATE = "startDate",
+  END_DATE = "endDate",
+  REMAINING_DAYS = "remainingDays",
+  STATUS = "status"
+}
+
+export const VACATION_SEASON_START = new Date(new Date().getFullYear(), 3, 1);
+
+export const VACATION_SEASON_END = new Date(new Date().getFullYear(), 2, 31);
