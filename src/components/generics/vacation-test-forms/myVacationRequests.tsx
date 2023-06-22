@@ -5,7 +5,7 @@ import theme from "theme/theme";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import strings from "localization/strings";
-import { VacationRequest, VacationType } from "generated/client";
+import { VacationRequest, VacationRequestStatus, VacationType } from "generated/client";
 import { useAppSelector } from "app/hooks";
 import { selectPerson } from "features/person/person-slice";
 import Api from "api/api";
@@ -46,11 +46,11 @@ const RenderVacationRequests = () => {
    * Initializes all vacation requests
    */
   const initializeRequests = async () => {
-    // if (!person) return;
+    if (!person) return;
 
     try {
       const vacationsApi = Api.getVacationRequestsApi(accessToken?.access_token);
-      const vacations = await vacationsApi.listVacationRequests({ personId: accessToken?.userId });
+      const vacations = await vacationsApi.listVacationRequests({ personId: person.id });
       setRequests(vacations);
     } catch (error) {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
@@ -100,18 +100,23 @@ const RenderVacationRequests = () => {
   * Sends vacation request to database
   */
   const createVacationRequest = async () => {
+    if (!person) return;
+
     try {
       const applyApi = Api.getVacationRequestsApi(accessToken?.access_token);
 
       const createdRequest = await applyApi.createVacationRequest({
         vacationRequest: {
+          person: person?.id as number,
           startDate: vacationRequest.startDate,
           endDate: vacationRequest.endDate,
           type: vacationRequest.type,
           message: vacationRequest.message,
           createdAt: new Date(),
           updatedAt: new Date(),
-          days: vacationRequest.days
+          days: vacationRequest.days,
+          projectManagerStatus: VacationRequestStatus.PENDING,
+          hrManagerStatus: VacationRequestStatus.PENDING
         }
       });
       
@@ -129,7 +134,7 @@ const RenderVacationRequests = () => {
    */
   const updateVacationRequest = async (id: string, index: number) => {
     const requestToBeUpdated = requests.find(request => request.id === id);
-    if (!requestToBeUpdated) return;
+    if (!person || !requestToBeUpdated) return;
 
     try {
       const updateApi = Api.getVacationRequestsApi(accessToken?.access_token);
@@ -197,20 +202,20 @@ const RenderVacationRequests = () => {
     }
   };
   
-  // /**
-  //  * Handle request status
-  //  * 
-  //  * @param requestStatus Vacation requests status
-  //  */
-  // const handleRequestStatus = (requestStatus: VacationRequestStatuses) => {
-  //   const statusMap = {
-  //     [VacationRequestStatuses.PENDING]: strings.vacationRequests.pending,
-  //     [VacationRequestStatuses.APPROVED]: strings.vacationRequests.approved,
-  //     [VacationRequestStatuses.DECLINED]: strings.vacationRequests.declined
-  //   };
+  /**
+   * Handle request status
+   * 
+   * @param requestStatus Vacation requests status
+   */
+  const handleRequestStatus = (requestStatus: VacationRequestStatus) => {
+    const statusMap = {
+      [VacationRequestStatus.PENDING]: strings.vacationRequests.pending,
+      [VacationRequestStatus.APPROVED]: strings.vacationRequests.approved,
+      [VacationRequestStatus.DECLINED]: strings.vacationRequests.declined
+    };
   
-  //   return statusMap[requestStatus] || "";
-  // };
+    return statusMap[requestStatus] || "";
+  };
 
   return (
     <Box>
@@ -249,7 +254,12 @@ const RenderVacationRequests = () => {
                     <TableCell>{ request.startDate.toDateString() }</TableCell>
                     <TableCell>{ request.endDate.toDateString() }</TableCell>
                     <TableCell>{ request.days }</TableCell>
-                    <TableCell/>
+                    <TableCell
+                      sx={{ "&.pending": { color: "#FF493C" }, "&.approved": { color: "#45cf36" } }}
+                      className={request.hrManagerStatus === "APPROVED" ? "approved" : "pending"}
+                    >
+                      { handleRequestStatus(request.hrManagerStatus) }
+                    </TableCell>
                     <TableCell>
                       <IconButton
                         aria-label="expand row"
@@ -279,9 +289,9 @@ const RenderVacationRequests = () => {
                                 <TableCell style={{ paddingLeft: "3em", width: "20%" }}>{ strings.vacationRequests.message }</TableCell>
                                 <TableCell style={{ width: "20%" }}>{ strings.vacationRequests.created }</TableCell>
                                 <TableCell style={{ width: "20%" }}>{ strings.vacationRequests.updated }</TableCell>
-                                <TableCell style={{ width: "10%" }}/>
-                                <TableCell style={{ width: "10%" }}/>
-                                <TableCell style={{ width: "10%" }}>Status</TableCell>
+                                <TableCell style={{ width: "10%" }}>Päivittänyt:</TableCell>
+                                <TableCell style={{ width: "10%" }}>{ strings.vacationRequests.projectManager }</TableCell>
+                                <TableCell style={{ width: "10%" }}>{ strings.vacationRequests.humanResourcesManager }</TableCell>
                               </TableRow>
                             </TableHead>
                             <TableBody>
@@ -289,9 +299,9 @@ const RenderVacationRequests = () => {
                                 <TableCell style={{ paddingLeft: "3em", border: 0 }}>{ request.message }</TableCell>
                                 <TableCell style={{ border: 0 }}>{ request.createdAt.toDateString() }</TableCell>
                                 <TableCell style={{ border: 0 }}>{ request.updatedAt.toDateString() }</TableCell>
-                                <TableCell style={{ border: 0 }}/>
-                                <TableCell style={{ border: 0 }}/>
-                                <TableCell style={{ border: 0 }}/>
+                                <TableCell style={{ border: 0 }}>Henkilö</TableCell>
+                                <TableCell style={{ border: 0 }}>{ request.projectManagerStatus }</TableCell>
+                                <TableCell style={{ border: 0 }}>{ request.hrManagerStatus }</TableCell>
                               </TableRow>
                             </TableBody>
                           </Table>

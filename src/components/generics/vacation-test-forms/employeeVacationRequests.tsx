@@ -1,4 +1,4 @@
-import { Box, Button, Collapse, FormControl, IconButton, InputLabel, MenuItem, Modal, Select, SelectChangeEvent, styled, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Box, Button, Collapse, FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, styled, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import useEditorContentStyles from "styles/editor-content/editor-content";
 import theme from "theme/theme";
 import { useState, useEffect, useContext } from "react";
@@ -8,7 +8,7 @@ import { CalendarPickerView } from "@mui/x-date-pickers";
 import strings from "localization/strings";
 import DateRangePicker from "../date-range-picker/date-range-picker";
 import { FilterScopes, VacationRequestSort } from "types";
-import { Person, VacationRequest, VacationRequestStatus, VacationRequestStatuses, VacationType } from "generated/client";
+import { Person, VacationRequest, VacationRequestStatus, VacationType } from "generated/client";
 import Api from "api/api";
 import { useAppSelector } from "app/hooks";
 import { ErrorContext } from "components/error-handler/error-handler";
@@ -16,7 +16,6 @@ import { selectPerson } from "features/person/person-slice";
 import { selectAuth } from "features/auth/auth-slice";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import CloseIcon from "@mui/icons-material/Close";
 
 /**
  * Component properties
@@ -58,7 +57,7 @@ const StyledTableCell = styled(TableCell)(() => ({
  */
 const RenderEmployeeVacationRequests = ({ persons }: Props) => {
   const classes = useEditorContentStyles();
-  const [ status, setStatus ] = useState<VacationRequestStatuses>(VacationRequestStatuses.PENDING);
+  const [ status, setStatus ] = useState<VacationRequestStatus>(VacationRequestStatus.PENDING);
   const [ employee, setEmployee ] = useState("Everyone");
   const [ vacationType, setVacationType ] = useState<VacationType>(VacationType.VACATION);
   const [ dateFormat ] = useState("yyyy.MM.dd");
@@ -72,8 +71,6 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
   const [ openRows, setOpenRows ] = useState<boolean[]>([]);
   const [sortBy, setSortBy] = useState<VacationRequestSort>(VacationRequestSort.START_DATE);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-  const [ openEdit, setOpenEdit ] = useState<boolean[]>([]);
-  const [ statuses, setStatuses ] = useState<VacationRequestStatus[]>([]);
 
   /**
    * Initializes all vacation requests
@@ -94,17 +91,6 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
     }
     initializeRequests();
   }, [person]);
-
-  /**
-   * Handle employee change
-   * 
-   * @param event select employee
-   */
-  const handleVacationRequestStatuses = async (id: string) => {
-    const vacationStatusApi = Api.getVacationRequestStatusApi(accessToken?.access_token);
-    const vacationStatuses = await vacationStatusApi.listVacationRequestStatuses({ id: id });
-    setStatuses(vacationStatuses);
-  };
 
   /**
    * Handle employee change
@@ -209,11 +195,11 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
   const handleVacationStatus = (statusString: string) => {
     switch (statusString) {
       case "PENDING":
-        return VacationRequestStatuses.PENDING;
+        return VacationRequestStatus.PENDING;
       case "APPROVED":
-        return VacationRequestStatuses.APPROVED;
+        return VacationRequestStatus.APPROVED;
       case "DECLINED":
-        return VacationRequestStatuses.DECLINED;
+        return VacationRequestStatus.DECLINED;
       default:
         return null;
     }
@@ -288,13 +274,13 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
         onChange={handleStatusChange}
         label={ strings.vacationRequests.status }
       >
-        <MenuItem value={ VacationRequestStatuses.PENDING }>
+        <MenuItem value={ VacationRequestStatus.PENDING }>
           { strings.vacationRequests.pending }
         </MenuItem>
-        <MenuItem value={ VacationRequestStatuses.APPROVED }>
+        <MenuItem value={ VacationRequestStatus.APPROVED }>
           { strings.vacationRequests.approved }
         </MenuItem>
-        <MenuItem value={ VacationRequestStatuses.DECLINED }>
+        <MenuItem value={ VacationRequestStatus.DECLINED }>
           { strings.vacationRequests.declined }
         </MenuItem>
       </Select>
@@ -307,12 +293,12 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
    * @param id 
    * @returns foundPerson.firstName and foundPerson.lastName
    */
-  const handlePersonNames = (id: string) => {
-    const foundPerson = persons.find(p => p.keycloakId === id);
+  const handlePersonNames = (id: number) => {
+    const foundPerson = persons.find(p => p.id === id);
     if (foundPerson) {
       return `${foundPerson.firstName} ${foundPerson.lastName}`;
     }
-    return id;
+    return "";
   };
 
   /**
@@ -353,11 +339,11 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
         ? a.type.localeCompare(b.type)
         : b.type.localeCompare(a.type);
     }
-    // if (sortBy === VacationRequestSort.STATUS) {
-    //   return sortOrder === "asc"
-    //     ? a.hrManagerStatus.localeCompare(b.hrManagerStatus)
-    //     : b.hrManagerStatus.localeCompare(a.hrManagerStatus);
-    // }
+    if (sortBy === VacationRequestSort.STATUS) {
+      return sortOrder === "asc"
+        ? a.hrManagerStatus.localeCompare(b.hrManagerStatus)
+        : b.hrManagerStatus.localeCompare(a.hrManagerStatus);
+    }
     return 0;
   });
   
@@ -367,9 +353,9 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
    * @param request vacation request
    */
   const handleRemainingVacationDays = (request: VacationRequest) => {
-    const foundPerson = persons.find(p => p.keycloakId === request.personId);
+    const foundPerson = persons.find(p => p.id === request.person);
     if (foundPerson) return foundPerson.unspentVacations - request.days;
-    return "unknown";
+    return null;
   };
 
   /**
@@ -396,20 +382,20 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
     }
   };
 
-  // /**
-  //  * Handle request status
-  //  * 
-  //  * @param requestStatus Vacation request status
-  //  */
-  // const handleRequestStatus = (requestStatus: VacationRequestStatuses) => {
-  //   const statusMap = {
-  //     [VacationRequestStatuses.PENDING]: strings.vacationRequests.pending,
-  //     [VacationRequestStatuses.APPROVED]: strings.vacationRequests.approved,
-  //     [VacationRequestStatuses.DECLINED]: strings.vacationRequests.declined
-  //   };
+  /**
+   * Handle request status
+   * 
+   * @param requestStatus Vacation request status
+   */
+  const handleRequestStatus = (requestStatus: VacationRequestStatus) => {
+    const statusMap = {
+      [VacationRequestStatus.PENDING]: strings.vacationRequests.pending,
+      [VacationRequestStatus.APPROVED]: strings.vacationRequests.approved,
+      [VacationRequestStatus.DECLINED]: strings.vacationRequests.declined
+    };
   
-  //   return statusMap[requestStatus] || "";
-  // };
+    return statusMap[requestStatus] || "";
+  };
 
   return (
     <Box className={classes.employeeVacationRequests}>
@@ -566,69 +552,18 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
             <TableBody>
               {sortedVacationRequests.map((request: VacationRequest, index: number) => (
                 <>
-                
-                  <Modal open={ openEdit[index] }>
-                    <Box sx={{
-                      margin: 0,
-                      width: "70%",
-                      position: "absolute" as "absolute",
-                      top: "50%",
-                      left: "50%",
-                      transform: "translate(-50%, -50%)",
-                      bgcolor: "background.paper",
-                      border: "2px solid #000",
-                      boxShadow: 24,
-                      p: 4
-                    }}
-                    >
-                      <IconButton
-                        onClick={() => {
-                          const openModal = [...openEdit];
-                          openModal[index] = !openModal[index];
-                          setOpenEdit(openModal);
-                        }}
-                        aria-label="close"
-                        size="large"
-                        style={{ marginRight: "20px" }}
-                      >
-                        <CloseIcon fontSize="medium"/>
-                      </IconButton>
-                      <Table size="small" aria-label="purchases">
-                        <TableBody>
-                          {statuses.map((s: VacationRequestStatus) => (
-                            <TableRow key={ s.id }>
-                              <TableCell>{ handlePersonNames(s.createdBy!!) }</TableCell>
-                              <TableCell>{ s.status }</TableCell>
-                              <TableCell>{ s.message }</TableCell>
-                              <TableCell>{ s.createdAt?.toISOString() }</TableCell>
-                              <TableCell>{ s.updatedAt?.toISOString() }</TableCell>
-                            </TableRow>
-                          ))
-                          }
-                        </TableBody>
-                      </Table>
-                    </Box>
-                  </Modal>
-
                   <StyledTableRow key={ request.id }>
                     <StyledTableCell component="th" scope="row">{ handleRequestType(request.type)}</StyledTableCell>
-                    <StyledTableCell>{ handlePersonNames(request.personId!!) }</StyledTableCell>
+                    <StyledTableCell>{ handlePersonNames(request.person!!) }</StyledTableCell>
                     <StyledTableCell>{ request.days }</StyledTableCell>
                     <StyledTableCell>{ request.startDate.toDateString() }</StyledTableCell>
                     <StyledTableCell>{ request.endDate.toDateString() }</StyledTableCell>
-                    <StyledTableCell>{ handleRemainingVacationDays(request) }</StyledTableCell>
-                    <StyledTableCell>
-                      <Button
-                        variant="outlined"
-                        onClick={() => {
-                          handleVacationRequestStatuses(request.id!!);
-                          const openModal = [...openEdit];
-                          openModal[index] = !openModal[index];
-                          setOpenEdit(openModal);
-                        }}
-                      >
-                        Status
-                      </Button>
+                    <StyledTableCell>{ handleRemainingVacationDays(request)}</StyledTableCell>
+                    <StyledTableCell
+                      sx={{ "&.pending": { color: "#FF493C" }, "&.approved": { color: "#45cf36" } }}
+                      className={ request.hrManagerStatus === "APPROVED" ? "approved" : "pending"}
+                    >
+                      {handleRequestStatus(request.hrManagerStatus)}
                     </StyledTableCell>
                     <StyledTableCell>
                       <IconButton
@@ -664,8 +599,8 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
                                 <TableCell>{ strings.vacationRequests.message }</TableCell>
                                 <TableCell>{ strings.vacationRequests.created }</TableCell>
                                 <TableCell>{ strings.vacationRequests.updated }</TableCell>
-                                <TableCell/>
-                                <TableCell/>
+                                <TableCell>{ strings.vacationRequests.projectManager }</TableCell>
+                                <TableCell>{ strings.vacationRequests.humanResourcesManager }</TableCell>
                                 <TableCell/>
                                 <TableCell/>
                                 <TableCell/>
@@ -676,8 +611,8 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
                                 <TableCell>{ request.message }</TableCell>
                                 <TableCell>{ request.createdAt.toDateString() }</TableCell>
                                 <TableCell>{ request.updatedAt.toDateString() }</TableCell>
-                                <TableCell/>
-                                <TableCell/>
+                                <TableCell>{ handleRequestStatus(request.projectManagerStatus) }</TableCell>
+                                <TableCell>{ handleRequestStatus(request.hrManagerStatus) }</TableCell>
                                 <TableCell/>
                                 <TableCell align="right">
                                   <Button
@@ -696,6 +631,7 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
                                   >
                                     { strings.vacationRequests.approved }
                                   </Button>
+
                                 </TableCell>
                               </TableRow>
                             </TableBody>
