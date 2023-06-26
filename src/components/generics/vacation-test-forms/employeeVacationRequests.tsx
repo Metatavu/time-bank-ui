@@ -24,7 +24,6 @@ const StyledTableRow = styled(TableRow)(() => ({
   "&:nth-of-type(odd)": {
     backgroundColor: theme.palette.action.hover
   },
-  // hide last border
   "&:last-child td, &:last-child th": {
     border: 0
   }
@@ -80,38 +79,38 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
    */
   const applyFilters = (vacations: VacationRequest[]) => {
     const filteredVacations = vacations.filter(request => {
-    // Filter by employee
+      // Filter by employee
       if (filterOptions.employee !== "Everyone" && request.person.toString() !== filterOptions.employee) {
         return false;
       }
-
+  
       // Filter by vacation type
       if (filterOptions.vacationType !== "All" && request.type !== filterOptions.vacationType) {
         return false;
       }
+  
       // Filter by application status
       if (request.hrManagerStatus !== filterOptions.status) {
         return false;
       }
+  
       // Filter by start and end dates
       if (
-        filterOptions.startDate &&
-      new Date(request.startDate) <= filterOptions.startDate
+        filterOptions.startDate && new Date(request.startDate) <= filterOptions.startDate
       ) {
         return false;
       }
       if (
-        filterOptions.endDate &&
-      new Date(request.endDate) >= filterOptions.endDate
+        filterOptions.endDate && new Date(request.endDate) >= filterOptions.endDate
       ) {
         return false;
       }
+  
       return true;
     });
-
+  
     setFilteredRequests(filteredVacations);
   };
-
   /**
  * Initializes all vacation requests
  */
@@ -121,7 +120,7 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
       const vacations = await vacationsApi.listVacationRequests({});
 
       setRequests(vacations);
-      applyFilters(vacations); // Apply filters after setting the vacations
+      applyFilters(vacations);
     } catch (error) {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
     }
@@ -191,7 +190,6 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
           <MenuItem key={p.id} value={p.id}>
             {`${p.firstName} ${p.lastName}`}
           </MenuItem>
-
         ))}
       </Select>
     </FormControl>
@@ -320,7 +318,7 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
   );
   
   /**
-   * 
+   * Method to handle persons name 
    * @param id 
    * @returns 
    */
@@ -338,10 +336,8 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
  */
   const handleSort = (column: string) => {
     if (column === sortBy) {
-      // If the same column is clicked again, toggle the sort order
       setSortOrder(sortOrder === "asc" ? "desc" : "asc");
     } else {
-      // If a different column is clicked, update the sorting column and set the sort order to ascending
       setSortBy(column);
       setSortOrder("asc");
     }
@@ -349,7 +345,7 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
 
   /**
    * Convert a date string or Date object to ISO format
-   * @param dateStringOrDate - The date string or Date object
+   * @param dateStringOrDate 
    * @returns The date in ISO format
    */
   function convertToISOFormat(dateStringOrDate: string | Date): string {
@@ -394,7 +390,7 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
         ? a.hrManagerStatus.localeCompare(b.hrManagerStatus)
         : b.hrManagerStatus.localeCompare(a.hrManagerStatus);
     }
-    return 0; // No sorting applied
+    return 0;
   });
   
   /**
