@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Collapse, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Box, styled, Modal } from "@mui/material";
+import { Collapse, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Box, styled, Modal, Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import useEditorContentStyles from "styles/editor-content/editor-content";
 import theme from "theme/theme";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
@@ -18,6 +18,11 @@ import VacationRequestForm from "./vacationRequestForm";
 import DeleteDialog from "../dialogs/delete-dialog";
 import CloseIcon from "@mui/icons-material/Close";
 
+interface DiscardChangesDialogProps {
+  open: boolean;
+  handleCloseDialog: (value: string) => void; // updated the type here
+}
+
 /**
  * Renders vacation request table
  */
@@ -30,6 +35,7 @@ const RenderVacationRequests = () => {
   const [ openDeleteDialog, setOpenDeleteDialog ] = useState<boolean>(false);
   const context = useContext(ErrorContext);
   const [ requests, setRequests ] = useState<VacationRequest[]>([]);
+  const [openDiscardChanges, setOpenDiscardChanges] = useState(false);
   let updatedObject: VacationRequest = {} as VacationRequest;
 
   /**
@@ -185,10 +191,30 @@ const RenderVacationRequests = () => {
   /**
    * Handles delete dialog close
    */
-  const handleClose = (value: string) => {
-    console.log(value);
-    
+  const handleClose = () => {
     setOpenDeleteDialog(false);
+  };
+
+  /**
+   * 
+   */
+  const DiscardChangesDialog: React.FC<DiscardChangesDialogProps> = ({ open, handleCloseDialog }) => {
+    return (
+      <Dialog open={open} onClose={() => handleCloseDialog("")}>
+        <DialogTitle>Discard Changes</DialogTitle>
+        <DialogContent>
+          Do you want to discard your changes?
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => handleCloseDialog("")} color="primary">
+            No
+          </Button>
+          <Button onClick={() => handleCloseDialog("discard")} color="primary" autoFocus>
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
   };
 
   /**
@@ -304,7 +330,7 @@ const RenderVacationRequests = () => {
                       </Collapse>
                     </TableCell>
                   </TableRow>
-                  <Modal open={ openEdit[index] }>
+                  <Modal open={openEdit[index]}>
                     <Box sx={{
                       margin: 0,
                       width: "70%",
@@ -319,13 +345,9 @@ const RenderVacationRequests = () => {
                     }}
                     >
                       <IconButton
-                        onClick={() => {
-                          const openModal = [...openEdit];
-                          openModal[index] = !openModal[index];
-                          setOpenEdit(openModal);
-                        }}
+                        onClick={() => setOpenDiscardChanges(true)}
                         aria-label="close"
-                        className={ classes.closeButton }
+                        className={classes.closeButton}
                         size="large"
                         style={{ marginRight: "20px" }}
                       >
@@ -333,15 +355,15 @@ const RenderVacationRequests = () => {
                       </IconButton>
                       <Box display="flex" alignItems="center">
                         <VacationRequestForm
-                          buttonLabel={ strings.generic.saveChanges }
+                          buttonLabel={strings.generic.saveChanges}
                           onClick={() => updateRequest(request.id as string, index)}
                           requestType={RequestType.UPDATE}
-                          createRequest={ getDefaultRequestObject }
+                          createRequest={getDefaultRequestObject}
                         />
                         <IconButton
-                          onClick={ handleClickOpen }
+                          onClick={handleClickOpen}
                           aria-label="delete"
-                          className={ classes.deleteButton }
+                          className={classes.deleteButton}
                           size="large"
                           style={{ marginRight: "20px" }}
                         >
@@ -351,10 +373,26 @@ const RenderVacationRequests = () => {
                     </Box>
                   </Modal>
                   <DeleteDialog
-                    open={ openDeleteDialog }
-                    // eslint-disable-next-line no-sequences
-                    onClose={(value: string) => (handleClose(value), value === "2" ? deleteRequest(request.id as string, index) : handleClose("1"))}
+                    open={openDeleteDialog}
+                    onClose={(value: string) => {
+                      handleClose();
+                      if (value === "2") {
+                        deleteRequest(request.id as string, index);
+                      }
+                    }}
                   />
+                  <DiscardChangesDialog
+                    open={openDiscardChanges}
+                    handleCloseDialog={(value: string) => {
+                      setOpenDiscardChanges(false);
+                      if (value === "discard") {
+                        const openModal = [...openEdit];
+                        openModal[index] = !openModal[index];
+                        setOpenEdit(openModal);
+                      }
+                    }}
+                  />
+
                 </>
               ))}
             </TableBody>
