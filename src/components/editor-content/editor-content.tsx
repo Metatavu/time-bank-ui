@@ -21,6 +21,7 @@ import vacationDaysProcess from "utils/vacation-data-utils";
 import { selectAuth } from "features/auth/auth-slice";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import RenderVacationRequests from "components/generics/vacation-test-forms/myVacationRequests";
+import projectsComponent from "components/generics/sprint-view/projectsComponent";
 
 /**
 * Application editor content component
@@ -749,6 +750,11 @@ const EditorContent = () => {
           { renderFilter() }
           { renderCharts() }
           { renderVacationDays() }
+          {projectsComponent({
+            activeProjects: [], // Pass your active projects data here
+            linkedTasks: {}, // Pass your linked tasks data here
+            selectedPerson: {} // Pass your selected person data here
+          })}
         </TabPanel>
         <TabPanel value="2">
           { renderVacationInfoSummary() }
