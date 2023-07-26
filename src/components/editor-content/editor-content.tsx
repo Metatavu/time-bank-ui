@@ -22,6 +22,7 @@ import { selectAuth } from "features/auth/auth-slice";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import RenderVacationRequests from "components/generics/vacation-test-forms/myVacationRequests";
 import projectsComponent from "components/generics/sprint-view/projectsComponent";
+import mockCombinedData from "components/generics/sprint-view/mockProjectsData";
 
 /**
 * Application editor content component
@@ -751,9 +752,9 @@ const EditorContent = () => {
           { renderCharts() }
           { renderVacationDays() }
           {projectsComponent({
-            activeProjects: [], // Pass your active projects data here
-            linkedTasks: {}, // Pass your linked tasks data here
-            selectedPerson: {} // Pass your selected person data here
+            activeProjects: mockCombinedData,
+            selectedPerson: { /* Replace this with the actual selected person data */ },
+            linkedTasks: []
           })}
         </TabPanel>
         <TabPanel value="2">

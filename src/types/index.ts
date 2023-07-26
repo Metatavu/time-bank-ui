@@ -189,6 +189,17 @@ export enum VacationRequestSort{
   STATUS = "status"
 }
 
+export interface Task {
+  id: number;
+  projectId: number;
+  ADADS: string;
+  title: string;
+  status: string;
+  estimate: number;
+  assignees: string[];
+  // Add more properties as needed
+}
+
 export const VACATION_SEASON_START = new Date(new Date().getFullYear(), 3, 1);
 
 export const VACATION_SEASON_END = new Date(new Date().getFullYear(), 2, 31);

@@ -1,0 +1,21 @@
+[
+    {
+      "id": 1,
+      "title": "Project 1",
+      "assignedPersons": ["John Doe", "Jane Smith"],
+      "startDate": "2023-07-01",
+      "endDate": "2023-07-15",
+      "highPriority": true,
+      "estimate": 120
+    },
+    {
+      "id": 2,
+      "title": "Project 2",
+      "assignedPersons": ["Bob Johnson", "Alice Williams"],
+      "startDate": "2023-08-01",
+      "endDate": "2023-08-31",
+      "highPriority": false,
+      "estimate": 180
+    }
+  ]
+  
