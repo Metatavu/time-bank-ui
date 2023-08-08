@@ -8,7 +8,7 @@ import { CalendarPickerView } from "@mui/x-date-pickers";
 import strings from "localization/strings";
 import DateRangePicker from "../date-range-picker/date-range-picker";
 import { FilterScopes, VacationRequestSort } from "types";
-import { Person, VacationRequest, VacationRequestStatus, VacationType } from "generated/client";
+import { Person, VacationRequest, VacationRequestStatuses, VacationType } from "generated/client";
 import Api from "api/api";
 import { useAppSelector } from "app/hooks";
 import { ErrorContext } from "components/error-handler/error-handler";
@@ -57,7 +57,7 @@ const StyledTableCell = styled(TableCell)(() => ({
  */
 const RenderEmployeeVacationRequests = ({ persons }: Props) => {
   const classes = useEditorContentStyles();
-  const [ status, setStatus ] = useState<VacationRequestStatus>(VacationRequestStatus.PENDING);
+  const [ status, setStatus ] = useState<VacationRequestStatuses>(VacationRequestStatuses.PENDING);
   const [ employee, setEmployee ] = useState("Everyone");
   const [ vacationType, setVacationType ] = useState<VacationType>(VacationType.VACATION);
   const [ dateFormat ] = useState("yyyy.MM.dd");
@@ -94,7 +94,7 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
 
   /**
    * Handle employee change
-   * 
+   *
    * @param event select employee
    */
   const handleEmployeeChange = (event: SelectChangeEvent) => {
@@ -134,7 +134,7 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
 
   /**
    * Method to handle vacation starting date change
-   * 
+   *
    * @param date selected date
    */
   const handleVacationStartDateChange = (date: Date | null) => {
@@ -143,7 +143,7 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
 
   /**
    * Method to handle vacation ending date change
-   * 
+   *
    * @param date selected date
    */
   const handleVacationEndDateChange = (date: Date | null) => {
@@ -173,10 +173,10 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
         return null;
     }
   };
-  
+
   /**
-   * Handle vacation type 
-   * 
+   * Handle vacation type
+   *
    * @param event Change event
    */
   const handleVacationTypeChange = ({ target: { value } }: SelectChangeEvent) => {
@@ -195,11 +195,11 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
   const handleVacationStatus = (statusString: string) => {
     switch (statusString) {
       case "PENDING":
-        return VacationRequestStatus.PENDING;
+        return VacationRequestStatuses.PENDING;
       case "APPROVED":
-        return VacationRequestStatus.APPROVED;
+        return VacationRequestStatuses.APPROVED;
       case "DECLINED":
-        return VacationRequestStatus.DECLINED;
+        return VacationRequestStatuses.DECLINED;
       default:
         return null;
     }
@@ -207,7 +207,7 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
 
   /**
  * Handle status change
- * 
+ *
  * @param event Select change event
  */
   const handleStatusChange = ({ target: { value } }: SelectChangeEvent) => {
@@ -274,23 +274,23 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
         onChange={handleStatusChange}
         label={ strings.vacationRequests.status }
       >
-        <MenuItem value={ VacationRequestStatus.PENDING }>
+        <MenuItem value={ VacationRequestStatuses.PENDING }>
           { strings.vacationRequests.pending }
         </MenuItem>
-        <MenuItem value={ VacationRequestStatus.APPROVED }>
+        <MenuItem value={ VacationRequestStatuses.APPROVED }>
           { strings.vacationRequests.approved }
         </MenuItem>
-        <MenuItem value={ VacationRequestStatus.DECLINED }>
+        <MenuItem value={ VacationRequestStatuses.DECLINED }>
           { strings.vacationRequests.declined }
         </MenuItem>
       </Select>
     </FormControl>
   );
-  
+
   /**
    * Method to handle person names on vacation applications
-   * 
-   * @param id 
+   *
+   * @param id
    * @returns foundPerson.firstName and foundPerson.lastName
    */
   const handlePersonNames = (id: number) => {
@@ -303,7 +303,7 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
 
   /**
  * Handle the column header click and update the sorting state
- * @param column 
+ * @param column
  */
   const handleSort = (column: VacationRequestSort) => {
     if (column === sortBy) {
@@ -323,7 +323,7 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
       const daysB = Number(b.days);
       return sortOrder === "asc" ? daysA - daysB : daysB - daysA;
     }
-    
+
     if (sortBy === VacationRequestSort.START_DATE) {
       const dateA = new Date(a.startDate.toISOString());
       const dateB = new Date(b.startDate.toISOString());
@@ -339,28 +339,29 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
         ? a.type.localeCompare(b.type)
         : b.type.localeCompare(a.type);
     }
-    if (sortBy === VacationRequestSort.STATUS) {
-      return sortOrder === "asc"
-        ? a.hrManagerStatus.localeCompare(b.hrManagerStatus)
-        : b.hrManagerStatus.localeCompare(a.hrManagerStatus);
-    }
+    // if (sortBy === VacationRequestSort.STATUS) {
+    //   return sortOrder === "asc"
+    //     ? a.hrManagerStatus.localeCompare(b.hrManagerStatus)
+    //     : b.hrManagerStatus.localeCompare(a.hrManagerStatus);
+    // }
     return 0;
   });
-  
-  /**
-   * Handle remaining vacation days
-   * 
-   * @param request vacation request
-   */
-  const handleRemainingVacationDays = (request: VacationRequest) => {
-    const foundPerson = persons.find(p => p.id === request.person);
-    if (foundPerson) return foundPerson.unspentVacations - request.days;
-    return null;
-  };
+
+  // /**
+  //  * Handle remaining vacation days
+  //  *
+  //  * @param request vacation request
+  //  */
+  // const handleRemainingVacationDays = (request: VacationRequest) => {
+  //   // TODO: These types are never going to match, p.id is forecast id, requst.personId is a keyclaok id
+  //   const foundPerson = persons.find(p => p.id === request.personId);
+  //   if (foundPerson) return foundPerson.unspentVacations - request.days;
+  //   return null;
+  // };
 
   /**
    * Handle request type
-   * 
+   *
    * @param type Vacation type
    */
   const handleRequestType = (type: VacationType) => {
@@ -382,20 +383,20 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
     }
   };
 
-  /**
-   * Handle request status
-   * 
-   * @param requestStatus Vacation request status
-   */
-  const handleRequestStatus = (requestStatus: VacationRequestStatus) => {
-    const statusMap = {
-      [VacationRequestStatus.PENDING]: strings.vacationRequests.pending,
-      [VacationRequestStatus.APPROVED]: strings.vacationRequests.approved,
-      [VacationRequestStatus.DECLINED]: strings.vacationRequests.declined
-    };
-  
-    return statusMap[requestStatus] || "";
-  };
+  // /**
+  //  * Handle request status
+  //  *
+  //  * @param requestStatus Vacation request status
+  //  */
+  // const handleRequestStatus = (requestStatus: VacationRequestStatuses) => {
+  //   const statusMap = {
+  //     [VacationRequestStatuses.PENDING]: strings.vacationRequests.pending,
+  //     [VacationRequestStatuses.APPROVED]: strings.vacationRequests.approved,
+  //     [VacationRequestStatuses.DECLINED]: strings.vacationRequests.declined
+  //   };
+
+  //   return statusMap[requestStatus] || "";
+  // };
 
   return (
     <Box className={classes.employeeVacationRequests}>
@@ -554,17 +555,18 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
                 <>
                   <StyledTableRow key={ request.id }>
                     <StyledTableCell component="th" scope="row">{ handleRequestType(request.type)}</StyledTableCell>
-                    <StyledTableCell>{ handlePersonNames(request.person!!) }</StyledTableCell>
+                    <StyledTableCell>{ handlePersonNames(Number(request.personId)) }</StyledTableCell>
                     <StyledTableCell>{ request.days }</StyledTableCell>
                     <StyledTableCell>{ request.startDate.toDateString() }</StyledTableCell>
                     <StyledTableCell>{ request.endDate.toDateString() }</StyledTableCell>
-                    <StyledTableCell>{ handleRemainingVacationDays(request)}</StyledTableCell>
-                    <StyledTableCell
+                    {/* TODO: NEeds fixing */}
+                    {/* <StyledTableCell>{ handleRemainingVacationDays(request)}</StyledTableCell> */}
+                    {/* <StyledTableCell
                       sx={{ "&.pending": { color: "#FF493C" }, "&.approved": { color: "#45cf36" } }}
                       className={ request.hrManagerStatus === "APPROVED" ? "approved" : "pending"}
                     >
                       {handleRequestStatus(request.hrManagerStatus)}
-                    </StyledTableCell>
+                    </StyledTableCell> */}
                     <StyledTableCell>
                       <IconButton
                         aria-label="expand row"
@@ -611,8 +613,8 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
                                 <TableCell>{ request.message }</TableCell>
                                 <TableCell>{ request.createdAt.toDateString() }</TableCell>
                                 <TableCell>{ request.updatedAt.toDateString() }</TableCell>
-                                <TableCell>{ handleRequestStatus(request.projectManagerStatus) }</TableCell>
-                                <TableCell>{ handleRequestStatus(request.hrManagerStatus) }</TableCell>
+                                {/* <TableCell>{ handleRequestStatus(request.projectManagerStatus) }</TableCell>
+                                <TableCell>{ handleRequestStatus(request.hrManagerStatus) }</TableCell> */}
                                 <TableCell/>
                                 <TableCell align="right">
                                   <Button

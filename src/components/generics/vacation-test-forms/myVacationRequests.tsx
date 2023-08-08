@@ -5,7 +5,7 @@ import theme from "theme/theme";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import strings from "localization/strings";
-import { VacationRequest, VacationRequestStatus, VacationType } from "generated/client";
+import { VacationRequest, VacationType } from "generated/client";
 import { useAppSelector } from "app/hooks";
 import { selectPerson } from "features/person/person-slice";
 import Api from "api/api";
@@ -50,7 +50,8 @@ const RenderVacationRequests = () => {
 
     try {
       const vacationsApi = Api.getVacationRequestsApi(accessToken?.access_token);
-      const vacations = await vacationsApi.listVacationRequests({ personId: person.id });
+      const vacations = await vacationsApi.listVacationRequests({ personId: person.keycloakId });
+      // TODO: Will need to also get the vacation statuses from API
       setRequests(vacations);
     } catch (error) {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
@@ -66,7 +67,7 @@ const RenderVacationRequests = () => {
 
   /**
  * Handle opening and closing details and edit
- * 
+ *
  * @param index index of the request
  */
   const handleDetails = (index: number) => {
@@ -77,7 +78,7 @@ const RenderVacationRequests = () => {
 
   /**
  * Handle opening and closing details and edit
- * 
+ *
  * @param index index of the request
  * @param request default values for edited request
  */
@@ -100,26 +101,26 @@ const RenderVacationRequests = () => {
   * Sends vacation request to database
   */
   const createVacationRequest = async () => {
-    if (!person) return;
+    if (!person || !person.keycloakId) return;
 
     try {
       const applyApi = Api.getVacationRequestsApi(accessToken?.access_token);
 
       const createdRequest = await applyApi.createVacationRequest({
         vacationRequest: {
-          person: person?.id as number,
+          personId: person.keycloakId,
+          createdBy: person.keycloakId,
           startDate: vacationRequest.startDate,
           endDate: vacationRequest.endDate,
           type: vacationRequest.type,
           message: vacationRequest.message,
           createdAt: new Date(),
           updatedAt: new Date(),
-          days: vacationRequest.days,
-          projectManagerStatus: VacationRequestStatus.PENDING,
-          hrManagerStatus: VacationRequestStatus.PENDING
+          days: vacationRequest.days
         }
+      // TODO: Also need to create a vacation status request for the created request, default as pending
       });
-      
+
       setRequests([...requests, createdRequest]);
     } catch (error) {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
@@ -128,7 +129,7 @@ const RenderVacationRequests = () => {
 
   /**
    * Updates the vacation request
-   * 
+   *
    * @param id id updated vacation request
    * @param index index of request in list
    */
@@ -150,7 +151,7 @@ const RenderVacationRequests = () => {
           days: updatedVacationRequest.days
         }
       });
-      
+
       const update = requests.map(request => (request.id !== id ? request : updatedRequest));
       setRequests(update);
     } catch (error) {
@@ -158,10 +159,10 @@ const RenderVacationRequests = () => {
     }
     handleEdit(index);
   };
-  
+
   /**
    * Method to delete vacation request
-   * 
+   *
    * @param id id updated vacation request
    * @param index index of request in list
    */
@@ -180,7 +181,7 @@ const RenderVacationRequests = () => {
 
   /**
  * Handle request type
- * 
+ *
  * @param type Type of vacation
  */
   const handleRequestType = (type: VacationType) => {
@@ -201,21 +202,21 @@ const RenderVacationRequests = () => {
         return strings.vacationRequests.vacation;
     }
   };
-  
-  /**
-   * Handle request status
-   * 
-   * @param requestStatus Vacation requests status
-   */
-  const handleRequestStatus = (requestStatus: VacationRequestStatus) => {
-    const statusMap = {
-      [VacationRequestStatus.PENDING]: strings.vacationRequests.pending,
-      [VacationRequestStatus.APPROVED]: strings.vacationRequests.approved,
-      [VacationRequestStatus.DECLINED]: strings.vacationRequests.declined
-    };
-  
-    return statusMap[requestStatus] || "";
-  };
+
+  // /**
+  //  * Handle request status
+  //  *
+  //  * @param requestStatus Vacation requests status
+  //  */
+  // const handleRequestStatus = (requestStatus: VacationRequestStatuses) => {
+  //   const statusMap = {
+  //     [VacationRequestStatuses.PENDING]: strings.vacationRequests.pending,
+  //     [VacationRequestStatuses.APPROVED]: strings.vacationRequests.approved,
+  //     [VacationRequestStatuses.DECLINED]: strings.vacationRequests.declined
+  //   };
+
+  //   return statusMap[requestStatus] || "";
+  // };
 
   return (
     <Box>
@@ -254,12 +255,12 @@ const RenderVacationRequests = () => {
                     <TableCell>{ request.startDate.toDateString() }</TableCell>
                     <TableCell>{ request.endDate.toDateString() }</TableCell>
                     <TableCell>{ request.days }</TableCell>
-                    <TableCell
+                    {/* <TableCell
                       sx={{ "&.pending": { color: "#FF493C" }, "&.approved": { color: "#45cf36" } }}
                       className={request.hrManagerStatus === "APPROVED" ? "approved" : "pending"}
                     >
                       { handleRequestStatus(request.hrManagerStatus) }
-                    </TableCell>
+                    </TableCell> */}
                     <TableCell>
                       <IconButton
                         aria-label="expand row"
@@ -300,8 +301,8 @@ const RenderVacationRequests = () => {
                                 <TableCell style={{ border: 0 }}>{ request.createdAt.toDateString() }</TableCell>
                                 <TableCell style={{ border: 0 }}>{ request.updatedAt.toDateString() }</TableCell>
                                 <TableCell style={{ border: 0 }}>Henkilö</TableCell>
-                                <TableCell style={{ border: 0 }}>{ request.projectManagerStatus }</TableCell>
-                                <TableCell style={{ border: 0 }}>{ request.hrManagerStatus }</TableCell>
+                                {/* <TableCell style={{ border: 0 }}>{ request.projectManagerStatus }</TableCell>
+                                <TableCell style={{ border: 0 }}>{ request.hrManagerStatus }</TableCell> */}
                               </TableRow>
                             </TableBody>
                           </Table>
