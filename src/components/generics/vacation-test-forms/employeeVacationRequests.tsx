@@ -8,7 +8,7 @@ import { CalendarPickerView } from "@mui/x-date-pickers";
 import strings from "localization/strings";
 import DateRangePicker from "../date-range-picker/date-range-picker";
 import { END_OF_YEAR, FilterScopes, START_OF_YEAR } from "types";
-import { Person, VacationRequest, VacationRequestStatus, VacationType } from "generated/client";
+import { Person, VacationRequest, VacationRequestStatuses, VacationType } from "generated/client";
 import Api from "api/api";
 import { useAppSelector } from "app/hooks";
 import { ErrorContext } from "components/error-handler/error-handler";
@@ -49,7 +49,7 @@ const StyledTableCell = styled(TableCell)(() => ({
  */
 const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
   const classes = useEditorContentStyles();
-  const [ status, setStatus ] = useState<VacationRequestStatus>(VacationRequestStatus.PENDING);
+  const [ status, setStatus ] = useState<VacationRequestStatuses>(VacationRequestStatuses.PENDING);
   const [ dateFormat ] = useState("yyyy.MM.dd");
   const [ datePickerView ] = useState<CalendarPickerView>("day");
   const { person } = useAppSelector(selectPerson);
@@ -63,13 +63,13 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
   const [filterOptions, setFilterOptions] = useState<{
     employee: string;
     vacationType: VacationType | string;
-    status: VacationRequestStatus;
+    status: VacationRequestStatuses;
     startDate: Date | null;
     endDate: Date | null;
   }>({
     employee: "Everyone",
     vacationType: "All",
-    status: VacationRequestStatus.PENDING,
+    status: VacationRequestStatuses.PENDING,
     startDate: START_OF_YEAR,
     endDate: END_OF_YEAR
   });
@@ -80,20 +80,22 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
   const applyFilters = (vacations: VacationRequest[]) => {
     const filteredVacations = vacations.filter(request => {
       // Filter by employee
-      if (filterOptions.employee !== "Everyone" && request.person.toString() !== filterOptions.employee) {
-        return false;
-      }
-  
+      // TODO: request.personId is a keycloak value, filter options.employee is a forecast userID, so the below will not work
+      // if (filterOptions.employee !== "Everyone" && request.personId?.toString() !== filterOptions.employee) {
+      //   return false;
+      // }
+
       // Filter by vacation type
       if (filterOptions.vacationType !== "All" && request.type !== filterOptions.vacationType) {
         return false;
       }
-  
-      // Filter by application status
-      if (request.hrManagerStatus !== filterOptions.status) {
-        return false;
-      }
-  
+
+      // TODO: This needs to be changed as no longer hrManagerStatus but coming from the VacationRrequestStatuses
+      // // Filter by application status
+      // if (request.hrManagerStatus !== filterOptions.status) {
+      //   return false;
+      // }
+
       // Filter by start and end dates
       if (
         filterOptions.startDate && new Date(request.startDate) <= filterOptions.startDate
@@ -105,10 +107,10 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
       ) {
         return false;
       }
-  
+
       return true;
     });
-  
+
     setFilteredRequests(filteredVacations);
   };
   /**
@@ -118,6 +120,7 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
     try {
       const vacationsApi = Api.getVacationRequestsApi(accessToken?.access_token);
       const vacations = await vacationsApi.listVacationRequests({});
+      // TODO: would also need to list the vacation statuses here and combine with the requests in order for the filters to work.
 
       setRequests(vacations);
       applyFilters(vacations);
@@ -152,7 +155,7 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
     setFilterOptions({
       employee: "Everyone",
       vacationType: "All",
-      status: VacationRequestStatus.PENDING,
+      status: VacationRequestStatuses.PENDING,
       startDate: new Date(),
       endDate: null
     });
@@ -222,7 +225,7 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
   };
 
   /**
-   * Handle vacation type 
+   * Handle vacation type
    */
   const handleVacationTypeChange = (event: SelectChangeEvent) => {
     const contentValue = event.target.value as VacationType;
@@ -280,7 +283,7 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
    * Handle status change
    */
   const handleStatusChange = (event: SelectChangeEvent) => {
-    const contentValue = event.target.value as VacationRequestStatus;
+    const contentValue = event.target.value as VacationRequestStatuses;
     setFilterOptions(prevOptions => ({
       ...prevOptions,
       status: contentValue
@@ -304,23 +307,23 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
         onChange={handleStatusChange}
         label={ strings.vacationRequests.status }
       >
-        <MenuItem value={ VacationRequestStatus.PENDING }>
+        <MenuItem value={ VacationRequestStatuses.PENDING }>
           { strings.vacationRequests.pending }
         </MenuItem>
-        <MenuItem value={ VacationRequestStatus.APPROVED }>
+        <MenuItem value={ VacationRequestStatuses.APPROVED }>
           { strings.vacationRequests.approved }
         </MenuItem>
-        <MenuItem value={ VacationRequestStatus.DECLINED }>
+        <MenuItem value={ VacationRequestStatuses.DECLINED }>
           { strings.vacationRequests.declined }
         </MenuItem>
       </Select>
     </FormControl>
   );
-  
+
   /**
-   * Method to handle persons name 
-   * @param id 
-   * @returns 
+   * Method to handle persons name
+   * @param id
+   * @returns
    */
   const handlePersonNames = (id: number) => {
     const foundPerson = persons.find(p => p.id === id);
@@ -332,7 +335,7 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
 
   /**
  * Handle the column header click and update the sorting state
- * @param column 
+ * @param column
  */
   const handleSort = (column: string) => {
     if (column === sortBy) {
@@ -345,7 +348,7 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
 
   /**
    * Convert a date string or Date object to ISO format
-   * @param dateStringOrDate 
+   * @param dateStringOrDate
    * @returns The date in ISO format
    */
   function convertToISOFormat(dateStringOrDate: string | Date): string {
@@ -363,13 +366,14 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
       const daysB = Number(b.days);
       return sortOrder === "asc" ? daysA - daysB : daysB - daysA;
     }
-    
-    if (sortBy === "employee") {
-      return sortOrder === "asc"
-        ? handlePersonNames(a.person).localeCompare(handlePersonNames(b.person))
-        : handlePersonNames(b.person).localeCompare(handlePersonNames(a.person));
-    }
-    
+
+    // TODO: This will need to be changed as using an id now, not a name, so need to get the name as well?- This can wait for now
+    // if (sortBy === "employee") {
+    //   return sortOrder === "asc"
+    //     ? handlePersonNames(a.person).localeCompare(handlePersonNames(b.person))
+    //     : handlePersonNames(b.person).localeCompare(handlePersonNames(a.person));
+    // }
+
     if (sortBy === "startDate") {
       const dateA = new Date(convertToISOFormat(a.startDate));
       const dateB = new Date(convertToISOFormat(b.startDate));
@@ -385,19 +389,21 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
         ? a.type.localeCompare(b.type)
         : b.type.localeCompare(a.type);
     }
-    if (sortBy === "status") {
-      return sortOrder === "asc"
-        ? a.hrManagerStatus.localeCompare(b.hrManagerStatus)
-        : b.hrManagerStatus.localeCompare(a.hrManagerStatus);
-    }
+    // TODO: Anything related to status needs fixing
+    // if (sortBy === "status") {
+    //   return sortOrder === "asc"
+    //     ? a.hrManagerStatus.localeCompare(b.hrManagerStatus)
+    //     : b.hrManagerStatus.localeCompare(a.hrManagerStatus);
+    // }
     return 0;
   });
-  
+
+  // TODO: IS this working?
   /**
    * Handle remaining vacation days
    */
   const handleRemainingVacationDays = (request: VacationRequest) => {
-    const foundPerson = persons.find(p => p.id === request.person);
+    const foundPerson = persons.find(p => p.id === Number(request.personId));
     if (foundPerson) { return foundPerson.unspentVacations - request.days; }
     return null;
   };
@@ -424,18 +430,19 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
     }
   };
 
-  /**
-   * Handle request status
-   */
-  const handleRequestStatus = (requestStatus: VacationRequestStatus) => {
-    const statusMap = {
-      [VacationRequestStatus.PENDING]: strings.vacationRequests.pending,
-      [VacationRequestStatus.APPROVED]: strings.vacationRequests.approved,
-      [VacationRequestStatus.DECLINED]: strings.vacationRequests.declined
-    };
-  
-    return statusMap[requestStatus] || "";
-  };
+  // TODO: will need to make a request to th evacationRequestStatus endpoint in order to update the status.
+  // /**
+  //  * Handle request status
+  //  */
+  // const handleRequestStatus = (requestStatus: VacationRequestStatuses) => {
+  //   const statusMap = {
+  //     [VacationRequestStatuses.PENDING]: strings.vacationRequests.pending,
+  //     [VacationRequestStatuses.APPROVED]: strings.vacationRequests.approved,
+  //     [VacationRequestStatuses.DECLINED]: strings.vacationRequests.declined
+  //   };
+
+  //   return statusMap[requestStatus] || "";
+  // };
 
   return (
     <Box className={classes.employeeVacationRequests}>
@@ -603,12 +610,12 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
                 <>
                   <StyledTableRow key={ request.id }>
                     <StyledTableCell component="th" scope="row">{ handleRequestType(request.type)}</StyledTableCell>
-                    <StyledTableCell>{ handlePersonNames(request.person!!) }</StyledTableCell>
+                    <StyledTableCell>{ handlePersonNames(Number(request.personId)) }</StyledTableCell>
                     <StyledTableCell>{ request.days }</StyledTableCell>
                     <StyledTableCell>{ request.startDate.toDateString() }</StyledTableCell>
                     <StyledTableCell>{ request.endDate.toDateString() }</StyledTableCell>
                     <StyledTableCell>{ handleRemainingVacationDays(request)}</StyledTableCell>
-                    <StyledTableCell sx={{ "&.pending": { color: "#FF493C" }, "&.approved": { color: "#45cf36" } }} className={ request.hrManagerStatus === "APPROVED" ? "approved" : "pending"}>{handleRequestStatus(request.hrManagerStatus)}</StyledTableCell>
+                    {/* <StyledTableCell sx={{ "&.pending": { color: "#FF493C" }, "&.approved": { color: "#45cf36" } }} className={ request.hrManagerStatus === "APPROVED" ? "approved" : "pending"}>{handleRequestStatus(request.hrManagerStatus)}</StyledTableCell> */}
                     <StyledTableCell>
                       <IconButton
                         aria-label="expand row"
@@ -645,9 +652,9 @@ const RenderEmployeeVacationRequests = ({ persons }: { persons: Person[] }) => {
                                 <TableCell>{ request.message }</TableCell>
                                 <TableCell>{ request.createdAt.toDateString() }</TableCell>
                                 <TableCell>{ request.updatedAt.toDateString() }</TableCell>
-                                <TableCell>{ handleRequestStatus(request.projectManagerStatus) }</TableCell>
+                                {/* <TableCell>{ handleRequestStatus(request.projectManagerStatus) }</TableCell>
                                 <TableCell>{ handleRequestStatus(request.hrManagerStatus) }</TableCell>
-                                <TableCell/>
+                                <TableCell/> */}
                                 <TableCell align="right"><Button variant="outlined" color="error" sx={{ color: "#F9473B" }}>{ strings.vacationRequests.declined }</Button></TableCell>
                                 <TableCell align="right"><Button variant="outlined" color="success" sx={{ color: "green" }}>{ strings.vacationRequests.approved }</Button></TableCell>
                               </TableRow>

@@ -1,12 +1,12 @@
 import { useContext, useEffect, useState } from "react";
-import { Collapse, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Box, styled } from "@mui/material";
+import { Collapse, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Box } from "@mui/material";
 import useEditorContentStyles from "styles/editor-content/editor-content";
 import theme from "theme/theme";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import strings from "localization/strings";
 import { RequestType } from "types";
-import { VacationRequest, VacationRequestStatus, VacationType } from "generated/client";
+import { VacationRequest, VacationType } from "generated/client";
 import { useAppSelector } from "app/hooks";
 import { selectPerson } from "features/person/person-slice";
 import Api from "api/api";
@@ -37,7 +37,7 @@ const RenderVacationRequests = () => {
 
     try {
       const vacationsApi = Api.getVacationRequestsApi(accessToken?.access_token);
-      const vacations = await vacationsApi.listVacationRequests({ personId: person.id });
+      const vacations = await vacationsApi.listVacationRequests({ personId: person.keycloakId });
       setRequests(vacations);
     } catch (error) {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
@@ -75,7 +75,8 @@ const RenderVacationRequests = () => {
       const createdRequest = await applyApi.createVacationRequest({
         vacationRequest: requestObject
       });
-      
+      // // TODO: Need to also create a POST for the request statuses here, begin as "Pending"
+
       setRequests(requests.concat(createdRequest));
     } catch (error) {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
@@ -84,13 +85,13 @@ const RenderVacationRequests = () => {
 
   /**
    * Updates the vacation request
-   * 
-   * @param request 
+   *
+   * @param request
    */
   const updateRequest = async (id: string, index: number) => {
     const requestToBeUpdated = requests.find(request => request.id === id);
     const requestObject = updatedObject;
-    
+
     if (!person) return;
 
     try {
@@ -107,7 +108,7 @@ const RenderVacationRequests = () => {
           days: requestObject.days
         }
       });
-      
+
       const update = requests.map((request: VacationRequest) => (request.id !== id ? request : updatedRequest));
       setRequests(update);
     } catch (error) {
@@ -117,7 +118,7 @@ const RenderVacationRequests = () => {
     newOpenRows[index] = !newOpenRows[index];
     setOpenEdit(newOpenRows);
   };
-  
+
   /**
    * Method to delete vacation request
    */
@@ -158,34 +159,34 @@ const RenderVacationRequests = () => {
         break;
     }
   };
-  
-  /**
-   * Handle request status
-   */
-  const handleRequestStatus = (requestStatus: VacationRequestStatus) => {
-    const statusMap = {
-      [VacationRequestStatus.PENDING]: strings.vacationRequests.pending,
-      [VacationRequestStatus.APPROVED]: strings.vacationRequests.approved,
-      [VacationRequestStatus.DECLINED]: strings.vacationRequests.declined
-    };
-  
-    return statusMap[requestStatus] || "";
-  };
 
-  /**
-   * Styles for table cells
-   */
-  const StyledTableCell = styled(TableCell)(() => ({
-    "& .pending": {
-      color: "#FF493C"
-    },
-    "& .approved": {
-      color: "#45cf36"
-    },
-    
-    // eslint-disable-next-line no-restricted-globals
-    ...(status === "APPROVED" ? { "&.approved": {} } : { "&.pending": {} })
-  }));
+  // /**
+  //  * Handle request status
+  //  */
+  // const handleRequestStatus = (requestStatus: VacationRequestStatuses) => {
+  //   const statusMap = {
+  //     [VacationRequestStatuses.PENDING]: strings.vacationRequests.pending,
+  //     [VacationRequestStatuses.APPROVED]: strings.vacationRequests.approved,
+  //     [VacationRequestStatuses.DECLINED]: strings.vacationRequests.declined
+  //   };
+
+  //   return statusMap[requestStatus] || "";
+  // };
+
+  // /**
+  //  * Styles for table cells
+  //  */
+  // const StyledTableCell = styled(TableCell)(() => ({
+  //   "& .pending": {
+  //     color: "#FF493C"
+  //   },
+  //   "& .approved": {
+  //     color: "#45cf36"
+  //   },
+
+  //   // eslint-disable-next-line no-restricted-globals
+  //   ...(status === "APPROVED" ? { "&.approved": {} } : { "&.pending": {} })
+  // }));
 
   return (
     <Box>
@@ -224,12 +225,12 @@ const RenderVacationRequests = () => {
                     <TableCell>{ request.startDate.toDateString() }</TableCell>
                     <TableCell>{ request.endDate.toDateString() }</TableCell>
                     <TableCell>{ request.days }</TableCell>
-                    <StyledTableCell
+                    {/* <StyledTableCell
                       sx={{ "&.pending": { color: "#FF493C" }, "&.approved": { color: "#45cf36" } }}
                       className={request.hrManagerStatus === "APPROVED" ? "approved" : "pending"}
                     >
                       { handleRequestStatus(request.hrManagerStatus) }
-                    </StyledTableCell>
+                    </StyledTableCell> */}
                     <TableCell>
                       <IconButton
                         aria-label="expand row"
@@ -276,8 +277,8 @@ const RenderVacationRequests = () => {
                                 <TableCell style={{ border: 0 }}>{ request.createdAt.toDateString() }</TableCell>
                                 <TableCell style={{ border: 0 }}>{ request.updatedAt.toDateString() }</TableCell>
                                 <TableCell style={{ border: 0 }}>Henkilö</TableCell>
-                                <TableCell style={{ border: 0 }}>{ request.projectManagerStatus }</TableCell>
-                                <TableCell style={{ border: 0 }}>{ request.hrManagerStatus }</TableCell>
+                                {/* <TableCell style={{ border: 0 }}>{ request.projectManagerStatus }</TableCell>
+                                <TableCell style={{ border: 0 }}>{ request.hrManagerStatus }</TableCell> */}
                               </TableRow>
                             </TableBody>
                           </Table>

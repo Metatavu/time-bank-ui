@@ -1,6 +1,6 @@
 import { CalendarPickerView } from "@mui/x-date-pickers";
 import { Box, Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, Typography } from "@mui/material";
-import { VacationRequestStatus, VacationType } from "generated/client";
+import { VacationRequest, VacationType } from "generated/client";
 import strings from "localization/strings";
 import { ChangeEvent, useState } from "react";
 import { FilterScopes, RequestType } from "types";
@@ -14,12 +14,13 @@ interface VacationRequestFormProps {
   onClick: (id?:string) => void;
   buttonLabel: string;
   requestType: RequestType;
-  createRequest: any;
+  createRequest: ((newRequest?: VacationRequest) => Promise<void>) | ((newRequest: VacationRequest) => Promise<void>) |
+  ((requestObject: VacationRequest) => VacationRequest | undefined);
 }
 
 /**
 * Form component for vacation requests
-* @param param0 
+* @param param0
 */
 const VacationRequestForm = ({ onClick, buttonLabel, requestType, createRequest }: VacationRequestFormProps) => {
   const classes = useEditorContentStyles();
@@ -50,8 +51,8 @@ const VacationRequestForm = ({ onClick, buttonLabel, requestType, createRequest 
   };
 
   /**
-   * Handle vacation type 
-   *  
+   * Handle vacation type
+   *
    * @param event
    */
   const handleVacationTypeChange = (event: SelectChangeEvent) => {
@@ -121,7 +122,7 @@ const VacationRequestForm = ({ onClick, buttonLabel, requestType, createRequest 
 
   /**
    * Handle vacation comment box content
-   * 
+   *
    * @param event
    */
   const handleVacationCommentContent = (event: ChangeEvent<HTMLInputElement>) => {
@@ -156,20 +157,20 @@ const VacationRequestForm = ({ onClick, buttonLabel, requestType, createRequest 
    * Creates a request object
    */
   const addRequest = () => {
+    if (!person || !person.id || !person.keycloakId) return;
+
     createRequest({
-      person: person?.id as number,
+      personId: person.keycloakId,
       startDate: selectedVacationStartDate,
       endDate: selectedVacationEndDate,
       type: vacationType,
       message: textContent,
       createdAt: new Date(),
       updatedAt: new Date(),
-      days: renderVacationDaysSpent(),
-      projectManagerStatus: VacationRequestStatus.PENDING,
-      hrManagerStatus: VacationRequestStatus.PENDING
+      days: renderVacationDaysSpent()
     });
   };
-  
+
   /**
    * Renders vacation apply button
    */
