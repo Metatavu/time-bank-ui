@@ -5,7 +5,7 @@ import theme from "theme/theme";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import strings from "localization/strings";
-import { VacationRequest, VacationType } from "generated/client";
+import { VacationRequest, VacationRequestStatus, VacationRequestStatuses, VacationType } from "generated/client";
 import { useAppSelector } from "app/hooks";
 import { selectPerson } from "features/person/person-slice";
 import Api from "api/api";
@@ -27,6 +27,8 @@ const RenderVacationRequests = () => {
   const [ openDetails, setOpenDetails ] = useState<boolean[]>([]);
   const context = useContext(ErrorContext);
   const [ requests, setRequests ] = useState<VacationRequest[]>([]);
+  const [ statuses, setStatuses ] = useState<VacationRequestStatus[]>([]);
+  const [ latestRequestStatuses, setLatestRequestStatuses ] = useState<VacationRequestStatus[]>([]);
   const [vacationRequest, setVacationRequest] = useState<VacationData>({
     startDate: new Date(),
     endDate: new Date(),
@@ -50,8 +52,12 @@ const RenderVacationRequests = () => {
 
     try {
       const vacationsApi = Api.getVacationRequestsApi(accessToken?.access_token);
-      const vacations = await vacationsApi.listVacationRequests({ personId: person.keycloakId });
-      // TODO: Will need to also get the vacation statuses from API
+      // Hardcoded personId for testing purposes, use person.keyCloakId for staging
+      // Use your own keyCloakId, if you wish to display vacation requests created by you
+      // It is currently a limitation of the TimeBankApi. It puts your keyCloakId in the
+      // vacation request when creating a new vacation request, regardless of the Id you use here
+      const vacations = await vacationsApi.listVacationRequests({ personId: "eeb18958-9644-4a6d-bc4d-7b250fc90f4f" });
+      // const vacations = await vacationsApi.listVacationRequests({ personId: person.keycloakId });
       setRequests(vacations);
     } catch (error) {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
@@ -64,6 +70,70 @@ const RenderVacationRequests = () => {
     }
     initializeRequests();
   }, [person]);
+
+  /**
+   * Initializes all vacation request statuses
+   */
+  const initializeRequestStatuses = async () => {
+    if (!person) return;
+
+    try {
+      const vacationRequestStatuses: VacationRequestStatus[] = [];
+
+      const statusesApi = Api.getVacationRequestStatusApi(accessToken?.access_token);
+
+      await Promise.all(requests.map(async request => {
+        const createdStatuses = await statusesApi.listVacationRequestStatuses({ id: request.id! });
+        createdStatuses.forEach(createdStatus => {
+          vacationRequestStatuses.push(createdStatus);
+        });
+      }));
+
+      setStatuses(vacationRequestStatuses);
+    } catch (error) {
+      context.setError(strings.errorHandling.fetchVacationDataFailed, error);
+    }
+  };
+
+  useEffect(() => {
+    if (requests.length <= 0) {
+      return;
+    }
+    initializeRequestStatuses();
+  }, [requests]);
+
+  /**
+   * Initializes all the latest vacation request statuses, so there would be only one status for each request showed on the UI
+   */
+  const initializeLatestStatuses = async () => {
+    const latestStatuses: VacationRequestStatus[] = [];
+
+    requests.forEach(request => {
+      const requestStatuses: VacationRequestStatus[] = [];
+  
+      // Get statuses for this particular request
+      statuses.forEach(status => {
+        if (request.id === status.vacationRequestId) {
+          requestStatuses.push(status);
+        }
+      });
+  
+      // Pick the latest statuses
+      if (requestStatuses.length > 0) {
+        const pickedStatus = requestStatuses.reduce((a, b) => (a.updatedAt! > b.updatedAt! ? a : b));
+        latestStatuses.push(pickedStatus);
+      }
+    });
+
+    setLatestRequestStatuses(latestStatuses);
+  };
+
+  useEffect(() => {
+    if (statuses.length <= 0) {
+      return;
+    }
+    initializeLatestStatuses();
+  }, [statuses]);
 
   /**
  * Handle opening and closing details and edit
@@ -96,6 +166,36 @@ const RenderVacationRequests = () => {
     newOpenRows[index] = !newOpenRows[index];
     setOpenEdit(newOpenRows);
   };
+
+  /**
+  * Handle vacation apply button
+  * Sends vacation request to database
+  * @param createdRequestId id of newly created vacation request
+  */
+  const createVacationRequestStatus = async (createdRequestId: string | undefined) => {
+    if (!person || !person.keycloakId) return;
+    
+    try {
+      const applyApi = Api.getVacationRequestStatusApi(accessToken?.access_token);
+
+      const createdStatus = await applyApi.createVacationRequestStatus({
+        id: createdRequestId!,
+        vacationRequestStatus: {
+          vacationRequestId: createdRequestId,
+          status: VacationRequestStatuses.PENDING,
+          message: vacationRequest.message,
+          createdAt: new Date(),
+          createdBy: person.keycloakId,
+          updatedAt: new Date(),
+          updatedBy: person.keycloakId
+        }
+      });
+
+      setStatuses([...statuses, createdStatus]);
+    } catch (error) {
+      context.setError(strings.errorHandling.fetchVacationDataFailed, error);
+    }
+  };
   /**
   * Handle vacation apply button
   * Sends vacation request to database
@@ -118,10 +218,10 @@ const RenderVacationRequests = () => {
           updatedAt: new Date(),
           days: vacationRequest.days
         }
-      // TODO: Also need to create a vacation status request for the created request, default as pending
       });
 
       setRequests([...requests, createdRequest]);
+      createVacationRequestStatus(createdRequest.id);
     } catch (error) {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
     }
@@ -203,20 +303,20 @@ const RenderVacationRequests = () => {
     }
   };
 
-  // /**
-  //  * Handle request status
-  //  *
-  //  * @param requestStatus Vacation requests status
-  //  */
-  // const handleRequestStatus = (requestStatus: VacationRequestStatuses) => {
-  //   const statusMap = {
-  //     [VacationRequestStatuses.PENDING]: strings.vacationRequests.pending,
-  //     [VacationRequestStatuses.APPROVED]: strings.vacationRequests.approved,
-  //     [VacationRequestStatuses.DECLINED]: strings.vacationRequests.declined
-  //   };
+  /**
+   * Handle request status
+   *
+   * @param requestStatus Vacation requests status
+   */
+  const handleRequestStatus = (requestStatus: VacationRequestStatuses) => {
+    const statusMap = {
+      [VacationRequestStatuses.PENDING]: strings.vacationRequests.pending,
+      [VacationRequestStatuses.APPROVED]: strings.vacationRequests.approved,
+      [VacationRequestStatuses.DECLINED]: strings.vacationRequests.declined
+    };
 
-  //   return statusMap[requestStatus] || "";
-  // };
+    return statusMap[requestStatus] || "";
+  };
 
   return (
     <Box>
@@ -255,12 +355,21 @@ const RenderVacationRequests = () => {
                     <TableCell>{ request.startDate.toDateString() }</TableCell>
                     <TableCell>{ request.endDate.toDateString() }</TableCell>
                     <TableCell>{ request.days }</TableCell>
-                    {/* <TableCell
-                      sx={{ "&.pending": { color: "#FF493C" }, "&.approved": { color: "#45cf36" } }}
-                      className={request.hrManagerStatus === "APPROVED" ? "approved" : "pending"}
-                    >
-                      { handleRequestStatus(request.hrManagerStatus) }
-                    </TableCell> */}
+                    {latestRequestStatuses.map(latestStatus => {
+                      return (
+                        <>
+                          {request.id === latestStatus.vacationRequestId &&
+                            <TableCell
+                              key={`status-${latestStatus.id}`}
+                              sx={{ "&.pending": { color: "#FF493C" }, "&.approved": { color: "#45cf36" } }}
+                              className={latestStatus.status === "APPROVED" ? "approved" : "pending"}
+                            >
+                              { handleRequestStatus(latestStatus.status) }
+                            </TableCell>
+                          }
+                        </>
+                      );
+                    })}
                     <TableCell>
                       <IconButton
                         aria-label="expand row"
