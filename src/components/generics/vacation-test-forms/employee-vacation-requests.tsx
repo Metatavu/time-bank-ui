@@ -89,7 +89,7 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
       const vacationsApi = Api.getVacationRequestsApi(accessToken?.access_token);
 
       // Hardcoded personId for testing purposes, use person.keyCloakId for staging 
-      const vacations = await vacationsApi.listVacationRequests({ personId: "eeb18958-9644-4a6d-bc4d-7b250fc90f4f" });
+      const vacations = await vacationsApi.listVacationRequests({ personId: person?.keycloakId });
       // const vacations = await vacationsApi.listVacationRequests({ personId: person?.keycloakId });
 
       setRequests(vacations);
