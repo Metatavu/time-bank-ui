@@ -13,7 +13,7 @@ import { selectAuth } from "features/auth/auth-slice";
 import { ErrorContext } from "components/error-handler/error-handler";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import VacationRequestForm from "./vacationRequestForm";
+import VacationRequestForm from "./vacation-request-form";
 import { VacationData } from "types";
 import getLocalizedRequestStatus from "utils/localization-utils.tsx/vacation-request-status-utils";
 import getLocalizedRequestType from "utils/localization-utils.tsx/vacation-request-type-utils";
