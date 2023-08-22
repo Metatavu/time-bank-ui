@@ -15,6 +15,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import VacationRequestForm from "./vacationRequestForm";
 import { VacationData } from "types";
+import getLocalizedRequestStatus from "utils/localization-utils.tsx/vacation-request-status-utils";
+import getLocalizedRequestType from "utils/localization-utils.tsx/vacation-request-type-utils";
 
 /**
  * Renders vacation request table
@@ -52,12 +54,10 @@ const RenderVacationRequests = () => {
 
     try {
       const vacationsApi = Api.getVacationRequestsApi(accessToken?.access_token);
-      // Hardcoded personId for testing purposes, use person.keyCloakId for staging
       // Use your own keyCloakId, if you wish to display vacation requests created by you
       // It is currently a limitation of the TimeBankApi. It puts your keyCloakId in the
-      // vacation request when creating a new vacation request, regardless of the Id you use here
-      const vacations = await vacationsApi.listVacationRequests({ personId: "eeb18958-9644-4a6d-bc4d-7b250fc90f4f" });
-      // const vacations = await vacationsApi.listVacationRequests({ personId: person.keycloakId });
+      // vacation request when creating a new vacation request, regardless of the Id you use in createVacationRequest()
+      const vacations = await vacationsApi.listVacationRequests({ personId: person.keycloakId });
       setRequests(vacations);
     } catch (error) {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
@@ -279,45 +279,6 @@ const RenderVacationRequests = () => {
     handleEdit(index);
   };
 
-  /**
- * Handle request type
- *
- * @param type Type of vacation
- */
-  const handleRequestType = (type: VacationType) => {
-    switch (type) {
-      case VacationType.VACATION:
-        return strings.vacationRequests.vacation;
-      case VacationType.PERSONAL_DAYS:
-        return strings.vacationRequests.personalDays;
-      case VacationType.UNPAID_TIME_OFF:
-        return strings.vacationRequests.unpaidTimeOff;
-      case VacationType.MATERNITY_PATERNITY:
-        return strings.vacationRequests.maternityPaternityLeave;
-      case VacationType.SICKNESS:
-        return strings.vacationRequests.sickness;
-      case VacationType.CHILD_SICKNESS:
-        return strings.vacationRequests.childSickness;
-      default:
-        return strings.vacationRequests.vacation;
-    }
-  };
-
-  /**
-   * Handle request status
-   *
-   * @param requestStatus Vacation requests status
-   */
-  const handleRequestStatus = (requestStatus: VacationRequestStatuses) => {
-    const statusMap = {
-      [VacationRequestStatuses.PENDING]: strings.vacationRequests.pending,
-      [VacationRequestStatuses.APPROVED]: strings.vacationRequests.approved,
-      [VacationRequestStatuses.DECLINED]: strings.vacationRequests.declined
-    };
-
-    return statusMap[requestStatus] || "";
-  };
-
   return (
     <Box>
       <Box className={ classes.employeeVacationRequests }>
@@ -351,7 +312,7 @@ const RenderVacationRequests = () => {
               {requests.map((request: VacationRequest, index: number) => (
                 <>
                   <TableRow key={ request.id }>
-                    <TableCell style={{ paddingLeft: "3em" }}>{ handleRequestType(request.type) }</TableCell>
+                    <TableCell style={{ paddingLeft: "3em" }}>{ getLocalizedRequestType(request.type) }</TableCell>
                     <TableCell>{ request.startDate.toDateString() }</TableCell>
                     <TableCell>{ request.endDate.toDateString() }</TableCell>
                     <TableCell>{ request.days }</TableCell>
@@ -364,7 +325,7 @@ const RenderVacationRequests = () => {
                               sx={{ "&.pending": { color: "#FF493C" }, "&.approved": { color: "#45cf36" } }}
                               className={latestStatus.status === "APPROVED" ? "approved" : "pending"}
                             >
-                              { handleRequestStatus(latestStatus.status) }
+                              { getLocalizedRequestStatus(latestStatus.status) }
                             </TableCell>
                           }
                         </>
