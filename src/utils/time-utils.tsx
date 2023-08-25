@@ -1,4 +1,5 @@
 import { PersonTotalTime } from "generated/client/models";
+import { DateTime, Interval } from "luxon";
 import moment from "moment";
 import { WorkTimeData } from "types";
 
@@ -55,8 +56,16 @@ export default class TimeUtils {
    * @param date week to be compared
    * @return true if within range, false otherwise
    */
-  public static DateInRange = (startDate: Date | moment.Moment, endDate: Date | moment.Moment, date: moment.Moment): boolean => {
-    return date.isBetween(startDate, endDate);
+  public static DateInRange = (startDate: DateTime, endDate: DateTime, date: DateTime): boolean => {
+    let startDateCorrected = startDate;
+    const startDayOffSet = startDateCorrected.day - 2;
+    startDateCorrected = startDateCorrected.set({ day: startDayOffSet });
+
+    let endDateCorrected = endDate;
+    const endDayOffSet = endDateCorrected.day - 1;
+    endDateCorrected = endDateCorrected.set({ day: endDayOffSet });
+
+    return Interval.fromDateTimes(startDateCorrected, endDateCorrected).contains(date);
   };
 
   /**
@@ -69,7 +78,7 @@ export default class TimeUtils {
   public static sortEntriesByWeek = (entry1: PersonTotalTime, entry2: PersonTotalTime): number => {
     const date1 = TimeUtils.getWeekFromEntry(entry1);
     const date2 = TimeUtils.getWeekFromEntry(entry2);
-    return date1.diff(date2);
+    return Number(date1.diff(date2));
   };
 
   /**
@@ -82,7 +91,7 @@ export default class TimeUtils {
   public static sortEntriesByMonth = (entry1: PersonTotalTime, entry2: PersonTotalTime): number => {
     const date1 = TimeUtils.getMonthFromEntry(entry1);
     const date2 = TimeUtils.getMonthFromEntry(entry2);
-    return date1.diff(date2);
+    return Number(date1.diff(date2));
   };
 
   /**
@@ -95,7 +104,7 @@ export default class TimeUtils {
   public static sortEntriesByYear = (entry1: PersonTotalTime, entry2: PersonTotalTime): number => {
     const date1 = TimeUtils.getYearFromEntry(entry1);
     const date2 = TimeUtils.getYearFromEntry(entry2);
-    return date1.diff(date2);
+    return Number(date1.diff(date2));
   };
 
   /**
@@ -118,12 +127,18 @@ export default class TimeUtils {
     const getTimeData = timePeriod.split(",");
     const year = Number(getTimeData[0]);
     const week = Number(getTimeData[2]);
-    
+
     if (year === undefined || week === undefined) {
       throw new Error("Malformed data!");
     }
 
-    return moment().year(year).week(week);
+    let weekFromEntry = DateTime.now();
+    weekFromEntry = weekFromEntry.set({ year: year });
+    weekFromEntry = weekFromEntry.set({ weekNumber: week });
+
+    // console.log("BB: ", asdf.toISODate());
+
+    return weekFromEntry;
   };
 
   /**
@@ -142,7 +157,7 @@ export default class TimeUtils {
       throw new Error("Malformed data!");
     }
 
-    return moment().year(year).month(month - 1);
+    return DateTime.now().set({ year: year, month: month });
   };
 
   /**
@@ -159,7 +174,10 @@ export default class TimeUtils {
       throw new Error("Malformed data!");
     }
 
-    return moment().year(year);
+    let yearFromEntry = DateTime.now();
+    yearFromEntry = yearFromEntry.set({ year: year });
+
+    return yearFromEntry;
   };
 
   /**
