@@ -19,7 +19,6 @@ import { setPerson } from "features/person/person-slice";
 import UserInfo from "components/generics/user-info/user-info";
 import SearchIcon from "@mui/icons-material/Search";
 import { selectAuth } from "features/auth/auth-slice";
-import moment from "moment";
 import { Create } from "@mui/icons-material";
 import GenericDialog from "components/generics/generic-dialog/generic-dialog";
 import { SyncOrUpdateContext } from "components/sync-or-update-handler/sync-or-update-handler";
@@ -27,6 +26,7 @@ import AuthUtils from "utils/auth";
 import CloseIcon from "@mui/icons-material/Close";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import RenderEmployeeVacationRequests from "components/generics/vacation-test-forms/employeeVacationRequests";
+import { DateTime } from "luxon";
 
 /**
  * Management screen screen component
@@ -385,7 +385,7 @@ const ManagementScreen = () => {
         </Box>
         <Divider/>
         <Box width="100%" my={ 2 }>
-          { renderExpectedWorkRow(`${strings.startDate}:`, moment(person.startDate).format("DD.MM.YYYY")) }
+          { renderExpectedWorkRow(`${strings.startDate}:`, DateTime.fromFormat(person.startDate!, "DD.MM.YYYY").toString()) }
           { renderExpectedWorkRow(`${strings.monday}:`, TimeUtils.convertToMinutesAndHours(person.monday)) }
           { renderExpectedWorkRow(`${strings.tuesday}:`, TimeUtils.convertToMinutesAndHours(person.tuesday)) }
           { renderExpectedWorkRow(`${strings.wednesday}:`, TimeUtils.convertToMinutesAndHours(person.wednesday)) }
@@ -451,7 +451,7 @@ const ManagementScreen = () => {
               variant="h4"
               className={ classes.personEntryDate }
             >
-              { `${moment(person.startDate).format("DD.MM.YYYY")} -` }
+              { `${DateTime.fromFormat(person.startDate!, "DD.MM.YYYY").toString()} -` }
             </Typography>
             { renderPieChart(personsTotalTimeEntry, false) }
           </Box>
