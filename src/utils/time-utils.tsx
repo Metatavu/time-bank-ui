@@ -1,6 +1,5 @@
 import { PersonTotalTime } from "generated/client/models";
 import { DateTime, Interval } from "luxon";
-import moment from "moment";
 import { WorkTimeData } from "types";
 
 /**
@@ -14,8 +13,8 @@ export default class TimeUtils {
    * @param date date data
    * @return date string in format of yyyy-mm-dd
    */
-  public static standardizedDateString = (date: Date | moment.Moment): string => {
-    return moment(date).format("YYYY-MM-DD");
+  public static standardizedDateString = (date: Date | DateTime): string => {
+    return DateTime.fromJSDate(date as Date).toFormat("YYYY-MM-DD").toString();
   };
 
   /**
@@ -113,7 +112,7 @@ export default class TimeUtils {
    * @returns current week number
    */
   public static getCurrentWeek = () => {
-    return moment().isoWeek();
+    return DateTime.now().weekday;
   };
 
   /**
