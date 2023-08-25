@@ -18,7 +18,7 @@ import { ErrorContext } from "components/error-handler/error-handler";
 import GenericDialog from "components/generics/generic-dialog/generic-dialog";
 import DeleteIcon from "@mui/icons-material/Delete";
 import GenericDatePicker from "components/generics/date-picker/date-picker";
-import moment from "moment";
+import { DateTime } from "luxon";
 
 /**
  * Component properties
@@ -35,7 +35,7 @@ interface Props {
  * @param props component properties
  */
 const AppLayout: React.VoidFunctionComponent<Props> = ({ drawerContent, children, managementScreen }) => {
-  const yesterday = moment(new Date()).subtract(1, "days").toDate();
+  const yesterday = DateTime.now().minus({ days: 1 }).toJSDate();
   const classes = useAppLayoutStyles();
   const dispatch = useAppDispatch();
   const { person } = useAppSelector(selectPerson);
