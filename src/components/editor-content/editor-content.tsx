@@ -13,7 +13,6 @@ import { Timespan } from "generated/client";
 import TotalChart from "components/generics/total-chart/total-chart";
 import OverviewChart from "components/generics/overview-chart/overview-chart";
 import WorkTimeDataUtils from "utils/work-time-data-utils";
-import moment from "moment";
 import DateRangePicker from "components/generics/date-range-picker/date-range-picker";
 import { ErrorContext } from "components/error-handler/error-handler";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -21,6 +20,7 @@ import vacationDaysProcess from "utils/vacation-data-utils";
 import { selectAuth } from "features/auth/auth-slice";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import RenderVacationRequests from "components/generics/vacation-test-forms/myVacationRequests";
+import { DateTime } from "luxon";
 
 /**
 * Application editor content component
@@ -71,13 +71,13 @@ const EditorContent = () => {
       const selectedEndDateWithOffset = new Date((selectedEndDate as Date).getTime());
       selectedEndDateWithOffset.setHours(selectedEndDateWithOffset.getHours() + 3);
 
-      const dailyEntries = await Api.getDailyEntriesApi(accessToken?.access_token).listDailyEntries({
+      let dailyEntries = await Api.getDailyEntriesApi(accessToken?.access_token).listDailyEntries({
         personId: person.id,
         before: selectedEndDateWithOffset || undefined,
         after: selectedStartDate as Date
       });
-
-      dailyEntries.sort((date1, date2) => moment(date1.date).diff(date2.date));
+      
+      dailyEntries = dailyEntries.sort((date1, date2) => Number(DateTime.fromJSDate(date1.date).diff(DateTime.fromJSDate(date2.date))));
 
       const { workTimeData, workTimeTotalData } = WorkTimeDataUtils.dateEntriesPreprocess(dailyEntries);
   
@@ -101,20 +101,25 @@ const EditorContent = () => {
         timespan: Timespan.WEEK
       });
 
-      const startMoment = moment().year((selectedStartDate as Date).getFullYear()).week(startWeek);
-      const endMoment = startMoment.clone();
-      selectedEndDate && endMoment.year((selectedEndDate as Date).getFullYear());
-      endWeek && endMoment.week(endWeek);
+      let startMoment: DateTime = DateTime.now();
+      const selectedStartDateYear = DateTime.fromJSDate(selectedStartDate as Date).year;
+      startMoment = startMoment.set({ year: selectedStartDateYear });
+      startMoment = startMoment.set({ weekNumber: startWeek });
 
-      const filteredWeekEntries = weekEntries.filter(
+      let endMoment = startMoment;
+      if (selectedEndDate && endWeek) {
+        endMoment = endMoment.set({ year: DateTime.fromJSDate(selectedEndDate as Date).year });
+        endMoment = endMoment.set({ weekNumber: endWeek });
+      }
+
+      let filteredWeekEntries = weekEntries.filter(
         entry => TimeUtils.DateInRange(
           startMoment.startOf("week"),
           endMoment.endOf("week"),
           TimeUtils.getWeekFromEntry(entry)
         )
       );
-
-      filteredWeekEntries.sort(TimeUtils.sortEntriesByWeek);
+      filteredWeekEntries = filteredWeekEntries.sort(TimeUtils.sortEntriesByWeek);
 
       const { workTimeData, workTimeTotalData } = WorkTimeDataUtils.weeksYearsAndMonthsPreprocess(filteredWeekEntries, FilterScopes.WEEK);
 
@@ -138,9 +143,20 @@ const EditorContent = () => {
         timespan: Timespan.MONTH
       });
 
-      const startMoment = moment().year((selectedStartDate as Date).getFullYear()).month((selectedStartDate as Date).getMonth());
-      const endMoment = startMoment.clone();
-      selectedEndDate && endMoment.year((selectedEndDate as Date).getFullYear()).month((selectedEndDate as Date).getMonth());
+      const selectedStartDateYear = DateTime.fromJSDate(selectedStartDate).year;
+      const selectedStartDateMonth = DateTime.fromJSDate(selectedStartDate).month;
+
+      let startMoment = DateTime.now();
+      startMoment = startMoment.set({ year: selectedStartDateYear });
+      startMoment = startMoment.set({ month: selectedStartDateMonth });
+
+      let endMoment = startMoment;
+      if (selectedEndDate) {
+        const selectedEndDateYear = DateTime.fromJSDate(selectedEndDate).year;
+        const selectedEndDateMonth = DateTime.fromJSDate(selectedEndDate).month;
+        endMoment = endMoment.set({ year: selectedEndDateYear });
+        endMoment = endMoment.set({ month: selectedEndDateMonth });
+      }
 
       const filteredMonthEntries = monthEntries.filter(
         entry => TimeUtils.DateInRange(
@@ -174,9 +190,16 @@ const EditorContent = () => {
         timespan: Timespan.YEAR
       });
 
-      const startMoment = moment().year((selectedStartDate as Date).getFullYear());
-      const endMoment = startMoment.clone();
-      selectedEndDate && endMoment.year((selectedEndDate as Date).getFullYear());
+      const selectedStartDateYear = DateTime.fromJSDate(selectedStartDate as Date).year;
+      const selectedEndDateYear = DateTime.fromJSDate(selectedEndDate as Date).year;
+
+      let startMoment = DateTime.now();
+      startMoment = startMoment.set({ year: selectedStartDateYear });
+
+      let endMoment = startMoment;
+      if (selectedEndDate) {
+        endMoment = endMoment.set({ year: selectedEndDateYear });
+      }
 
       const filteredYearEntries = yearEntries.filter(
         entry => TimeUtils.DateInRange(
@@ -185,8 +208,8 @@ const EditorContent = () => {
           TimeUtils.getYearFromEntry(entry)
         )
       );
-  
-      yearEntries.sort(TimeUtils.sortEntriesByYear);
+
+      filteredYearEntries.sort(TimeUtils.sortEntriesByYear);
 
       const { workTimeData, workTimeTotalData } = WorkTimeDataUtils.weeksYearsAndMonthsPreprocess(filteredYearEntries, FilterScopes.YEAR);
   
