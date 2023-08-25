@@ -10,7 +10,7 @@ import fiLocale from "date-fns/locale/fi";
 import enLocale from "date-fns/locale/en-US";
 import { useAppSelector } from "app/hooks";
 import { selectLocale } from "features/locale/locale-slice";
-import moment from "moment";
+import { DateTime } from "luxon";
 
 /**
  * Component properties
@@ -98,14 +98,18 @@ const DateRangePicker: React.FC<Props> = ({
    * Get max start week
    */
   const getMaxStartWeek = () => {
-    return todayDate.getFullYear() === (selectedStartDate as Date).getFullYear() ? currentWeekNumber : moment((selectedStartDate as Date)).weeksInYear();
+    return todayDate.getFullYear() === DateTime.fromJSDate(selectedStartDate as Date).year
+      ? currentWeekNumber
+      : DateTime.fromJSDate(selectedStartDate as Date).weeksInWeekYear;
   };
 
   /**
-   * Get max end week
+   * Get max start week
    */
   const getMaxEndWeek = () => {
-    return todayDate.getFullYear() === (selectedEndDate as Date)?.getFullYear() ? currentWeekNumber : moment((selectedEndDate as Date)).weeksInYear();
+    return todayDate.getFullYear() === DateTime.fromJSDate(selectedEndDate as Date).year
+      ? currentWeekNumber
+      : DateTime.fromJSDate(selectedEndDate as Date).weeksInWeekYear;
   };
 
   /**
