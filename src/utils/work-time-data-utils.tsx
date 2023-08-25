@@ -1,5 +1,5 @@
 import { PersonTotalTime, DailyEntry } from "generated/client";
-import moment from "moment";
+import { DateTime } from "luxon";
 import { FilterScopes, WorkTimeCategory, WorkTimeData, WorkTimeDatas, WorkTimeTotalData } from "types";
 
 /**
@@ -27,7 +27,7 @@ export default class WorkTimeDataUtils {
         const { date, expected, billableProjectTime, nonBillableProjectTime, internalTime, balance, logged } = entry;
 
         workTimeData.push({
-          name: moment(date).format("YYYY-MM-DD"),
+          name: DateTime.fromJSDate(date).toFormat("YYYY-MM-DD").toString(),
           expected: expected,
           billableProject: billableProjectTime,
           nonBillableProject: nonBillableProjectTime,
