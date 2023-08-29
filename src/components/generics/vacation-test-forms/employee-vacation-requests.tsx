@@ -73,24 +73,21 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
   const context = useContext(ErrorContext);
   const [ requests, setRequests ] = useState<VacationRequest[]>([]);
   const [ statuses, setStatuses ] = useState<VacationRequestStatus[]>([]);
-  const [ latestRequestStatuses, setLatestRequestStatuses ] = useState<VacationRequestStatus[]>([]);
+  const [ latestRequestStatuses, setLatestStatuses ] = useState<VacationRequestStatus[]>([]);
   const [ openRows, setOpenRows ] = useState<boolean[]>([]);
   const [sortBy, setSortBy] = useState<VacationRequestSort>(VacationRequestSort.START_DATE);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [ loading, setLoading ] = useState<boolean>(false);
   const [ approvalChanged, setApprovalChanged ] = useState<boolean>(false);
-  const myRef = useRef<any>();
+  const statusTextReferenceObject = useRef<any>();
 
   /**
-   * Initializes all vacation requests
+   * Initializes vacation requests for logged-in user
    */
   const initializeRequests = async () => {
     try {
       const vacationsApi = Api.getVacationRequestsApi(accessToken?.access_token);
-
-      // Hardcoded personId for testing purposes, use person.keyCloakId for staging 
       const vacations = await vacationsApi.listVacationRequests({ personId: person?.keycloakId });
-      // const vacations = await vacationsApi.listVacationRequests({ personId: person?.keycloakId });
 
       setRequests(vacations);
     } catch (error) {
@@ -114,7 +111,12 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
       const statusesApi = Api.getVacationRequestStatusApi(accessToken?.access_token);
 
       await Promise.all(requests.map(async request => {
-        const createdStatuses = await statusesApi.listVacationRequestStatuses({ id: request.id! });
+        let createdStatuses: VacationRequestStatus[];
+        if (request.id) {
+          createdStatuses = await statusesApi.listVacationRequestStatuses({ id: request.id });
+        } else {
+          throw new Error("Vacation Request ID undefined!");
+        }
         createdStatuses.forEach(createdStatus => {
           vacationRequestStatuses.push(createdStatus);
         });
@@ -128,7 +130,7 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
   };
 
   useEffect(() => {
-    if (requests.length <= 0) {
+    if (!requests.length) {
       return;
     }
     initializeRequestStatuses();
@@ -142,22 +144,21 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
 
     requests.forEach(request => {
       const requestStatuses: VacationRequestStatus[] = [];
-  
-      // Get statuses for this particular request
-      statuses.forEach(status1 => {
-        if (request.id === status1.vacationRequestId) {
-          requestStatuses.push(status1);
+      
+      statuses.forEach(pickedStatus => {
+        if (request.id === pickedStatus.vacationRequestId) {
+          requestStatuses.push(pickedStatus);
         }
       });
   
       // Pick the latest statuses
-      if (requestStatuses.length > 0) {
+      if (requestStatuses.length) {
         const pickedStatus = requestStatuses.reduce((a, b) => (a.updatedAt! > b.updatedAt! ? a : b));
         latestStatuses.push(pickedStatus);
       }
     });
 
-    setLatestRequestStatuses(latestStatuses);
+    setLatestStatuses(latestStatuses);
   };
 
   useEffect(() => {
@@ -326,12 +327,15 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
    * @param id
    * @returns foundPerson.firstName and foundPerson.lastName
    */
-  const handlePersonNames = (id: string) => {
+  const handlePersonNames = (id: string | null) => {
+    if (id === null) {
+      return `${strings.errorHandling.personIdUndefined}`;
+    }
     const foundPerson = persons.find(p => p.keycloakId === id);
     if (foundPerson) {
       return `${foundPerson.firstName} ${foundPerson.lastName}`;
     }
-    return "null";
+    return `${strings.errorHandling.nameNotFound}`;
   };
 
   /**
@@ -394,8 +398,9 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
 
   /**
    * Update vacation request status
-   * @param requestId id of vacation status request
-   * @param newStatus new selected status from status types
+   * 
+   * @param selectedStatusObject id of the vacation request status
+   * @param newStatus status to be applied to the updated vacation request status
    */
   const updateVacationRequestStatus = async (selectedStatusObject: VacationRequestStatus, newStatus: VacationRequestStatuses) => {
     if (!selectedStatusObject) {
@@ -420,7 +425,7 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
       });
 
       const update = latestRequestStatuses.map(requestStatus => (requestStatus.id !== selectedStatusObject.id ? requestStatus : updatedRequestStatus));
-      setLatestRequestStatuses(update);
+      setLatestStatuses(update);
     } catch (error) {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
     }
@@ -428,20 +433,22 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
 
   /**
    * Handle request status on click
+   * 
    * @param approved is status approved or not
    * @param requestId the id of vacation request
    */
   const handleClick = (approved: boolean, requestId: string | undefined) => {
     const selectedStatusIndex = latestRequestStatuses.findIndex(s => s.vacationRequestId === requestId);
     const selectedStatusObject = latestRequestStatuses.find(s => s.vacationRequestId === requestId);
-    if (approved && selectedStatusObject?.status && myRef.current) {
+
+    if (approved && selectedStatusObject?.status && statusTextReferenceObject.current) {
       selectedStatusObject.status = VacationRequestStatuses.APPROVED;
-      myRef.current.className = "approved";
+      statusTextReferenceObject.current.className = "approved";
       updateVacationRequestStatus(selectedStatusObject, selectedStatusObject.status);
     }
-    if (!approved && selectedStatusObject?.status && myRef.current) {
+    if (!approved && selectedStatusObject?.status && statusTextReferenceObject.current) {
       selectedStatusObject.status = VacationRequestStatuses.DECLINED;
-      myRef.current.className = "declined";
+      statusTextReferenceObject.current.className = "declined";
       updateVacationRequestStatus(selectedStatusObject, selectedStatusObject.status);
     }
     latestRequestStatuses[selectedStatusIndex] = selectedStatusObject!;
@@ -469,14 +476,15 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
    */
   function StatusTableCell(props: StatusTableCellProps) {
     const { requestStatusId, requestStatus } = props;
-    const [ statusText, setStatusText ] = useState<string>(getLocalizedRequestStatus(requestStatus));
+    const [ statusText, setStatusText ] = useState(getLocalizedRequestStatus(requestStatus));
 
     useEffect(() => {
       setStatusText(getLocalizedRequestStatus(requestStatus));
     }, [approvalChanged]);
+    
     return (
       <StyledTableCell
-        ref={myRef}
+        ref={statusTextReferenceObject}
         key={`status-${requestStatusId}`}
         sx={{ "&.pending": { color: "#FF493C" }, "&.approved": { color: "#45cf36" } }}
         className={requestStatus === "APPROVED" ? "approved" : "pending"}
@@ -643,7 +651,7 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
                 <>
                   <StyledTableRow key={ request.id }>
                     <StyledTableCell component="th" scope="row">{ getLocalizedRequestType(request.type)}</StyledTableCell>
-                    <StyledTableCell>{ handlePersonNames(request.personId!) }</StyledTableCell>
+                    <StyledTableCell>{ request.personId ? handlePersonNames(request.personId) : handlePersonNames(null) }</StyledTableCell>
                     <StyledTableCell>{ request.days }</StyledTableCell>
                     <StyledTableCell>{ request.startDate.toDateString() }</StyledTableCell>
                     <StyledTableCell>{ request.endDate.toDateString() }</StyledTableCell>

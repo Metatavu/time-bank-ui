@@ -6,7 +6,6 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import strings from "localization/strings";
 import { VacationRequest, VacationRequestStatus, VacationRequestStatuses, VacationType } from "generated/client";
-import { useAppSelector } from "app/hooks";
 import { selectPerson } from "features/person/person-slice";
 import Api from "api/api";
 import { selectAuth } from "features/auth/auth-slice";
@@ -17,6 +16,7 @@ import VacationRequestForm from "./vacation-request-form";
 import { VacationData } from "types";
 import getLocalizedRequestStatus from "utils/localization-utils.tsx/vacation-request-status-utils";
 import getLocalizedRequestType from "utils/localization-utils.tsx/vacation-request-type-utils";
+import { useAppSelector } from "app/hooks";
 
 /**
  * Renders vacation request table
@@ -31,6 +31,7 @@ const RenderVacationRequests = () => {
   const [ requests, setRequests ] = useState<VacationRequest[]>([]);
   const [ statuses, setStatuses ] = useState<VacationRequestStatus[]>([]);
   const [ latestRequestStatuses, setLatestRequestStatuses ] = useState<VacationRequestStatus[]>([]);
+  const [ loading, setLoading ] = useState<boolean>(true);
   const [vacationRequest, setVacationRequest] = useState<VacationData>({
     startDate: new Date(),
     endDate: new Date(),
@@ -75,28 +76,31 @@ const RenderVacationRequests = () => {
    * Initializes all vacation request statuses
    */
   const initializeRequestStatuses = async () => {
-    if (!person) return;
-
     try {
       const vacationRequestStatuses: VacationRequestStatus[] = [];
-
       const statusesApi = Api.getVacationRequestStatusApi(accessToken?.access_token);
 
       await Promise.all(requests.map(async request => {
-        const createdStatuses = await statusesApi.listVacationRequestStatuses({ id: request.id! });
+        let createdStatuses: VacationRequestStatus[];
+        if (request.id) {
+          createdStatuses = await statusesApi.listVacationRequestStatuses({ id: request.id });
+        } else {
+          throw new Error("Vacation Request ID undefined!");
+        }
         createdStatuses.forEach(createdStatus => {
           vacationRequestStatuses.push(createdStatus);
         });
       }));
 
       setStatuses(vacationRequestStatuses);
+      setLoading(false);
     } catch (error) {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
     }
   };
 
   useEffect(() => {
-    if (requests.length <= 0) {
+    if (!requests.length) {
       return;
     }
     initializeRequestStatuses();
@@ -310,7 +314,7 @@ const RenderVacationRequests = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {requests.map((request: VacationRequest, index: number) => (
+              {!loading && requests.map((request: VacationRequest, index: number) => (
                 <>
                   <TableRow key={ request.id }>
                     <TableCell style={{ paddingLeft: "3em" }}>{ getLocalizedRequestType(request.type) }</TableCell>
