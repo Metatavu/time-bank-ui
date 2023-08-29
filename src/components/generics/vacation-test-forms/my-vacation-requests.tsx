@@ -170,6 +170,7 @@ const RenderVacationRequests = () => {
   /**
   * Handle vacation apply button
   * Sends vacation request to database
+  *
   * @param createdRequestId id of newly created vacation request
   */
   const createVacationRequestStatus = async (createdRequestId: string | undefined) => {
