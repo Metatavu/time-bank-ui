@@ -413,7 +413,8 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
 
   /**
    * Update vacation request status
-   * @param requestId id of vacation status request
+    * @param selectedStatusObject id of the vacation request status
+    * @param newStatus status to be applied to the updated vacation request status
    * @param newStatus new selected status from status types
    */
   const updateVacationRequestStatus = async (selectedStatusObject: VacationRequestStatus, newStatus: VacationRequestStatuses) => {
