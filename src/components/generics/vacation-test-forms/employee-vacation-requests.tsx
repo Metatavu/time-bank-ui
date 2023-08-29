@@ -158,7 +158,10 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
       });
   
       // Pick the latest statuses
-      if (requestStatuses.length > 0) {
+      // Pick the latest statuses
+      if (requestStatuses.length) {
+        ...
+      }
         const pickedStatus = requestStatuses.reduce((a, b) => (a.updatedAt! > b.updatedAt! ? a : b));
         latestStatuses.push(pickedStatus);
       }
