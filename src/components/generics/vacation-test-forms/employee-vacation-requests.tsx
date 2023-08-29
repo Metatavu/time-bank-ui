@@ -114,7 +114,12 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
       const statusesApi = Api.getVacationRequestStatusApi(accessToken?.access_token);
 
       await Promise.all(requests.map(async request => {
-        const createdStatuses = await statusesApi.listVacationRequestStatuses({ id: request.id! });
+    let createdStatuses: VacationRequestStatus[];
+    if (request.id) {
+      createdStatuses = await statusesApi.listVacationRequestStatuses({ id: request.id });
+    } else {
+      throw new Error("Vacation Request ID undefined!");
+    }
         createdStatuses.forEach(createdStatus => {
           vacationRequestStatuses.push(createdStatus);
         });
