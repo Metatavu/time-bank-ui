@@ -341,7 +341,16 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
     if (foundPerson) {
       return `${foundPerson.firstName} ${foundPerson.lastName}`;
     }
-    return "null";
+    const handlePersonNames = (id: string | null) => {
+      if (id === null) {
+        return `${strings.errorHandling.personIdUndefined}`;
+      }
+      const foundPerson = persons.find(p => p.keycloakId === id);
+      if (foundPerson) {
+        return `${foundPerson.firstName} ${foundPerson.lastName}`;
+      }
+      return `${strings.errorHandling.nameNotFound}`;
+    };
   };
 
   /**
