@@ -91,7 +91,9 @@
     "fetchUserDataFailed": "Fetching user data failed",
     "syncTimeDataFailed": "Synchronizing time data failed",
     "updateBillingPercentageFailed": "Updating billing rate failed",
-    "title": "Error"
+    "title": "Error",
+    "nameNotFound": "Name not found",
+    "personIdUndefined": "Person ID undefined"
   },
 
   "syncHandling": {
