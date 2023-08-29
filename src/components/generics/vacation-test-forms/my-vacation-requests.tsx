@@ -114,8 +114,7 @@ const RenderVacationRequests = () => {
 
     requests.forEach(request => {
       const requestStatuses: VacationRequestStatus[] = [];
-  
-      // Get statuses for this particular request
+      
       statuses.forEach(status => {
         if (request.id === status.vacationRequestId) {
           requestStatuses.push(status);
