@@ -82,7 +82,7 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
   const statusTextReferenceObject = useRef<any>();
 
   /**
-   * Initializes all vacation requests
+   * Initializes vacation requests for logged-in user
    */
   const initializeRequests = async () => {
     try {
