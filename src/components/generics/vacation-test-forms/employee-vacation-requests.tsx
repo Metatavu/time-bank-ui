@@ -489,7 +489,7 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
    */
   function StatusTableCell(props: StatusTableCellProps) {
     const { requestStatusId, requestStatus } = props;
-    const [ statusText, setStatusText ] = useState<string>(getLocalizedRequestStatus(requestStatus));
+    const [ statusText, setStatusText ] = useState(getLocalizedRequestStatus(requestStatus));
 
     useEffect(() => {
       setStatusText(getLocalizedRequestStatus(requestStatus));
