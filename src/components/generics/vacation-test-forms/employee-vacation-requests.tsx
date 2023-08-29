@@ -128,7 +128,9 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
   };
 
   useEffect(() => {
-    if (requests.length <= 0) {
+      if (!requests.length) {
+      return;
+    }
       return;
     }
     initializeRequestStatuses();
