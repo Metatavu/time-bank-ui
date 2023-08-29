@@ -1,9 +1,9 @@
 import { VacationType } from "generated/client";
 
 /**
- * set the string to corresponding enum value
+ * Set the string to corresponding enum value
  *
- * @param filterString filter scope as string
+ * @param typeString filter scope as string
  */
 const getLocalizedVacationType = (typeString: string) => {
   switch (typeString) {

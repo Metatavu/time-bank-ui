@@ -2,9 +2,9 @@ import { VacationType } from "generated/client";
 import strings from "localization/strings";
 
 /**
- * Handle request type
+ * Get a localized string corresponding to vacation type 
  *
- * @param type Type of vacation
+ * @param type Type of vacation, an enum case
  */
 const getLocalizedRequestType = (type: VacationType) => {
   switch (type) {
