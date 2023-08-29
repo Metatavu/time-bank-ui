@@ -79,7 +79,7 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [ loading, setLoading ] = useState<boolean>(false);
   const [ approvalChanged, setApprovalChanged ] = useState<boolean>(false);
-  const myRef = useRef<any>();
+  const statusTextReferenceObject = useRef<any>();
 
   /**
    * Initializes all vacation requests
