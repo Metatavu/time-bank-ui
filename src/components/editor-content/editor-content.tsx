@@ -20,7 +20,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import vacationDaysProcess from "utils/vacation-data-utils";
 import { selectAuth } from "features/auth/auth-slice";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import RenderVacationRequests from "components/generics/vacation-test-forms/myVacationRequests";
+import RenderVacationRequests from "components/generics/vacation-test-forms/my-vacation-requests";
 
 /**
 * Application editor content component
@@ -745,7 +745,6 @@ const EditorContent = () => {
           </TabList>
         </Box>
         <TabPanel value="1">
-          { renderFilter }
           { renderFilter() }
           { renderCharts() }
           { renderVacationDays() }

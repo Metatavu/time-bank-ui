@@ -91,7 +91,9 @@
     "fetchVacationDataFailed": "Lomatietojen haku epäonnistui",
     "syncTimeDataFailed": "Aikatietojen synkronointi epäonnistui",
     "updateBillingPercentageFailed": "Laskutusasteen päivitys epäonnistui",
-    "title": "Error"
+    "title": "Error",
+    "nameNotFound": "Nimeä ei löydetty",
+    "personIdUndefined": "Henkilötunnusta ei määritetty"
   },
 
   "syncHandling": {

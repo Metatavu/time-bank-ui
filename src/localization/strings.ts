@@ -121,6 +121,8 @@ export interface IStrings extends LocalizedStringsMethods {
     syncTimeDataFailed: string;
     updateBillingPercentageFailed: string;
     title: string;
+    nameNotFound: string;
+    personIdUndefined: string;
   };
 
   /**

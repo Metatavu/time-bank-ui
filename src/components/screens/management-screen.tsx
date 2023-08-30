@@ -26,7 +26,7 @@ import { SyncOrUpdateContext } from "components/sync-or-update-handler/sync-or-u
 import AuthUtils from "utils/auth";
 import CloseIcon from "@mui/icons-material/Close";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import RenderEmployeeVacationRequests from "components/generics/vacation-test-forms/employeeVacationRequests";
+import RenderEmployeeVacationRequests from "components/generics/vacation-test-forms/employee-vacation-requests";
 
 /**
  * Management screen screen component

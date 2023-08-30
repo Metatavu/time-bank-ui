@@ -5,16 +5,18 @@ import theme from "theme/theme";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import strings from "localization/strings";
-import { VacationRequest, VacationType } from "generated/client";
-import { useAppSelector } from "app/hooks";
+import { VacationRequest, VacationRequestStatus, VacationRequestStatuses, VacationType } from "generated/client";
 import { selectPerson } from "features/person/person-slice";
 import Api from "api/api";
 import { selectAuth } from "features/auth/auth-slice";
 import { ErrorContext } from "components/error-handler/error-handler";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import VacationRequestForm from "./vacationRequestForm";
+import VacationRequestForm from "./vacation-request-form";
 import { VacationData } from "types";
+import getLocalizedRequestStatus from "utils/localization-utils.tsx/vacation-request-status-utils";
+import getLocalizedRequestType from "utils/localization-utils.tsx/vacation-request-type-utils";
+import { useAppSelector } from "app/hooks";
 
 /**
  * Renders vacation request table
@@ -27,6 +29,9 @@ const RenderVacationRequests = () => {
   const [ openDetails, setOpenDetails ] = useState<boolean[]>([]);
   const context = useContext(ErrorContext);
   const [ requests, setRequests ] = useState<VacationRequest[]>([]);
+  const [ statuses, setStatuses ] = useState<VacationRequestStatus[]>([]);
+  const [ latestRequestStatuses, setLatestRequestStatuses ] = useState<VacationRequestStatus[]>([]);
+  const [ loading, setLoading ] = useState<boolean>(true);
   const [vacationRequest, setVacationRequest] = useState<VacationData>({
     startDate: new Date(),
     endDate: new Date(),
@@ -50,8 +55,10 @@ const RenderVacationRequests = () => {
 
     try {
       const vacationsApi = Api.getVacationRequestsApi(accessToken?.access_token);
+      // Use your own keyCloakId, if you wish to display vacation requests created by you
+      // It is currently a limitation of the TimeBankApi. It puts your keyCloakId in the
+      // vacation request when creating a new vacation request, regardless of the Id you use in createVacationRequest()
       const vacations = await vacationsApi.listVacationRequests({ personId: person.keycloakId });
-      // TODO: Will need to also get the vacation statuses from API
       setRequests(vacations);
     } catch (error) {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
@@ -64,6 +71,71 @@ const RenderVacationRequests = () => {
     }
     initializeRequests();
   }, [person]);
+
+  /**
+   * Initializes all vacation request statuses
+   */
+  const initializeRequestStatuses = async () => {
+    try {
+      const vacationRequestStatuses: VacationRequestStatus[] = [];
+      const statusesApi = Api.getVacationRequestStatusApi(accessToken?.access_token);
+
+      await Promise.all(requests.map(async request => {
+        let createdStatuses: VacationRequestStatus[];
+        if (request.id) {
+          createdStatuses = await statusesApi.listVacationRequestStatuses({ id: request.id });
+        } else {
+          throw new Error("Vacation Request ID undefined!");
+        }
+        createdStatuses.forEach(createdStatus => {
+          vacationRequestStatuses.push(createdStatus);
+        });
+      }));
+
+      setStatuses(vacationRequestStatuses);
+      setLoading(false);
+    } catch (error) {
+      context.setError(strings.errorHandling.fetchVacationDataFailed, error);
+    }
+  };
+
+  useEffect(() => {
+    if (!requests.length) {
+      return;
+    }
+    initializeRequestStatuses();
+  }, [requests]);
+
+  /**
+   * Initializes all the latest vacation request statuses, so there would be only one status for each request showed on the UI
+   */
+  const initializeLatestStatuses = async () => {
+    const latestStatuses: VacationRequestStatus[] = [];
+
+    requests.forEach(request => {
+      const requestStatuses: VacationRequestStatus[] = [];
+      
+      statuses.forEach(status => {
+        if (request.id === status.vacationRequestId) {
+          requestStatuses.push(status);
+        }
+      });
+  
+      if (requestStatuses.length) {
+        const pickedStatus = requestStatuses.reduce((a, b) => (a.updatedAt! > b.updatedAt! ? a : b));
+        latestStatuses.push(pickedStatus);
+      }
+    });
+
+    setLatestRequestStatuses(latestStatuses);
+  };
+
+  useEffect(() => {
+    if (!statuses.length) {
+      return;
+    }
+    initializeLatestStatuses();
+  }, [statuses]);
 
   /**
  * Handle opening and closing details and edit
@@ -96,6 +168,37 @@ const RenderVacationRequests = () => {
     newOpenRows[index] = !newOpenRows[index];
     setOpenEdit(newOpenRows);
   };
+
+  /**
+  * Handle vacation apply button
+  * Sends vacation request to database
+  *
+  * @param createdRequestId id of newly created vacation request
+  */
+  const createVacationRequestStatus = async (createdRequestId: string | undefined) => {
+    if (!person || !person.keycloakId) return;
+    
+    try {
+      const applyApi = Api.getVacationRequestStatusApi(accessToken?.access_token);
+
+      const createdStatus = await applyApi.createVacationRequestStatus({
+        id: createdRequestId!,
+        vacationRequestStatus: {
+          vacationRequestId: createdRequestId,
+          status: VacationRequestStatuses.PENDING,
+          message: vacationRequest.message,
+          createdAt: new Date(),
+          createdBy: person.keycloakId,
+          updatedAt: new Date(),
+          updatedBy: person.keycloakId
+        }
+      });
+
+      setStatuses([...statuses, createdStatus]);
+    } catch (error) {
+      context.setError(strings.errorHandling.fetchVacationDataFailed, error);
+    }
+  };
   /**
   * Handle vacation apply button
   * Sends vacation request to database
@@ -118,10 +221,10 @@ const RenderVacationRequests = () => {
           updatedAt: new Date(),
           days: vacationRequest.days
         }
-      // TODO: Also need to create a vacation status request for the created request, default as pending
       });
 
       setRequests([...requests, createdRequest]);
+      createVacationRequestStatus(createdRequest.id);
     } catch (error) {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
     }
@@ -179,45 +282,6 @@ const RenderVacationRequests = () => {
     handleEdit(index);
   };
 
-  /**
- * Handle request type
- *
- * @param type Type of vacation
- */
-  const handleRequestType = (type: VacationType) => {
-    switch (type) {
-      case VacationType.VACATION:
-        return strings.vacationRequests.vacation;
-      case VacationType.PERSONAL_DAYS:
-        return strings.vacationRequests.personalDays;
-      case VacationType.UNPAID_TIME_OFF:
-        return strings.vacationRequests.unpaidTimeOff;
-      case VacationType.MATERNITY_PATERNITY:
-        return strings.vacationRequests.maternityPaternityLeave;
-      case VacationType.SICKNESS:
-        return strings.vacationRequests.sickness;
-      case VacationType.CHILD_SICKNESS:
-        return strings.vacationRequests.childSickness;
-      default:
-        return strings.vacationRequests.vacation;
-    }
-  };
-
-  // /**
-  //  * Handle request status
-  //  *
-  //  * @param requestStatus Vacation requests status
-  //  */
-  // const handleRequestStatus = (requestStatus: VacationRequestStatuses) => {
-  //   const statusMap = {
-  //     [VacationRequestStatuses.PENDING]: strings.vacationRequests.pending,
-  //     [VacationRequestStatuses.APPROVED]: strings.vacationRequests.approved,
-  //     [VacationRequestStatuses.DECLINED]: strings.vacationRequests.declined
-  //   };
-
-  //   return statusMap[requestStatus] || "";
-  // };
-
   return (
     <Box>
       <Box className={ classes.employeeVacationRequests }>
@@ -248,19 +312,28 @@ const RenderVacationRequests = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {requests.map((request: VacationRequest, index: number) => (
+              {!loading && requests.map((request: VacationRequest, index: number) => (
                 <>
                   <TableRow key={ request.id }>
-                    <TableCell style={{ paddingLeft: "3em" }}>{ handleRequestType(request.type) }</TableCell>
+                    <TableCell style={{ paddingLeft: "3em" }}>{ getLocalizedRequestType(request.type) }</TableCell>
                     <TableCell>{ request.startDate.toDateString() }</TableCell>
                     <TableCell>{ request.endDate.toDateString() }</TableCell>
                     <TableCell>{ request.days }</TableCell>
-                    {/* <TableCell
-                      sx={{ "&.pending": { color: "#FF493C" }, "&.approved": { color: "#45cf36" } }}
-                      className={request.hrManagerStatus === "APPROVED" ? "approved" : "pending"}
-                    >
-                      { handleRequestStatus(request.hrManagerStatus) }
-                    </TableCell> */}
+                    {latestRequestStatuses.map(latestStatus => {
+                      return (
+                        <>
+                          {request.id === latestStatus.vacationRequestId &&
+                            <TableCell
+                              key={`status-${latestStatus.id}`}
+                              sx={{ "&.pending": { color: "#FF493C" }, "&.approved": { color: "#45cf36" } }}
+                              className={latestStatus.status === "APPROVED" ? "approved" : "pending"}
+                            >
+                              { getLocalizedRequestStatus(latestStatus.status) }
+                            </TableCell>
+                          }
+                        </>
+                      );
+                    })}
                     <TableCell>
                       <IconButton
                         aria-label="expand row"
