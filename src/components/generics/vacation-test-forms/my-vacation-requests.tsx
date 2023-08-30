@@ -121,8 +121,7 @@ const RenderVacationRequests = () => {
         }
       });
   
-      // Pick the latest statuses
-      if (requestStatuses.length > 0) {
+      if (requestStatuses.length) {
         const pickedStatus = requestStatuses.reduce((a, b) => (a.updatedAt! > b.updatedAt! ? a : b));
         latestStatuses.push(pickedStatus);
       }
@@ -132,7 +131,7 @@ const RenderVacationRequests = () => {
   };
 
   useEffect(() => {
-    if (statuses.length <= 0) {
+    if (!statuses.length) {
       return;
     }
     initializeLatestStatuses();

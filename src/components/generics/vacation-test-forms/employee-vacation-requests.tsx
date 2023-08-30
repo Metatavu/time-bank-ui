@@ -79,7 +79,7 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [ loading, setLoading ] = useState<boolean>(false);
   const [ approvalChanged, setApprovalChanged ] = useState<boolean>(false);
-  const statusTextReferenceObject = useRef<any>();
+  const statusTextReferenceObject = useRef<HTMLParagraphElement>();
 
   /**
    * Initializes vacation requests for logged-in user
@@ -150,14 +150,13 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
           requestStatuses.push(pickedStatus);
         }
       });
-  
-      // Pick the latest statuses
+      
       if (requestStatuses.length > 0) {
         const pickedStatus = requestStatuses.reduce((a, b) => (a.updatedAt! > b.updatedAt! ? a : b));
         latestStatuses.push(pickedStatus);
       }
     });
-
+    
     setLatestStatuses(latestStatuses);
   };
 
@@ -403,15 +402,15 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
    * @param newStatus status to be applied to the updated vacation request status
    */
   const updateVacationRequestStatus = async (selectedStatusObject: VacationRequestStatus, newStatus: VacationRequestStatuses) => {
-    if (!selectedStatusObject) {
+    if (!selectedStatusObject || !selectedStatusObject.id) {
       return;
     }
 
     try {
       const updateApi = Api.getVacationRequestStatusApi(accessToken?.access_token);
       const updatedRequestStatus = await updateApi.updateVacationRequestStatus({
-        id: selectedStatusObject.id!,
-        statusId: selectedStatusObject.id!,
+        id: selectedStatusObject.id,
+        statusId: selectedStatusObject.id,
         vacationRequestStatus: {
           ...selectedStatusObject,
           status: newStatus,
