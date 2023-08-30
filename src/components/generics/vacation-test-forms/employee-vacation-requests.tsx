@@ -152,7 +152,7 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
       });
   
       // Pick the latest statuses
-      if (requestStatuses.length) {
+      if (requestStatuses.length > 0) {
         const pickedStatus = requestStatuses.reduce((a, b) => (a.updatedAt! > b.updatedAt! ? a : b));
         latestStatuses.push(pickedStatus);
       }
@@ -322,11 +322,11 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
   );
 
   /**
-   * Method to handle person names on vacation applications
-   *
-   * @param id
-   * @returns foundPerson.firstName and foundPerson.lastName
-   */
+ * Method to handle person names on vacation applications
+ *
+ * @param id
+ * @returns foundPerson.firstName and foundPerson.lastName
+ */
   const handlePersonNames = (id: string | null) => {
     if (id === null) {
       return `${strings.errorHandling.personIdUndefined}`;
