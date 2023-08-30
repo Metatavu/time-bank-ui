@@ -1,4 +1,4 @@
-import { Person, PersonTotalTime, VacationRequestStatus, VacationType } from "generated/client";
+import { Person, PersonTotalTime, VacationRequestStatus, VacationRequestStatuses, VacationType } from "generated/client";
 
 /**
  * Access token
@@ -144,6 +144,15 @@ export interface ErrorContextType {
 export interface SyncOrUpdateContextType {
   syncOrUpdate?: string;
   setSyncOrUpdate: (message: string) => void;
+}
+
+/**
+ * Interface for StatusTableCell props
+ */
+export interface StatusTableCellProps {
+  requestStatusId: string | undefined,
+  requestStatus: VacationRequestStatuses,
+  approvalChanged: boolean
 }
 
 /**

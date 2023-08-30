@@ -175,14 +175,14 @@ const RenderVacationRequests = () => {
   *
   * @param createdRequestId id of newly created vacation request
   */
-  const createVacationRequestStatus = async (createdRequestId: string | undefined) => {
-    if (!person || !person.keycloakId) return;
+  const createVacationRequestStatus = async (createdRequestId: string) => {
+    if (!person || !person.keycloakId || createdRequestId) return;
     
     try {
       const applyApi = Api.getVacationRequestStatusApi(accessToken?.access_token);
 
       const createdStatus = await applyApi.createVacationRequestStatus({
-        id: createdRequestId!,
+        id: createdRequestId,
         vacationRequestStatus: {
           vacationRequestId: createdRequestId,
           status: VacationRequestStatuses.PENDING,
@@ -224,7 +224,7 @@ const RenderVacationRequests = () => {
       });
 
       setRequests([...requests, createdRequest]);
-      createVacationRequestStatus(createdRequest.id);
+      createdRequest.id && createVacationRequestStatus(createdRequest.id);
     } catch (error) {
       context.setError(strings.errorHandling.fetchVacationDataFailed, error);
     }

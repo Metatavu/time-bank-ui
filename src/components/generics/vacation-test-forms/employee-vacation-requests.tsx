@@ -7,7 +7,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { CalendarPickerView } from "@mui/x-date-pickers";
 import strings from "localization/strings";
 import DateRangePicker from "../date-range-picker/date-range-picker";
-import { FilterScopes, VacationRequestSort } from "types";
+import { FilterScopes, StatusTableCellProps, VacationRequestSort } from "types";
 import { Person, VacationRequest, VacationRequestStatus, VacationRequestStatuses, VacationType } from "generated/client";
 import { useAppSelector } from "app/hooks";
 import { ErrorContext } from "components/error-handler/error-handler";
@@ -161,7 +161,7 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
   };
 
   useEffect(() => {
-    if (statuses.length <= 0) {
+    if (!statuses.length) {
       return;
     }
     initializeLatestStatuses();
@@ -243,7 +243,7 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
  *
  * @param event Select change event
  */
-  const handleStatusChange = ({ target: { value } }: SelectChangeEvent) => {
+  const changeVacationRequestStatusChange = ({ target: { value } }: SelectChangeEvent) => {
     const contentValue = getLocalizedVacationStatus(value);
 
     if (!contentValue) return;
@@ -304,7 +304,7 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
       <InputLabel>{ strings.vacationRequests.status }</InputLabel>
       <Select
         value={ status }
-        onChange={handleStatusChange}
+        onChange={changeVacationRequestStatusChange}
         label={ strings.vacationRequests.status }
       >
         <MenuItem value={ VacationRequestStatuses.PENDING }>
@@ -326,7 +326,7 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
  * @param id
  * @returns foundPerson.firstName and foundPerson.lastName
  */
-  const handlePersonNames = (id: string | null) => {
+  const handlePersonNames = (id: string | undefined) => {
     if (!id) {
       return `${strings.errorHandling.personIdUndefined}`;
     }
@@ -436,7 +436,7 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
    * @param approved is status approved or not
    * @param requestId the id of vacation request
    */
-  const handleClick = (approved: boolean, requestId: string | undefined) => {
+  const changeVacationRequestStatus = (approved: boolean, requestId: string | undefined) => {
     const selectedStatusIndex = latestRequestStatuses.findIndex(s => s.vacationRequestId === requestId);
     const selectedStatusObject = latestRequestStatuses.find(s => s.vacationRequestId === requestId);
 
@@ -458,15 +458,6 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
       setApprovalChanged(true);
     }
   };
-
-  /**
-   * Interface for StatusTableCell props
-   */
-  interface StatusTableCellProps {
-    requestStatusId: string | undefined,
-    requestStatus: VacationRequestStatuses,
-    approvalChanged: boolean
-  }
   
   /**
    * Handle request status on click
@@ -650,7 +641,7 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
                 <>
                   <StyledTableRow key={ request.id }>
                     <StyledTableCell component="th" scope="row">{ getLocalizedRequestType(request.type)}</StyledTableCell>
-                    <StyledTableCell>{ request.personId ? handlePersonNames(request.personId) : handlePersonNames(null) }</StyledTableCell>
+                    <StyledTableCell>{ handlePersonNames(request.personId) }</StyledTableCell>
                     <StyledTableCell>{ request.days }</StyledTableCell>
                     <StyledTableCell>{ request.startDate.toDateString() }</StyledTableCell>
                     <StyledTableCell>{ request.endDate.toDateString() }</StyledTableCell>
@@ -729,7 +720,7 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
                                     color="error"
                                     sx={{ color: "#F9473B" }}
                                     onClick={() => {
-                                      handleClick(false, request.id);
+                                      changeVacationRequestStatus(false, request.id);
                                     }}
                                   >
                                     { strings.vacationRequests.declined }
@@ -741,7 +732,7 @@ const RenderEmployeeVacationRequests = ({ persons }: Props) => {
                                     color="success"
                                     sx={{ color: "green" }}
                                     onClick={() => {
-                                      handleClick(true, request.id);
+                                      changeVacationRequestStatus(true, request.id);
                                     }}
                                   >
                                     { strings.vacationRequests.approved }

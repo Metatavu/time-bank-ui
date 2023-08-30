@@ -2,7 +2,6 @@ import { VacationType } from "generated/client";
 import strings from "localization/strings";
 
 /**
-/**
  * Get request type as an enum case and return a corresponding localized string
  *
  * @param type Type of vacation, an enum case
