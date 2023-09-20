@@ -80,7 +80,7 @@ const EditorContent = () => {
       dailyEntries.sort((date1, date2) => moment(date1.date).diff(date2.date));
 
       const { workTimeData, workTimeTotalData } = WorkTimeDataUtils.dateEntriesPreprocess(dailyEntries);
-  
+      console.log(workTimeData, workTimeTotalData);
       setDisplayedTimeData(workTimeData);
       setDisplayedTotal(workTimeTotalData);
     } catch (error) {
